@@ -1,0 +1,71 @@
+/* Fonts */
+.noto-sans > {
+    font-family: "Noto Sans", serif;
+    font-optical-sizing: auto;
+    font-weight: 100, 200, 300, 400, 500, 600, 700, 800, 900;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
+
+.noto-sans-javanese {
+    font-family: "Noto Sans Javanese", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400, 500, 600, 700;
+    font-style: normal;
+}
+
+.jawa-h1 {
+    font-family: "Noto Sans Javanese", sans-serif;
+    font-size: 3.2rem;
+}
+
+.jawa-h2 {
+    font-family: "Noto Sans Javanese", sans-serif;
+    font-size: 2.5rem;
+}
+
+.jawa-normal {
+    font-family: "Noto Sans Javanese", sans-serif;
+    font-size: 1.2rem;
+}
+
+.jawa {
+    font-family: "Noto Sans Javanese", sans-serif;
+}
+
+/* Warna */
+:root {
+    --white: #ffffff;
+    --lightGray: #f6f7fc;
+    --darkGray: #d9d9d9;
+    --black: #000000;
+    --gold: #ffb200;
+}
+
+body {
+    font-family: "Noto Sans", serif;
+}
+
+h1 {
+    font-size: 3rem;
+}
+
+h2 {
+    font-size: 2.5rem;
+}
+
+h3 {
+    font-size: 2rem;
+}
+
+h4 {
+    font-size: 1.5rem;
+}
+
+h5 {
+    font-size: 1.2rem;
+}
+
+.small-text {
+    font-size: 0.8rem;
+}

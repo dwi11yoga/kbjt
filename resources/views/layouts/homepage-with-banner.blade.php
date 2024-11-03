@@ -26,8 +26,24 @@
     {{-- Navbar --}}
     @include('.../partials/navbar')
 
-    {{-- Content --}}
-    @yield('body')
+    {{-- Konten --}}
+    <div class="container mx-auto p-10">
+        <div class="grid grid-cols-4 space-x-5 space-y-10">
+            <div class="md:col-span-3 col-span-4">
+                @yield('body')
+            </div>
+            {{-- Banner --}}
+            <div class="md:col-span-1 col-span-4">
+                <hr class="sm:hidden mb-10 w-1/3 border-2 align-middle mx-auto ">
+                <div class="sticky top-24 space-y-3">
+                    {{-- banner 1 --}}
+                    <div class="rounded-2xl bg-gray-200 w-full h-60"></div>
+                    {{-- banner 2 --}}
+                    <div class="rounded-2xl bg-gray-200 w-full h-96"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {{-- footer --}}
     @include('.../partials/footer')

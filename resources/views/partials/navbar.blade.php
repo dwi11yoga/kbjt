@@ -64,7 +64,7 @@
     </div>
     <div>
         {{-- Belum login --}}
-        <a href="#"
+        <a href="/masuk"
             class="rounded-md py-2 px-5 bg-yellow-300 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-yellow-400 active:bg-yellow-400">Masuk</a>
         {{-- Sudah login --}}
         <div class="hidden bg-yellow-300 w-10 h-10 rounded-full"></div>

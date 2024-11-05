@@ -1,0 +1,9 @@
+@import url("style.css");
+
+a {
+    color: black;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+    text-decoration-color: #ffb200;
+}

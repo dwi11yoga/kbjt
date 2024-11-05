@@ -17,3 +17,11 @@ Route::get('/hall-of-fame', function () {
 Route::get('/blog', function () {
     return view('homepage.blog');
 });
+
+Route::get('/donasi', function () {
+    return view('homepage.donasi');
+});
+
+Route::get('/masuk', function () {
+    return view('homepage.login');
+});

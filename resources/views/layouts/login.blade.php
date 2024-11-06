@@ -24,7 +24,19 @@
 
 <body>
     {{-- Content --}}
-    @yield('body')
+    <div class="container p-10 mx-auto flex justify-center h-screen items-center">
+        <div class="grid grid-cols-3 space-x-2">
+            {{-- Gambar --}}
+            <div
+                class="md:col-span-2 col-span-3 overflow-hidden relative md:max-h-[35rem] max-h-32 md:rounded-2xl rounded-t-lg md:mt-0 mt-20">
+                @yield('img')
+            </div>
+            <div class="md:col-span-1 col-span-3 md:p-5 p-0 pt-5">
+                @yield('body')
+            </div>
+        </div>
+    </div>
+
 
     {{-- Feathericon --}}
     <script>

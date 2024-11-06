@@ -25,3 +25,7 @@ Route::get('/donasi', function () {
 Route::get('/masuk', function () {
     return view('homepage.login');
 });
+
+Route::get('/daftar', function () {
+    return view('homepage.signup');
+});

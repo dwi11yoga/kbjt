@@ -6,7 +6,7 @@
     {{-- List artikel --}}
     <div class="space-y-5">
         {{-- Artikel di pin --}}
-        <a href="#"
+        <a href="/blog/post"
             class="grid grid-cols-10 group w-full rounded-2xl border border-gray-200 hover:border-yellow-100 hover:bg-yellow-100 hover:outline hover:outline-2 hover:outline-offset-4 hover:outline-yellow-300 active:bg-yellow-200">
             <div class="col-span-3">
                 <div class="bg-gray-400 rounded-l-2xl w-full aspect-video"></div>

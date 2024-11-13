@@ -34,19 +34,41 @@
     <h3 class="font-bold mb-3 mt-3">Buat akun</h3>
     <p id="deskripsi" class="mb-7">Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, soluta.</p>
     {{-- Form --}}
-    <form action="" class="">
+    <form action="/buat-akun" method="POST">
+        @csrf
         <div id="pertama">
             <label for="nama">Nama</label>
-            <input name="nama" id="nama" type="text" placeholder=""
-                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3">
+            <input name="nama" id="nama" type="text" value="{{ old('nama') }}" placeholder=""
+                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3
+                @error('nama')
+                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+                @enderror
+                ">
+            @error('nama')
+                <div class="text-xs text-red-600 -mt-2">*{{ $message }}</div>
+            @enderror
 
             <label for="email">Email</label>
-            <input name="email" id="email" type="email" placeholder=""
-                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3">
+            <input name="email" id="email" type="text" value="{{ old('email') }}" placeholder=""
+                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3
+                @error('email')
+                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+                @enderror
+                ">
+            @error('email')
+                <div class="text-xs text-red-600 -mt-2">*{{ $message }}</div>
+            @enderror
 
             <label for="username">Username</label>
-            <input name="username" id="username" type="text" placeholder=""
-                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3">
+            <input name="username" id="username" type="text" value="{{ old('username') }}" placeholder=""
+                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3
+                @error('username')
+                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+                @enderror
+                ">
+            @error('username')
+                <div class="text-xs text-red-600 -mt-2">*{{ $message }}</div>
+            @enderror
 
             <div id="next"
                 class="mt-6 bg-gray-300 text-center p-3 w-full rounded-full cursor-pointer hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-gray-400 active:bg-gray-400">
@@ -56,16 +78,33 @@
         <div id="kedua" class="hidden md:mt-[3.75rem]">
             <label for="password">Kata sandi</label>
             <input name="password" id="password" type="password" placeholder=""
-                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3">
+                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3
+                @error('password')
+                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+                @enderror
+                ">
+            @error('password')
+                <div class="text-xs text-red-600 -mt-2">*{{ $message }}</div>
+            @enderror
 
             <label for="password2">Ulangi kata sandi</label>
             <input name="password2" id="password2" type="password" placeholder=""
-                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3">
+                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3
+                @error('password2')
+                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+                @enderror
+                ">
+            @error('password2')
+                <div class="text-xs text-red-600 -mt-2">*{{ $message }}</div>
+            @enderror
 
-            <input type="checkbox" name="remember" id="remember"
-                class="mr-1 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-            <label for="remember">Dengan ini, saya telah membaca dan menyetujui syarat dan ketentuan yang berlaku dan siap
-                mematuhinya.</label>
+            <input required {{ old('remember') != null ? 'checked' : '' }} value="checked" type="checkbox" name="remember"
+                id="remember" class="mr-1 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <label for="remember"
+                class="@error('remember')
+                underline underline-offset-2 decoration-red-600 decoration-2
+            @enderror">Dengan
+                ini, saya telah membaca dan menyetujui syarat dan ketentuan yang berlaku dan siap mematuhinya.</label>
 
             <div class="grid grid-cols-7 space-x-3 mt-6">
                 <div id="back"

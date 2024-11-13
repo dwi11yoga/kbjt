@@ -181,7 +181,8 @@
                 <h3 class="font-bold mb-3">Gabung sekarang juga!</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est in unde tempore quasi ratione incidunt
                     assumenda minus explicabo earum officia temporibus iste voluptatibus illum error sed amet.</p>
-                <button class="mt-4 rounded-full bg-white py-3 px-6 border-2 border-white hover:bg-yellow-400">Daftar
+                <button
+                    class="mt-4 rounded-full bg-white py-3 px-6 hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-white active:bg-black active:text-white active:outline-black">Daftar
                     sekarang!</button>
             </div>
         </div>

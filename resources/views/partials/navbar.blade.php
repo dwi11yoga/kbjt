@@ -41,23 +41,23 @@
     <div>
         <ul class="flex">
             <a href="/"
-                class="font-bold text-yellow-500 px-4 py-2 hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-4 active:bg-gray-50 active:rounded-full">
+                class="px-4 py-2 hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-4 active:bg-gray-50 active:rounded-full {{ $group == 'homepage' ? 'text-yellow-500 font-bold' : 'text-gray-700 hover:text-black' }}">
                 <li>Home</li>
             </a>
             <a href="/daftar-kosakata"
-                class="text-gray-700 px-4 py-2 hover:text-black hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-4 active:bg-gray-50 active:rounded-full">
+                class="px-4 py-2 hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-4 active:bg-gray-50 active:rounded-full {{ $group == 'kosakata' ? 'text-yellow-500 font-bold' : 'text-gray-700 hover:text-black' }}">
                 <li>Kosakata</li>
             </a>
             <a href="/hall-of-fame"
-                class="text-gray-700 px-4 py-2 hover:text-black hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-4 active:bg-gray-50 active:rounded-full">
+                class="px-4 py-2 hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-4 active:bg-gray-50 active:rounded-full {{ $group == 'hall of fame' ? 'text-yellow-500 font-bold' : 'text-gray-700 hover:text-black' }}">
                 <li>Hall of Fame</li>
             </a>
             <a href="/blog"
-                class="text-gray-700 px-4 py-2 hover:text-black hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-4 active:bg-gray-50 active:rounded-full">
+                class="px-4 py-2 hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-4 active:bg-gray-50 active:rounded-full {{ $group == 'blog' ? 'text-yellow-500 font-bold' : 'text-gray-700 hover:text-black' }}">
                 <li>Blog</li>
             </a>
             <a href="/donasi"
-                class="text-gray-700 px-4 py-2 hover:text-black hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-4 active:bg-gray-50 active:rounded-full">
+                class="px-4 py-2 hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-4 active:bg-gray-50 active:rounded-full {{ $group == 'donasi' ? 'text-yellow-500 font-bold' : 'text-gray-700 hover:text-black' }}">
                 <li>Donasi</li>
             </a>
         </ul>

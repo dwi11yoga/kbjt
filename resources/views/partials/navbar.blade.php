@@ -63,10 +63,18 @@
         </ul>
     </div>
     <div>
-        {{-- Belum login --}}
-        <a href="/masuk"
-            class="rounded-md py-2 px-5 bg-yellow-300 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-yellow-400 active:bg-yellow-400">Masuk</a>
-        {{-- Sudah login --}}
-        <div class="hidden bg-yellow-300 w-10 h-10 rounded-full"></div>
+        {{-- Cek apakah sudah login --}}
+        @auth
+            <a href="/dashboard">
+                <div class="overflow-hidden md:w-10 md:h-10 w-12 h-12 rounded-full flex justify-center">
+                    <img class="w-full h-full object-cover"
+                        src="https://cdn.thefairnews.co.kr/news/photo/202404/25369_59232_5627.jpg" alt="Profile picture">
+                </div>
+                {{-- <div class="bg-yellow-300 w-10 h-10 rounded-full"></div> --}}
+            </a>
+        @else
+            <a href="/masuk"
+                class="rounded-md py-2 px-5 bg-yellow-300 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-yellow-400 active:bg-yellow-400">Masuk</a>
+        @endauth
     </div>
 </nav>

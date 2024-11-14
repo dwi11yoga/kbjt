@@ -34,7 +34,9 @@ return new class extends Migration {
             $table->integer('poin')->default(10);
             $table->timestamp('poin_diperbarui')->nullable();
             $table->text(column: 'achivement')->nullable();
+            $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // Schema::create('password_reset_tokens', function (Blueprint $table) {

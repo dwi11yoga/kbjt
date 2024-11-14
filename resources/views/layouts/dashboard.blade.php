@@ -83,6 +83,23 @@
 
                     <hr class="h-px mx-auto w-3/5">
 
+                    {{-- Logout sementara --}}
+                    <form action="/logout" method="POST">
+                        @csrf
+                        <button type="submit" href="/logout"
+                            class="group w-14 h-14 flex justify-center items-center rounded-xl hover:bg-yellow-300 active:bg-yellow-400 cursor-pointer">
+                            <i data-feather='log-out'></i>
+                            <div class="relative">
+                                <div
+                                    class="hidden absolute top-0.5 left-[1.4rem] transform -translate-y-1/2 bg-yellow-300 w-4 h-4 rotate-45 group-hover:block">
+                                </div>
+                                <div
+                                    class="hidden absolute -top-6 left-6 p-3 rounded-xl group-hover:block bg-yellow-300">
+                                    Logout</div>
+                            </div>
+                        </button>
+                    </form>
+
                     {{-- Ke Beranda --}}
                     <a href="/"
                         class="group w-14 h-14 flex justify-center items-center rounded-xl hover:bg-yellow-300 active:bg-yellow-400">
@@ -120,8 +137,8 @@
                     </div>
 
                     <div class="md:col-span-7 col-span-1 flex justify-end items-center">
-                        <p class="mr-4 text-right md:block hidden">Selamat datang, <span class="font-bold">Muklis
-                                Ardiawan!</span>
+                        <p class="mr-4 text-right md:block hidden">Selamat datang, <span
+                                class="font-bold">{{ auth()->user()->nama }}</span>
                         </p>
                         <div class="overflow-hidden md:w-14 md:h-14 w-12 h-12 rounded-full flex justify-center">
                             <img class="w-full h-full object-cover"

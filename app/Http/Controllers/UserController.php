@@ -3,10 +3,64 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+
+    // View Masuk (Login)
+    public function signin()
+    {
+        return view('homepage.login', [
+            'group' => 'login',
+            'title' => 'Masuk'
+        ]);
+    }
+
+    // Login 
+    public function authenticate(Request $request)
+    {
+        // Validasi
+        $credentials = $request->validate([
+            'user' => 'required|min:6|max:255|regex:/^[A-Za-z0-9_.@-]+$/',
+            'password' => 'required|min:6|max:255'
+        ]);
+
+        // Cek remember me
+        $remember = $request->has('remember'); //hasil=true/false
+
+        // Cek apakah username/email yang digunakan
+        $fieldType = filter_var($credentials['user'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        // Authentikasi
+        if (Auth::attempt([$fieldType => $credentials['user'], 'password' => $credentials['password']], $remember)) {
+            $request->session()->regenerate(); //untuk mencegah serangan session fixation
+            return redirect()->intended('/dashboard');
+        }
+
+        return back()->with('failed', 'Username, email, atau password salah')->withInput();
+    }
+
+    // Logout
+    public function logout(Request $request): RedirectResponse
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    }
+
+    // View Daftar
+    public function signup()
+    {
+        return view('homepage.signup', [
+            'group' => 'login',
+            'title' => 'Buat akun'
+        ]);
+    }
+
     //Buat akun (daftar)
     public function store(Request $request)
     {

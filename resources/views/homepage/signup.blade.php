@@ -34,7 +34,7 @@
     <h3 class="font-bold mb-3 mt-3">Buat akun</h3>
     <p id="deskripsi" class="mb-7">Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, soluta.</p>
     {{-- Form --}}
-    <form action="/buat-akun" method="POST">
+    <form action="/daftar" method="POST">
         @csrf
         <div id="pertama">
             <label for="nama">Nama</label>
@@ -98,10 +98,10 @@
                 <div class="text-xs text-red-600 -mt-2">*{{ $message }}</div>
             @enderror
 
-            <input required {{ old('remember') != null ? 'checked' : '' }} value="checked" type="checkbox" name="remember"
-                id="remember" class="mr-1 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-            <label for="remember"
-                class="@error('remember')
+            <input required {{ old('remember') != null ? 'checked' : '' }} value="checked" type="checkbox" name="eula"
+                id="eula" class="mr-1 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <label for="eula"
+                class="@error('eula')
                 underline underline-offset-2 decoration-red-600 decoration-2
             @enderror">Dengan
                 ini, saya telah membaca dan menyetujui syarat dan ketentuan yang berlaku dan siap mematuhinya.</label>

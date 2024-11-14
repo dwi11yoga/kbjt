@@ -31,16 +31,16 @@ Route::get('/donasi', function () {
     return view('homepage.donasi', ['group' => 'donasi', 'title' => 'Donasi']);
 });
 
-Route::get('/masuk', function () {
-    return view('homepage.login', ['group' => 'login', 'title' => 'Masuk']);
-});
-
-Route::get('/daftar', function () {
-    return view('homepage.signup', ['group' => 'login', 'title' => 'Buat akun']);
-});
-Route::post('/buat-akun', [UserController::class, 'store']);
+// Login
+Route::get('/masuk', [UserController::class, 'signin'])->name('login')->middleware('guest');
+Route::post('/masuk', [UserController::class, 'authenticate']);
+// Daftar
+Route::get('/daftar', [UserController::class, 'signup'])->middleware('guest');
+Route::post('/daftar', [UserController::class, 'store']);
+// Logout
+Route::post('/logout', [UserController::class, 'logout']);
 
 // DASHBOARD
 Route::get('/dashboard', function () {
     return view('dashboard.dashboard', ['group' => 'dashboard', 'title' => 'Dashboard']);
-});
+})->middleware('auth');

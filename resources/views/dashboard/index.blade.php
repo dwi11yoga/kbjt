@@ -2,11 +2,13 @@
 
 @section('body')
     {{-- Pemberitahuan untuk melengkapi data diri --}}
-    <div class="md:flex md:justify-between border border-gray-200 rounded-xl p-3 shadow-sm mb-4">
-        <div>Segera lengkapi profil kamu.</div>
-        <a href="#" class="text-blue-600 md:text-base text-sm">Pergi ke pengaturan<i data-feather='arrow-up-right'
-                class="inline-block md:w-5 w-4"></i></a>
-    </div>
+    @if ($lengkap == false)
+        <div class="md:flex md:justify-between border border-gray-200 rounded-xl p-3 shadow-sm mb-4">
+            <div>Segera lengkapi profil kamu.</div>
+            <a href="#" class="text-blue-600 md:text-base text-sm">Pergi ke pengaturan<i data-feather='arrow-up-right'
+                    class="inline-block md:w-5 w-4"></i></a>
+        </div>
+    @endif
 
     {{-- Level & Poin --}}
     <div class="grid grid-cols-3 gap-3 ">
@@ -14,11 +16,14 @@
             class="md:col-span-1 col-span-3 border border-gray-200 shadow-sm rounded-xl p-3 hover:outline hover:outline-offset-2 hover:outline-yellow-200 hover:decoration-1">
             <div>
                 Level <br>
-                <h1 class="font-bold -mt-2">20</h1>
+                <h1 class="font-bold -mt-2">{{ $userProgress['lvl'] }}</h1>
             </div>
             <div class="relative mb-3">
                 <div class="absolute top-0 w-full bg-gray-300 h-2 rounded-full"></div>
-                <div class="absolute top-0 w-3/4 bg-yellow-400 h-2 rounded-full"></div>
+                <div title="{{ $userProgress['progress'] }}%"
+                    class="absolute top-0 min-w-[2%] bg-yellow-400 h-2 rounded-full hover:outline hover:outline-4 hover:outline-yellow-400"
+                    style="width: {{ $userProgress['progress'] }}%">
+                </div>
             </div>
         </div>
 
@@ -26,11 +31,17 @@
             class="md:col-span-1 col-span-3 border border-gray-200 shadow-sm rounded-xl p-3 hover:outline hover:outline-offset-2 hover:outline-yellow-200 hover:decoration-1">
             <div>Poin <br>
                 <div class="flex items-baseline">
-                    <h1 class="font-bold -mt-2">27.551</h1>
+                    <h1 class="font-bold -mt-2">{{ auth()->user()->poin }}</h1>
                     <span class="text-green-600"><i data-feather='arrow-up' class="inline-block w-5 -mt-1"></i>210</span>
                 </div>
             </div>
-            <div class="small-text"><span class="font-bold">1.678 poin</span> lagi sebelum naik level</div>
+            <div class="small-text">
+                @if ($userProgress['poinKurang'] != null)
+                    <span class="font-bold">{{ $userProgress['poinKurang'] }} poin</span> lagi sebelum naik level
+                @else
+                    Kamu telah mencapai level maksimal 🙌
+                @endif
+            </div>
         </div>
 
         <div
@@ -53,7 +64,8 @@
         ?>
     <div class="md:flex md:justify-between border border-gray-200 p-3 mt-3 rounded-xl">
         <div>Lorem ipsum dolor sit amet.</div>
-        <div class="md:text-base text-sm">10 poin</div>
+        <div class="md:text-base text-sm"><i data-feather='stop-circle' class="inline-block w-5 text-yellow-600"></i> 10
+            poin</div>
     </div>
     <?php
     }

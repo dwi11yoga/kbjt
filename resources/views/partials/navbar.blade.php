@@ -30,15 +30,15 @@
     </div> --}}
 
 {{-- Navbar 2 --}}
-<nav class="w-full justify-between bg-white shadow-sm py-4 px-9 items-center flex sticky top-0 z-50">
-    {{-- Logo --}}
-    <div class="mr-16">
+{{-- <nav class="w-full justify-between bg-white shadow-sm py-4 px-9 items-center flex sticky top-0 z-50"> --}}
+{{-- Logo --}}
+{{-- <div class="mr-16">
         <a href="/">
             <h4 class="font-bold underline decoration-yellow-400 underline-offset-4 decoration-4">kbjt</h4>
         </a>
-    </div>
-    {{-- Menu --}}
-    <div>
+    </div> --}}
+{{-- Menu --}}
+{{-- <div>
         <ul class="flex">
             <a href="/"
                 class="px-4 py-2 hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-4 active:bg-gray-50 active:rounded-full {{ $group == 'homepage' ? 'text-yellow-500 font-bold' : 'text-gray-700 hover:text-black' }}">
@@ -62,19 +62,88 @@
             </a>
         </ul>
     </div>
-    <div>
-        {{-- Cek apakah sudah login --}}
-        @auth
-            <a href="/dashboard">
+    <div> --}}
+{{-- Cek apakah sudah login --}}
+{{-- @auth --}}
+{{-- <a href="/dashboard">
                 <div class="overflow-hidden md:w-10 md:h-10 w-12 h-12 rounded-full flex justify-center">
                     <img class="w-full h-full object-cover"
                         src="https://cdn.thefairnews.co.kr/news/photo/202404/25369_59232_5627.jpg" alt="Profile picture">
-                </div>
-                {{-- <div class="bg-yellow-300 w-10 h-10 rounded-full"></div> --}}
-            </a>
-        @else
-            <a href="/masuk"
+                </div> --}}
+{{-- <div class="bg-yellow-300 w-10 h-10 rounded-full"></div> --}}
+{{-- </a> --}}
+{{-- @else --}}
+{{-- <a href="/masuk"
                 class="rounded-md py-2 px-5 bg-yellow-300 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-yellow-400 active:bg-yellow-400">Masuk</a>
         @endauth
     </div>
+</nav> --}}
+
+{{-- Navbar 3 --}}
+<nav class="w-full justify-between bg-white shadow-sm py-4 px-9 items-center flex sticky top-0 z-50">
+    {{-- Logo & pencarian --}}
+    <div class="flex items-center space-x-8">
+        {{-- logo --}}
+        <div class="">
+            <a href="/">
+                <h4 class="font-bold underline decoration-amber-400 underline-offset-4 decoration-4">kbjt</h4>
+            </a>
+        </div>
+
+        {{-- pencarian --}}
+        @if ($title != 'Selamat datang di Kamus Bahasa Jawa Terbuka!')
+            <form action="" method="GET">
+                @csrf
+                <div class="relative">
+                    <input
+                        class="bg-neutral-100 w-96 px-5 py-2.5 pr-12 rounded-full hover:bg-white hover:outline hover:outline-2 hover:outline-amber-400 focus:outline focus:outline-amber-400 focus:outline-2 focus-within:bg-white"
+                        name="search" id="search" type="text" placeholder="Cari...">
+                    <button type="submit" class="absolute right-4 top-2.5 text-neutral-500" title="Cari"><i
+                            data-feather='search'></i></button>
+                </div>
+            </form>
+        @endif
+    </div>
+
+    {{-- Menu --}}
+    <ul class="flex items-center">
+        <li>
+            <a href="/"
+                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ $title == 'Selamat datang di Kamus Bahasa Jawa Terbuka!' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Home</a>
+        </li>
+        <li>
+            <a href="/daftar-kosakata"
+                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ $title == 'Daftar Kosakata' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Daftar
+                Kosakata</a>
+        </li>
+        <li>
+            <a href="/hall-of-fame"
+                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ $title == 'Hall of Fame' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Hall
+                of
+                Fame</a>
+        </li>
+        <li>
+            <a href="/blog"
+                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ $title == 'Blog' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Blog</a>
+        </li>
+        <li>
+            <a href="/donasi"
+                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ $title == 'Donasi' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Donasi</a>
+        </li>
+        <li>
+            @auth
+                <a href="/dashboard" title="Ke Dashboard">
+                    <div
+                        class="overflow-hidden ml-2 md:w-10 md:h-10 w-12 h-12 rounded-full flex justify-center hover:outline hover:outline-amber-400 hover:outline-offset-2 hover:outline-2">
+                        <img class="w-full h-full object-cover"
+                            src="https://cdn.thefairnews.co.kr/news/photo/202404/25369_59232_5627.jpg"
+                            alt="Profile picture">
+                    </div>
+                </a>
+            @else
+                <a href="/masuk"
+                    class="px-5 py-3 bg-amber-300 rounded-full hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-amber-400 active:bg-amber-400">Masuk</a>
+            @endauth
+        </li>
+    </ul>
 </nav>

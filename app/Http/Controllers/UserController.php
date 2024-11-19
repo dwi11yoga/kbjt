@@ -76,4 +76,13 @@ class UserController extends Controller
         User::create($validatedData);
         return redirect('/masuk')->with('success', 'Akun berhasil terdaftar, silahkan login');
     }
+
+    // Edit data user
+    public function editUSer()
+    {
+        return view('dashboard.setting-userinfo', [
+            'group' => 'settings',
+            'title' => 'Edit data user'
+        ]);
+    }
 }

@@ -52,10 +52,9 @@
                     <div class="md:col-span-7 col-span-1 flex justify-end items-center">
                         <p class="mr-4 text-right md:block hidden">
                             {{ auth()->user()->nama }}<br>
-                            <span
-                                class="text-sm bg-yellow-100 rounded-md py-1 px-2">Lv.{{ $userProgress['lvl'] }}</span>
+                            {{-- <span class="text-sm bg-yellow-100 rounded-md py-1 px-2">Lv.{{ $userProgress['lvl'] }}</span> --}}
                         </p>
-                        <div class="overflow-hidden md:w-14 md:h-14 w-12 h-12 rounded-full flex justify-center">
+                        <div class="overflow-hidden w-12 h-12 rounded-full flex justify-center">
                             <img class="w-full h-full object-cover"
                                 src="https://cdn.thefairnews.co.kr/news/photo/202404/25369_59232_5627.jpg"
                                 alt="Profile picture">

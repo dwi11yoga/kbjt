@@ -58,4 +58,12 @@ class DashboardController extends Controller
             'userProgress' => $userProgress
         ]);
     }
+
+    public function settings()
+    {
+        return view('dashboard.settings', [
+            'group' => 'settings',
+            'title' => 'Pengaturan',
+        ]);
+    }
 }

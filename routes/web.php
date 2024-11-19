@@ -29,4 +29,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     // Logout
     Route::post('/logout', [UserController::class, 'logout']);
+    // Pengaturan
+    Route::get('/pengaturan', [DashboardController::class, 'settings']);
+    // Ubah data diri
+    Route::get('/pengaturan/edit-user', [UserController::class, 'editUser']);
 });

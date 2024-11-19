@@ -9,7 +9,7 @@ class HomepageController extends Controller
     //Beranda
     public function index()
     {
-        return view('homepage/homepage', [
+        return view('homepage.index', [
             'group' => 'homepage',
             'title' => 'Selamat datang di Kamus Bahasa Jawa Terbuka!'
         ]);

@@ -28,7 +28,7 @@
 
     {{-- Konten --}}
     <div class="container mx-auto p-10">
-        <div class="grid grid-cols-4 space-x-5 space-y-10">
+        <div class="grid grid-cols-4 space-x-7 space-y-10">
             <div class="md:col-span-3 col-span-4">
                 @yield('body')
             </div>

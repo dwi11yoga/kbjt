@@ -5,7 +5,7 @@
     <p class="mb-7">Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis rerum, accusantium veniam quisquam
         doloremque quo quasi aliquid asperiores recusandae illum.</p>
 
-    <div class="w-full border border-gray-200 rounded-lg py-4 px-5">
+    <div class="w-full border border-gray-200 rounded-2xl py-6 px-7">
         {{-- Select metode pembayaran --}}
         <label for="metode-pembayaran" class="block mb-2 text-sm font-medium text-gray-800">Metode
             donasi</label>
@@ -22,11 +22,11 @@
         </form>
 
         {{-- QRIS --}}
-        <div class="grid grid-cols-4 space-x-5 mt-5">
-            <div class="col-span-1">
+        <div class="grid grid-cols-4 md:space-x-5 mt-5 md:space-y-0 space-y-5">
+            <div class="md:col-span-1 col-span-4">
                 <div class="rounded-2xl bg-gray-200 w-full h-60"></div>
             </div>
-            <div class="col-span-3">
+            <div class="md:col-span-3 col-span-4">
                 <div class="font-semibold">Cara donasi</div>
                 <ul class="list-decimal ml-5">
                     <li>Lorem, ipsum dolor.</li>

@@ -92,7 +92,7 @@
 
         {{-- pencarian --}}
         @if ($title != 'Selamat datang di Kamus Bahasa Jawa Terbuka!')
-            <form action="" method="GET">
+            <form action="" method="GET" class="md:block hidden">
                 @csrf
                 <div class="relative">
                     <input
@@ -106,7 +106,7 @@
     </div>
 
     {{-- Menu --}}
-    <ul class="flex items-center">
+    <ul class="md:flex hidden items-center">
         <li>
             <a href="/"
                 class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ $title == 'Selamat datang di Kamus Bahasa Jawa Terbuka!' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Home</a>

@@ -4,7 +4,7 @@
     {{-- Section selamat datang --}}
     <div class="container w-screen mx-auto py-28 text-center">
         {{-- <p class="jawa-h2 -mb-3">ꦱꦸꦒꦼꦁ ꦫꦮꦸꦃ!</p> --}}
-        <h1 class="">Selamat datang di <br> <b>Kamus Bahasa Jawa Terbuka</b></h1>
+        <h1 class="md:text-5xl text-2xl">Selamat datang di <br> <b>Kamus Bahasa Jawa Terbuka</b></h1>
         <p class="mt-5">Kamus bahasa jawa online terlengkap dengan <br> dukungan dari komunitas.</p>
         <form action="#" method="GET">
             @csrf
@@ -19,7 +19,7 @@
         <h3 class="mb-8 font-semibold text-center">Kosakata Acak Untuk Kamu</h3>
         <div class="grid grid-cols-6 gap-4">
             {{-- Daftar kosakata --}}
-            <div class="col-start-2 col-span-3 ">
+            <div class="md:col-start-2 md:col-span-3 col-span-6">
                 <div class="bg-white rounded-2xl p-6 mb-4 hover:outline hover:outline-2 hover:outline-amber-400">
                     {{-- Kosakata --}}
                     <h5 class="font-semibold mb-4">Siram</h5>
@@ -121,7 +121,14 @@
                 </div>
             </div>
             {{-- Lihat kosakata lainnya --}}
-            <div>
+            {{-- Mobile --}}
+            <div class="md:hidden block col-span-6 mx-auto">
+                <a href="#"
+                    class="bg-amber-400 p-4 rounded-full hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-amber-400 active:bg-amber-500">Temukan
+                    kosakata lainnya <i data-feather='arrow-right' class="inline-block"></i></a>
+            </div>
+            {{-- Desktop --}}
+            <div class="md:block hidden col-span-1">
                 <div class="bg-amber-400 rounded-2xl p-6 sticky top-24 z-0">
                     <h4 class="font-bold mb-2">Temukan kosakata lainnya!</h4>
                     <button class="rounded-lg border-2 border-black p-2 small-text hover:bg-black hover:text-white">Klik
@@ -133,27 +140,30 @@
 
     {{-- Pengenalan kbjt --}}
     <div class="container mx-auto p-10">
-        <h3 class="font-semibold px-24 mb-6">Apa itu Kamus Bahasa Jawa Terbuka?</h3>
+        <h3 class="font-semibold md:px-24 mb-6">Apa itu Kamus Bahasa Jawa Terbuka?</h3>
         <div class="space-y-5">
             {{-- Pengertian --}}
-            <div class="bg-amber-400 rounded-2xl py-5 px-14 w-10/12 mx-auto flex justify-between items-center space-x-16">
-                <p>
-                    <span class="font-semibold">Kamus Bahasa Jawa Terbuka adalah</span> sebuah platform digital yang
+            <div
+                class="bg-amber-400 rounded-2xl md:py-5 py-8 md:px-14 md:w-10/12 mx-auto flex md:flex-row flex-col md:justify-between items-center md:space-x-16">
+                <p class="md:order-1 order-2 md:px-0 px-10 md:pt-0 pt-5">
+                    <span class="font-semibold">Kamus Bahasa Jawa Terbuka adalah</span> sebuah platform digital
+                    yang
                     dirancang untuk memfasilitasi pengguna
                     dalam mencari, mempelajari, dan memperkaya kosa kata bahasa Jawa. Situs ini dibangun tidak hanya sebagai
                     media informasi, tetapi juga sebagai sarana pelestarian bahasa jawa.
                 </p>
-                <img class="object-cover max-w-64"
+                <img class="md:order-2 order-1 object-cover max-w-64"
                     src="https://cdn3d.iconscout.com/3d/premium/thumb/language-translate-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--learning-international-course-global-online-school-pack-education-illustrations-3404368.png"
                     alt="3d language icon">
             </div>
 
             {{-- Konsep crowdsource --}}
-            <div class="bg-amber-400 rounded-2xl py-5 px-14 w-10/12 mx-auto flex justify-between items-center space-x-16">
+            <div
+                class="bg-amber-400 rounded-2xl md:py-5 py-8 md:px-14 md:w-10/12 mx-auto flex md:flex-row flex-col md:justify-between items-center md:space-x-16">
                 <img class="object-cover max-w-64"
                     src="https://static.vecteezy.com/system/resources/thumbnails/022/597/384/small_2x/3d-chatting-social-media-png.png"
                     alt="3d language icon">
-                <p>
+                <p class="md:px-0 px-10 md:pt-0 pt-5">
                     Situs ini menggunakan <span class="font-semibold">konsep crowdsourcing</span>, di mana pengguna dapat
                     berkontribusi secara aktif sehingga
                     konten kamus dapat terus berkembang. Melalui fitur ini, pengguna dapat menambahkan kata baru, memberikan
@@ -162,13 +172,14 @@
             </div>
 
             {{-- Keunggulan --}}
-            <div class="bg-amber-400 rounded-2xl py-5 px-14 w-10/12 mx-auto flex justify-between items-center space-x-16">
-                <p>
+            <div
+                class="bg-amber-400 rounded-2xl md:py-5 py-8 md:px-14 md:w-10/12 mx-auto flex md:flex-row flex-col md:justify-between items-center md:space-x-16">
+                <p class="md:order-1 order-2 md:px-0 px-10 md:pt-0 pt-5">
                     Akses yang mudah melalui internet memungkinkan siapa saja, kapan saja, untuk belajar bahasa
                     Jawa, tanpa dibatasi oleh lokasi atau perangkat. Hal ini menjadikannya alat yang efektif untuk
                     melestarikan dan mempopulerkan bahasa Jawa di era digital.
                 </p>
-                <img class="object-cover max-w-64"
+                <img class="md:order-2 order-1 object-cover max-w-64"
                     src="https://cdn3d.iconscout.com/3d/premium/thumb/thumb-up-3d-icon-download-in-png-blend-fbx-gltf-file-formats--like-logo-feedback-hand-gesture-ui-kit-elements-pack-user-interface-icons-5285041.png"
                     alt="3d language icon">
             </div>
@@ -177,30 +188,30 @@
 
     {{-- Statisitk pengguna --}}
     <div class="container mx-auto p-10 bg-neutral-100 rounded-xl">
-        <div class="mb-3 px-24">
+        <div class="mb-3 md:px-24">
             <h3 class="font-semibold mb-5">Kamus Bahasa Jawa Terbuka <br>Dalam Statistik</h3>
 
-            <div class="flex space-x-3 mb-3">
+            <div class="flex md:flex-row flex-col md:space-x-3 space-y-3 mb-3">
                 <div
-                    class="px-10 py-16 bg-white hover:bg-white hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2 rounded-2xl w-1/4 text-center">
+                    class="px-10 py-16 bg-white hover:bg-white hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2 rounded-2xl md:w-1/4 w-full text-center">
                     <h2 class="font-bold">9.213</h2>
                     <div>Anggota</div>
                 </div>
 
                 <div
-                    class="px-10 py-16 bg-white hover:bg-white hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2 rounded-2xl w-1/4 text-center">
+                    class="px-10 py-16 bg-white hover:bg-white hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2 rounded-2xl md:w-1/4 w-full text-center">
                     <h2 class="font-bold">27.551</h2>
                     <div>Kosakata</div>
                 </div>
 
                 <div
-                    class="px-10 py-16 bg-white hover:bg-white hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2 rounded-2xl w-1/4 text-center">
+                    class="px-10 py-16 bg-white hover:bg-white hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2 rounded-2xl md:w-1/4 w-full text-center">
                     <h2 class="font-bold">67.974</h2>
                     <div>Definisi</div>
                 </div>
 
                 <div
-                    class="px-10 py-16 bg-white hover:bg-white hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2 rounded-2xl w-1/4 text-center">
+                    class="px-10 py-16 bg-white hover:bg-white hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2 rounded-2xl md:w-1/4 w-full text-center">
                     <h2 class="font-bold">20.151</h2>
                     <div>Definisi Terverifikasi</div>
                 </div>
@@ -210,14 +221,14 @@
 
     {{-- Kontributor teratas --}}
     <div class="container mx-auto pt-10 text-center">
-        <div class="px-24">
+        <div class="md:px-24">
             <h3 class="font-semibold mb-3">Kontributor Teratas</h3>
             <p class="w-2/3 mx-auto">
                 Mereka yang menjadi tulang punggung Kamus Bahasa Jawa Terbuka. Mereka yang telah menyumbangkan waktu dan
                 pengetahuan untuk memperkaya kamus ini demi melestarikan bahasa jawa.
             </p>
             <div class="mx-auto mt-8 space-x-2 space-y-1">
-                <?php for ($i=0; $i < 85; $i++) { ?>
+                <?php for ($i=0; $i < 100; $i++) { ?>
                 {{-- <div class="rounded-full w-12 h-12 bg-yellow-400 mr-3 inline-block"></div> --}}
                 <div
                     class="overflow-hidden w-14 h-14 rounded-full justify-center hover:outline hover:outline-amber-400 hover:outline-offset-2 hover:outline-2 inline-block">
@@ -232,14 +243,14 @@
 
     {{-- FAQ --}}
     <div class="container p-10 mb-5 mx-auto">
-        <div class="px-24">
+        <div class="md:px-24">
             <h3 class="font-semibold mb-5">FAQ</h3>
 
             {{-- FAQ 1 --}}
             <div class="relative">
                 <div id="accordion-header-1" class="text-neutral-600">
                     <button id="accordion-title-1"
-                        class="w-full bg-white text-left py-5 pl-6 pr-10 rounded-t-xl border border-neutral-200 hover:bg-neutral-100">
+                        class="w-full bg-white text-left py-5 pl-6 pr-10 rounded-t-xl border border-neutral-200 hover:bg-amber-100">
                         <i data-feather='help-circle' class="inline-block mr-3"></i>
                         Bagaimana cara saya ikut berkontribusi?
                     </button>
@@ -261,7 +272,7 @@
             <div class="relative">
                 <div id="accordion-header-2" class="text-neutral-600">
                     <button id="accordion-title-2"
-                        class="w-full bg-white text-left py-5 pl-6 pr-10 border border-neutral-200 hover:bg-neutral-100">
+                        class="w-full bg-white text-left py-5 pl-6 pr-10 border border-neutral-200 hover:bg-amber-100">
                         <i data-feather='help-circle' class="inline-block mr-3"></i>
                         Apakah ada keuntungan menjadi kontributor?
                     </button>
@@ -287,7 +298,7 @@
             <div class="relative">
                 <div id="accordion-header-3" class="text-neutral-600">
                     <button id="accordion-title-3"
-                        class="w-full bg-white text-left py-5 pl-6 pr-10 border border-neutral-200 hover:bg-neutral-100">
+                        class="w-full bg-white text-left py-5 pl-6 pr-10 border border-neutral-200 hover:bg-amber-100">
                         <i data-feather='help-circle' class="inline-block mr-3"></i>
                         Apakah platform ini gratis untuk digunakan?
                     </button>
@@ -307,7 +318,7 @@
             <div class="relative">
                 <div id="accordion-header-4" class="text-neutral-600">
                     <button id="accordion-title-4"
-                        class="w-full bg-white text-left py-5 pl-6 pr-10 border border-neutral-200 hover:bg-neutral-100">
+                        class="w-full bg-white text-left py-5 pl-6 pr-10 border border-neutral-200 hover:bg-amber-100">
                         <i data-feather='help-circle' class="inline-block mr-3"></i>
                         Bagaimana jika saya menemukan kata atau definisi yang tidak sesuai?
                     </button>
@@ -327,7 +338,7 @@
             <div class="relative">
                 <div id="accordion-header-5" class="text-neutral-600">
                     <button id="accordion-title-5"
-                        class="w-full bg-white text-left py-5 pl-6 pr-10 border border-neutral-200 hover:bg-neutral-100">
+                        class="w-full bg-white text-left py-5 pl-6 pr-10 border border-neutral-200 hover:bg-amber-100">
                         <i data-feather='help-circle' class="inline-block mr-3"></i>
                         Apakah saya harus paham Bahasa Jawa untuk menggunakan platform ini?
                     </button>
@@ -350,19 +361,19 @@
         function accordion(accordionHeader, accordionTitle, accordionContent, accordionShow, accordionHide) {
             accordionContent.classList.toggle('hidden');
             if (accordionContent.classList.contains('hidden')) { // Jika item disembunyikan
-                accordionTitle.classList.remove('bg-neutral-100');
+                accordionTitle.classList.remove('bg-amber-100');
                 accordionTitle.classList.add('bg-white', 'text-neutral-600');
                 accordionShow.classList.remove('hidden');
                 accordionHide.classList.add('hidden');
-                accordionHeader.classList.remove('text-black');
+                accordionHeader.classList.remove('text-amber-700');
                 accordionHeader.classList.add('text-neutral-600');
             } else { //Jika item ditampilkan
                 accordionTitle.classList.remove('bg-white', 'text-neutral-600')
-                accordionTitle.classList.add('bg-neutral-100');
+                accordionTitle.classList.add('bg-amber-100');
                 accordionShow.classList.add('hidden');
                 accordionHide.classList.remove('hidden');
                 accordionHeader.classList.remove('text-neutral-600');
-                accordionHeader.classList.add('text-black');
+                accordionHeader.classList.add('text-amber-700');
             }
         }
     </script>

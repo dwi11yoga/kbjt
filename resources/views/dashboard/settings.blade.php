@@ -1,8 +1,6 @@
 @extends('layouts.dashboard')
 
 @section('body')
-    <h3 class="font-bold mb-3">Pengaturan</h3>
-
     <div class="space-y-4">
         <div class="mb-3">Pengaturan akun</div>
         <div class="space-y-2">

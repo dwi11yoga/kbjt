@@ -46,10 +46,10 @@
 
         <div
             class="md:col-span-1 col-span-3 border border-gray-200 shadow-sm rounded-xl p-3 hover:outline hover:outline-offset-2 hover:outline-yellow-200 hover:decoration-1">
-            <div>Achivement<br>
-                <h1 class="font-bold -mt-2">5</h1>
+            <div>Popularitas<br>
+                <h1 class="font-bold -mt-2">52.000</h1>
             </div>
-            <div class="small-text">Lorem ipsum dolor sit amet</div>
+            <div class="small-text">Jumlah kunjungan ke akun kamu</div>
         </div>
     </div>
 

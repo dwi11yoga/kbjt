@@ -22,47 +22,62 @@
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 </head>
 
-<body>
-    <div class="container mx-auto p-10">
-        <div class="grid grid-cols-12 gap-5">
+<body class="bg-neutral-50">
+    <div class="2xl:container 2xl:mx-auto">
+        <div class="grid grid-cols-10">
 
             {{-- Menu --}}
-            @include('partials.dashboard-menu')
+            <div class="col-span-2 bg-white p-6 border-r border-neutral-200">
+                @include('partials.dashboard-menu')
+            </div>
 
             {{-- Isi --}}
-            <div class="md:col-span-9 col-span-12">
+            <div class="md:col-span-8 col-span-12 m-7">
 
-                {{-- Notifikasi & Foto profil --}}
-                <div class="grid grid-cols-8 mb-5 bg-white md:py-0 py-2 md:static sticky top-0 flex items-center">
+                {{-- header --}}
+                <div class="grid grid-cols-8 space-x-1 mb-5 md:py-0 py-2 md:static sticky top-0 flex items-center">
 
+                    {{-- Menu mobile --}}
                     <div class="col-span-1 md:hidden">
                         <div
-                            class="mr-1 bg-gray-100 w-12 h-12 rounded-full flex justify-center cursor-pointer items-center hover:bg-gray-200 active:bg-gray-300">
+                            class="w-12 h-12 rounded-full flex justify-center cursor-pointer items-center hover:bg-gray-200 active:bg-gray-300">
                             <i data-feather='menu'></i>
                         </div>
                     </div>
 
-                    <div class="md:col-span-1 col-span-2 col-start-6 flex md:justify-start justify-end mr-2">
-                        <a href="#"
-                            class="group bg-gray-100 w-12 h-12 rounded-full flex justify-center items-center hover:bg-gray-200 active:bg-gray-300">
-                            <i data-feather='bell' class="group-active:fill-yellow-300"></i>
-                        </a>
+                    {{-- Judul halaman --}}
+                    <div class="md:col-span-5 col-span-4">
+                        <h5>{{ $title }}</h5>
                     </div>
 
-                    <div class="md:col-span-7 col-span-1 flex justify-end items-center">
+                    {{-- Profil & notifikasi --}}
+                    <div class="md:col-span-3 col-span-3 flex justify-end items-center">
                         <p class="mr-4 text-right md:block hidden">
                             {{ auth()->user()->nama }}<br>
-                            {{-- <span class="text-sm bg-yellow-100 rounded-md py-1 px-2">Lv.{{ $userProgress['lvl'] }}</span> --}}
+                            {{-- <span class="text-sm bg-amber-100 rounded-md py-1 px-2">Lv.{{ $userProgress['lvl'] }}</span> --}}
                         </p>
                         <div class="overflow-hidden w-12 h-12 rounded-full flex justify-center">
                             <img class="w-full h-full object-cover"
                                 src="https://cdn.thefairnews.co.kr/news/photo/202404/25369_59232_5627.jpg"
                                 alt="Profile picture">
                         </div>
+
+                        <a href="#"
+                            class="group ml-2 bg-gray-100 w-12 h-12 rounded-full flex justify-center items-center hover:bg-gray-200 active:bg-gray-300">
+                            <i data-feather='bell' class="group-active:fill-amber-300"></i>
+                        </a>
                     </div>
+
+                    {{-- <div class="md:col-span-1 col-span-2 col-start-6 flex md:justify-start justify-end mr-2">
+                        <a href="#"
+                            class="group bg-gray-100 w-12 h-12 rounded-full flex justify-center items-center hover:bg-gray-200 active:bg-gray-300">
+                            <i data-feather='bell' class="group-active:fill-amber-300"></i>
+                        </a>
+                    </div> --}}
 
                 </div>
 
+                {{-- Konten --}}
                 @yield('body')
             </div>
         </div>

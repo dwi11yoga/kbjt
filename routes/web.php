@@ -29,6 +29,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     // Logout
     Route::post('/logout', [UserController::class, 'logout']);
+
+    // kontribusi
+    Route::get('/kontribusi', [DashboardController::class, 'kontribusi']);
+    // achivement
+    Route::get('/achivement', [DashboardController::class, 'achivement']);
+    // sertifikat
+    Route::get('/sertifikat', [DashboardController::class, 'sertifikat']);
+
     // Pengaturan
     Route::get('/pengaturan', [DashboardController::class, 'settings']);
     // Ubah data diri

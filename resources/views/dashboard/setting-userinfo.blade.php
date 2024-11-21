@@ -1,8 +1,8 @@
 @extends('layouts.dashboard')
 
 @section('body')
-    <h3 class="font-bold mb-3">Edit Profil</h3>
     <form action="#">
+        @csrf
         <div class="grid grid-cols-2 space-x-5">
             <div class="space-y-2">
 
@@ -69,11 +69,11 @@
                 <div>
                     {{-- bio --}}
                     <label for="bio">Bio</label>
-                    <input type="text" value="{{ old('bio') != null ? old('bio') : auth()->user()->bio }}" name="bio"
-                        id="bio"
+                    <textarea name="bio" id="bio" cols="30" rows="10"
                         class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3 @error('bio')
-                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
-                @enderror">
+                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700 @enderror">
+                        {{ old('bio') != null ? old('bio') : auth()->user()->bio }}
+                    </textarea>
                 </div>
 
                 <div>

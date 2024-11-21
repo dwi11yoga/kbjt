@@ -59,6 +59,28 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function kontribusi()
+    {
+        return view('dashboard.kontribusi', [
+            'group' => 'kontribusi',
+            'title' => 'Kontribusi'
+        ]);
+    }
+    public function achivement()
+    {
+        return view('dashboard.achivement', [
+            'group' => 'achivement',
+            'title' => 'Achivement'
+        ]);
+    }
+    public function sertifikat()
+    {
+        return view('dashboard.sertifikat', [
+            'group' => 'sertifikat',
+            'title' => 'Sertifikat'
+        ]);
+    }
+
     public function settings()
     {
         return view('dashboard.settings', [

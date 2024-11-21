@@ -82,7 +82,7 @@ class UserController extends Controller
     {
         return view('dashboard.setting-userinfo', [
             'group' => 'settings',
-            'title' => 'Edit data user'
+            'title' => 'Edit Profil'
         ]);
     }
 }

@@ -22,7 +22,7 @@
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 </head>
 
-<body class="bg-neutral-50">
+<body class="bg-neutral-50 relative">
     <div class="2xl:container 2xl:mx-auto">
         <div class="grid grid-cols-10">
 
@@ -61,9 +61,7 @@
                         </a>
 
                         <div class="overflow-hidden w-10 h-10 rounded-full flex justify-center">
-                            <img class="w-full h-full object-cover"
-                                src="https://cdn.thefairnews.co.kr/news/photo/202404/25369_59232_5627.jpg"
-                                alt="Profile picture">
+                            @include('partials.profile-pic')
                         </div>
                     </div>
 

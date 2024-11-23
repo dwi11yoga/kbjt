@@ -29,7 +29,7 @@ return new class extends Migration {
             $table->string('pekerjaan', 100)->nullable();
             $table->string('hobi')->nullable();
             $table->boolean('tampilkan_email')->default(true);
-            $table->text('media_sosial')->nullable();
+            $table->json('media_sosial')->nullable();
             $table->datetime('terakhir_aktif')->nullable();
             $table->integer('poin')->default(0);
             $table->timestamp('poin_diperbarui')->nullable();

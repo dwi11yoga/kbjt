@@ -135,9 +135,7 @@
                 <a href="/dashboard" title="Ke Dashboard">
                     <div
                         class="overflow-hidden ml-2 md:w-10 md:h-10 w-12 h-12 rounded-full flex justify-center hover:outline hover:outline-amber-400 hover:outline-offset-2 hover:outline-2">
-                        <img class="w-full h-full object-cover"
-                            src="https://cdn.thefairnews.co.kr/news/photo/202404/25369_59232_5627.jpg"
-                            alt="Profile picture">
+                        @include('partials.profile-pic')
                     </div>
                 </a>
             @else

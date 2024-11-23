@@ -15,7 +15,7 @@
         <div class="mb-3">Overview</div>
         <div class="grid grid-cols-3 gap-3 ">
             <div
-                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 shadow-sm rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
                 <div>
                     Level <br>
                     <h1 class="font-bold -mt-2 inline-block">{{ $userProgress['lvl'] }}</h1>
@@ -30,7 +30,7 @@
             </div>
 
             <div
-                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 shadow-sm rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
                 <div>Poin <br>
                     <div class="flex items-baseline">
                         <h1 class="font-bold -mt-2">{{ auth()->user()->poin }}</h1>
@@ -48,7 +48,7 @@
             </div>
 
             <div
-                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 shadow-sm rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
                 <div>Popularitas<br>
                     <h1 class="font-bold -mt-2">52.000</h1>
                 </div>
@@ -106,7 +106,7 @@
     <div class="flex space-x-3">
         {{-- Sertifikat --}}
         <a href="/sertifikat"
-            class="w-1/3 bg-white rounded-xl border border-neutral-100 hover:outline hover:outline-amber-400 hover:outline-offset-4">
+            class="w-1/3 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
             <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
                 <img class="object-cover w-full h-full"
                     src="https://img.freepik.com/free-vector/certification-concept-illustration_114360-5171.jpg?w=740"
@@ -120,7 +120,7 @@
 
         {{-- Ajak teman --}}
         <a href="#"
-            class="w-1/3 bg-white rounded-xl border border-neutral-100 hover:outline hover:outline-amber-400 hover:outline-offset-4">
+            class="w-1/3 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
             <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
                 <img class="object-cover w-full h-full"
                     src="https://img.freepik.com/free-vector/solidarity-concept-illustration_114360-6286.jpg?w=740"
@@ -134,7 +134,7 @@
 
         {{-- donasi --}}
         <a href="/donasi"
-            class="w-1/3 bg-white rounded-xl border border-neutral-100 hover:outline hover:outline-amber-400 hover:outline-offset-4">
+            class="w-1/3 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
             <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
                 <img class="object-cover w-full h-full"
                     src="https://img.freepik.com/free-vector/inflation-concept-illustration_114360-25779.jpg"

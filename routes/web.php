@@ -41,4 +41,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengaturan', [DashboardController::class, 'settings']);
     // Ubah data diri
     Route::get('/pengaturan/edit-user', [UserController::class, 'editUser']);
+    // Simpan perubahan data diri
+    Route::put('/pengaturan/edit-user', [UserController::class, 'update']);
 });

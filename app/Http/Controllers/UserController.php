@@ -6,6 +6,9 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\File;
 
 class UserController extends Controller
 {
@@ -84,5 +87,62 @@ class UserController extends Controller
             'group' => 'settings',
             'title' => 'Edit Profil'
         ]);
+    }
+    // Simpan perubahan data user
+    public function update(Request $request)
+    {
+        $rules = [
+            'nama' => 'required|max:255',
+            'tgl_lahir' => 'required|date',
+            'kota' => '',
+            'jenis_kelamin' => 'required',
+            'bio' => '',
+            'telp' => 'numeric|digits_between:12,14',
+            'fb' => '',
+            'ig' => '',
+            'x' => '',
+            'tiktok' => '',
+            'profile_pic' => [File::types(['jpg', 'jpeg', 'png', 'webp', 'tiff', 'bmp'])->max(1024)],
+        ];
+
+        // If else username tidak diubah
+        if ($request->username != Auth::user()->username) {
+            $rules['username'] = 'required|min:6|max:255|unique:users,username|regex:/^[A-Za-z0-9_.]+$/';
+        } else {
+            $rules['username'] = '';
+        }
+
+        // validasi data
+        $validatedData = $request->validate($rules);
+
+        $arraySimpan = [
+            'username' => $validatedData['username'],
+            'nama' => $validatedData['nama'],
+            'tgl_lahir' => $validatedData['tgl_lahir'],
+            'kota' => $validatedData['kota'],
+            'jenis_kelamin' => $validatedData['jenis_kelamin'],
+            'bio' => $validatedData['bio'],
+            'telp' => $validatedData['telp'],
+            'media_sosial' => ['fb' => $validatedData['fb'] ?? null, 'x' => $validatedData['x'] ?? null, 'ig' => $validatedData['ig'] ?? null, 'tiktok' => $validatedData['tiktok'] ?? null],
+        ];
+
+        // simpan gambar
+        if ($request->pp_remove == 'on') {
+            $arraySimpan['profile_pic'] = null;
+        } elseif ($request->profile_pic != null) {
+            $validatedData['profile_pic'] = $request->file('profile_pic')->store('profile-pics');
+            $arraySimpan['profile_pic'] = $validatedData['profile_pic'];
+        }
+
+        DB::table('users')->where('id', Auth::user()->id)->update($arraySimpan);
+
+        // Hapus foto lama
+        if ($request->pp_remove == 'on') {
+            Storage::delete($request->oldPP);
+        } elseif ($request->profile_pic != null && $request->oldPP) {
+            Storage::delete($request->oldPP);
+        }
+
+        return back()->with('success', 'Profil berhasil diperbarui.');
     }
 }

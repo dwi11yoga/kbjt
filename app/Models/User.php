@@ -52,6 +52,10 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected $casts = [
+        'media_sosial' => 'array' //konversi json jadi array
+    ];
+
     /**
      * Get the attributes that should be cast.
      *

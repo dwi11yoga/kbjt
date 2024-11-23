@@ -76,8 +76,5 @@
     </p>
 @endsection
 
-{{-- Pemberitahuan sukses buat akun --}}
-@include('../partials/toast-success')
-
-{{-- Pemberitahuan gagal login --}}
-@include('../partials/toast-failed')
+{{-- Pemberitahuan --}}
+@include('partials.toast')

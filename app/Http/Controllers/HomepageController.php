@@ -59,4 +59,13 @@ class HomepageController extends Controller
             'title' => 'Donasi'
         ]);
     }
+
+    // Pencarian
+    public function pencarian(Request $request)
+    {
+        return view('homepage.pencarian', [
+            'group' => 'pencarian',
+            'title' => 'Pencarian'
+        ]);
+    }
 }

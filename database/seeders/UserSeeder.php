@@ -20,14 +20,7 @@ class UserSeeder extends Seeder
             'nama' => 'Muklis Ambatukam',
             'username' => 'moeklis',
             'email' => Str::random(10) . '@example.com',
-            'password' => Hash::make('muklistampan'),
-            'tgl_lahir' => '2000-12-01',
-            'kota' => 'Pati',
-            'profile_pic' => 'https://cdn.thefairnews.co.kr/news/photo/202404/25369_59232_5627.jpg',
-            'bio' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus necessitatibus tenetur voluptates at quis quae voluptatum suscipit fugiat, molestiae vel dolores officia illo, dolorum asperiores, perspiciatis natus facere aperiam ratione.',
-            'telp' => '089726514414',
-            'pekerjaan' => 'Founder PeduliBudayaJawa.org',
-            'hobi' => 'Memancing',
+            'password' => Hash::make('muklis1'),
             'tampilkan_email' => true,
         ]);
     }

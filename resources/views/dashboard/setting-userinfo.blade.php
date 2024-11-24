@@ -162,21 +162,8 @@
                         @enderror
                     </div>
                 </div>
-            </div>
 
-
-            <div class="col-span-2 space-y-5">
-                <div class="bg-white rounded-2xl p-5">
-                    {{-- bio --}}
-                    <label for="bio" class="">Bio</label>
-                    <textarea name="bio" id="bio" cols="30" rows="10"
-                        class="px-4 py-3 w-full mt-1.5 border border-neutral-200 rounded-xl block mb-3 @error('bio')
-                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700 @enderror">{{ old('bio', auth()->user()->bio) }}</textarea>
-                    @error('bio')
-                        <div class="text-xs text-red-600 -mt-2">*{{ $message }}</div>
-                    @enderror
-                </div>
-
+                {{-- Kontak --}}
                 <div class="bg-white p-5 rounded-2xl">
                     <div class="mb-3 text-black">Kontak</div>
                     <div>
@@ -201,7 +188,7 @@
                                 class="inline-flex py-1 px-1 justify-center items-center rounded-l-xl bg-neutral-200 w-14"><i
                                     data-feather='facebook' class="fill-blue-700 stroke-none"></i></span>
                             <input type="text" id="fb" name="fb"
-                                value="{{ old('fb', auth()->user()->media_sosial['fb']) }}"
+                                value="{{ old('fb', auth()->user()->media_sosial['fb'] ?? '') }}"
                                 class="px-3 py-3 w-full border border-neutral-200 rounded-r-xl block @error('fb')
                         border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
                     @enderror">
@@ -216,7 +203,7 @@
                                 class="inline-flex py-1 px-1 justify-center items-center rounded-l-xl bg-neutral-200 w-14"><i
                                     data-feather='twitter' class="fill-sky-600 stroke-none"></i></span>
                             <input type="text" id="x" name="x"
-                                value="{{ old('x', auth()->user()->media_sosial['x']) }}"
+                                value="{{ old('x', auth()->user()->media_sosial['x'] ?? '') }}"
                                 class="px-3 py-3 w-full border border-neutral-200 rounded-r-xl block @error('x')
                         border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
                     @enderror">
@@ -241,7 +228,7 @@
                                 </svg>
                             </span>
                             <input type="text" id="ig" name="ig"
-                                value="{{ old('ig', auth()->user()->media_sosial['ig']) }}"
+                                value="{{ old('ig', auth()->user()->media_sosial['ig'] ?? '') }}"
                                 class="px-3 py-3 w-full border border-neutral-200 rounded-r-xl block @error('ig')
                         border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
                     @enderror">
@@ -261,7 +248,7 @@
                                 </svg>
                             </span>
                             <input type="text" id="tiktok" name="tiktok"
-                                value="{{ old('tiktok', auth()->user()->media_sosial['tiktok']) }}"
+                                value="{{ old('tiktok', auth()->user()->media_sosial['tiktok'] ?? '') }}"
                                 class="px-3 py-3 w-full border border-neutral-200 rounded-r-xl block @error('tiktok')
                         border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
                     @enderror">
@@ -270,6 +257,104 @@
                             @enderror
                         </div>
                     </div>
+                </div>
+            </div>
+
+
+            <div class="col-span-2 space-y-5">
+                <div class="bg-white rounded-2xl p-5">
+                    {{-- bio --}}
+                    <label for="bio" class="">Bio</label>
+                    <textarea name="bio" id="bio" cols="30" rows="10"
+                        class="px-4 py-3 w-full mt-1.5 border border-neutral-200 rounded-xl block mb-3 @error('bio')
+                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700 @enderror">{{ old('bio', auth()->user()->bio) }}</textarea>
+                    @error('bio')
+                        <div class="text-xs text-red-600 -mt-2">*{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- Link pengguna --}}
+                <div class="bg-white p-5 rounded-2xl">
+                    <div class="text-black">Tautan</div>
+                    <div class="text-xs mb-3">Tambahkan tautan kamu (YouTube, website, blog, toko online, dll.)</div>
+                    <input type="text" id="tautan" name="tautan"
+                        value="{{ old('tautan', auth()->user()->tautan) }}"
+                        class="px-4 py-3 w-full mt-1.5 border border-neutral-200 rounded-xl block mb-3 @error('tautan')
+    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700 @enderror">
+                    @error('tautan')
+                        <div class="text-xs text-red-600 -mt-2">*{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- Metode donasi --}}
+                <div class="bg-white p-5 rounded-2xl">
+                    <div class="text-black">Donasi</div>
+                    <div class="text-xs mb-3">Izinkan pengguna menunjukkan terima kasih melalui donasi.</div>
+                    <select name="metode_donasi" id="metode_donasi"
+                        class="px-4 py-3 w-full mt-1.5 border border-neutral-200 bg-white rounded-xl block mb-3 @error('jenis_kelamin')
+                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+                @enderror">
+                        <option value="">Pilih metode...</option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'Allobank' ? 'selected' : '' }}>
+                            Allobank</option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'BCA' ? 'selected' : '' }}>
+                            BCA
+                        </option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'BNI' ? 'selected' : '' }}>
+                            BNI
+                        </option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'BRI' ? 'selected' : '' }}>
+                            BRI
+                        </option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'BSI' ? 'selected' : '' }}>
+                            BSI
+                        </option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'Commonwealth Bank' ? 'selected' : '' }}>
+                            Commonwealth Bank</option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'DANA' ? 'selected' : '' }}>
+                            DANA
+                        </option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'Gopay' ? 'selected' : '' }}>
+                            Gopay
+                        </option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'Jago' ? 'selected' : '' }}>
+                            Jago
+                        </option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'Jenius' ? 'selected' : '' }}>
+                            Jenius</option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'Mandiri' ? 'selected' : '' }}>
+                            Mandiri</option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'Octo Mobile' ? 'selected' : '' }}>
+                            Octo Mobile</option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'OVO' ? 'selected' : '' }}>
+                            OVO
+                        </option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'QRIS' ? 'selected' : '' }}>
+                            QRIS
+                        </option>
+                    </select>
+                    <input id="rekening" name="rekening" type="text"
+                        value="{{ old('rekening', auth()->user()->donasi['rekening'] ?? '') }}"
+                        class="hidden px-4 py-3 w-full border border-neutral-200 rounded-xl mb-3 @error('rekening')
+                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+                @enderror">
+                    @error('rekening')
+                        <div class="text-xs text-red-600 -mt-2">*{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
@@ -298,11 +383,13 @@
         const instagram = document.getElementById('ig');
         const tiktok = document.getElementById('tiktok');
         const pp_remove = document.getElementById('pp_remove'); //Checkbox pp remove
+        const tautan = document.getElementById('tautan');
+        const rekening = document.getElementById('rekening');
 
 
         // array
         const arrayInput = [profile_pic, username, nama, tgl_lahir, kota, jenis_kelamin, bio, telp, facebook, twitter,
-            instagram, tiktok
+            instagram, tiktok, tautan, rekening
         ];
 
         // foreach
@@ -344,6 +431,38 @@
             pp_remove_trigger.classList.toggle('bg-amber-300');
             pp_preview.src = pp_remove.checked ? defaultImage : originalImage;
             save.classList.remove('hidden');
+        }
+
+        // Tampilkan input rekening
+        const metode = document.getElementById('metode_donasi');
+
+        function showRekening(rekening) {
+            if (metode.value == '') {
+                rekening.classList.add('hidden');
+            } else {
+                rekening.classList.remove('hidden');
+                if (metode.value == 'Allobank' || metode.value == 'DANA' || metode.value == 'Gopay' || metode
+                    .value ==
+                    'OVO') {
+                    rekening.placeholder = 'Nomor telepon';
+                } else if (metode.value == 'QRIS') {
+                    rekening.placeholder = 'Tautan/Link';
+                } else {
+                    rekening.placeholder = 'Nomor rekening';
+                }
+            }
+        }
+
+        if (metode.value != '' && rekening.value != '') {
+            rekening.classList.remove('hidden');
+        } else {
+            document.addEventListener('DOMContentLoaded', () => {
+                showRekening(rekening)
+            })
+            metode.addEventListener('change', () => {
+                showRekening(rekening);
+            });
+
         }
     </script>
 

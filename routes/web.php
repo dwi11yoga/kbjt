@@ -11,8 +11,8 @@ Route::get('/daftar-kosakata', [HomepageController::class, 'daftarKosakata']);
 Route::get('/hall-of-fame', [HomepageController::class, 'hallOfFame']);
 Route::get('/blog', [HomepageController::class, 'blog']);
 Route::get('/blog/post', [HomepageController::class, 'blogPost']);
-
 Route::get('/donasi', [HomepageController::class, 'donasi']);
+Route::get('/cari', [HomepageController::class, 'pencarian']);
 
 Route::middleware(['guest'])->group(function () {
     // Login

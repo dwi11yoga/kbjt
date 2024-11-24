@@ -96,14 +96,20 @@ class UserController extends Controller
             'tgl_lahir' => 'required|date',
             'kota' => '',
             'jenis_kelamin' => 'required',
-            'bio' => '',
-            'telp' => 'numeric|digits_between:12,14',
+            'telp' => 'nullable|numeric|digits_between:12,14',
             'fb' => '',
             'ig' => '',
             'x' => '',
             'tiktok' => '',
+            'bio' => '',
+            'tautan' => 'nullable|url',
             'profile_pic' => [File::types(['jpg', 'jpeg', 'png', 'webp', 'tiff', 'bmp'])->max(1024)],
         ];
+
+        // Validasi metode donasi
+        if ($request->metode_donasi != null) {
+            $rules['rekening'] = 'required';
+        }
 
         // If else username tidak diubah
         if ($request->username != Auth::user()->username) {
@@ -122,11 +128,17 @@ class UserController extends Controller
             'kota' => $validatedData['kota'],
             'jenis_kelamin' => $validatedData['jenis_kelamin'],
             'bio' => $validatedData['bio'],
+            'tautan' => $validatedData['tautan'],
             'telp' => $validatedData['telp'],
             'media_sosial' => ['fb' => $validatedData['fb'] ?? null, 'x' => $validatedData['x'] ?? null, 'ig' => $validatedData['ig'] ?? null, 'tiktok' => $validatedData['tiktok'] ?? null],
         ];
 
-        // simpan gambar
+        // tambahkan metode donasi (jika ada)
+        if ($request->metode_donasi != null) {
+            $arraySimpan['donasi'] = ['metode' => $request->metode_donasi, 'rekening' => $validatedData['rekening']];
+        }
+
+        // simpan gambar ke penyimpanan
         if ($request->pp_remove == 'on') {
             $arraySimpan['profile_pic'] = null;
         } elseif ($request->profile_pic != null) {

@@ -14,10 +14,11 @@ return new class extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
             $table->string('username')->unique();
+            $table->string('nama');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->boolean('tampilkan_email')->default(true);
             $table->string('password');
             $table->string('role', 20)->default('kontributor');
             $table->date('tgl_lahir')->nullable();
@@ -26,12 +27,11 @@ return new class extends Migration {
             $table->string('profile_pic')->nullable();
             $table->text('bio')->nullable();
             $table->string('telp', 14)->nullable();
-            $table->string('pekerjaan', 100)->nullable();
-            $table->string('hobi')->nullable();
-            $table->boolean('tampilkan_email')->default(true);
+            $table->string('tautan')->nullable();
             $table->json('media_sosial')->nullable();
+            $table->json('donasi')->nullable();
             $table->datetime('terakhir_aktif')->nullable();
-            $table->integer('poin')->default(0);
+            $table->integer('poin')->default(10);
             $table->timestamp('poin_diperbarui')->nullable();
             $table->text('achivement')->nullable();
             $table->rememberToken();

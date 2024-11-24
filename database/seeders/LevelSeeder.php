@@ -27,5 +27,11 @@ class LevelSeeder extends Seeder
             'min_poin' => 100,
             'created_by' => '1'
         ]);
+
+        DB::table('levels')->insert([
+            'lvl' => 3,
+            'min_poin' => 200,
+            'created_by' => '1'
+        ]);
     }
 }

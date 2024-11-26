@@ -13,6 +13,7 @@ Route::get('/blog', [HomepageController::class, 'blog']);
 Route::get('/blog/post', [HomepageController::class, 'blogPost']);
 Route::get('/donasi', [HomepageController::class, 'donasi']);
 Route::get('/cari', [HomepageController::class, 'pencarian']);
+Route::get('/kosakata/{slug}', [HomepageController::class, 'kosakata']);
 
 Route::middleware(['guest'])->group(function () {
     // Login

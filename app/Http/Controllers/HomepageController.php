@@ -68,4 +68,12 @@ class HomepageController extends Controller
             'title' => 'Pencarian'
         ]);
     }
+
+    public function kosakata()
+    {
+        return view('homepage.kosakata', [
+            'group' => 'pencarian',
+            'title' => 'Kosakata'
+        ]);
+    }
 }

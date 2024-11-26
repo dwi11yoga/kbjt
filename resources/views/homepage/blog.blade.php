@@ -4,12 +4,12 @@
     <h3 class="mb-7 font-bold">Blog</h3>
 
     {{-- List artikel --}}
-    <div class="space-y-5">
+    <div class="space-y-3">
         {{-- Artikel di pin --}}
         <a href="/blog/post"
             class="grid grid-cols-10 group w-full rounded-2xl border border-gray-200 hover:border-yellow-100 hover:bg-yellow-100 hover:outline hover:outline-2 hover:outline-offset-4 hover:outline-yellow-300 active:bg-yellow-200">
             <div class="md:col-span-3 col-span-10">
-                <div class="bg-gray-400 md:rounded-l-2xl rounded-t-2xl w-full aspect-video"></div>
+                <div class="bg-gray-400 md:rounded-none md:rounded-l-2xl rounded-t-2xl w-full aspect-video"></div>
             </div>
             <div class="flex items-center md:col-span-7 col-span-10 ml-5 md:my-0 my-5">
                 <div>
@@ -29,7 +29,7 @@
         <a href="#"
             class="grid grid-cols-10 w-full rounded-2xl border border-gray-200 hover:border-yellow-100 hover:bg-yellow-100 hover:outline hover:outline-2 hover:outline-offset-4 hover:outline-yellow-300 active:bg-yellow-200">
             <div class="md:col-span-3 col-span-10">
-                <div class="bg-gray-400 md:rounded-l-2xl rounded-t-2xl w-full aspect-video"></div>
+                <div class="bg-gray-400 md:rounded-none md:rounded-l-2xl rounded-t-2xl w-full aspect-video"></div>
             </div>
             <div class="flex items-center md:col-span-7 col-span-10 ml-5 md:my-0 my-5">
                 <div>

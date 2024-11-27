@@ -1,29 +1,42 @@
 @extends('layouts.homepage-with-banner')
 
 @section('body')
-    <div class="bg-white border border-neutral-200 p-5 rounded-t-2xl -mb-[1.3rem] z-50">
+    <div
+        class="bg-white border border-neutral-200 p-5 @isset($data->serupa)rounded-t-2xl -mb-[1.3rem] @else rounded-2xl @endisset z-50">
         <div class="flex justify-between">
-            <h4>Madaran <span class="text-sm jawa">ꦩꦢꦫꦤ꧀</span></h4>
+            <h4>{{ $data->kosakata }} <span class="text-sm jawa">{{ $data->aksara }}</span></h4>
             <div><i data-feather='more-horizontal'></i></div>
         </div>
-        <div>/ma-da-ran/</div>
-        <div>Kosakata asli dalam Bahasa Jawa.</div>
+        @if ($data->notasi_fonetik)
+            <div>/{{ $data->notasi_fonetik }}/</div>
+        @endif
+        <div>
+            @if (isset($data->etimologi) && $data->etimologi[0] == 'Asli')
+                Kosakata asli dalam Bahasa Jawa.
+            @elseif (isset($data->etimologi))
+                Kata serapan dari bahasa {{ $data->etimologi[0] }} yang berarti {{ $data->etimologi[1] }}
+            @endif
+        </div>
         {{-- <div>Dalam Bahasa Indonesia, kata ini berarti "Perut".</div> --}}
         <div class="flex space-x-2 items-center mt-1">
-            <div class="py-1 px-2 bg-blue-100 rounded-lg">Krama</div>
-            <div class="py-1 px-2 bg-red-100 rounded-lg">Nomina</div>
+            @isset($data->ragam)
+                <div class="py-1 px-2 bg-blue-100 rounded-lg">{{ $data->ragam }}</div>
+            @endisset
+            @isset($data->jenis)
+                <div class="py-1 px-2 bg-red-100 rounded-lg">{{ $data->jenis }}</div>
+            @endisset
             <div class="flex -space-x-3">
-                <div class="overflow-hidden h-8 w-8 rounded-full z-20 border-white group-hover:border-amber-100 border-2">
+                <div class="overflow-hidden h-8 w-8 rounded-full z-20 border-white border-2">
                     <img class="object-cover w-full h-full"
                         src="https://img.freepik.com/free-photo/portrait-volunteer-who-organized-donations-charity_23-2149230567.jpg?w=360"
                         alt="">
                 </div>
-                <div class="overflow-hidden h-8 w-8 rounded-full z-10 border-white group-hover:border-amber-100 border-2">
+                <div class="overflow-hidden h-8 w-8 rounded-full z-10 border-white border-2">
                     <img class="object-cover w-full h-full"
                         src="https://img.freepik.com/free-photo/portrait-interesting-young-man-winter-clothes_158595-914.jpg?w=360"
                         alt="">
                 </div>
-                <div class="overflow-hidden h-8 w-8 rounded-full border-white group-hover:border-amber-100 border-2">
+                <div class="overflow-hidden h-8 w-8 rounded-full border-white border-2">
                     <img class="object-cover w-full h-full"
                         src="https://img.freepik.com/free-photo/portrait-smiling-blonde-woman_23-2148316635.jpg?w=360"
                         alt="">
@@ -31,12 +44,26 @@
             </div>
             <div class="ml-2">26 Kontributor</div>
         </div>
+        @if ($dataNull > 3)
+            <div class="mt-1 text-sm">Detail kosakata belum lengkap. <a href="#" class="text-blue-600">Bantu
+                    lengkapi yuk</a>.</div>
+        @endif
     </div>
-    <div class="bg-amber-300 rounded-b-2xl px-5 py-2 flex">
-        Lihat juga:&nbsp;
-        <a href="#" class="text-amber-950">Weteng (Ngoko)<i data-feather='arrow-up-right'
-                class="inline-block w-5"></i></a>
-    </div>
+    {{-- Lihat juga --}}
+    @isset($data->serupa)
+        <div class="bg-amber-300 rounded-b-2xl px-5 py-2 flex">
+            Lihat juga:&nbsp;
+            {!! implode(
+                ',&nbsp;',
+                array_map(
+                    fn(
+                        $d,
+                    ) => "<a href=\"/kosakata/{$d}\" class=\"text-amber-950\">{$d}<i data-feather='arrow-up-right' class='inline-block w-5'></i></a>",
+                    $data->serupa,
+                ),
+            ) !!}
+        </div>
+    @endisset
 
     <div class="space-y-1">
         {{-- Definisi --}}

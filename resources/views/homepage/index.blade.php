@@ -6,9 +6,8 @@
         {{-- <p class="jawa-h2 -mb-3">ꦱꦸꦒꦼꦁ ꦫꦮꦸꦃ!</p> --}}
         <h1 class="md:text-5xl text-2xl">Selamat datang di <br> <b>Kamus Bahasa Jawa Terbuka</b></h1>
         <p class="mt-5">Kamus bahasa jawa online terlengkap dengan <br> dukungan dari komunitas.</p>
-        <form action="#" method="GET">
-            @csrf
-            <input
+        <form action="/cari" method="GET">
+            <input name="keyword" id="keyword" required
                 class="rounded-full w-11/12 md:w-1/2 h-12 mt-10 px-7 bg-neutral-200 hover:bg-white hover:outline hover:outline-2 hover:outline-amber-400 focus:outline focus:outline-amber-400 focus:outline-2 focus-within:bg-white"
                 type="text" placeholder="Cari...">
         </form>

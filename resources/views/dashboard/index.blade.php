@@ -124,7 +124,7 @@
             <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
                 <img class="object-cover w-full h-full"
                     src="https://img.freepik.com/free-vector/solidarity-concept-illustration_114360-6286.jpg?w=740"
-                    alt="Certification concept illustration (freepik/storyset)">
+                    alt="Solidarity concept illustration (freepik/storyset)">
             </div>
             <div class="p-4">
                 <div>Ajak teman</div>
@@ -138,7 +138,7 @@
             <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
                 <img class="object-cover w-full h-full"
                     src="https://img.freepik.com/free-vector/inflation-concept-illustration_114360-25779.jpg"
-                    alt="Certification concept illustration (freepik/storyset)">
+                    alt="Inflation concept illustration (freepik/storyset)">
             </div>
             <div class="p-4">
                 <div>Donasi</div>

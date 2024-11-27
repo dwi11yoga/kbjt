@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Kosakata extends Model
 {
     use SoftDeletes;
+    // Tabel
+    protected $table = 'kosakata';
     protected $guarded = ['id'];
     protected $casts = [
         'diedit_oleh' => 'array',
-        'serupa' => 'array'
+        'serupa' => 'array',
+        'etimologi' => 'array'
     ];
 }

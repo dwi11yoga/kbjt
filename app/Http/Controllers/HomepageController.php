@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kosakata;
 use Illuminate\Http\Request;
 
 class HomepageController extends Controller
@@ -63,17 +64,36 @@ class HomepageController extends Controller
     // Pencarian
     public function pencarian(Request $request)
     {
+
+        $kosakata = Kosakata::select(['kosakata', 'slug', 'aksara', 'ragam', 'jenis', 'arti_indo'])
+            ->where('kosakata', 'like', '%' . $request->keyword . '%')
+            ->orWhere('arti_indo', 'like', '%' . $request->keyword . '%')
+            ->orWhere('aksara', 'like', '%' . $request->keyword . '%')
+            ->get();
+        $jumlahKosakata = count($kosakata);
         return view('homepage.pencarian', [
             'group' => 'pencarian',
-            'title' => 'Pencarian'
+            'title' => 'Pencarian',
+            'kosakata' => $kosakata,
+            'jumlahKosakata' => $jumlahKosakata
         ]);
     }
 
-    public function kosakata()
+    public function kosakata($slug)
     {
+        $kosakata = Kosakata::firstWhere('slug', $slug);
+        $cekKolom = ['ragam', 'aksara', 'jenis', 'notasi_fonetik', 'arti_indo', 'etimologi', 'serupa'];
+        $nullCount = 0;
+        foreach ($cekKolom as $d) {
+            if (is_null($kosakata[$d])) {
+                $nullCount += 1;
+            }
+        }
         return view('homepage.kosakata', [
             'group' => 'pencarian',
-            'title' => 'Kosakata'
+            'title' => 'Kosakata',
+            'data' => $kosakata,
+            'dataNull' => $nullCount
         ]);
     }
 }

@@ -92,12 +92,11 @@
 
         {{-- pencarian --}}
         @if ($title != 'Selamat datang di Kamus Bahasa Jawa Terbuka!')
-            <form action="" method="GET" class="md:block hidden">
-                @csrf
+            <form action="/cari" method="GET" class="md:block hidden">
                 <div class="relative">
-                    <input
+                    <input value="{{ request('keyword') }}" required
                         class="bg-neutral-100 w-96 px-5 py-2.5 pr-12 rounded-full hover:bg-white hover:outline hover:outline-2 hover:outline-amber-400 focus:outline focus:outline-amber-400 focus:outline-2 focus-within:bg-white"
-                        name="search" id="search" type="text" placeholder="Cari...">
+                        name="keyword" id="keyword" type="text" placeholder="Cari...">
                     <button type="submit" class="absolute right-4 top-2.5 text-neutral-500" title="Cari"><i
                             data-feather='search'></i></button>
                 </div>

@@ -29,18 +29,20 @@ class DatabaseSeeder extends Seeder
         // KOSAKATA
         DB::table('kosakata')->insert([
             'kosakata' => 'Madaran',
+            'slug' => 'madaran',
             'ragam' => 'Krama',
             'aksara' => 'ꦩꦢꦫꦤ꧀',
-            'jenis' => 'Kata benda',
+            'jenis' => 'Nomina',
             'notasi_fonetik' => 'ma-da-ran',
             'arti_indo' => 'Malam',
-            'etimologi' => 'Asli',
+            'etimologi' => json_encode(['Asli']),
+            'dibuat_oleh' => 1,
             'serupa' => json_encode(['Bengi', 'Dalu']),
-            'dibuat_oleh' => 1
         ]);
 
         DB::table('kosakata')->insert([
             'kosakata' => 'Dalu',
+            'slug' => 'dalu',
             'dibuat_oleh' => 1
         ]);
     }

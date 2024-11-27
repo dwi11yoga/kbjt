@@ -13,12 +13,13 @@ return new class extends Migration {
         Schema::create('kosakata', function (Blueprint $table) {
             $table->id();
             $table->string('kosakata', 100);
+            $table->string('slug', length: 100);
             $table->enum('ragam', ['Krama', 'Ngoko'])->nullable();
             $table->string('aksara')->nullable();
             $table->string('jenis', 50)->nullable();
             $table->string('notasi_fonetik')->nullable();
             $table->string('arti_indo')->nullable();
-            $table->string('etimologi')->nullable();
+            $table->json('etimologi')->nullable();
             $table->integer('view')->default(0);
             $table->json('serupa')->nullable();
             $table->bigInteger('dibuat_oleh');

@@ -4,17 +4,35 @@
     {{-- Hasil --}}
     <div>
         <h3 class="font-semibold">Pencarian</h3>
-        <div>23 kosakata berhasil ditemukan.</div>
     </div>
     {{-- Kosakata --}}
-    <div class="mb-3">Kosakata</div>
+    <div>
+        <span class="font-semibold">Kosakata</span>
+        <br>{{ $jumlahKosakata }} data berhasil ditemukan.
+    </div>
     <div class="space-y-3">
-        @for ($i = 0; $i < 5; $i++)
-            <a href="/kosakata/madaran" class="block">
+        @foreach ($kosakata as $d)
+            <a href="/kosakata/{{ $d->slug }}" class="block">
                 <div
                     class="group bg-white p-5 rounded-2xl border border-neutral-200 hover:border-amber-100 hover:bg-amber-100 hover:outline hover:outline-2 hover:outline-offset-4 hover:outline-amber-300 active:bg-amber-200">
-                    <h5 class="">Madaran <span class="jawa text-sm">(ꦩꦢꦫꦤ꧀)</span></h5>
+                    <h5 class="capitalize">{{ $d->kosakata }} @if ($d->aksara)
+                            <span class="jawa text-sm">({{ $d->aksara }})</span>
+                        @endif
+                    </h5>
+
+                    {{-- Jika keyword mirip dengan arti indo --}}
+                    {{-- stripos digunakan untuk pencocokan kata dari request dengan arti_indo. ada=bernilai posisi string yang sama. tidak ada=false --}}
+                    @if (stripos($d->arti_indo, request('keyword')) !== false)
+                        <div>
+                            Dalam Bahasa Indonesia, kosakata ini berarti <span
+                                class="font-semibold capitalize">{{ $d->arti_indo }}</span>.
+                        </div>
+                    @endif
+
+                    {{-- Jumlah definisi --}}
                     <div>26 definisi (4 definisi terverifikasi)</div>
+
+                    {{-- Kontributor --}}
                     <div class="flex mt-1 items-center">
                         <div class="flex -space-x-3">
                             <div
@@ -38,14 +56,22 @@
                         </div>
                         <div class="ml-2">26 Kontributor</div>
                     </div>
+                    {{-- Ragam dan jenis kosakata --}}
                     <div class="text-sm mt-2">
-                        <span class="py-1 px-2 bg-blue-100 rounded-lg">Krama</span>
-                        <span class="py-1 px-2 bg-red-100 rounded-lg">Nomina</span>
+                        @if ($d->ragam)
+                            <span class="py-1 px-2 bg-blue-100 rounded-lg">{{ $d->ragam }}</span>
+                        @endif
+                        @if ($d->jenis)
+                            <span class="py-1 px-2 bg-red-100 rounded-lg">{{ $d->jenis }}</span>
+                        @endif
                     </div>
                 </div>
             </a>
-        @endfor
+        @endforeach
     </div>
     {{-- User --}}
-    <div class="">Anggota</div>
+    <div>
+        <span class="font-semibold">Anggota</span>
+        <br>0 data berhasil ditemukan.
+    </div>
 @endsection

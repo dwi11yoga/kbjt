@@ -97,8 +97,8 @@
                     <input value="{{ request('keyword') }}" required
                         class="bg-neutral-100 w-96 px-5 py-2.5 pr-12 rounded-full hover:bg-white hover:outline hover:outline-2 hover:outline-amber-400 focus:outline focus:outline-amber-400 focus:outline-2 focus-within:bg-white"
                         name="keyword" id="keyword" type="text" placeholder="Cari...">
-                    <button type="submit" class="absolute right-4 top-2.5 text-neutral-500" title="Cari"><i
-                            data-feather='search'></i></button>
+                    <button type="submit" class="absolute right-4 top-2.5 text-neutral-500 hover:text-amber-400"
+                        title="Cari"><i data-feather='search'></i></button>
                 </div>
             </form>
         @endif

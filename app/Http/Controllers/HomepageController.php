@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Definisi;
 use App\Models\Kosakata;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HomepageController extends Controller
@@ -17,11 +19,25 @@ class HomepageController extends Controller
     }
 
     // Daftar Kosakata
-    public function daftarKosakata()
+    public function daftarKosakata(Request $request)
     {
+        // Dapatkan data kosakata
+        $filter = isset($request->filter) ? $request->filter : 'A';
+        $kosakata = Kosakata::select(['user_id', 'kosakata', 'slug', 'ragam'])
+            ->whereLike('kosakata', $filter . '%')
+            ->with([
+                'user' => function ($query) {
+                    $query->select('id', 'nama');
+                }
+            ])
+            ->orderBy('kosakata', 'asc')
+            ->get();
+
         return view('homepage.daftar-kosakata', [
             'group' => 'kosakata',
-            'title' => 'Daftar Kosakata'
+            'title' => 'Daftar Kosakata',
+            'filter' => $filter,
+            'kosakata' => $kosakata
         ]);
     }
 
@@ -79,21 +95,36 @@ class HomepageController extends Controller
         ]);
     }
 
+    // Halaman kosakata & definisi
     public function kosakata($slug)
     {
+        // ambil data kosakata
         $kosakata = Kosakata::firstWhere('slug', $slug);
         $cekKolom = ['ragam', 'aksara', 'jenis', 'notasi_fonetik', 'arti_indo', 'etimologi', 'serupa'];
+
+        // Hitung jumlah kolom null
         $nullCount = 0;
         foreach ($cekKolom as $d) {
             if (is_null($kosakata[$d])) {
                 $nullCount += 1;
             }
         }
+
+        // ambil data definisi
+        $definisi = Definisi::where('kosakata_id', $kosakata['id'])
+            ->with([
+                'user' => function ($query) {
+                    $query->select('id', 'nama', 'username', 'profile_pic');
+                }
+            ])
+            ->get();
+
         return view('homepage.kosakata', [
             'group' => 'pencarian',
             'title' => 'Kosakata',
             'data' => $kosakata,
-            'dataNull' => $nullCount
+            'dataNull' => $nullCount,
+            'definisi' => $definisi
         ]);
     }
 }

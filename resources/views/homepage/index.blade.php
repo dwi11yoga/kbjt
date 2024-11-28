@@ -152,16 +152,15 @@
                     media informasi, tetapi juga sebagai sarana pelestarian bahasa jawa.
                 </p>
                 <img class="md:order-2 order-1 object-cover max-w-64"
-                    src="https://cdn3d.iconscout.com/3d/premium/thumb/language-translate-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--learning-international-course-global-online-school-pack-education-illustrations-3404368.png"
-                    alt="3d language icon">
+                    alt="Connected world concept illustration (freepik/storyset)"
+                    src="{{ asset('img/homepage_banner-01.png') }}">
             </div>
 
             {{-- Konsep crowdsource --}}
             <div
                 class="bg-amber-400 rounded-2xl md:py-5 py-8 md:px-14 md:w-10/12 mx-auto flex md:flex-row flex-col md:justify-between items-center md:space-x-16">
-                <img class="object-cover max-w-64"
-                    src="https://static.vecteezy.com/system/resources/thumbnails/022/597/384/small_2x/3d-chatting-social-media-png.png"
-                    alt="3d language icon">
+                <img class="object-cover max-w-64" alt="New team member concept illustration (freepik/storyset)"
+                    src="{{ asset('img/homepage_banner-02.png') }}">
                 <p class="md:px-0 px-10 md:pt-0 pt-5">
                     Situs ini menggunakan <span class="font-semibold">konsep crowdsourcing</span>, di mana pengguna dapat
                     berkontribusi secara aktif sehingga
@@ -179,8 +178,8 @@
                     melestarikan dan mempopulerkan bahasa Jawa di era digital.
                 </p>
                 <img class="md:order-2 order-1 object-cover max-w-64"
-                    src="https://cdn3d.iconscout.com/3d/premium/thumb/thumb-up-3d-icon-download-in-png-blend-fbx-gltf-file-formats--like-logo-feedback-hand-gesture-ui-kit-elements-pack-user-interface-icons-5285041.png"
-                    alt="3d language icon">
+                    alt="Product quality concept illustration (freepik/storyset)"
+                    src="{{ asset('img/homepage_banner-03.png') }}">
             </div>
         </div>
     </div>

@@ -34,16 +34,49 @@ class DatabaseSeeder extends Seeder
             'aksara' => 'ꦩꦢꦫꦤ꧀',
             'jenis' => 'Nomina',
             'notasi_fonetik' => 'ma-da-ran',
-            'arti_indo' => 'Malam',
+            'arti_indo' => 'Perut',
             'etimologi' => json_encode(['Asli']),
-            'dibuat_oleh' => 1,
-            'serupa' => json_encode(['Bengi', 'Dalu']),
+            'user_id' => 1,
+            'serupa' => json_encode(['weteng']),
         ]);
 
         DB::table('kosakata')->insert([
             'kosakata' => 'Dalu',
             'slug' => 'dalu',
-            'dibuat_oleh' => 1
+            'user_id' => 1,
+            'serupa' => json_encode(['malam']),
+        ]);
+
+        // Definisi
+        DB::table('definisi')->insert([
+            'kosakata_id' => 1,
+            'user_id' => 1,
+            'definisi' => 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore assumenda iure quasi vero architecto voluptas repellendus ad? Iste, vero voluptas.',
+            'contoh' => 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab, possimus!',
+            'bahasa' => 'Indonesia',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('definisi')->insert([
+            'kosakata_id' => 1,
+            'user_id' => 1,
+            'definisi' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores ipsum, tenetur ipsa praesentium ut dignissimos.',
+            'referensi' => json_encode(['https://id.wikipedia.org/wiki/Bahasa_Jawa', 'https://stackoverflow.com/questions/40375022/how-to-parse-datetime-using-laravel-on-date-and-time']),
+            'bahasa' => 'Indonesia',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('definisi')->insert([
+            'kosakata_id' => 1,
+            'user_id' => 1,
+            'definisi' => 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore assumenda iure quasi vero architecto voluptas repellendus ad? Iste, vero voluptas.',
+            'contoh' => 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab, possimus!',
+            'referensi' => json_encode(['https://google.com/images']),
+            'bahasa' => 'Indonesia',
+            'created_at' => now(),
+            'updated_at' => now()
         ]);
     }
 }

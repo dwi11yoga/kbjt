@@ -67,39 +67,74 @@
 
     <div class="space-y-1">
         {{-- Definisi --}}
-        @for ($i = 0; $i < 10; $i++)
+        @foreach ($definisi as $d)
             <div class="md:col-start-2 md:col-span-3 col-span-6">
                 <div
                     class="bg-white rounded-2xl p-6 mb-4 border border-neutral-200 hover:outline hover:outline-2 hover:outline-amber-400">
                     {{-- Kosakata --}}
-                    <h5 class="font-semibold mb-4">Madaran</h5>
+                    <h5 class="font-semibold mb-4">{{ $data->kosakata }}</h5>
+
                     {{-- Definisi --}}
-                    <p class="mb-3">Bahasa krama dari "perut". Biasa digunakan ketika aksi dilakukan oleh seseorang yang
-                        lebih tua.</p>
+                    <p class="mb-3">{{ $d->definisi }}</p>
+
                     {{-- Contoh kalimat --}}
-                    <p>Contoh kalimat:</p>
-                    <p>"Ibu nembe gerah madaran" (Ibu sedang sakit perut)</p>
+                    @isset($d->contoh)
+                        <p>Contoh kalimat:</p>
+                        <p>{{ $d->contoh }}</p>
+                    @endisset
+
                     {{-- Referensi --}}
-                    <div class="italic font-light small-text mt-4">
-                        <p>Referensi</p>
-                        <ul class="list-decimal list-inside">
-                            <li>Kitab Pranata Adicara (Purwadi, 2020)</li>
+                    @isset($d->referensi)
+                        <div class="italic font-light small-text mt-4">
+                            <p>Referensi</p>
+                            <ul class="list-decimal list-inside">
+                                @foreach ($d->referensi as $r)
+                                    <li>
+                                        <a href="{{ $r }}" target="_blank"
+                                            class="hover:underline hover:decoration-amber-400 hover:underline-offset-2 hover:decoration-2">{{ $r }}</a>
+                                    </li>
+                                @endforeach
+                                {{-- {{ $d->referensi }} --}}
+                                {{-- <li>Kitab Pranata Adicara (Purwadi, 2020)</li>
                             <li>https://www.cnnindoensia.com/bahasa-krama</li>
-                            <li>https://brainly.co.id/tugas/17480360</li>
-                        </ul>
-                    </div>
+                            <li>https://brainly.co.id/tugas/17480360</li> --}}
+                            </ul>
+                        </div>
+                    @endisset
                     {{-- Author --}}
                     <p class="mt-4 mb-2">Disubmit oleh</p>
-                    <div class="rounded-full w-12 h-12 bg-yellow-400 float-left mr-3"></div>
+                    {{-- <div class="rounded-full w-12 h-12 bg-yellow-400 float-left mr-3"></div> --}}
                     <div class="flex justify-between items-end">
-                        <div>
-                            <div>Muklis Satriya Nugraha</div>
-                            <div class="small-text">20 September 2024</div>
+                        <div class="flex items-center">
+                            <a href="#">
+                                <div class="h-12 w-12 rounded-full overflow-hidden mr-3">
+                                    @isset(auth()->user()->profile_pic)
+                                        <img class="w-full h-full object-cover"
+                                            src="{{ asset('storage/' . $d->user->profile_pic) }}" alt="Profile picture">
+                                    @else
+                                        @if (auth()->user()->jenis_kelamin == 'Perempuan')
+                                            <img class="w-full h-full object-cover"
+                                                src="{{ asset('storage/profile-pics/profile_pic-f.jpg') }}"
+                                                alt="Profile picture (Freepik/gstudioimagen)">
+                                        @else
+                                            <img class="w-full h-full object-cover"
+                                                src="{{ asset('storage/profile-pics/profile_pic-m.jpg') }}"
+                                                alt="Profile picture (Freepik/gstudioimagen)">
+                                        @endif
+                                    @endisset
+                                </div>
+                            </a>
+                            <a href="#">
+                                <div>{{ $d->user->nama }}</div>
+                                <div class="small-text">{{ $d->created_at->format('d F Y') }}</div>
+                            </a>
                         </div>
                         <div><i data-feather='more-vertical'></i></div>
                     </div>
                 </div>
             </div>
-        @endfor
+        @endforeach
+        {{-- @for ($i = 0; $i < 10; $i++)
+        @endfor --}}
     </div>
 @endsection

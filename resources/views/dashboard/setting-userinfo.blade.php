@@ -291,9 +291,7 @@
                     <div class="text-black">Donasi</div>
                     <div class="text-xs mb-3">Izinkan pengguna menunjukkan terima kasih melalui donasi.</div>
                     <select name="metode_donasi" id="metode_donasi"
-                        class="px-4 py-3 w-full mt-1.5 border border-neutral-200 bg-white rounded-xl block mb-3 @error('jenis_kelamin')
-                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
-                @enderror">
+                        class="px-4 py-3 w-full mt-1.5 border border-neutral-200 bg-white rounded-xl block mb-3">
                         <option value="">Pilih metode...</option>
                         <option
                             {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'Allobank' ? 'selected' : '' }}>

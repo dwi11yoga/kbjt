@@ -15,9 +15,8 @@ return new class extends Migration {
             $table->bigInteger('kosakata_id');
             $table->bigInteger('user_id');
             $table->text('definisi');
-            $table->text('contoh')->nullable();
+            $table->json('contoh')->nullable();
             $table->json('referensi')->nullable();
-            $table->string('bahasa');
             $table->json('verifikasi')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -41,8 +41,6 @@ class DashboardController extends Controller
             ];
         }
 
-        // dd($userProgress);
-
         // Cek data lengkap/tidak untuk pemberitahuan
         $lengkap = true;
         $field = ['tgl_lahir', 'kota', 'jenis_kelamin', 'profile_pic', 'bio', 'telp'];

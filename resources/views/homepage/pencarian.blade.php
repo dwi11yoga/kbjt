@@ -7,8 +7,16 @@
     </div>
     {{-- Kosakata --}}
     <div>
-        <span class="font-semibold">Kosakata</span>
-        <br>{{ $jumlahKosakata }} data berhasil ditemukan.
+        @if ($jumlahKosakata > 0)
+            <div class="font-semibold">Kosakata</div>
+            <div>{{ $jumlahKosakata }} data berhasil ditemukan.</div>
+        @else
+            <div class="font-semibold mb-3">Kosakata</div>
+            <?php
+            $notFound = 'Kosakata dengan kata kunci "' . request()->keyword . '" tidak ditemukan. <a href="#" title="Tambahkan kosakata" class="text-blue-600">Tambahkan?</a>';
+            ?>
+            @include('partials.not-found')
+        @endif
     </div>
     <div class="space-y-3">
         @foreach ($kosakata as $d)
@@ -22,7 +30,7 @@
 
                     {{-- Jika keyword mirip dengan arti indo --}}
                     {{-- stripos digunakan untuk pencocokan kata dari request dengan arti_indo. ada=bernilai posisi string yang sama. tidak ada=false --}}
-                    @if (stripos($d->arti_indo, request('keyword')) !== false)
+                    @if (isset($d->arti_indo) && stripos($d->arti_indo, request('keyword')) !== false)
                         <div>
                             Dalam Bahasa Indonesia, kosakata ini berarti <span
                                 class="font-semibold capitalize">{{ $d->arti_indo }}</span>.
@@ -42,7 +50,7 @@
                                     alt="">
                             </div>
                             <div
-                                class="overflow-hidden h-8 w-8 rounded-full z-30 border-white group-hover:border-amber-100 border-2">
+                                class="overflow-hidden h-8 w-8 rounded-full z-10 border-white group-hover:border-amber-100 border-2">
                                 <img class="object-cover w-full h-full"
                                     src="https://img.freepik.com/free-photo/portrait-interesting-young-man-winter-clothes_158595-914.jpg?w=360"
                                     alt="">
@@ -71,7 +79,50 @@
     </div>
     {{-- User --}}
     <div>
-        <span class="font-semibold">Anggota</span>
-        <br>0 data berhasil ditemukan.
+        @if ($jumlahUser > 0)
+            <div class="font-semibold">Pengguna</div>
+            <div>{{ $jumlahUser }} data berhasil ditemukan.</div>
+        @else
+            <div class="font-semibold mb-3">Pengguna</div>
+            <?php
+            $notFound = 'Pengguna dengan kata kunci "' . request()->keyword . '" tidak ditemukan.';
+            ?>
+            @include('partials.not-found')
+        @endif
+    </div>
+
+    <div class="space-y-3">
+        @foreach ($user as $d)
+            <a href="/user/{{ $d->username }}" class="block">
+                <div
+                    class="group flex items-center bg-white p-5 rounded-2xl border border-neutral-200 hover:border-amber-100 hover:bg-amber-100 hover:outline hover:outline-2 hover:outline-offset-4 hover:outline-amber-300 active:bg-amber-200">
+                    {{-- Foto profil --}}
+                    <div class="h-10 w-10 rounded-full overflow-hidden mr-3">
+                        @isset($d->profile_pic)
+                            <img class="w-full h-full object-cover" src="{{ asset('storage/' . $d->profile_pic) }}"
+                                alt="Profile picture">
+                        @else
+                            @if (isset($d->jenis_kelamin) && $d->jenis_kelamin == 'Perempuan')
+                                <img class="w-full h-full object-cover"
+                                    src="{{ asset('storage/profile-pics/profile_pic-f.jpg') }}"
+                                    alt="Profile picture (Freepik/gstudioimagen)">
+                            @else
+                                <img class="w-full h-full object-cover"
+                                    src="{{ asset('storage/profile-pics/profile_pic-m.jpg') }}"
+                                    alt="Profile picture (Freepik/gstudioimagen)">
+                            @endif
+                        @endisset
+                    </div>
+
+                    <div>
+                        {{-- Nama --}}
+                        <div class="">{{ $d->nama }}</div>
+                        <div class="text-neutral-700 text-sm">&#64;{{ $d->username }} <span
+                                class="bg-amber-100 rounded-full px-2 py-0.5 group-hover:bg-amber-200">Lv.{{ $d->level }}</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        @endforeach
     </div>
 @endsection

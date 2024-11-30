@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Definisi;
 use App\Models\Kosakata;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -80,18 +81,35 @@ class HomepageController extends Controller
     // Pencarian
     public function pencarian(Request $request)
     {
-
+        $keyword = $request->keyword;
+        // Cari kosakata
         $kosakata = Kosakata::select(['kosakata', 'slug', 'aksara', 'ragam', 'jenis', 'arti_indo'])
-            ->where('kosakata', 'like', '%' . $request->keyword . '%')
-            ->orWhere('arti_indo', 'like', '%' . $request->keyword . '%')
-            ->orWhere('aksara', 'like', '%' . $request->keyword . '%')
+            ->where('kosakata', 'like', '%' . $keyword . '%')
+            ->orWhere('arti_indo', 'like', '%' . $keyword . '%')
+            ->orWhere('aksara', 'like', '%' . $keyword . '%')
             ->get();
         $jumlahKosakata = count($kosakata);
+
+        // Cari pengguna
+        $user = User::select(['username', 'nama', 'profile_pic', 'poin', 'jenis_kelamin'])
+            ->whereLike('username', '%' . $keyword . '%')
+            ->orWhereLike('nama', '%' . $keyword . '%')
+            ->get();
+        $jumlahUser = count($user);
+
+        // Hitung & tambahkan level pada $user
+        $user = $user->map(function ($item) {
+            $item->level = $this->levelCalculator($item->poin); // Tambahkan atribut 'level'
+            return $item;
+        });
+
         return view('homepage.pencarian', [
             'group' => 'pencarian',
             'title' => 'Pencarian',
             'kosakata' => $kosakata,
-            'jumlahKosakata' => $jumlahKosakata
+            'jumlahKosakata' => $jumlahKosakata,
+            'user' => $user,
+            'jumlahUser' => $jumlahUser
         ]);
     }
 
@@ -104,24 +122,32 @@ class HomepageController extends Controller
 
         // Hitung jumlah kolom null
         $nullCount = 0;
-        foreach ($cekKolom as $d) {
-            if (is_null($kosakata[$d])) {
-                $nullCount += 1;
+        if (isset($kosakata)) {
+            foreach ($cekKolom as $d) {
+                if (is_null($kosakata[$d])) {
+                    $nullCount += 1;
+                }
             }
         }
 
         // ambil data definisi
-        $definisi = Definisi::where('kosakata_id', $kosakata['id'])
-            ->with([
-                'user' => function ($query) {
-                    $query->select('id', 'nama', 'username', 'profile_pic');
-                }
-            ])
-            ->get();
+        $definisi = [];
+        if (isset($kosakata)) {
+            $definisi = Definisi::where('kosakata_id', $kosakata['id'])
+                ->with([
+                    'user' => function ($query) {
+                        $query->select('id', 'nama', 'username', 'profile_pic', 'jenis_kelamin');
+                    }
+                ])
+                ->get();
+        }
+
+        // dd($definisi);
 
         return view('homepage.kosakata', [
             'group' => 'pencarian',
             'title' => 'Kosakata',
+            'kosakata' => $slug,
             'data' => $kosakata,
             'dataNull' => $nullCount,
             'definisi' => $definisi

@@ -52,8 +52,7 @@ class DatabaseSeeder extends Seeder
             'kosakata_id' => 1,
             'user_id' => 1,
             'definisi' => 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore assumenda iure quasi vero architecto voluptas repellendus ad? Iste, vero voluptas.',
-            'contoh' => 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab, possimus!',
-            'bahasa' => 'Indonesia',
+            'contoh' => json_encode(['Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab, possimus!']),
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -63,7 +62,6 @@ class DatabaseSeeder extends Seeder
             'user_id' => 1,
             'definisi' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores ipsum, tenetur ipsa praesentium ut dignissimos.',
             'referensi' => json_encode(['https://id.wikipedia.org/wiki/Bahasa_Jawa', 'https://stackoverflow.com/questions/40375022/how-to-parse-datetime-using-laravel-on-date-and-time']),
-            'bahasa' => 'Indonesia',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -72,9 +70,8 @@ class DatabaseSeeder extends Seeder
             'kosakata_id' => 1,
             'user_id' => 1,
             'definisi' => 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore assumenda iure quasi vero architecto voluptas repellendus ad? Iste, vero voluptas.',
-            'contoh' => 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab, possimus!',
+            'contoh' => json_encode(['Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab, possimus!']),
             'referensi' => json_encode(['https://google.com/images']),
-            'bahasa' => 'Indonesia',
             'created_at' => now(),
             'updated_at' => now()
         ]);

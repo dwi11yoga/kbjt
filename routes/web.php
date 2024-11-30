@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DefinisiController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -44,4 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengaturan/edit-user', [UserController::class, 'editUser']);
     // Simpan perubahan data diri
     Route::put('/pengaturan/edit-user', [UserController::class, 'update']);
+
+    // Tambah definisi
+    Route::post('kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create']);
 });

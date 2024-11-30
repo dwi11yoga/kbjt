@@ -14,6 +14,7 @@ class Definisi extends Model
     protected $guarded = ['id'];
     protected $casts = [
         'verifikasi' => 'array',
+        'contoh' => 'array',
         'referensi' => 'array'
     ];
 

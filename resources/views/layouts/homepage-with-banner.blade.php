@@ -48,6 +48,8 @@
     {{-- footer --}}
     @include('.../partials/footer')
 
+    @yield('toast')
+
     {{-- Feathericon --}}
     <script>
         feather.replace();

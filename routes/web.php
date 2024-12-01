@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefinisiController;
 use App\Http\Controllers\HomepageController;
+use App\Http\Controllers\KosakataController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,8 @@ Route::get('/blog', [HomepageController::class, 'blog']);
 Route::get('/blog/post', [HomepageController::class, 'blogPost']);
 Route::get('/donasi', [HomepageController::class, 'donasi']);
 Route::get('/cari', [HomepageController::class, 'pencarian']);
+Route::get('/kosakata/buat', [KosakataController::class, 'tambahKosakata'])->middleware('auth');
+Route::post('/kosakata/buat', [KosakataController::class, 'store'])->middleware('auth');
 Route::get('/kosakata/{slug}', [HomepageController::class, 'kosakata']);
 
 Route::middleware(['guest'])->group(function () {

@@ -12,9 +12,9 @@
                 <div>/{{ $data->notasi_fonetik }}/</div>
             @endif
             <div>
-                @if (isset($data->etimologi) && $data->etimologi[0] == 'Asli')
+                @if (isset($data->etimologi) && $data->etimologi != [''] && $data->etimologi[0] == 'Asli')
                     Kosakata asli dalam Bahasa Jawa.
-                @elseif (isset($data->etimologi))
+                @elseif (isset($data->etimologi) && $data->etimologi != [''])
                     Kata serapan dari bahasa {{ $data->etimologi[0] }} yang berarti {{ $data->etimologi[1] }}
                 @endif
             </div>
@@ -51,20 +51,20 @@
             @endif
         </div>
         {{-- Lihat juga --}}
-        @isset($data->serupa)
+        @if (isset($data->serupa) && $data->serupa != [''])
             <div class="bg-amber-300 rounded-b-2xl px-5 py-2 flex">
                 Lihat juga:&nbsp;
                 {!! implode(
                     ',&nbsp;',
                     array_map(
-                        fn(
-                            $d,
-                        ) => "<a href=\"/kosakata/{$d}\" class=\"text-amber-950\">{$d}<i data-feather='arrow-up-right' class='inline-block w-5'></i></a>",
+                        fn($d) => "<a href=\"/kosakata/" .
+                            str_replace(' ', '-', $d) .
+                            "\" class=\"text-amber-950\">{$d}<i data-feather='arrow-up-right' class='inline-block w-5'></i></a>",
                         $data->serupa,
                     ),
                 ) !!}
             </div>
-        @endisset
+        @endif
 
         @auth
             <div class="flex justify-end">
@@ -163,17 +163,7 @@
                         newDefinition.classList.toggle('hidden');
                     })
 
-                    // const definisi = document.getElementById('definisi');
-                    document.addEventListener('DOMContentLoaded', () => {
-                        if (document.getElementById('definisi').value !== '') {
-                            newDefinition.classList.remove('hidden');
-                        }
-                    })
-
-
                     // buat panjang textarea otomatis
-                    // const definisi = document.getElementById('definisi');
-
                     function textareaHeight(id) {
                         id.style.height = 'auto';
                         id.style.height = `${id.scrollHeight}px`;
@@ -183,88 +173,96 @@
 
 
             {{-- Definisi --}}
-            @foreach ($definisi as $d)
-                <div class="md:col-start-2 md:col-span-3 col-span-6">
-                    <div
-                        class="bg-white rounded-2xl p-6 mb-4 border border-neutral-200 hover:outline hover:outline-2 hover:outline-amber-400">
-                        {{-- Kosakata --}}
-                        <h5 class="font-semibold mb-4 capitalize">{{ $data->kosakata }}</h5>
+            @if ($definisi->isNotEmpty())
+                @foreach ($definisi as $d)
+                    <div class="md:col-start-2 md:col-span-3 col-span-6">
+                        <div
+                            class="bg-white rounded-2xl p-6 mb-4 border border-neutral-200 hover:outline hover:outline-2 hover:outline-amber-400">
+                            {{-- Kosakata --}}
+                            <h5 class="font-semibold mb-4 capitalize">{{ $data->kosakata }}</h5>
 
-                        {{-- Definisi --}}
-                        <p class="mb-3">{{ $d->definisi }}</p>
+                            {{-- Definisi --}}
+                            <p class="mb-3">{{ $d->definisi }}</p>
 
-                        {{-- Contoh kalimat --}}
-                        @if (isset($d->contoh) && $d->contoh != [''])
-                            <p>Contoh kalimat:</p>
-                            <ul class=" list-inside italic">
-                                @foreach ($d->contoh as $c)
-                                    <li>{{ $c }}</li>
-                                @endforeach
-                            </ul>
-                        @endif
-
-                        {{-- Referensi --}}
-                        @if (isset($d->referensi) && $d->referensi != [''])
-                            <div class="italic font-light small-text mt-4">
-                                <p>Referensi</p>
-                                <ul class="list-decimal list-inside">
-                                    @foreach ($d->referensi as $r)
-                                        <li>
-                                            @if (filter_var($r, FILTER_VALIDATE_URL))
-                                                <a href="{{ $r }}" target="_blank"
-                                                    class="hover:underline hover:decoration-amber-400 hover:underline-offset-2 hover:decoration-2">{{ $r }}</a>
-                                            @else
-                                                {{ $r }}
-                                            @endif
-                                        </li>
+                            {{-- Contoh kalimat --}}
+                            @if (isset($d->contoh) && $d->contoh != [''])
+                                <p>Contoh kalimat:</p>
+                                <ul class=" list-inside italic">
+                                    @foreach ($d->contoh as $c)
+                                        <li>{{ $c }}</li>
                                     @endforeach
                                 </ul>
-                            </div>
-                        @endif
-                        {{-- Author --}}
-                        <p class="mt-4 mb-2">Disubmit oleh</p>
-                        {{-- <div class="rounded-full w-12 h-12 bg-yellow-400 float-left mr-3"></div> --}}
-                        <div class="flex justify-between items-end">
-                            <div class="flex items-center">
-                                <a href="#">
-                                    <div class="h-12 w-12 rounded-full overflow-hidden mr-3">
-                                        @isset($d->user->profile_pic)
-                                            <img class="w-full h-full object-cover"
-                                                src="{{ asset('storage/' . $d->user->profile_pic) }}" alt="Profile picture">
-                                        @else
-                                            @if (isset($d->user->jenis_kelamin) && $d->user->jenis_kelamin == 'Perempuan')
+                            @endif
+
+                            {{-- Referensi --}}
+                            @if (isset($d->referensi) && $d->referensi != [''])
+                                <div class="italic font-light small-text mt-4">
+                                    <p>Referensi</p>
+                                    <ul class="list-decimal list-inside">
+                                        @foreach ($d->referensi as $r)
+                                            <li>
+                                                @if (filter_var($r, FILTER_VALIDATE_URL))
+                                                    <a href="{{ $r }}" target="_blank"
+                                                        class="hover:underline hover:decoration-amber-400 hover:underline-offset-2 hover:decoration-2">{{ $r }}</a>
+                                                @else
+                                                    {{ $r }}
+                                                @endif
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                            {{-- Author --}}
+                            <p class="mt-4 mb-2">Disubmit oleh</p>
+                            {{-- <div class="rounded-full w-12 h-12 bg-yellow-400 float-left mr-3"></div> --}}
+                            <div class="flex justify-between items-end">
+                                <div class="flex items-center">
+                                    <a href="#">
+                                        <div class="h-12 w-12 rounded-full overflow-hidden mr-3">
+                                            @isset($d->user->profile_pic)
                                                 <img class="w-full h-full object-cover"
-                                                    src="{{ asset('storage/profile-pics/profile_pic-f.jpg') }}"
-                                                    alt="Profile picture (Freepik/gstudioimagen)">
+                                                    src="{{ asset('storage/' . $d->user->profile_pic) }}" alt="Profile picture">
                                             @else
-                                                <img class="w-full h-full object-cover"
-                                                    src="{{ asset('storage/profile-pics/profile_pic-m.jpg') }}"
-                                                    alt="Profile picture (Freepik/gstudioimagen)">
-                                            @endif
-                                        @endisset
-                                    </div>
-                                </a>
-                                <a href="#">
-                                    <div>{{ $d->user->nama }}</div>
-                                    <div class="small-text">{{ $d->created_at->format('d F Y') }}</div>
-                                </a>
+                                                @if (isset($d->user->jenis_kelamin) && $d->user->jenis_kelamin == 'Perempuan')
+                                                    <img class="w-full h-full object-cover"
+                                                        src="{{ asset('storage/profile-pics/profile_pic-f.jpg') }}"
+                                                        alt="Profile picture (Freepik/gstudioimagen)">
+                                                @else
+                                                    <img class="w-full h-full object-cover"
+                                                        src="{{ asset('storage/profile-pics/profile_pic-m.jpg') }}"
+                                                        alt="Profile picture (Freepik/gstudioimagen)">
+                                                @endif
+                                            @endisset
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div>{{ $d->user->nama }}</div>
+                                        <div class="small-text">{{ $d->created_at->format('d F Y') }}</div>
+                                    </a>
+                                </div>
+                                <div><i data-feather='more-vertical'></i></div>
                             </div>
-                            <div><i data-feather='more-vertical'></i></div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            @else
+                {{-- Jika belum ada definisi --}}
+                <?php $notFound = 'Belum ada definisi untuk kosakata ' . $data->kosakata . '.'; ?>
+                @include('partials.not-found')
+            @endif
         </div>
     @else
         {{-- Jika kosakata tidak ditemukan dalam database --}}
         <?php
-        $notFound = "Kosakata <span class='capitalize'>" . $kosakata . "</span> tidak ditemukan. <a href='#' class='text-blue-600' title='Tambah kosakata'>Tambahkan?</a>";
+        $notFound = "Kosakata <span class='capitalize'>" . str_replace('-', ' ', $kosakata) . "</span> tidak ditemukan. <a href='/kosakata/buat?kosakata=" . $kosakata . "' class='text-blue-600' title='Tambah kosakata'>Tambahkan?</a>";
         ?>
         <div class="h-3/5 w-3/5 mx-auto">
             @include('partials.not-found')
         </div>
     @endisset
+@endsection
 
+@section('toast')
     {{-- Import toast --}}
     @include('partials.toast')
 @endsection

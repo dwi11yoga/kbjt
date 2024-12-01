@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
             'kosakata' => 'Dalu',
             'slug' => 'dalu',
             'user_id' => 1,
-            'serupa' => json_encode(['malam']),
+            'serupa' => json_encode(['bengi']),
         ]);
 
         // Definisi

@@ -3,10 +3,37 @@
 @section('body')
     @isset($data)
         <div
-            class="bg-white border border-neutral-200 p-5 @isset($data->serupa)rounded-t-2xl -mb-[1.3rem] @else rounded-2xl @endisset z-50">
+            class="bg-white border border-neutral-200 @if (isset($data->serupa) && $data->serupa != ['']) -mb-[1.3rem] @endif p-5 @isset($data->serupa)rounded-t-2xl @else rounded-2xl @endisset z-50">
             <div class="flex justify-between">
                 <h4 class="capitalize">{{ $data->kosakata }} <span class="text-sm jawa">{{ $data->aksara }}</span></h4>
-                <div><i data-feather='more-horizontal'></i></div>
+
+                {{-- Menu --}}
+                <div class="relative">
+                    <button id="dropdownBtn" onclick="dropdown(this, document.getElementById('dropdown'))"
+                        class="p-2 rounded-full hover:bg-neutral-100"><i data-feather='more-horizontal'></i></button>
+                    <div id="dropdown"
+                        class="absolute hidden bg-white right-0 z-40 py-1.5 rounded-xl border border-neutral-200 min-w-40 text-neutral-800 text-sm">
+                        <ul>
+                            <a href="{{ $data->slug }}/edit">
+                                <li class="flex py-2 px-4 rounded-lg hover:bg-neutral-100"><i data-feather='edit-3'
+                                        class="w-4 mr-1.5"></i>
+                                    Edit
+                                </li>
+                            </a>
+                            <a href="#">
+                                <li class="flex py-2 px-4 rounded-lg hover:bg-neutral-100"><i data-feather='clock'
+                                        class="w-4 mr-1.5"></i>
+                                    Riwayat edit</li>
+                            </a>
+                            <a href="#">
+                                <li class="flex py-2 px-4 rounded-lg hover:bg-red-100"><i data-feather='flag'
+                                        class="w-4 mr-1.5"></i>
+                                    Laporkan</li>
+                            </a>
+                        </ul>
+                    </div>
+
+                </div>
             </div>
             @if ($data->notasi_fonetik)
                 <div>/{{ $data->notasi_fonetik }}/</div>
@@ -124,7 +151,7 @@
                             <p class="mb-2">Disubmit oleh</p>
                             <div class="flex justify-between items-end">
                                 <div class="flex items-center">
-                                    <a href="#">
+                                    <div>
                                         <div class="h-12 w-12 rounded-full overflow-hidden mr-3">
                                             @isset(auth()->user()->profile_pic)
                                                 <img class="w-full h-full object-cover"
@@ -141,11 +168,11 @@
                                                 @endif
                                             @endisset
                                         </div>
-                                    </a>
-                                    <a href="#">
+                                    </div>
+                                    <div>
                                         <div>{{ auth()->user()->nama }}</div>
                                         <div class="small-text">{{ now()->format('d F Y') }}</div>
-                                    </a>
+                                    </div>
                                 </div>
                                 {{-- Simpan --}}
                                 <button type="submit"
@@ -217,7 +244,7 @@
                             {{-- <div class="rounded-full w-12 h-12 bg-yellow-400 float-left mr-3"></div> --}}
                             <div class="flex justify-between items-end">
                                 <div class="flex items-center">
-                                    <a href="#">
+                                    <a href="/u/{{ $d->user->username }}">
                                         <div class="h-12 w-12 rounded-full overflow-hidden mr-3">
                                             @isset($d->user->profile_pic)
                                                 <img class="w-full h-full object-cover"
@@ -235,7 +262,7 @@
                                             @endisset
                                         </div>
                                     </a>
-                                    <a href="#">
+                                    <a href="/u/{{ $d->user->username }}">
                                         <div>{{ $d->user->nama }}</div>
                                         <div class="small-text">{{ $d->created_at->format('d F Y') }}</div>
                                     </a>

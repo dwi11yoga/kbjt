@@ -77,4 +77,6 @@
 @endsection
 
 {{-- Pemberitahuan --}}
-@include('partials.toast')
+@section('toast')
+    @include('partials.toast')
+@endsection

@@ -226,15 +226,12 @@
                 pengetahuan untuk memperkaya kamus ini demi melestarikan bahasa jawa.
             </p>
             <div class="mx-auto mt-8 space-x-2 space-y-1">
-                <?php for ($i=0; $i < 100; $i++) { ?>
-                {{-- <div class="rounded-full w-12 h-12 bg-yellow-400 mr-3 inline-block"></div> --}}
-                <div
-                    class="overflow-hidden w-14 h-14 rounded-full justify-center hover:outline hover:outline-amber-400 hover:outline-offset-2 hover:outline-2 inline-block">
-                    <img class="w-full h-full object-cover"
-                        src="https://cdn.thefairnews.co.kr/news/photo/202404/25369_59232_5627.jpg" alt="Profile picture">
-                </div>
-                <?php
-            } ?>
+                @foreach ($topContributor as $d)
+                    <a href="/u/{{ $d->username }}" title="{{ $d->nama }} ({{ $d->username }})"
+                        class="overflow-hidden w-14 h-14 rounded-full justify-center hover:outline hover:outline-amber-400 hover:outline-offset-2 hover:outline-2 inline-block">
+                        @include('partials.profile-pic-general')
+                    </a>
+                @endforeach
             </div>
         </div>
     </div>

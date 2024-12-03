@@ -37,6 +37,8 @@
         </div>
     </div>
 
+    @yield('toast')
+
 
     {{-- Feathericon --}}
     <script>

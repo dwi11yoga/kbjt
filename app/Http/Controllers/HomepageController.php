@@ -13,9 +13,15 @@ class HomepageController extends Controller
     //Beranda
     public function index()
     {
+        $topContributor = User::select(['username', 'nama', 'profile_pic', 'jenis_kelamin', 'poin'])
+            ->orderBy('poin', 'asc')
+            ->limit(100)
+            ->get();
+
         return view('homepage.index', [
             'group' => 'homepage',
-            'title' => 'Selamat datang di Kamus Bahasa Jawa Terbuka!'
+            'title' => 'Selamat datang di Kamus Bahasa Jawa Terbuka!',
+            'topContributor' => $topContributor
         ]);
     }
 

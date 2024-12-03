@@ -75,5 +75,20 @@ class DatabaseSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now()
         ]);
+
+        // Edit kosakata
+        DB::table('editkosakata')->insert([
+            'user_id' => 1,
+            'kosakata_id' => 1,
+            'slug' => 'madaran',
+            'ragam' => 'Krama',
+            'aksara' => 'ꦩꦢꦫꦤ꧀',
+            'jenis' => 'Nomina',
+            'notasi_fonetik' => 'ma-da-ran',
+            'arti_indo' => 'Perut',
+            'etimologi' => json_encode(['Asli']),
+            'serupa' => json_encode(['weteng']),
+        ]);
     }
+
 }

@@ -18,6 +18,8 @@ Route::get('/cari', [HomepageController::class, 'pencarian']);
 Route::get('/kosakata/buat', [KosakataController::class, 'tambahKosakata'])->middleware('auth');
 Route::post('/kosakata/buat', [KosakataController::class, 'store'])->middleware('auth');
 Route::get('/kosakata/{slug}', [HomepageController::class, 'kosakata']);
+// Profil user
+Route::get('/u/{username}', [UserController::class, 'profile']);
 
 Route::middleware(['guest'])->group(function () {
     // Login
@@ -51,4 +53,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Tambah definisi
     Route::post('kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create']);
+
+    // Edit kosakata
+    Route::get('/kosakata/{slug}/edit', [KosakataController::class, 'edit']);
+    Route::post('/kosakata/{slug}/edit', [KosakataController::class, 'simpanEdit']);
 });

@@ -1,7 +1,9 @@
-@if (auth()->user()->profile_pic != null)
-    <img class="w-full h-full object-cover" src="{{ asset('storage/' . auth()->user()->profile_pic) }}" alt="Foto profil">
+{{-- Profil pic untuk menampilkan foto semua user --}}
+
+@if ($d->profile_pic != null)
+    <img class="w-full h-full object-cover" src="{{ asset('storage/' . $d->profile_pic) }}" alt="Foto profil">
 @else
-    @if (auth()->user()->jenis_kelamin == 'Perempuan')
+    @if ($d->jenis_kelamin == 'Perempuan')
         <img class="w-full h-full object-cover" src="{{ asset('storage/profile-pics/profile_pic-f.jpg') }}"
             alt="Foto profil (Freepik/gstudioimagen)">
     @else

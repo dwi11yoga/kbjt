@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Definisi;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -83,7 +84,7 @@ class UserController extends Controller
     // Profil user
     public function profile($username)
     {
-        $user = User::select(['nama', 'username', 'email', 'tampilkan_email', 'role', 'tgl_lahir', 'kota', 'jenis_kelamin', 'profile_pic', 'bio', 'telp', 'tautan', 'media_sosial', 'donasi', 'poin', 'achivement', 'terakhir_aktif', 'created_at'])
+        $user = User::select(['id', 'nama', 'username', 'email', 'tampilkan_email', 'role', 'tgl_lahir', 'kota', 'jenis_kelamin', 'profile_pic', 'bio', 'telp', 'tautan', 'media_sosial', 'donasi', 'poin', 'achivement', 'terakhir_aktif', 'created_at'])
             ->where('username', $username)
             ->first();
         $user['level'] = $this->levelCalculator($user['poin']);
@@ -96,9 +97,23 @@ class UserController extends Controller
             }));
         }
 
+        // dapatkan definisi buatan user
+        $definisi = User::find($user['id'])
+            ->definisi()
+            ->with('kosakata:id,kosakata,slug')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        foreach ($definisi as $d) {
+            $d['slug'] = $d->kosakata['slug'];
+            $d['kosakata'] = $d->kosakata['kosakata'];
+        }
+
+
+        // return
         return view('homepage.profile', [
             'title' => $user['nama'] . ' ' . '(' . $username . '',
-            'user' => $user
+            'user' => $user,
+            'definisi' => $definisi
         ]);
     }
 

@@ -139,13 +139,14 @@ class HomepageController extends Controller
         // ambil data definisi
         $definisi = [];
         if (isset($kosakata)) {
-            $definisi = Definisi::where('kosakata_id', $kosakata['id'])
-                ->with([
-                    'user' => function ($query) {
-                        $query->select('id', 'nama', 'username', 'profile_pic', 'jenis_kelamin');
-                    }
-                ])
+            $definisi = Kosakata::find($kosakata['id'])
+                ->definisi()
+                ->with('user:id,username,nama,profile_pic,jenis_kelamin')
                 ->get();
+            foreach ($definisi as $d) {
+                $d['kosakata'] = $kosakata->kosakata;
+                $d['slug'] = $kosakata->slug;
+            }
         }
 
         // dd($definisi);

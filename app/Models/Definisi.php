@@ -23,4 +23,9 @@ class Definisi extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function kosakata(): BelongsTo
+    {
+        return $this->belongsTo(Kosakata::class);
+    }
 }

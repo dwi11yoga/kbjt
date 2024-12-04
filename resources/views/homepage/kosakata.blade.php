@@ -12,23 +12,25 @@
                     <button id="dropdownBtn" onclick="dropdown(this, document.getElementById('dropdown'))"
                         class="p-2 rounded-full hover:bg-neutral-100"><i data-feather='more-horizontal'></i></button>
                     <div id="dropdown"
-                        class="absolute hidden bg-white right-0 z-40 py-1.5 rounded-xl border border-neutral-200 min-w-40 text-neutral-800 text-sm">
+                        class="absolute hidden bg-white right-0 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
                         <ul>
                             <a href="{{ $data->slug }}/edit">
-                                <li class="flex py-2 px-4 rounded-lg hover:bg-neutral-100"><i data-feather='edit-3'
-                                        class="w-4 mr-1.5"></i>
-                                    Edit
+                                <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
+                                    <div>Edit</div>
+                                    <i data-feather='edit-3' class="w-5"></i>
                                 </li>
                             </a>
                             <a href="#">
-                                <li class="flex py-2 px-4 rounded-lg hover:bg-neutral-100"><i data-feather='clock'
-                                        class="w-4 mr-1.5"></i>
-                                    Riwayat edit</li>
+                                <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
+                                    <div>Riwayat edit</div>
+                                    <i data-feather='clock' class="w-5"></i>
+                                </li>
                             </a>
                             <a href="#">
-                                <li class="flex py-2 px-4 rounded-lg hover:bg-red-100"><i data-feather='flag'
-                                        class="w-4 mr-1.5"></i>
-                                    Laporkan</li>
+                                <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500">
+                                    <div>Laporkan</div>
+                                    <i data-feather='flag' class="w-5"></i>
+                                </li>
                             </a>
                         </ul>
                     </div>
@@ -73,7 +75,8 @@
                 <div class="ml-2">26 Kontributor</div>
             </div>
             @if ($dataNull > 3)
-                <div class="mt-1 text-sm">Detail kosakata belum lengkap. <a href="#" class="text-blue-600">Bantu
+                <div class="mt-1 text-sm">Detail kosakata belum lengkap. <a href="{{ $data->slug }}/edit"
+                        class="text-blue-600">Bantu
                         lengkapi yuk</a>.</div>
             @endif
         </div>
@@ -202,75 +205,7 @@
             {{-- Definisi --}}
             @if ($definisi->isNotEmpty())
                 @foreach ($definisi as $d)
-                    <div class="md:col-start-2 md:col-span-3 col-span-6">
-                        <div
-                            class="bg-white rounded-2xl p-6 mb-4 border border-neutral-200 hover:outline hover:outline-2 hover:outline-amber-400">
-                            {{-- Kosakata --}}
-                            <h5 class="font-semibold mb-4 capitalize">{{ $data->kosakata }}</h5>
-
-                            {{-- Definisi --}}
-                            <p class="mb-3">{{ $d->definisi }}</p>
-
-                            {{-- Contoh kalimat --}}
-                            @if (isset($d->contoh) && $d->contoh != [''])
-                                <p>Contoh kalimat:</p>
-                                <ul class=" list-inside italic">
-                                    @foreach ($d->contoh as $c)
-                                        <li>{{ $c }}</li>
-                                    @endforeach
-                                </ul>
-                            @endif
-
-                            {{-- Referensi --}}
-                            @if (isset($d->referensi) && $d->referensi != [''])
-                                <div class="italic font-light small-text mt-4">
-                                    <p>Referensi</p>
-                                    <ul class="list-decimal list-inside">
-                                        @foreach ($d->referensi as $r)
-                                            <li>
-                                                @if (filter_var($r, FILTER_VALIDATE_URL))
-                                                    <a href="{{ $r }}" target="_blank"
-                                                        class="hover:underline hover:decoration-amber-400 hover:underline-offset-2 hover:decoration-2">{{ $r }}</a>
-                                                @else
-                                                    {{ $r }}
-                                                @endif
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            {{-- Author --}}
-                            <p class="mt-4 mb-2">Disubmit oleh</p>
-                            {{-- <div class="rounded-full w-12 h-12 bg-yellow-400 float-left mr-3"></div> --}}
-                            <div class="flex justify-between items-end">
-                                <div class="flex items-center">
-                                    <a href="/u/{{ $d->user->username }}">
-                                        <div class="h-12 w-12 rounded-full overflow-hidden mr-3">
-                                            @isset($d->user->profile_pic)
-                                                <img class="w-full h-full object-cover"
-                                                    src="{{ asset('storage/' . $d->user->profile_pic) }}" alt="Profile picture">
-                                            @else
-                                                @if (isset($d->user->jenis_kelamin) && $d->user->jenis_kelamin == 'Perempuan')
-                                                    <img class="w-full h-full object-cover"
-                                                        src="{{ asset('storage/profile-pics/profile_pic-f.jpg') }}"
-                                                        alt="Profile picture (Freepik/gstudioimagen)">
-                                                @else
-                                                    <img class="w-full h-full object-cover"
-                                                        src="{{ asset('storage/profile-pics/profile_pic-m.jpg') }}"
-                                                        alt="Profile picture (Freepik/gstudioimagen)">
-                                                @endif
-                                            @endisset
-                                        </div>
-                                    </a>
-                                    <a href="/u/{{ $d->user->username }}">
-                                        <div>{{ $d->user->nama }}</div>
-                                        <div class="small-text">{{ $d->created_at->format('d F Y') }}</div>
-                                    </a>
-                                </div>
-                                <div><i data-feather='more-vertical'></i></div>
-                            </div>
-                        </div>
-                    </div>
+                    @include('partials.definisi')
                 @endforeach
             @else
                 {{-- Jika belum ada definisi --}}

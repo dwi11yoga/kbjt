@@ -59,8 +59,8 @@
 @endif
 
 {{-- Whatsapp --}}
-@if (isset($user->media_sosial['whatsapp']) && $user->media_sosial['whatsapp'] != '' && $medsos < 5)
-    <a target="_blank" href="https://wa.me/{{ $user->media_sosial['whatsapp'] }}" title="Buka whatsapp"
+@if (isset($user->media_sosial['wa']) && $user->media_sosial['wa'] != '' && $medsos < 5)
+    <a target="_blank" href="https://wa.me/{{ $user->media_sosial['wa'] }}" title="Buka whatsapp"
         class="group w-9 h-9 flex justify-center items-center rounded-full hover:bg-green-500">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 30 30"
             width="24px" height="24px">
@@ -106,9 +106,9 @@
     <?php $medsos += 1; ?>
 @endif
 
-@if ($user->jmlMedsos > 4)
+{{-- @if ($user->jmlMedsos > 4)
     <div title="Masih ada lagi"
         class="group w-9 h-9 flex items-center justify-center rounded-full bg-neutral-100 hover:bg-neutral-300 cursor-pointer">
         •••
     </div>
-@endif
+@endif --}}

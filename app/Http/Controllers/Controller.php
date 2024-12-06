@@ -32,4 +32,13 @@ abstract class Controller
             return intval((($point - $minPoin) / ($syaratNaikLvl - $minPoin)) * 100);
         }
     }
+
+    // mengetahui url web
+    public function getUrl()
+    {
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https:' : 'http';
+        $host = $_SERVER['HTTP_HOST'];
+        $url = $protocol . '://' . $host;
+        return $url;
+    }
 }

@@ -56,7 +56,8 @@ class User extends Authenticatable
     protected $casts = [
         //konversi json jadi array
         'media_sosial' => 'array',
-        'donasi' => 'array'
+        'donasi' => 'array',
+        'tgl_lahir' => 'datetime'
     ];
 
     /**

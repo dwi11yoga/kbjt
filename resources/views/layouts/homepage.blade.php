@@ -12,6 +12,9 @@
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
+    {{-- Import js --}}
+    <script src="{{ asset('js/script.js') }}"></script>
+
     {{-- Import font --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

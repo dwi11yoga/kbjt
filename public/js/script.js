@@ -85,3 +85,19 @@ function deskripsiJenis(item) {
         jenis_deskripsi.innerText = "";
     }
 }
+
+// salin text
+function copyUrl(target, iconBefore, iconAfter) {
+    navigator.clipboard.writeText(
+        target.innerText || target.textContent || target.value,
+    );
+    iconBefore.classList.remove("inline-block");
+    iconBefore.classList.add("hidden");
+    iconAfter.classList.remove("hidden");
+    iconAfter.classList.add("inline-block");
+}
+
+// Modal toggle
+function modal(modal) {
+    modal.classList.toggle("hidden");
+}

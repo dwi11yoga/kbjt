@@ -26,10 +26,14 @@ class KosakataController extends Controller
     // Simpan kosakata
     public function store(Request $request)
     {
+        // Buat slug
+        $request['slug'] = strtolower($request['kosakata']);
+        $request['slug'] = str_replace(' ', '-', $request['slug']);
+        // dd($request['slug']);
 
         $rules = [
             'kosakata' => 'required|unique:kosakata,kosakata',
-            'ragam' => 'required',
+            'ragam' => '',
             'slug' => 'required|unique:kosakata,slug'
         ];
         if (isset($request->bahasa)) {

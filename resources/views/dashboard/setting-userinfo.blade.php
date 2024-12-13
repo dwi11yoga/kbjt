@@ -119,7 +119,7 @@
                     <div>
                         {{-- tgl_lahir --}}
                         <label for="tgl_lahir">Tanggal lahir</label>
-                        <input type="date" value="{{ old('tgl_lahir', auth()->user()->tgl_lahir->format('Y-m-d')) }}"
+                        <input type="date" value="{{ old('tgl_lahir', auth()->user()->tgl_lahir?->format('Y-m-d')) }}"
                             name="tgl_lahir" id="tgl_lahir"
                             class="px-4 py-3 w-full mt-1.5 border border-neutral-200 rounded-xl block mb-3 @error('tgl_lahir')
                         border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
@@ -443,6 +443,14 @@
                             {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'QRIS' ? 'selected' : '' }}>
                             QRIS
                         </option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'Saweria' ? 'selected' : '' }}>
+                            Saweria
+                        </option>
+                        <option
+                            {{ old('metode_donasi', auth()->user()->donasi['metode'] ?? '') == 'Trakteer' ? 'selected' : '' }}>
+                            Trakteer
+                        </option>
                     </select>
                     <input id="rekening" name="rekening" type="text"
                         value="{{ old('rekening', auth()->user()->donasi['rekening'] ?? '') }}"
@@ -458,9 +466,6 @@
             <div class="space-y-2"></div>
         </div>
     </form>
-
-    {{-- Notifikasi sukses --}}
-    @include('partials.toast')
 
     <script>
         // TAMPILKAN TOMBOL SIMPAN
@@ -547,7 +552,7 @@
                     .value ==
                     'OVO') {
                     rekening.placeholder = 'Nomor telepon';
-                } else if (metode.value == 'QRIS') {
+                } else if (metode.value == 'QRIS' || metode.value == 'Saweria' || metode.value == 'Trakteer') {
                     rekening.placeholder = 'Tautan/Link';
                 } else {
                     rekening.placeholder = 'Nomor rekening';

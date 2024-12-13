@@ -14,128 +14,35 @@
     </div>
 
     {{-- Kosakata acak --}}
-    <div class="container mx-auto px-10 py-14 bg-neutral-100 rounded-2xl">
-        <h3 class="mb-8 font-semibold text-center">Kosakata Acak Untuk Kamu</h3>
-        <div class="grid grid-cols-6 gap-4">
-            {{-- Daftar kosakata --}}
-            <div class="md:col-start-2 md:col-span-3 col-span-6">
-                <div class="bg-white rounded-2xl p-6 mb-4 hover:outline hover:outline-2 hover:outline-amber-400">
-                    {{-- Kosakata --}}
-                    <h5 class="font-semibold mb-4">Siram</h5>
-                    {{-- Definisi --}}
-                    <p class="mb-3">Bahasa krama dari "mandi". Biasa digunakan ketika aksi dilakukan oleh seseorang yang
-                        lebih
-                        tua.</p>
-                    {{-- Contoh kalimat --}}
-                    <p>Contoh kalimat:</p>
-                    <p>"Bapak nembe siram" (Ayah sedang mandi)</p>
-                    {{-- Referensi --}}
-                    <div class="italic font-light small-text mt-4">
-                        <p>Referensi</p>
-                        <ul class="list-decimal list-inside">
-                            <li>Kitab Pranata Adicara (Purwadi, 2020)</li>
-                            <li>https://www.cnnindoensia.com/bahasa-krama</li>
-                        </ul>
-                    </div>
-                    {{-- Author --}}
-                    <p class="mt-4 mb-2">Disubmit oleh</p>
-                    <div class="rounded-full w-12 h-12 bg-yellow-400 float-left mr-3"></div>
-                    <p>Muklis Satriya Nugraha</p>
-                    <p class="small-text">20 September 2024</p>
+    @isset($definisi)
+        <div class="container mx-auto px-10 py-14 bg-neutral-100 rounded-2xl">
+            <h3 class="mb-8 font-semibold text-center">Kosakata Acak Untuk Kamu</h3>
+            <div class="grid grid-cols-6 gap-4">
+                {{-- Daftar kosakata --}}
+                <div class="md:col-start-2 md:col-span-3 col-span-6">
+                    @foreach ($definisi as $d)
+                        @include('partials.definisi')
+                    @endforeach
                 </div>
-
-                <div class="bg-white rounded-2xl p-6 mb-4 hover:outline hover:outline-2 hover:outline-amber-400">
-                    {{-- Kosakata --}}
-                    <h5 class="font-semibold mb-4">Siram</h5>
-                    {{-- Definisi --}}
-                    <p class="mb-3">Bahasa krama dari "mandi". Biasa digunakan ketika aksi dilakukan oleh seseorang yang
-                        lebih
-                        tua.</p>
-                    {{-- Contoh kalimat --}}
-                    <p>Contoh kalimat:</p>
-                    <p>"Bapak nembe siram" (Ayah sedang mandi)</p>
-                    {{-- Referensi --}}
-                    <div class="italic font-light small-text mt-4">
-                        <p>Referensi</p>
-                        <ul class="list-decimal list-inside">
-                            <li>Kitab Pranata Adicara (Purwadi, 2020)</li>
-                            <li>https://www.cnnindoensia.com/bahasa-krama</li>
-                        </ul>
-                    </div>
-                    {{-- Author --}}
-                    <p class="mt-4 mb-2">Disubmit oleh</p>
-                    <div class="rounded-full w-12 h-12 bg-yellow-400 float-left mr-3"></div>
-                    <p>Muklis Satriya Nugraha</p>
-                    <p class="small-text">20 September 2024</p>
+                {{-- Lihat kosakata lainnya --}}
+                {{-- Mobile --}}
+                <div class="md:hidden block col-span-6 mx-auto">
+                    <a href="#"
+                        class="bg-amber-400 p-4 rounded-full hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-amber-400 active:bg-amber-500">Temukan
+                        kosakata lainnya <i data-feather='arrow-right' class="inline-block"></i></a>
                 </div>
-
-                <div class="bg-white rounded-2xl p-6 mb-4 hover:outline hover:outline-2 hover:outline-amber-400">
-                    {{-- Kosakata --}}
-                    <h5 class="font-semibold mb-4">Siram</h5>
-                    {{-- Definisi --}}
-                    <p class="mb-3">Bahasa krama dari "mandi". Biasa digunakan ketika aksi dilakukan oleh seseorang yang
-                        lebih
-                        tua.</p>
-                    {{-- Contoh kalimat --}}
-                    <p>Contoh kalimat:</p>
-                    <p>"Bapak nembe siram" (Ayah sedang mandi)</p>
-                    {{-- Referensi --}}
-                    <div class="italic font-light small-text mt-4">
-                        <p>Referensi</p>
-                        <ul class="list-decimal list-inside">
-                            <li>Kitab Pranata Adicara (Purwadi, 2020)</li>
-                            <li>https://www.cnnindoensia.com/bahasa-krama</li>
-                        </ul>
+                {{-- Desktop --}}
+                <div class="md:block hidden col-span-1">
+                    <div class="bg-amber-400 rounded-2xl p-6 sticky top-24 z-0">
+                        <h4 class="font-bold mb-2">Temukan kosakata lainnya!</h4>
+                        <a href="/daftar-kosakata"
+                            class="rounded-lg border-2 border-black p-2 small-text hover:bg-black hover:text-white">Klik
+                            disini<i data-feather='arrow-right' class="inline-block h-4"></i></a>
                     </div>
-                    {{-- Author --}}
-                    <p class="mt-4 mb-2">Disubmit oleh</p>
-                    <div class="rounded-full w-12 h-12 bg-yellow-400 float-left mr-3"></div>
-                    <p>Muklis Satriya Nugraha</p>
-                    <p class="small-text">20 September 2024</p>
-                </div>
-
-                <div class="bg-white rounded-2xl p-6 mb-4 hover:outline hover:outline-2 hover:outline-amber-400">
-                    {{-- Kosakata --}}
-                    <h5 class="font-semibold mb-4">Siram</h5>
-                    {{-- Definisi --}}
-                    <p class="mb-3">Bahasa krama dari "mandi". Biasa digunakan ketika aksi dilakukan oleh seseorang yang
-                        lebih
-                        tua.</p>
-                    {{-- Contoh kalimat --}}
-                    <p>Contoh kalimat:</p>
-                    <p>"Bapak nembe siram" (Ayah sedang mandi)</p>
-                    {{-- Referensi --}}
-                    <div class="italic font-light small-text mt-4">
-                        <p>Referensi</p>
-                        <ul class="list-decimal list-inside">
-                            <li>Kitab Pranata Adicara (Purwadi, 2020)</li>
-                            <li>https://www.cnnindoensia.com/bahasa-krama</li>
-                        </ul>
-                    </div>
-                    {{-- Author --}}
-                    <p class="mt-4 mb-2">Disubmit oleh</p>
-                    <div class="rounded-full w-12 h-12 bg-yellow-400 float-left mr-3"></div>
-                    <p>Muklis Satriya Nugraha</p>
-                    <p class="small-text">20 September 2024</p>
-                </div>
-            </div>
-            {{-- Lihat kosakata lainnya --}}
-            {{-- Mobile --}}
-            <div class="md:hidden block col-span-6 mx-auto">
-                <a href="#"
-                    class="bg-amber-400 p-4 rounded-full hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-amber-400 active:bg-amber-500">Temukan
-                    kosakata lainnya <i data-feather='arrow-right' class="inline-block"></i></a>
-            </div>
-            {{-- Desktop --}}
-            <div class="md:block hidden col-span-1">
-                <div class="bg-amber-400 rounded-2xl p-6 sticky top-24 z-0">
-                    <h4 class="font-bold mb-2">Temukan kosakata lainnya!</h4>
-                    <button class="rounded-lg border-2 border-black p-2 small-text hover:bg-black hover:text-white">Klik
-                        disini<i data-feather='arrow-right' class="inline-block h-4"></i></button>
                 </div>
             </div>
         </div>
-    </div>
+    @endisset
 
     {{-- Pengenalan kbjt --}}
     <div class="container mx-auto p-10">
@@ -192,25 +99,25 @@
             <div class="flex md:flex-row flex-col md:space-x-3 space-y-3 mb-3">
                 <div
                     class="px-10 py-16 bg-white hover:bg-white hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2 rounded-2xl md:w-1/4 w-full text-center">
-                    <h2 class="font-bold">9.213</h2>
+                    <h2 class="font-bold">{{ $jmlAnggota }}</h2>
                     <div>Anggota</div>
                 </div>
 
                 <div
                     class="px-10 py-16 bg-white hover:bg-white hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2 rounded-2xl md:w-1/4 w-full text-center">
-                    <h2 class="font-bold">27.551</h2>
+                    <h2 class="font-bold">{{ $jmlKosakata }}</h2>
                     <div>Kosakata</div>
                 </div>
 
                 <div
                     class="px-10 py-16 bg-white hover:bg-white hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2 rounded-2xl md:w-1/4 w-full text-center">
-                    <h2 class="font-bold">67.974</h2>
+                    <h2 class="font-bold">{{ $jmlDefinisi }}</h2>
                     <div>Definisi</div>
                 </div>
 
                 <div
                     class="px-10 py-16 bg-white hover:bg-white hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2 rounded-2xl md:w-1/4 w-full text-center">
-                    <h2 class="font-bold">20.151</h2>
+                    <h2 class="font-bold">{{ $jmlTerverifikasi }}</h2>
                     <div>Definisi Terverifikasi</div>
                 </div>
             </div>
@@ -241,8 +148,60 @@
         <div class="md:px-24">
             <h3 class="font-semibold mb-5">FAQ</h3>
 
+            <?php
+            $faq = [
+                [
+                    'id' => 1,
+                    'title' => 'Bagaimana cara aku ikut berkontribusi?',
+                    'content' => 'Kamu bisa mendaftar sebagai pengguna, kemudian mulai menambahkan kata atau definisi baru. Setelah itu, kontribusi kamu akan ditampilkan di halaman kosakata. Kontribusi kamu akan mendapat status "terferifikasi" setelah divalidasi oleh pengurus/moderator.',
+                ],
+                [
+                    'id' => 2,
+                    'title' => 'Apakah ada keuntungan menjadi kontributor?',
+                    'content' => 'Ya! Kontributor akan mendapatkan poin setiap kali berkontribusi pada komunitas. Poin tersebutmenentukanlevel kontributor. Kontributor juga akan menerima sertifikat saat mencapai level tertentu. Selain itu, kontributor bisa meraih pencapaian (achievement) khusus dengan menyelesaikan aktivitas tertentu.Pengguna lain pun dapat memberikan donasi langsung kepada kontributor sebagai bentuk apresiasi.',
+                ],
+                [
+                    'id' => 3,
+                    'title' => 'Apakah platform ini gratis untuk digunakan?',
+                    'content' => 'Ya, platform ini gratis untuk semua pengguna. Meski begitu, kamu dapat mendukung keberlanjutan aplikasi ini melalui donasi. Uang donasi nantinya digunakan untuk membayar hosting dan domain.',
+                ],
+                [
+                    'id' => 4,
+                    'title' => 'Bagaimana jika aku menemukan kata atau definisi yang tidak sesuai?',
+                    'content' => 'Kamu dapat melaporkan kata atau definisi tersebut melalui fitur laporkan kesalahan. Pengurus / moderator akan memproses laporan kamu dan melakukan perbaikan jika diperlukan.',
+                ],
+                [
+                    'id' => 5,
+                    'title' => 'Apakah aku harus paham Bahasa Jawa untuk menggunakan platform ini?',
+                    'content' => 'Tidak. Platform ini dirancang ramah pengguna, termasuk mereka yang baru belajar Bahasa Jawa. Kamu bahkan dapat melihat terjemahan dan contoh penggunaan untuk membantu memahami.',
+                ],
+            ];
+            ?>
+
+            @foreach ($faq as $d)
+                <div class="relative">
+                    <div id="accordion-header-{{ $d['id'] }}" class="text-neutral-600">
+                        <button id="accordion-title-{{ $d['id'] }}"
+                            class="w-full bg-white text-left py-5 pl-6 pr-10 border border-neutral-200 hover:bg-amber-100">
+                            <i data-feather='help-circle' class="inline-block mr-3"></i>
+                            {{ $d['title'] }}
+                        </button>
+                        <div id="accordion-show-{{ $d['id'] }}"><i data-feather='chevron-down'
+                                class="absolute top-5 right-6"></i>
+                        </div>
+                        <div id="accordion-hide-{{ $d['id'] }}" class="hidden"><i data-feather='chevron-up'
+                                class="absolute top-5 right-6"></i>
+                        </div>
+                    </div>
+                    <div id="accordion-content-{{ $d['id'] }}"
+                        class="hidden py-5 pl-6 pr-4 border border-neutral-200 text-neutral-600">
+                        {!! $d['content'] !!}
+                    </div>
+                </div>
+            @endforeach
+
             {{-- FAQ 1 --}}
-            <div class="relative">
+            {{-- <div class="relative">
                 <div id="accordion-header-1" class="text-neutral-600">
                     <button id="accordion-title-1"
                         class="w-full bg-white text-left py-5 pl-6 pr-10 rounded-t-xl border border-neutral-200 hover:bg-amber-100">
@@ -261,10 +220,10 @@
                         "terferifikasi" setelah divalidasi oleh pengurus/moderator.
                     </p>
                 </div>
-            </div>
+            </div> --}}
 
             {{-- FAQ 2" --}}
-            <div class="relative">
+            {{-- <div class="relative">
                 <div id="accordion-header-2" class="text-neutral-600">
                     <button id="accordion-title-2"
                         class="w-full bg-white text-left py-5 pl-6 pr-10 border border-neutral-200 hover:bg-amber-100">
@@ -287,10 +246,10 @@
                         Pengguna lain pun dapat memberikan donasi langsung kepada kontributor sebagai bentuk apresiasi.
                     </p>
                 </div>
-            </div>
+            </div> --}}
 
             {{-- FAQ 3" --}}
-            <div class="relative">
+            {{-- <div class="relative">
                 <div id="accordion-header-3" class="text-neutral-600">
                     <button id="accordion-title-3"
                         class="w-full bg-white text-left py-5 pl-6 pr-10 border border-neutral-200 hover:bg-amber-100">
@@ -307,10 +266,10 @@
                     Ya, platform ini gratis untuk semua pengguna. Meski begitu, kamu dapat mendukung keberlanjutan aplikasi
                     ini melalui donasi. Uang donasi nantinya digunakan untuk membayar hosting dan domain.
                 </div>
-            </div>
+            </div> --}}
 
             {{-- FAQ 4" --}}
-            <div class="relative">
+            {{-- <div class="relative">
                 <div id="accordion-header-4" class="text-neutral-600">
                     <button id="accordion-title-4"
                         class="w-full bg-white text-left py-5 pl-6 pr-10 border border-neutral-200 hover:bg-amber-100">
@@ -327,10 +286,10 @@
                     Kamu dapat melaporkan kata atau definisi tersebut melalui fitur laporkan kesalahan. Pengurus / moderator
                     akan memproses laporan kamu dan melakukan perbaikan jika diperlukan.
                 </div>
-            </div>
+            </div> --}}
 
             {{-- FAQ 5" --}}
-            <div class="relative">
+            {{-- <div class="relative">
                 <div id="accordion-header-5" class="text-neutral-600">
                     <button id="accordion-title-5"
                         class="w-full bg-white text-left py-5 pl-6 pr-10 border border-neutral-200 hover:bg-amber-100">
@@ -347,45 +306,25 @@
                     Tidak. Platform ini dirancang ramah pengguna, termasuk mereka yang baru belajar Bahasa Jawa. Kamu bahkan
                     dapat melihat terjemahan dan contoh penggunaan untuk membantu memahami.
                 </div>
-            </div>
+            </div> --}}
 
         </div>
     </div>
 
     <script>
-        function accordion(accordionHeader, accordionTitle, accordionContent, accordionShow, accordionHide) {
-            accordionContent.classList.toggle('hidden');
-            if (accordionContent.classList.contains('hidden')) { // Jika item disembunyikan
-                accordionTitle.classList.remove('bg-amber-100');
-                accordionTitle.classList.add('bg-white', 'text-neutral-600');
-                accordionShow.classList.remove('hidden');
-                accordionHide.classList.add('hidden');
-                accordionHeader.classList.remove('text-amber-700');
-                accordionHeader.classList.add('text-neutral-600');
-            } else { //Jika item ditampilkan
-                accordionTitle.classList.remove('bg-white', 'text-neutral-600')
-                accordionTitle.classList.add('bg-amber-100');
-                accordionShow.classList.add('hidden');
-                accordionHide.classList.remove('hidden');
-                accordionHeader.classList.remove('text-neutral-600');
-                accordionHeader.classList.add('text-amber-700');
-            }
+        for (let i = 1; i <= 5; i++) {
+            document.getElementById(`accordion-title-${i}`).addEventListener('click', () => {
+                accordion(
+                    5,
+                    document.getElementById(`accordion-header-${i}`),
+                    document.getElementById(`accordion-title-${i}`),
+                    document.getElementById(`accordion-content-${i}`),
+                    document.getElementById(`accordion-show-${i}`),
+                    document.getElementById(`accordion-hide-${i}`)
+                );
+            });
         }
     </script>
-
-    <?php for($i=1; $i<=5; $i++) { ?>
-    <script>
-        document.getElementById('accordion-title-<?= $i ?>').addEventListener('click', () => {
-            accordion(
-                document.getElementById('accordion-header-<?= $i ?>'),
-                document.getElementById('accordion-title-<?= $i ?>'),
-                document.getElementById('accordion-content-<?= $i ?>'),
-                document.getElementById('accordion-show-<?= $i ?>'),
-                document.getElementById('accordion-hide-<?= $i ?>')
-            );
-        });
-    </script>
-    <?php } ?>
 
     {{-- Ajakan untuk berbagung --}}
     <div class="container mx-auto px-10 py-28 bg-amber-400 rounded-xl">

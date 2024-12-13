@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -166,9 +167,17 @@ class UserController extends Controller
             $rules['username'] = '';
         }
 
-
         // validasi data
-        $validatedData = $request->validate($rules);
+        try {
+            $validatedData = $request->validate($rules);
+        } catch (ValidationException $e) {
+            return back()
+                ->with('failed', 'Gagal menyimpan perubahan')
+                ->withErrors($e->errors())
+                ->withInput();
+        }
+
+
 
         $arraySimpan = [
             'username' => $validatedData['username'],
@@ -214,6 +223,6 @@ class UserController extends Controller
             Storage::delete($request->oldPP);
         }
 
-        return back()->with('success', 'Profil berhasil diperbarui.');
+        return back()->with('success', 'Profil berhasil diperbarui');
     }
 }

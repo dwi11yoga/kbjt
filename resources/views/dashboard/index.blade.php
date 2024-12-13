@@ -33,7 +33,7 @@
                 class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
                 <div>Poin <br>
                     <div class="flex items-baseline">
-                        <h1 class="font-bold -mt-2">{{ auth()->user()->poin }}</h1>
+                        <h1 class="font-bold -mt-2">{{ number_format(auth()->user()->poin, 0, ',', '.') }}</h1>
                         <span class="text-green-600"><i data-feather='arrow-up'
                                 class="inline-block w-5 -mt-1"></i>210</span>
                     </div>

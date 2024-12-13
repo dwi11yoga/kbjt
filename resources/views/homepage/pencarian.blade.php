@@ -13,7 +13,7 @@
         @else
             <div class="font-semibold mb-3">Kosakata</div>
             <?php
-            $notFound = 'Kosakata dengan kata kunci "' . request()->keyword . '" tidak ditemukan. <a href="#" title="Tambahkan kosakata" class="text-blue-600">Tambahkan?</a>';
+            $notFound = 'Kosakata dengan kata kunci "' . request()->keyword . '" tidak ditemukan. <a href="/tambah/kosakata?keyword=' . request()->keyword . '" title="Tambahkan kosakata" class="text-blue-600">Tambahkan?</a>';
             ?>
             @include('partials.not-found')
         @endif
@@ -93,7 +93,7 @@
 
     <div class="space-y-3">
         @foreach ($user as $d)
-            <a href="/user/{{ $d->username }}" class="block">
+            <a href="/u/{{ $d->username }}" class="block">
                 <div
                     class="group flex items-center bg-white p-5 rounded-2xl border border-neutral-200 hover:border-amber-100 hover:bg-amber-100 hover:outline hover:outline-2 hover:outline-offset-4 hover:outline-amber-300 active:bg-amber-200">
                     {{-- Foto profil --}}

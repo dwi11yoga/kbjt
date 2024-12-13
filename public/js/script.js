@@ -1,9 +1,6 @@
 // Toggle menu - untuk halaman kosakata
 function dropdown(button, menu) {
     menu.classList.toggle("hidden");
-    button.classList.toggle("outline");
-    button.classList.toggle("outline-2");
-    button.classList.toggle("outline-neutral-200");
     // Tutup menu jika klik di luar
     if (!menu.classList.contains("hidden")) {
         document.addEventListener("click", function handleClickOutside(event) {
@@ -12,11 +9,6 @@ function dropdown(button, menu) {
                 !button.contains(event.target)
             ) {
                 menu.classList.add("hidden");
-                button.classList.remove(
-                    "outline",
-                    "outline-2",
-                    "outline-neutral-200",
-                );
                 document.removeEventListener("click", handleClickOutside); // Hapus event listener
             }
         });
@@ -26,9 +18,17 @@ function dropdown(button, menu) {
 // Ubah label serupa - untuk buat dan edit kosakata
 function ubahSerupa(id) {
     const labelSerupa = document.getElementById("labelSerupa");
-    if (id.value == "Krama") {
+    const serupa = document.getElementById("serupa");
+    if (id.value == "") {
+        labelSerupa.classList.add("hidden");
+        serupa.classList.add("hidden");
+    } else if (id.value == "Krama") {
+        labelSerupa.classList.remove("hidden");
+        serupa.classList.remove("hidden");
         labelSerupa.innerText = "Arti dalam bahasa ngoko";
     } else if (id.value == "Ngoko") {
+        labelSerupa.classList.remove("hidden");
+        serupa.classList.remove("hidden");
         labelSerupa.innerText = "Arti dalam bahasa krama";
     }
 }
@@ -100,4 +100,62 @@ function copyUrl(target, iconBefore, iconAfter) {
 // Modal toggle
 function modal(modal) {
     modal.classList.toggle("hidden");
+}
+
+// Accordion
+function accordion(jmlAccordion, header, title, content, showBtn, hideBtn) {
+    // cek apakah didalam konten yang diklik adalah accordion yang ditampilkan/tidak
+    const containHidden = content.classList.contains("hidden") ? true : false;
+
+    // sembunyikan semua accordion
+    for (let i = 1; i <= jmlAccordion; i++) {
+        document
+            .getElementById(`accordion-title-${i}`)
+            .classList.remove("bg-amber-100");
+        document
+            .getElementById(`accordion-title-${i}`)
+            .classList.add("bg-white", "text-neutral-600");
+        document
+            .getElementById(`accordion-show-${i}`)
+            .classList.remove("hidden");
+        document.getElementById(`accordion-hide-${i}`).classList.add("hidden");
+        document
+            .getElementById(`accordion-header-${i}`)
+            .classList.remove("text-amber-700");
+        document
+            .getElementById(`accordion-header-${i}`)
+            .classList.add("text-neutral-600");
+        document
+            .getElementById(`accordion-content-${i}`)
+            .classList.add("hidden");
+    }
+
+    // tampilkan accordion yang diklik
+    if (containHidden == true) {
+        content.classList.remove("hidden");
+        title.classList.remove("bg-white", "text-neutral-600");
+        title.classList.add("bg-amber-100");
+        showBtn.classList.add("hidden");
+        hideBtn.classList.remove("hidden");
+        header.classList.remove("text-neutral-600");
+        header.classList.add("text-amber-700");
+    }
+}
+
+// buat panjang textarea otomatis
+function textareaHeight(id) {
+    id.style.height = "auto";
+    id.style.height = `${id.scrollHeight}px`;
+}
+
+// Buka popup
+function openWindow(component) {
+    var component = document.getElementById(component);
+    component.classList.remove("invisible");
+}
+
+// tutup popup
+function closeWindow(component) {
+    var component = document.getElementById(component);
+    component.classList.add("invisible");
 }

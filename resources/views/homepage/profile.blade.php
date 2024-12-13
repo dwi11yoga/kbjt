@@ -46,7 +46,7 @@
 
                         {{-- Bergabung --}}
                         <div class="text-neutral-600">
-                            Bergabung sejak {{ $user->created_at->format('d F Y') }}.
+                            Bergabung sejak {{ $user->created_at->translatedFormat('d F Y') }}.
                         </div>
 
                         {{-- Website & Media sosial --}}
@@ -97,50 +97,61 @@
                 <div class="col-span-3 text-justify">
                     {{-- Definisi --}}
                     <div id="definisipane" class="">
-                        @foreach ($definisi as $d)
-                            @include('partials.definisi')
-                        @endforeach
+                        @if (!$definisi->isEmpty())
+                            @foreach ($definisi as $d)
+                                @include('partials.definisi')
+                            @endforeach
+                        @else
+                            <?php $notFound = 'Belum ada definisi yang ditambahkan oleh pengguna.'; ?>
+                            @include('partials.not-found')
+                        @endif
                     </div>
                     {{-- Kosakata --}}
                     <div id="kosakatapane" class="space-y-3">
-                        @foreach ($kosakata as $d)
-                            <a href="/kosakata/{{ $d->slug }}" class="block">
-                                <div
-                                    class="group bg-white p-5 rounded-2xl border border-neutral-200 hover:border-amber-100 hover:bg-amber-100 hover:outline hover:outline-2 hover:outline-offset-4 hover:outline-amber-300 active:bg-amber-200">
-                                    <h5 class="capitalize">{{ $d->kosakata }} @if ($d->aksara)
-                                            <span class="jawa text-sm">({{ $d->aksara }})</span>
-                                        @endif
-                                    </h5>
+                        @if (!$kosakata->isEmpty())
+                            @foreach ($kosakata as $d)
+                                <a href="/kosakata/{{ $d->slug }}" class="block">
+                                    <div
+                                        class="group bg-white p-5 rounded-2xl border border-neutral-200 hover:border-amber-100 hover:bg-amber-100 hover:outline hover:outline-2 hover:outline-offset-4 hover:outline-amber-300 active:bg-amber-200">
+                                        <h5 class="capitalize">{{ $d->kosakata }} @if ($d->aksara)
+                                                <span class="jawa text-sm">({{ $d->aksara }})</span>
+                                            @endif
+                                        </h5>
 
-                                    {{-- Jumlah definisi --}}
-                                    <div>26 definisi (4 definisi terverifikasi)</div>
+                                        {{-- Jumlah definisi --}}
+                                        <div>26 definisi (4 definisi terverifikasi)</div>
 
-                                    {{-- Kontributor --}}
-                                    <div class="flex mt-1 items-center">
-                                        <div class="flex -space-x-3">
-                                            <div
-                                                class="overflow-hidden h-8 w-8 rounded-full z-20 border-white group-hover:border-amber-100 border-2">
-                                                @include('partials.profil-pic-general-array2')
+                                        {{-- Kontributor --}}
+                                        <div class="flex mt-1 items-center">
+                                            <div class="flex -space-x-3">
+                                                <div
+                                                    class="overflow-hidden h-8 w-8 rounded-full z-20 border-white group-hover:border-amber-100 border-2">
+                                                    @include('partials.profil-pic-general-array2')
+                                                </div>
                                             </div>
+                                            <div class="ml-2">{{ $d->user->nama }}</div>
                                         </div>
-                                        <div class="ml-2">{{ $d->user->nama }}</div>
+                                        {{-- Ragam dan jenis kosakata --}}
+                                        <div class="text-sm mt-2">
+                                            @if ($d->ragam)
+                                                <span class="py-1 px-2 bg-blue-100 rounded-lg">{{ $d->ragam }}</span>
+                                            @endif
+                                            @if ($d->jenis)
+                                                <span class="py-1 px-2 bg-red-100 rounded-lg">{{ $d->jenis }}</span>
+                                            @endif
+                                        </div>
                                     </div>
-                                    {{-- Ragam dan jenis kosakata --}}
-                                    <div class="text-sm mt-2">
-                                        @if ($d->ragam)
-                                            <span class="py-1 px-2 bg-blue-100 rounded-lg">{{ $d->ragam }}</span>
-                                        @endif
-                                        @if ($d->jenis)
-                                            <span class="py-1 px-2 bg-red-100 rounded-lg">{{ $d->jenis }}</span>
-                                        @endif
-                                    </div>
-                                </div>
-                            </a>
-                        @endforeach
+                                </a>
+                            @endforeach
+                        @else
+                            <?php $notFound = 'Belum ada kosakata yang ditambahkan oleh pengguna.'; ?>
+                            @include('partials.not-found')
+                        @endif
                     </div>
                     {{-- Achivement --}}
                     <div id="achivementpane" class="">
-                        Achievement
+                        <?php $notFound = 'Belum ada achievement yang diperoleh pengguna.'; ?>
+                        @include('partials.not-found')
                     </div>
                     {{-- Tentang --}}
                     <div id="tentangpane" class="space-y-4">
@@ -342,17 +353,25 @@
                         ini!
                     </div>
                     <div class="flex relative">
-                        <span title="Facebook"
+                        <span
                             class="inline-flex py-1 px-5 text-nowrap border border-neutral-200 justify-center items-center rounded-l-xl">{{ $user->donasi['metode'] }}</span>
                         <input id="rekening" type="text" readonly
                             class="rounded-r-xl border border-neutral-200 px-4 py-3 w-full"
                             value="{{ $user->donasi['rekening'] }}">
-                        <span
-                            onclick="copyUrl(document.getElementById('rekening'), document.getElementById('copyBefore2'), document.getElementById('copyAfter2'))"
-                            class="absolute right-3 top-3 cursor-pointer" title="Salin">
-                            <i id="copyBefore2" data-feather='copy' class="w-5"></i>
-                            <i id="copyAfter2" data-feather='check' class="w-5 hidden"></i>
-                        </span>
+                        @if ($user->donasi['metode'] == 'QRIS' || $user->donasi['metode'] == 'Saweria' || $user->donasi['metode'] == 'Trakteer')
+                            <a href="{{ $user->donasi['rekening'] }}" target="_blank"
+                                class="absolute right-3 top-3 cursor-pointer"
+                                title="Beralih ke {{ $user->donasi['metode'] }}">
+                                <i data-feather='external-link' class="w-5"></i>
+                            </a>
+                        @else
+                            <span
+                                onclick="copyUrl(document.getElementById('rekening'), document.getElementById('copyBefore2'), document.getElementById('copyAfter2'))"
+                                class="absolute right-3 top-3 cursor-pointer" title="Salin">
+                                <i id="copyBefore2" data-feather='copy' class="w-5"></i>
+                                <i id="copyAfter2" data-feather='check' class="w-5 hidden"></i>
+                            </span>
+                        @endif
                     </div>
                 </div>
             </div>

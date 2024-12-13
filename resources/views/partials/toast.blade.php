@@ -1,6 +1,6 @@
 @if (session('failed'))
     <div id="failed"
-        class="sticky bottom-8 left-1/2 transform -translate-x-1/2 z-50 bg-white shadow-md p-4 w-full max-w-sm text-gray-800 flex justify-between items-start rounded-lg">
+        class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 bg-white shadow-md p-4 w-full max-w-sm text-gray-800 flex justify-between items-start rounded-lg">
         <div class="flex items-center">
             <div class="inline-block rounded-md bg-red-200 py-1 px-1.5 mr-4"><i data-feather='alert-triangle'
                     class="text-red-700 w-5"></i>
@@ -34,7 +34,7 @@
     </script>
 @elseif (session('success'))
     <div id="success"
-        class="sticky bottom-8 left-1/2 transform -translate-x-1/2 z-50 bg-white shadow-md p-4 w-full max-w-sm text-gray-800 flex justify-between items-start rounded-lg">
+        class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 bg-white shadow-md p-4 w-full max-w-sm text-gray-800 flex justify-between items-start rounded-lg">
         <div class="flex items-center">
             <div class="inline-block rounded-md bg-green-200 py-1 px-1.5 mr-4"><i data-feather='check-circle'
                     class="text-green-700 w-5"></i>

@@ -7,21 +7,41 @@ use App\Models\Kosakata;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomepageController extends Controller
 {
     //Beranda
     public function index()
     {
+        // Ambil top 100 user
         $topContributor = User::select(['username', 'nama', 'profile_pic', 'jenis_kelamin', 'poin'])
             ->orderBy('poin', 'asc')
             ->limit(100)
             ->get();
 
+        // Ambil definisi random
+        $definisi = Definisi::inRandomOrder()->take(5)->with('kosakata:id,kosakata,slug')->get();
+        foreach ($definisi as $d) {
+            $d['slug'] = $d->kosakata->slug;
+            $d['kosakata'] = $d->kosakata->kosakata;
+        }
+
+        // dapatkan statistik web
+        $jmlAnggota = number_format(User::select('id')->count(), 0, ',', '.');
+        $jmlKosakata = number_format(Kosakata::select('id')->count(), 0, ',', '.');
+        $jmlDefinisi = number_format(Definisi::select('id')->count(), 0, ',', '.');
+        $jmlTerverifikasi = number_format(Definisi::select('id')->whereNotNull('verifikasi')->count(), 0, ',', '.');
+
         return view('homepage.index', [
             'group' => 'homepage',
             'title' => 'Selamat datang di Kamus Bahasa Jawa Terbuka!',
-            'topContributor' => $topContributor
+            'topContributor' => $topContributor,
+            'definisi' => $definisi,
+            'jmlAnggota' => $jmlAnggota,
+            'jmlKosakata' => $jmlKosakata,
+            'jmlDefinisi' => $jmlDefinisi,
+            'jmlTerverifikasi' => $jmlTerverifikasi
         ]);
     }
 
@@ -51,9 +71,19 @@ class HomepageController extends Controller
     // Hall of Fame
     public function hallOfFame()
     {
+        $user = User::select('id', 'username', 'poin', 'created_at', 'jenis_kelamin', 'profile_pic')
+            ->orderBy('poin', 'desc')
+            ->limit(100)
+            ->get();
+        foreach ($user as $d) {
+            $d['level'] = $this->levelCalculator($d['poin']);
+            $d['poin'] = number_format($d['poin'], 0, ',', '.');
+        }
+        // dd($user);
         return view('homepage.hall-of-fame', [
             'group' => 'hall of fame',
-            'title' => 'Hall of Fame'
+            'title' => 'Hall of Fame',
+            'user' => $user
         ]);
     }
 
@@ -149,6 +179,18 @@ class HomepageController extends Controller
             }
         }
 
+        // Cek apakah user sudah submit definisi/belum
+        function cariDefinisiUser($definisi, $userId)
+        {
+            foreach ($definisi as $d) {
+                if ($d->user_id == $userId) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        $cekDefinisiUser = cariDefinisiUser($definisi, Auth::user()->id);
+
         // dd($definisi);
 
         return view('homepage.kosakata', [
@@ -157,7 +199,8 @@ class HomepageController extends Controller
             'kosakata' => $slug,
             'data' => $kosakata,
             'dataNull' => $nullCount,
-            'definisi' => $definisi
+            'definisi' => $definisi,
+            'cekDefinisiUser' => $cekDefinisiUser
         ]);
     }
 }

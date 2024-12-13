@@ -82,6 +82,9 @@
         </div>
     </div>
 
+    {{-- Toast --}}
+    @include('partials.toast')
+
     {{-- Feathericon --}}
     <script>
         feather.replace();

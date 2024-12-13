@@ -15,8 +15,8 @@ Route::get('/blog', [HomepageController::class, 'blog']);
 Route::get('/blog/post', [HomepageController::class, 'blogPost']);
 Route::get('/donasi', [HomepageController::class, 'donasi']);
 Route::get('/cari', [HomepageController::class, 'pencarian']);
-Route::get('/kosakata/buat', [KosakataController::class, 'tambahKosakata'])->middleware('auth');
-Route::post('/kosakata/buat', [KosakataController::class, 'store'])->middleware('auth');
+Route::get('/tambah/kosakata', [KosakataController::class, 'tambahKosakata'])->middleware('auth');
+Route::post('/tambah/kosakata', [KosakataController::class, 'store'])->middleware('auth');
 Route::get('/kosakata/{slug}', [HomepageController::class, 'kosakata']);
 // Profil user
 Route::get('/u/{username}', [UserController::class, 'profile']);

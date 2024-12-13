@@ -3,11 +3,11 @@
 @section('body')
     <h3 class="font-semibold">Tambah kosakata</h3>
     <div class="p-8 border border-neutral-200 rounded-2xl">
-        <form action="/kosakata/buat" method="POST">
+        <form action="/tambah/kosakata" method="POST">
             @csrf
             <label for="kosakata">Kosakata</label>
             <input type="text" name="kosakata" id="kosakata" oninput="slug()"
-                value="{{ old('kosakata', str_replace('-', ' ', request()->kosakata)) }}"
+                value="{{ old('kosakata', str_replace('-', ' ', request()->keyword)) }}"
                 class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-xl block mb-3 @error('kosakata')
             border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
             @enderror">
@@ -28,6 +28,7 @@
                     <label for="ragam">Ragam</label>
                     <select name="ragam" id="ragam" onchange="ubahSerupa(this)"
                         class="px-4 appearance-none bg-white py-3 w-full mt-1.5 border border-gray-400 rounded-xl block mb-3">
+                        <option value="">Pilih</option>
                         <option {{ old('ragam') == 'Krama' ? 'selected' : '' }}>Krama</option>
                         <option {{ old('ragam') == 'Ngoko' ? 'selected' : '' }}>Ngoko</option>
                     </select>
@@ -148,22 +149,6 @@
                     }
                 </script>
             </div>
-
-            {{-- Slug --}}
-            <input type="text" name="slug" id="slug" readonly hidden value="{{ old('slug') }}"><br>
-            {{-- buat slug otomatis --}}
-            <script>
-                const kosakata = document.getElementById('kosakata');
-                const slug = document.getElementById('slug');
-                kosakata.addEventListener('input', () => {
-                    const convert = kosakata.value.replace(/ /g, '-');
-                    slug.value = convert;
-                })
-
-                // Atur slug secara otomatis saat halaman dimuat
-                const convert = kosakata.value.replace(/ /g, '-');
-                slug.value = convert;
-            </script>
 
             <button type="submit"
                 class=" rounded-full bg-amber-300 py-2 px-4 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-amber-400">Submit</button>

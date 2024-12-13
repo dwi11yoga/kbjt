@@ -22,9 +22,11 @@ class UserSeeder extends Seeder
             'username' => 'moeklis',
             'email' => Str::random(10) . '@example.com',
             'password' => Hash::make('muklis1'),
+            'poin' => random_int(10, 10000),
             'tampilkan_email' => true,
+            'created_at' => now()
         ]);
 
-        User::factory(10)->create();
+        User::factory(100)->create();
     }
 }

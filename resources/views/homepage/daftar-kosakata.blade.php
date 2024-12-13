@@ -4,7 +4,7 @@
     <h3 class="font-bold mb-7">Daftar Kosakata</h3>
     {{-- Dropdown huruf --}}
     <form action="/daftar-kosakata" method="GET" class="relative justify-between">
-        <select name="filter" id="filter"
+        <select name="filter" id="filter" onchange="muatDropdown(this)"
             class="w-full py-3 px-5 rounded-md bg-white border border-gray-200 cursor-pointer font-bold appearance-none">
             <option value="A" {{ $filter == 'A' ? 'selected' : '' }}>A</option>
             <option value="B" {{ $filter == 'B' ? 'selected' : '' }}>B</option>
@@ -38,17 +38,18 @@
     </form>
     {{-- memuat halaman ketika item dropdown dipilih --}}
     <script>
-        const dropdown = document.getElementById('filter');
-        dropdown.addEventListener('change', () => {
+        function muatDropdown(dropdown) {
             dropdown.form.submit();
-        });
+        }
     </script>
 
     @if ($kosakata->isEmpty())
-        <div class="w-full text-center">
+        <?php $notFound = "Belum ada data. <a href='/kosakata/buat' class='text-blue-500'>Tambahkan?</a>"; ?>
+        @include('partials.not-found')
+        {{-- <div class="w-full text-center">
             <div>Belum ada data. <a href="#" class="text-blue-600">Tambahkan</a>
             </div>
-        </div>
+        </div> --}}
     @else
         <ul class="list-disc list-outside ml-4 flex flex-wrap mt-4 space-y-1">
             @foreach ($kosakata as $d)

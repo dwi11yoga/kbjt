@@ -38,7 +38,14 @@
                     @endif
 
                     {{-- Jumlah definisi --}}
-                    <div>26 definisi (4 definisi terverifikasi)</div>
+                    <div>
+                        @if ($d->jmlDefinisi > 0)
+                            {{ $d->jmlDefinisi }}
+                            definisi{{ $d->jmlTerverifikasi > 0 ? ' (' . $d->jmlTerverifikasi . ' terverifikasi)' : '' }}.
+                        @else
+                            Definisi belum ditambahkan.
+                        @endif
+                    </div>
 
                     {{-- Kontributor --}}
                     <div class="flex mt-1 items-center">

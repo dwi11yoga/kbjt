@@ -119,11 +119,24 @@ class HomepageController extends Controller
     {
         $keyword = $request->keyword;
         // Cari kosakata
-        $kosakata = Kosakata::select(['kosakata', 'slug', 'aksara', 'ragam', 'jenis', 'arti_indo'])
+        $kosakata = Kosakata::select('id', 'kosakata', 'slug', 'aksara', 'ragam', 'jenis', 'arti_indo')
             ->where('kosakata', 'like', '%' . $keyword . '%')
             ->orWhere('arti_indo', 'like', '%' . $keyword . '%')
             ->orWhere('aksara', 'like', '%' . $keyword . '%')
             ->get();
+        foreach ($kosakata as $d) {
+            $d['jmlDefinisi'] = Definisi::select('id')
+                ->where('kosakata_id', '=', $d->id)
+                ->count();
+            if ($d['jmlDefinisi'] > 0) {
+                $d['jmlTerverifikasi'] = Definisi::select('id')
+                    ->where('kosakata_id', '=', $d->id)
+                    ->whereNotNull('verifikasi')
+                    ->count();
+            } else {
+                $d['jmlTerverifikasi'] = 0;
+            }
+        }
         $jumlahKosakata = count($kosakata);
 
         // Cari pengguna
@@ -189,9 +202,7 @@ class HomepageController extends Controller
             }
             return false;
         }
-        $cekDefinisiUser = cariDefinisiUser($definisi, Auth::user()->id);
-
-        // dd($definisi);
+        $cekDefinisiUser = cariDefinisiUser($definisi, Auth::user()->id ?? 0);
 
         return view('homepage.kosakata', [
             'group' => 'pencarian',

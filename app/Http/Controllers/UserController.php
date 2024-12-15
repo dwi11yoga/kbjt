@@ -8,9 +8,12 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\ValidationException;
+
+use function Laravel\Prompts\error;
 
 class UserController extends Controller
 {
@@ -177,8 +180,6 @@ class UserController extends Controller
                 ->withInput();
         }
 
-
-
         $arraySimpan = [
             'username' => $validatedData['username'],
             'nama' => $validatedData['nama'],
@@ -224,5 +225,26 @@ class UserController extends Controller
         }
 
         return back()->with('success', 'Profil berhasil diperbarui');
+    }
+
+    // Update Password User
+    public function updatePassword(Request $request)
+    {
+        // dd($request);
+        // Validasi
+        $validatedData = $request->validate([
+            'oldPassword' => 'required|min:6',
+            'newPassword1' => 'required|min:6|same:newPassword1',
+            'newPassword2' => 'required|min:6|same:newPassword1'
+        ]);
+
+        // Cek apakah password lama benar
+        if (!Hash::check($validatedData['oldPassword'], Auth::user()->password)) {
+            return back()->with('failed', 'Gagal mengubah kata sandi')->withErrors(['oldPassword' => 'Old password are wrong, try again'])->withInput();
+        }
+
+        User::find(Auth::user()->id)->update(['password' => $validatedData['newPassword2']]);
+
+        return back()->with('success', 'Kata sandi berhasil diubah');
     }
 }

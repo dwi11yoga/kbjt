@@ -20,6 +20,13 @@ Route::post('/tambah/kosakata', [KosakataController::class, 'store'])->middlewar
 Route::get('/kosakata/{slug}', [HomepageController::class, 'kosakata']);
 // Profil user
 Route::get('/u/{username}', [UserController::class, 'profile']);
+// Akses ditolak
+Route::get('/akses-ditolak', function () {
+    return view('403', [
+        'title' => 'Akses ditolak',
+        'group' => ''
+    ]);
+});
 
 Route::middleware(['guest'])->group(function () {
     // Login
@@ -37,12 +44,68 @@ Route::middleware(['auth'])->group(function () {
     // Logout
     Route::post('/logout', [UserController::class, 'logout']);
 
-    // kontribusi
+    // kontribusi - kontributor
     Route::get('/kontribusi', [DashboardController::class, 'kontribusi']);
-    // achivement
+    // achivement - kontributor & pengurus
     Route::get('/achivement', [DashboardController::class, 'achivement']);
-    // sertifikat
+    // sertifikat - kontributor & pengurus
     Route::get('/sertifikat', [DashboardController::class, 'sertifikat']);
+
+    Route::middleware(['pengurusKepala'])->group(function () {
+        // artikel - pengurus & kepala
+        Route::get('/artikel', function () {
+            return view('dashboard.artikel', [
+                'title' => 'Artikel',
+                'group' => 'artikel'
+            ]);
+        });
+        // banner - pengurus & kepala
+        Route::get('/banner', function () {
+            return view('dashboard.artikel', [
+                'title' => 'Banner',
+                'group' => 'banner'
+            ]);
+        });
+        // kontributor - pengurus
+        Route::get('/kontributor', function () {
+            return view('dashboard.artikel', [
+                'title' => 'Kontributor',
+                'group' => 'kontributor'
+            ]);
+        });
+        // pengurus - pengurus
+        Route::get('/pengurus', function () {
+            return view('dashboard.artikel', [
+                'title' => 'Pengurus',
+                'group' => 'pengurus'
+            ]);
+        });
+        // laporan - pengurus
+        Route::get('/laporan', function () {
+            return view('dashboard.artikel', [
+                'title' => 'Laporan',
+                'group' => 'laporan'
+            ]);
+        });
+    });
+
+    Route::middleware(['kepala'])->group(function () {
+        // donasi - kepala
+        Route::get('/metode-donasi', function () {
+            return view('dashboard.artikel', [
+                'title' => 'Donasi',
+                'group' => 'donasi'
+            ]);
+        });
+        // level - kepala
+        Route::get('/level', function () {
+            return view('dashboard.artikel', [
+                'title' => 'Level & Poin',
+                'group' => 'level'
+            ]);
+        });
+    });
+
 
     // Pengaturan
     Route::get('/pengaturan', [DashboardController::class, 'settings']);
@@ -50,9 +113,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengaturan/edit-user', [UserController::class, 'editUser']);
     // Simpan perubahan data diri
     Route::put('/pengaturan/edit-user', [UserController::class, 'update']);
+    // Simpan edit password
+    Route::put('/pengaturan/ganti-password', [UserController::class, 'updatePassword']);
 
     // Tambah definisi
-    Route::post('kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create']);
+    Route::post('/kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create']);
+    // Edit definisi
+    Route::put('/kosakata/{slug}/{definisiId}/update', [DefinisiController::class, 'update']);
+    // Hapus definisi
+    Route::delete('/kosakata/{slug}/{definisiId}/delete', [DefinisiController::class, 'delete']);
 
     // Edit kosakata
     Route::get('/kosakata/{slug}/edit', [KosakataController::class, 'edit']);

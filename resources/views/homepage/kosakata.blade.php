@@ -115,7 +115,7 @@
             @auth
                 @if (!$cekDefinisiUser == true)
                     {{-- Buat definisi --}}
-                    <form action="{{ $data->slug }}/buat-definisi" method="POST" id="newDefinition" class="hidden">
+                    <form action="/kosakata/{{ $data->slug }}/buat-definisi" method="POST" id="newDefinition" class="hidden">
                         @csrf
                         <div class="md:col-start-2 md:col-span-3 col-span-6">
                             <div

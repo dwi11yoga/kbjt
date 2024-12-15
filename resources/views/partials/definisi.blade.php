@@ -67,7 +67,7 @@
                                     <i data-feather='edit-3' class="w-5"></i>
                                 </li>
                                 <li onclick="openWindow('hapusDefinisi-{{ $d->id }}')"
-                                    class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500">
+                                    class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500 cursor-pointer">
                                     <div>Hapus</div>
                                     <i data-feather='trash' class="w-5"></i>
                                 </li>
@@ -84,6 +84,7 @@
                     </div>
                 @endisset
             </div>
+
         </div>
     </div>
 </div>
@@ -96,12 +97,14 @@
 
             <h5 class="font-semibold mb-5 capitalize">Edit definisi</h5>
 
-            <form action="">
+            <form action="/kosakata/{{ $d->slug }}/{{ $d->id }}/update" method="POST">
+                @method('put')
                 @csrf
-                <div class="overflow-auto max-h-[29rem]">
+                <div class="overflow-auto max-h-[27rem]">
                     {{-- Definisi --}}
                     <label for="editDefinisi" class="block">Definisi</label>
-                    <textarea id="editDefinisi" name="editDefinisi" placeholder="Definisi..." oninput="textareaHeight(this)"
+                    <textarea id="editDefinisi" name="editDefinisi" placeholder="Pengertian, dialek, dan semacamnya..."
+                        oninput="textareaHeight(this)"
                         class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 @error('editDefinisi')
                 border-b border-red-600
             @enderror">{{ old('editDefinisi', $d->definisi) }}</textarea>
@@ -109,20 +112,22 @@
                         <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
                     @enderror
 
-                    {{-- Contoh kalimat --}}
-                    <label for="editContoh" class="block">Contoh kalimat</label>
+                    {{-- Contoh --}}
+                    <label for="editContoh" class="block">Contoh<span class="text-xs text-red-500">*</span></label>
                     <textarea id="editContoh" name="editContoh"
                         class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 max-h-52 whitespace-pre-line"
-                        placeholder="Pisahkan contoh dengan tanda titik koma (;)" oninput="textareaHeight(this)">{{ old('editContoh', isset($d->contoh) ? implode('; ', $d->contoh) : '') }}</textarea>
+                        placeholder="Contoh kosakata (opsional)..." oninput="textareaHeight(this)">{{ old('editContoh', isset($d->contoh) ? implode('; ', $d->contoh) : '') }}</textarea>
 
                     {{-- Referensi --}}
-                    <label for="editReferensi" class="block">Referensi</label>
+                    <label for="editReferensi" class="block">Referensi<span
+                            class="text-xs text-red-500">*</span></label>
                     <textarea id="editReferensi" name="editReferensi"
                         class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 max-h-52"
-                        placeholder="Pisahkan referensi dengan tanda titik koma (;)" oninput="textareaHeight(this)">{{ old('editReferensi', isset($d->referensi) ? implode('; ', $d->referensi) : '') }}</textarea>
+                        placeholder="Sumber referensi (opsional)..." oninput="textareaHeight(this)">{{ old('editReferensi', isset($d->referensi) ? implode('; ', $d->referensi) : '') }}</textarea>
                 </div>
 
                 {{-- Button --}}
+                <div class="text-xs text-red-500 mb-2">*Pisah contoh dan referensi dengan titik koma (;).</div>
                 <div class="flex space-x-2">
                     <div onclick="closeWindow('editDefinisi-{{ $d->id }}')"
                         class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
@@ -155,7 +160,8 @@
                 <p>Yakin ingin melanjutkan?</p>
             </div>
 
-            <form action="">
+            <form action="/kosakata/{{ $d->slug }}/{{ $d->id }}/delete" method="POST">
+                @method('delete')
                 @csrf
                 {{-- Button --}}
                 <div class="flex space-x-2">

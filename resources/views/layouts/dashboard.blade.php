@@ -12,6 +12,9 @@
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
+    {{-- Import js --}}
+    <script src="{{ asset('js/script.js') }}"></script>
+
     {{-- Import font --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,7 +49,7 @@
                     </div>
 
                     {{-- Judul halaman --}}
-                    <div class="md:col-span-5 col-span-4">
+                    <div class="md:col-span-5 col-span-4 flex items-center">
                         <h5>{{ $title }}</h5>
                     </div>
 
@@ -60,9 +63,10 @@
                             <i data-feather='bell' class="group-active:fill-black"></i>
                         </a>
 
-                        <div class="overflow-hidden w-10 h-10 rounded-full flex justify-center">
+                        <a href="/u/{{ auth()->user()->username }}"
+                            class="overflow-hidden w-10 h-10 rounded-full flex justify-center hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2">
                             @include('partials.profile-pic')
-                        </div>
+                        </a>
                     </div>
 
                     {{-- <div class="md:col-span-1 col-span-2 col-start-6 flex md:justify-start justify-end mr-2">

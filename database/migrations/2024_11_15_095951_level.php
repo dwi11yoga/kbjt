@@ -15,8 +15,6 @@ return new class extends Migration {
             $table->id();
             $table->integer('lvl')->unique();
             $table->integer('min_poin');
-            $table->string('created_by');
-            $table->string('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

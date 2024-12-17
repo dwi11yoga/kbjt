@@ -19,19 +19,21 @@ class LevelSeeder extends Seeder
         DB::table('levels')->insert([
             'lvl' => 1,
             'min_poin' => 1,
-            'created_by' => '1'
         ]);
 
         DB::table('levels')->insert([
             'lvl' => 2,
             'min_poin' => 100,
-            'created_by' => '1'
         ]);
 
         DB::table('levels')->insert([
             'lvl' => 3,
             'min_poin' => 200,
-            'created_by' => '1'
+        ]);
+
+        DB::table('levels')->insert([
+            'lvl' => 4,
+            'min_poin' => 400,
         ]);
     }
 }

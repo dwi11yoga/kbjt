@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefinisiController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\KosakataController;
+use App\Http\Controllers\LevelController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -97,13 +98,13 @@ Route::middleware(['auth'])->group(function () {
                 'group' => 'donasi'
             ]);
         });
+
         // level - kepala
-        Route::get('/level', function () {
-            return view('dashboard.artikel', [
-                'title' => 'Level & Poin',
-                'group' => 'level'
-            ]);
-        });
+        Route::get('/level', [LevelController::class, 'index']);
+        // tambah level - kepala
+        Route::post('/level/tambah', [LevelController::class, 'create']);
+        // update level - kepala
+        Route::put('/level/update', [LevelController::class, 'update']);
     });
 
 

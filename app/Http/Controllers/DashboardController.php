@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Level;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -57,6 +59,7 @@ class DashboardController extends Controller
         ]);
     }
 
+    // Kontribusi - Kontributor
     public function kontribusi()
     {
         return view('dashboard.kontribusi', [
@@ -64,6 +67,8 @@ class DashboardController extends Controller
             'title' => 'Kontribusi'
         ]);
     }
+
+    // HAlaman achievement
     public function achivement()
     {
         return view('dashboard.achivement', [
@@ -71,6 +76,7 @@ class DashboardController extends Controller
             'title' => 'Achivement'
         ]);
     }
+    // Halaman sertifikat
     public function sertifikat()
     {
         return view('dashboard.sertifikat', [
@@ -78,7 +84,7 @@ class DashboardController extends Controller
             'title' => 'Sertifikat'
         ]);
     }
-
+    // Halaman setting
     public function settings()
     {
         return view('dashboard.settings', [

@@ -30,7 +30,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'jenis_kelamin' => rand(0, 1) === 1 ? 'Laki-laki' : 'Perempuan',
             'password' => static::$password ??= Hash::make('password'),
-            'poin' => random_int(10, 10000),
+            'poin' => random_int(10, 500),
             'remember_token' => Str::random(10),
         ];
     }

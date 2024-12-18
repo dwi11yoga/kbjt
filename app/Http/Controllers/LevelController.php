@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Level;
+use App\Models\PoinKontribusi;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -11,6 +12,7 @@ class LevelController extends Controller
     // Halaman level
     public function index()
     {
+        // Level
         $level = Level::select('*')->orderBy('lvl', 'desc')->get();
         $user = User::select('id', 'poin')->get();
         $jml_user = $user->count();
@@ -21,7 +23,7 @@ class LevelController extends Controller
                 return $u->poin >= $d->min_poin;
             })->count();
 
-            // Simpan user yang tidak memenuhi syarat level tertentu (Hapus user dari $user jika user sudah mendapatkan level)
+            // Hapus user dari $user jika user sudah mendapatkan level
             $user = $user->reject(function ($u) use ($d) {
                 return $u->poin >= $d->min_poin;
             });
@@ -30,11 +32,17 @@ class LevelController extends Controller
             $d['persentase'] = number_format(($d['user_total'] / $jml_user) * 100, 1, ',');
             $d['min_poin'] = number_format($d['min_poin'], 0, ',', '.');
         }
-        // dd($level);
+
+        // Poin kontribusi
+        $kontribusiKontributor = PoinKontribusi::where('role', '=', 'kontributor')->get();
+        $kontribusiPengurus = PoinKontribusi::where('role', '=', 'pengurus')->get();
+
         return view('dashboard.level', [
             'title' => 'Level & Poin',
             'group' => 'level',
-            'level' => $level
+            'level' => $level,
+            'kontribusiKontributor' => $kontribusiKontributor,
+            'kontribusiPengurus' => $kontribusiPengurus
         ]);
     }
 

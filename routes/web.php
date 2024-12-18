@@ -5,6 +5,7 @@ use App\Http\Controllers\DefinisiController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\KosakataController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\PoinKontribusiController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -105,6 +106,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/level/tambah', [LevelController::class, 'create']);
         // update level - kepala
         Route::put('/level/update', [LevelController::class, 'update']);
+        // update poin kontribusi - kepala
+        Route::put('/poin-kontribusi/update', [PoinKontribusiController::class, 'update']);
     });
 
 

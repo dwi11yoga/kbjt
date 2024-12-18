@@ -7,7 +7,7 @@
             class="bg-amber-300 hover:bg-amber-400 rounded-xl w-1/2 text-center py-3">Level</button>
         <button id="aktivitasTab" onclick="changeTab(this)"
             class="bg-neutral-100 hover:bg-neutral-200 rounded-xl w-1/2 text-center py-3">Poin
-            Aktivitas</button>
+            Kontribusi</button>
     </div>
 
     {{-- Pindah-pindah tab --}}
@@ -43,7 +43,7 @@
         function changeTab(tab) {
             if (tab.innerText == "Level") {
                 levelTabClick();
-            } else if (tab.innerText == "Poin Aktivitas") {
+            } else if (tab.innerText == "Poin Kontribusi") {
                 aktivitasTabClick();
             }
         }
@@ -68,9 +68,9 @@
         </select>
     </div> --}}
 
-    <div class="bg-white rounded-2xl p-5">
-        {{-- Level --}}
-        <div id="levelContent" class="space-y-2">
+    {{-- Level --}}
+    <div id="levelContent" class="bg-white rounded-2xl p-5">
+        <div class="space-y-2">
 
             {{-- Tambah level --}}
             <button onclick="openWindow('tambahLevel')"
@@ -98,19 +98,65 @@
             @endforeach
 
         </div>
+    </div>
 
-        {{-- Aktivitas --}}
-        <div id="aktivitasContent" class="space-y-2 hidden">
-            @for ($i = 0; $i < 10; $i++)
-                <div
-                    class="flex py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm justify-between cursor-pointer items-center hover:bg-neutral-100">
-                    <div>Menambah definisi</div>
-                    <div class="flex items-center py-1 px-2 rounded-lg">
-                        <i data-feather='stop-circle' class="stroke-amber-400 w-5 inline-block mr-1"></i>
-                        <div>10 Poin</div>
+    {{-- Aktivitas --}}
+    <div id="aktivitasContent" class="hidden space-y-5">
+        <div class="bg-white rounded-2xl p-5 space-y-2">
+            <div>Kontributor</div>
+            @if (isset($kontribusiKontributor))
+                @foreach ($kontribusiKontributor as $d)
+                    <div onclick="editPoinKontribusi('editPoinKontribusi', 'editKontribusi-{{ $d->id }}', 'editDeskripsi-{{ $d->id }}', 'editPoin-{{ $d->id }}', '{{ $d->id }}')"
+                        class="flex py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm justify-between cursor-pointer items-center hover:bg-neutral-100">
+                        <div>
+                            <div id="editKontribusi-{{ $d->id }}">{{ $d->kontribusi }}</div>
+                            @isset($d->deskripsi)
+                                <div class="text-sm text-neutral-700 line-clamp-2" id="editDeskripsi-{{ $d->id }}">
+                                    {{ $d->deskripsi }}</div>
+                            @endisset
+                        </div>
+                        <div class="flex items-center py-1 px-2 rounded-lg">
+                            <i data-feather='stop-circle' class="stroke-amber-400 w-5 inline-block mr-1"></i>
+                            <div class="min-w-14"><span id="editPoin-{{ $d->id }}">{{ $d->poin }}</span> Poin
+                            </div>
+                        </div>
                     </div>
+                @endforeach
+            @else
+                <div
+                    class="py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer text-center hover:bg-neutral-100">
+                    Belum ada data.
                 </div>
-            @endfor
+            @endif
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 space-y-2">
+            <div>Pengurus</div>
+            @if (isset($kontribusiPengurus))
+                @foreach ($kontribusiPengurus as $d)
+                    <div onclick="editPoinKontribusi('editPoinKontribusi', 'editKontribusi-{{ $d->id }}', 'editDeskripsi-{{ $d->id }}', 'editPoin-{{ $d->id }}', '{{ $d->id }}')"
+                        class="flex py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm justify-between cursor-pointer items-center hover:bg-neutral-100">
+                        <div>
+                            <div id="editKontribusi-{{ $d->id }}">{{ $d->kontribusi }}</div>
+                            @isset($d->deskripsi)
+                                <div class="text-sm text-neutral-700 line-clamp-2" id="editDeskripsi-{{ $d->id }}">
+                                    {{ $d->deskripsi }}
+                                </div>
+                            @endisset
+                        </div>
+                        <div class="flex items-center py-1 px-2 rounded-lg">
+                            <i data-feather='stop-circle' class="stroke-amber-400 w-5 inline-block mr-1"></i>
+                            <div class="min-w-14"><span id="editPoin-{{ $d->id }}">{{ $d->poin }}</span> Poin
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div
+                    class="py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer text-center hover:bg-neutral-100">
+                    Belum ada data.
+                </div>
+            @endif
         </div>
     </div>
 
@@ -212,7 +258,66 @@
         </div>
     </div>
 
+    {{-- Popup edit poin kontribusi --}}
+    <div id="editPoinKontribusi"
+        class="fixed inset-0 z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
+
+            <h5 class="font-semibold mb-5 capitalize">Edit poin kontribusi</h5>
+
+            <form action="/poin-kontribusi/update" method="POST">
+                @method('put')
+                @csrf
+                <div class="overflow-auto max-h-[27rem]">
+                    {{-- id --}}
+                    <input class="hidden" id="idPoinKontribusi" name="idPoinKontribusi" type="text" value=""
+                        hidden readonly>
+                    {{-- kontribusi --}}
+                    <label for="editKontribusi" class="block">Kontribusi</label>
+                    <input id="editKontribusi" name="editKontribusi" placeholder="Nama kontribusi..." type="text"
+                        readonly value="{{ old('editKontribusi') }}"
+                        class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('editKontribusi')
+        border-b border-red-600 @enderror">
+                    @error('editKontribusi')
+                        <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
+                    @enderror
+
+                    {{-- deskripsi --}}
+                    <label for="editDeskripsi" class="block">Deskripsi</label>
+                    <textarea id="editDeskripsi" name="editDeskripsi" placeholder="Tambahkan deskripsi..."
+                        oninput="textareaHeight(this)"
+                        class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 @error('editDeskripsi')
+                border-b border-red-600
+            @enderror">{{ old('editDeskripsi') }}</textarea>
+                    @error('editDeskripsi')
+                        <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
+                    @enderror
+
+                    {{-- poin --}}
+                    <label for="editPoinDiperoleh" class="block">Poin Diperoleh</label>
+                    <input id="editPoinDiperoleh" name="editPoinDiperoleh" placeholder="Poin yang diperoleh user..."
+                        type="number" value="{{ old('editPoinDiperoleh') }}" min="1"
+                        class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('editPoinDiperoleh')
+        border-b border-red-600 @enderror">
+                    @error('editPoinDiperoleh')
+                        <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- Button --}}
+                <div class="flex space-x-2">
+                    <div onclick="closeWindow('editPoinKontribusi')"
+                        class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
+                        Batal</div>
+                    <button type="submit"
+                        class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // otomatis isi input edit level
         function editLevel(component, inputLevel, inputPoin) {
             var component = document.getElementById(component);
             component.classList.remove("invisible");
@@ -222,13 +327,56 @@
             document.getElementById('editLvl').value = inputLevel;
             document.getElementById('editMinPoin').value = inputPoin;
         }
+
+        // otomatis isi input edit poin kontribusi
+        function editPoinKontribusi(component, inputKontribusi, inputDeskripsi, inputPoin, inputId) {
+            var component = document.getElementById(component);
+            component.classList.remove('invisible');
+
+            var inputKontribusi = document.getElementById(inputKontribusi).innerText;
+            var inputPoin = document.getElementById(inputPoin).innerText;
+            var inputDeskripsi = document.getElementById(inputDeskripsi);
+            if (inputDeskripsi) {
+                var inputDeskripsi = inputDeskripsi.innerText;
+            } else {
+                var inputDeskripsi = "";
+            }
+            document.getElementById('idPoinKontribusi').value = inputId;
+            document.getElementById('editKontribusi').value = inputKontribusi;
+            document.getElementById('editDeskripsi').value = inputDeskripsi;
+            document.getElementById('editPoinDiperoleh').value = inputPoin;
+        }
     </script>
 
+    {{-- Otomatis buka popup edit level ketika ada error --}}
     @if ($errors->has('editLvl') || $errors->has('editMinPoin'))
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 openWindow('editLevel');
             });
+        </script>
+    @endif
+
+    {{-- Otomatis buka popup edit poin kontribusi ketika ada error --}}
+    @if (
+        $errors->has('idPoinKontribusi') ||
+            $errors->has('editKontribusi') ||
+            $errors->has('editDeskripsi') ||
+            $errors->has('editPoinDiperoleh'))
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                aktivitasTabClick();
+                openWindow('editPoinKontribusi');
+            });
+        </script>
+    @endif
+
+    {{-- otomatis pindah ke tab poin kontribusi ketika berhasil edit --}}
+    @if (session('success') == 'Poin kontribusi berhasil diedit')
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                aktivitasTabClick();
+            })
         </script>
     @endif
 @endsection

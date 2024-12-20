@@ -5,40 +5,46 @@
 
     {{-- List artikel --}}
     <div class="space-y-3">
-        {{-- Artikel di pin --}}
-        <a href="/blog/post"
-            class="grid grid-cols-10 group w-full rounded-2xl border border-gray-200 hover:border-yellow-100 hover:bg-yellow-100 hover:outline hover:outline-2 hover:outline-offset-4 hover:outline-yellow-300 active:bg-yellow-200">
-            <div class="md:col-span-3 col-span-10">
-                <div class="bg-gray-400 md:rounded-none md:rounded-l-2xl rounded-t-2xl w-full aspect-video"></div>
-            </div>
-            <div class="flex items-center md:col-span-7 col-span-10 ml-5 md:my-0 my-5">
-                <div>
-                    <div
-                        class="rounded-md bg-yellow-100 inline-block px-2 text-gray-800 group-hover:bg-yellow-200 group-active:bg-yellow-300">
-                        📌Dipin oleh pengurus
-                    </div>
-                    <h5 class="mb-1 line-clamp-2">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</h5>
-                    <div class="text-gray-700">Oleh <span class="font-bold">Muklis Diharja</span> • 20 Oktober 2024</div>
-                </div>
-            </div>
-        </a>
 
         {{-- Artikel biasa --}}
-        <?php for ($i=0; $i < 10; $i++) { 
-            ?>
-        <a href="#"
-            class="grid grid-cols-10 w-full rounded-2xl border border-gray-200 hover:border-yellow-100 hover:bg-yellow-100 hover:outline hover:outline-2 hover:outline-offset-4 hover:outline-yellow-300 active:bg-yellow-200">
-            <div class="md:col-span-3 col-span-10">
-                <div class="bg-gray-400 md:rounded-none md:rounded-l-2xl rounded-t-2xl w-full aspect-video"></div>
-            </div>
-            <div class="flex items-center md:col-span-7 col-span-10 ml-5 md:my-0 my-5">
-                <div>
-                    <h5 class="mb-1">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</h5>
-                    <div class="text-gray-700">Oleh <span class="font-bold">Muklis Diharja</span> • 20 Oktober 2024</div>
+        @foreach ($posts as $d)
+            <a href="/blog/{{ $d->id }}"
+                class="grid md:grid-cols-10 grid-cols-12 group w-full rounded-2xl border border-gray-200 hover:border-yellow-100 hover:bg-yellow-100 hover:outline hover:outline-2 hover:outline-offset-4 hover:outline-yellow-300 active:bg-yellow-200">
+                <div class="md:col-span-3 col-span-4">
+                    <div
+                        class="bg-gray-400 md:rounded-none md:rounded-l-2xl rounded-l-2xl w-full h-full md:aspect-video aspect-square">
+                    </div>
                 </div>
-            </div>
-        </a>
-        <?php
-        } ?>
+                <div class="flex items-center md:col-span-7 col-span-7 md:ml-5 ml-3 md:my-0 my-5">
+                    <div class="">
+                        @if ($d->pinned == 1)
+                            <div
+                                class="md:text-base text-sm rounded-md bg-yellow-100 inline-block px-2 text-gray-800 group-hover:bg-yellow-200 group-active:bg-yellow-300">
+                                📌Dipin oleh pengurus
+                            </div>
+                        @endif
+                        <h5 class="mb-1 md:line-clamp-2 line-clamp-2 md:text-xl text-sm">{{ $d->judul }}</h5>
+
+                        {{-- <div class="flex space-x-1.5">
+                        <div class="md:w-10 md:h-10 w-8 h-8 rounded-full overflow-hidden">
+                            @include('partials.profile-pic-general')
+                        </div>
+                        <div class="text-gray-700 md:text-sm text-xs">
+                            <div class="font-semibold line-clamp-1">{{ $d->user->nama }}</div>
+                            {{ $d->updated_at->format('d F Y') }}
+                        </div>
+                    </div> --}}
+                        <div class="text-gray-700 md:text-base text-xs"><span
+                                class="font-semibold">{{ $d->user->nama }}</span>
+                            • {{ $d->updated_at->format('d F Y') }}
+                        </div>
+                    </div>
+                </div>
+            </a>
+        @endforeach
+    </div>
+    {{-- Pagination --}}
+    <div class="">
+        {{ $posts->links() }}
     </div>
 @endsection

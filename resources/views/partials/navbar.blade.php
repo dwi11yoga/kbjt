@@ -108,26 +108,26 @@
     <ul class="md:flex hidden items-center">
         <li>
             <a href="/"
-                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ $title == 'Selamat datang di Kamus Bahasa Jawa Terbuka!' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Home</a>
+                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ isset($group) && $group == 'homepage' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Home</a>
         </li>
         <li>
             <a href="/daftar-kosakata"
-                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ $title == 'Daftar Kosakata' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Daftar
+                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ isset($group) && $group == 'kosakata' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Daftar
                 Kosakata</a>
         </li>
         <li>
             <a href="/hall-of-fame"
-                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ $title == 'Hall of Fame' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Hall
+                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ isset($group) && $group == 'hall of fame' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Hall
                 of
                 Fame</a>
         </li>
         <li>
             <a href="/blog"
-                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ $title == 'Blog' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Blog</a>
+                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ isset($group) && $group == 'blog' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Blog</a>
         </li>
         <li>
             <a href="/donasi"
-                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ $title == 'Donasi' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Donasi</a>
+                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ isset($group) && $group == 'donasi' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Donasi</a>
         </li>
         <li>
             @auth

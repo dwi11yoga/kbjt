@@ -79,8 +79,15 @@ class User extends Authenticatable
         return $this->hasMany(Definisi::class);
     }
 
+    // Relasi dengan table kosakata
     public function kosakata(): HasMany
     {
         return $this->hasMany(Kosakata::class);
+    }
+
+    // Relasi dengan table blog
+    public function blog(): HasMany
+    {
+        return $this->hasMany(Blog::class);
     }
 }

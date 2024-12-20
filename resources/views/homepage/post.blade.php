@@ -1,12 +1,35 @@
 @extends('.../layouts/homepage-with-banner')
 
 @section('body')
-    {{-- Judul --}}
-    <h3 class="font-bold leading-tight">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem obcaecati
-        repellendus provident nihil.</h3>
-
     {{-- author & tanggal --}}
-    <div class="mt-2 mb-5">Oleh <span class="font-bold">Muklis Diharja</span> • 20 Oktober 2024</div>
+    <?php $d = $post; ?>
+    <div class="flex items-center justify-between space-x-2 !-mb-3">
+        <a href="{{ $url . '/u/' . $post->user->username }}" class="inline-flex items-center">
+            <div class="h-8 w-8 overflow-hidden rounded-full">
+                @include('partials.profil-pic-general-array2')
+            </div>
+            <div class="ml-2">{{ $post->user->nama }}</div>
+        </a>
+
+    </div>
+
+    {{-- Judul --}}
+    <h3 class="font-bold leading-tight !-mb-3">{{ $post->judul }}</h3>
+    {{-- subjudul --}}
+    @isset($post->subjudul)
+        <h5 class="text-neutral-800 !-mb-2">{{ $post->subjudul }}</h5>
+    @endisset
+
+    {{-- Waktu --}}
+    <div class="text-neutral-800 inline-flex items-center">
+        <i data-feather='calendar' class="w-5 mr-1"></i>
+        {{ $post->updated_at->format('d F Y') }}
+        <i data-feather='clock' class="w-5 ml-3 mr-1"></i>
+        {{ $post->updated_at->format('h:iA') }}
+    </div>
+
+    {{-- <div class="mt-2 mb-5">Oleh <span class="font-bold">{{ $post->user->nama }}</span> •
+        {{ $post->updated_at->format('d F Y') }}</div> --}}
 
     {{-- Thumbnail --}}
     <img alt="" class="aspect-video overflow-hidden object-cover w-full rounded-lg mb-5"
@@ -20,24 +43,7 @@
 
     {{-- Isi Blog --}}
     <div class="space-y-3 my-5">
-        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Esse quasi eos quaerat aperiam saepe cum placeat
-            repellat ipsa eius asperiores molestias, laboriosam sint, adipisci mollitia quis sed ex eligendi ratione aliquam
-            consectetur nisi. At voluptatibus qui voluptatem velit ipsam accusantium, sint ea placeat dolorem, quas possimus
-            voluptate magni atque nobis.
-        </p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam cupiditate atque alias quas aspernatur
-            accusantium nemo aut saepe neque! Fugiat ducimus, id est, quae officiis, reprehenderit quasi sapiente ut cum ad
-            earum.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem accusantium, ut error quo, repellendus accusamus
-            quis earum quisquam, pariatur quod harum tempora eos. Illo iusto voluptatum cumque ab odit doloremque quibusdam,
-            fugit obcaecati quae nostrum nisi, doloribus quis voluptatibus dolorum neque laborum autem reiciendis ducimus
-            voluptate! Facere voluptates natus id dolores alias amet, quisquam itaque quam facilis neque cumque temporibus
-            illo molestiae maxime in iure, earum quas eligendi nemo cupiditate totam. Sed quas totam saepe, sapiente
-            temporibus voluptatem.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores quas perferendis obcaecati. Dolor ex impedit
-            reprehenderit voluptatum nihil itaque voluptatem similique consectetur distinctio expedita praesentium pariatur
-            eveniet natus sunt ipsa, et saepe. Dolorem nesciunt accusamus accusantium, numquam, inventore voluptatem totam
-            fugiat quod aspernatur earum id eveniet alias?</p>
+        {!! $post->konten !!}
     </div>
 
     {{-- Iklan bawah --}}

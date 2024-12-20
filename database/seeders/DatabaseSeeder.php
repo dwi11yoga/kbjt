@@ -22,9 +22,10 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-            UserSeeder::class,
+            BlogSeeder::class,
             LevelSeeder::class,
-            PoinKontribusiSeeder::class
+            PoinKontribusiSeeder::class,
+            UserSeeder::class,
         ]);
 
         // KOSAKATA

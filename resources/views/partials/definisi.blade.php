@@ -54,8 +54,7 @@
             {{-- Menu --}}
             <div class="relative">
                 @isset(auth()->user()->id)
-                    <button id="dropdownBtn"
-                        onclick="dropdown(this, document.getElementById('dropdown{{ $d->id }}'))"
+                    <button id="dropdownBtn" onclick="dropdown(this, 'dropdown{{ $d->id }}')"
                         class="p-2 rounded-full hover:bg-neutral-100"><i data-feather='more-horizontal'></i></button>
                     <div id="dropdown{{ $d->id }}"
                         class="absolute hidden bg-white right-0 bottom-10 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefinisiController;
 use App\Http\Controllers\HomepageController;
@@ -14,7 +15,7 @@ Route::get('/', [HomepageController::class, 'index']);
 Route::get('/daftar-kosakata', [HomepageController::class, 'daftarKosakata']);
 Route::get('/hall-of-fame', [HomepageController::class, 'hallOfFame']);
 Route::get('/blog', [HomepageController::class, 'blog']);
-Route::get('/blog/post', [HomepageController::class, 'blogPost']);
+Route::get('/blog/{id}', [HomepageController::class, 'blogPost']);
 Route::get('/donasi', [HomepageController::class, 'donasi']);
 Route::get('/cari', [HomepageController::class, 'pencarian']);
 Route::get('/tambah/kosakata', [KosakataController::class, 'tambahKosakata'])->middleware('auth');
@@ -55,12 +56,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['pengurusKepala'])->group(function () {
         // artikel - pengurus & kepala
-        Route::get('/artikel', function () {
-            return view('dashboard.artikel', [
-                'title' => 'Artikel',
-                'group' => 'artikel'
-            ]);
-        });
+        Route::get('/artikel', [BlogController::class, 'index']);
         // banner - pengurus & kepala
         Route::get('/banner', function () {
             return view('dashboard.artikel', [

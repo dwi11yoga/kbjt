@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use App\Models\Definisi;
 use App\Models\Kosakata;
 use App\Models\User;
@@ -90,18 +91,36 @@ class HomepageController extends Controller
     // Blog
     public function blog()
     {
+        $blog = Blog::where('status', '=', 1)
+            ->with('user:id,nama')
+            ->orderBy('pinned', 'desc')
+            ->orderBy('updated_at', 'desc')
+            ->paginate(10);
+
         return view('homepage.blog', [
             'group' => 'blog',
-            'title' => 'Blog'
+            'title' => 'Blog',
+            'posts' => $blog
         ]);
     }
 
     // Blog Post
-    public function blogPost()
+    public function blogPost($id)
     {
+        // Ambil data blog
+        $post = Blog::where('id', '=', $id)
+            ->with('user:id,username,nama,jenis_kelamin,profile_pic')
+            ->first();
+
+        // dapatkan url web
+        $url = $this->getUrl();
+
+        // dd($post);
         return view('homepage.post', [
             'group' => 'blog',
-            'title' => 'Post'
+            'title' => 'Post',
+            'post' => $post,
+            'url' => $url
         ]);
     }
 

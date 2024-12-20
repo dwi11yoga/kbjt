@@ -1,5 +1,7 @@
 // Toggle menu - untuk halaman kosakata
 function dropdown(button, menu) {
+    var menu = document.getElementById(menu);
+
     menu.classList.toggle("hidden");
     // Tutup menu jika klik di luar
     if (!menu.classList.contains("hidden")) {

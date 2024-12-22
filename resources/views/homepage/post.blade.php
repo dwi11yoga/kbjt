@@ -1,7 +1,16 @@
 @extends('.../layouts/homepage-with-banner')
 
 @section('body')
-    {{-- author & tanggal --}}
+    @if ($post->status == 0)
+        {{-- peringatan jika preview --}}
+        <div
+            class="bg-red-600 text-white w-full rounded-md py-3 uppercase inline-flex overflow-hidden justify-center font-semibold">
+            @for ($i = 0; $i < 13; $i++)
+                <div class="mr-5">Preview</div>
+            @endfor
+        </div>
+    @endif
+    {{-- author --}}
     <?php $d = $post; ?>
     <div class="flex items-center justify-between space-x-2 !-mb-3">
         <a href="{{ $url . '/u/' . $post->user->username }}" class="inline-flex items-center">

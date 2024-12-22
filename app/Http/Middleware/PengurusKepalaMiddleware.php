@@ -19,7 +19,10 @@ class PengurusKepalaMiddleware
         // Jika user adalah kepala atau pengurus
         $user = Auth::user();
         if (!$user || ($user->role !== 'kepala' && $user->role !== 'pengurus')) {
-            return redirect('akses-ditolak');
+            return response()->view('error.403', [
+                'title' => 'Akses ditolak'
+            ], 403);
+            // return redirect('akses-ditolak');
         }
         return $next($request);
     }

@@ -1,3 +1,9 @@
+// Muat Dropdown / Select
+// memuat halaman ketika item dropdown dipilih
+function muatDropdown(dropdown) {
+    dropdown.form.submit();
+}
+
 // Toggle menu - untuk halaman kosakata
 function dropdown(button, menu) {
     var menu = document.getElementById(menu);

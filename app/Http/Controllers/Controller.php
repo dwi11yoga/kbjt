@@ -41,4 +41,20 @@ abstract class Controller
         $url = $protocol . '://' . $host;
         return $url;
     }
+
+    // untuk menampilkan error 403: unathorized access
+    public function error403()
+    {
+        return response()->view('error.403', [
+            'title' => 'Akses ditolak'
+        ], 403);
+    }
+
+    // untuk menampilkan error 404: not found
+    public function error404()
+    {
+        return response()->view('error.404', [
+            'title' => 'Halaman tidak ditemukan'
+        ], 403);
+    }
 }

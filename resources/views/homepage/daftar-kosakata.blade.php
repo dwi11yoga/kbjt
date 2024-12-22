@@ -36,12 +36,6 @@
 
         <span class="absolute flex right-4 top-3"><i data-feather='chevron-down'></i></span>
     </form>
-    {{-- memuat halaman ketika item dropdown dipilih --}}
-    <script>
-        function muatDropdown(dropdown) {
-            dropdown.form.submit();
-        }
-    </script>
 
     @if ($kosakata->isEmpty())
         <?php $notFound = "Belum ada data. <a href='/kosakata/buat' class='text-blue-500'>Tambahkan?</a>"; ?>

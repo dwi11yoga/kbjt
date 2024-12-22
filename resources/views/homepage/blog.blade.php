@@ -8,7 +8,7 @@
 
         {{-- Artikel biasa --}}
         @foreach ($posts as $d)
-            <a href="/blog/{{ $d->id }}"
+            <a href="/blog/post/{{ $d->id }}"
                 class="grid md:grid-cols-10 grid-cols-12 group w-full rounded-2xl border border-gray-200 hover:border-yellow-100 hover:bg-yellow-100 hover:outline hover:outline-2 hover:outline-offset-4 hover:outline-yellow-300 active:bg-yellow-200">
                 <div class="md:col-span-3 col-span-4">
                     <div

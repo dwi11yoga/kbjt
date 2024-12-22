@@ -112,13 +112,23 @@ class HomepageController extends Controller
             ->with('user:id,username,nama,jenis_kelamin,profile_pic')
             ->first();
 
+        // Jika bukan halaman preview dan Jika status post ==0 (draf)
+        if (empty($post) || ($post['status'] == 0 && $_SERVER['REQUEST_URI'] != '/blog/preview/' . $id)) {
+            return $this->error404();
+        }
+
+        // Jika artikel sudah dipublikasikan, namun url adalah preview, maka redirect
+        if ($_SERVER['REQUEST_URI'] == '/blog/preview/' . $id && $post['status'] == 1) {
+            return redirect('/blog/post/' . $id);
+        }
+
         // dapatkan url web
         $url = $this->getUrl();
 
         // dd($post);
         return view('homepage.post', [
             'group' => 'blog',
-            'title' => 'Post',
+            'title' => $post->judul,
             'post' => $post,
             'url' => $url
         ]);

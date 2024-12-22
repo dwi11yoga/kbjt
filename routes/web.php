@@ -15,7 +15,7 @@ Route::get('/', [HomepageController::class, 'index']);
 Route::get('/daftar-kosakata', [HomepageController::class, 'daftarKosakata']);
 Route::get('/hall-of-fame', [HomepageController::class, 'hallOfFame']);
 Route::get('/blog', [HomepageController::class, 'blog']);
-Route::get('/blog/{id}', [HomepageController::class, 'blogPost']);
+Route::get('/blog/post/{id}', [HomepageController::class, 'blogPost']);
 Route::get('/donasi', [HomepageController::class, 'donasi']);
 Route::get('/cari', [HomepageController::class, 'pencarian']);
 Route::get('/tambah/kosakata', [KosakataController::class, 'tambahKosakata'])->middleware('auth');
@@ -55,8 +55,20 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sertifikat', [DashboardController::class, 'sertifikat']);
 
     Route::middleware(['pengurusKepala'])->group(function () {
+
         // artikel - pengurus & kepala
         Route::get('/artikel', [BlogController::class, 'index']);
+        // preview artikel
+        Route::get('/blog/preview/{slug}', [HomepageController::class, 'blogPost']);
+        // Edit artikel/post
+        Route::get('/artikel/edit/{id}', [BlogController::class, 'editPost']);
+        // draf/terbitkan post
+        Route::put('/artikel/draf/{id}', [BlogController::class, 'draft']);
+        // sematkan/tidak post
+        Route::put('/artikel/sematkan/{id}', [BlogController::class, 'sematkan']);
+        // hapus definisi
+        Route::delete('/artikel/hapus/{id}', [BlogController::class, 'delete']);
+
         // banner - pengurus & kepala
         Route::get('/banner', function () {
             return view('dashboard.artikel', [

@@ -211,6 +211,10 @@ class UserController extends Controller
         if ($request->pp_remove == 'on') {
             $arraySimpan['profile_pic'] = null;
         } elseif ($request->profile_pic != null) {
+            if (isset(Auth::user()->profile_pic)) {
+                // hapus foto jika ada
+                Storage::delete(Auth::user()->profile_pic);
+            }
             $validatedData['profile_pic'] = $request->file('profile_pic')->store('profile-pics');
             $arraySimpan['profile_pic'] = $validatedData['profile_pic'];
         }

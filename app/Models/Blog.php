@@ -14,7 +14,7 @@ class Blog extends Model
     protected $table = 'blog';
 
     // lindungi
-    protected $guarded = 'id';
+    protected $guarded = ['id'];
 
     /**
      * Get the user that owns the Blog

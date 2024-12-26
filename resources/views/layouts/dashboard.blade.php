@@ -21,6 +21,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
 
+    {{-- Import custom --}}
+    @yield('head')
+
     {{-- Feathericon --}}
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 </head>

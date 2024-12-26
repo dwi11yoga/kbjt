@@ -1,6 +1,7 @@
 @extends('.../layouts/homepage-with-banner')
 
 @section('body')
+
     @if ($post->status == 0)
         {{-- peringatan jika preview --}}
         <div
@@ -42,7 +43,7 @@
 
     {{-- Thumbnail --}}
     <img alt="" class="aspect-video overflow-hidden object-cover w-full rounded-lg mb-5"
-        src="https://www.agoda.com/wp-content/uploads/2024/07/Featured-image-Lawang-Sewu-Semarang-Indonesia.jpg">
+        src="{{ isset($post->thumbnail) ? asset('storage/' . $post->thumbnail) : 'https://www.agoda.com/wp-content/uploads/2024/07/Featured-image-Lawang-Sewu-Semarang-Indonesia.jpg' }}">
 
     {{-- Iklan atas --}}
     <a href="#">
@@ -51,6 +52,76 @@
     </a>
 
     {{-- Isi Blog --}}
+    <style>
+        div.space-y-3.my-5 h1 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        div.space-y-3.my-5 ul {
+            padding-left: 25px;
+            /* Space before list items */
+            list-style-type: disc;
+            /* Bullet (•) for items */
+        }
+
+        div.space-y-3.my-5 ol {
+            padding-left: 25px;
+            /* Space before list items */
+            list-style-type: decimal;
+            /* Numbers (1, 2, 3, ...) for items */
+        }
+
+        div.space-y-3.my-5 li {
+            display: list-item;
+            /* Default display for list items */
+        }
+
+        div.space-y-3.my-5 pre {
+            display: block;
+            /* Ditampilkan sebagai blok */
+            font-family: monospace;
+            /* Menggunakan font monospace */
+            white-space: pre;
+            /* Pertahankan spasi dan baris baru */
+            margin: 1em 0;
+            /* Margin atas dan bawah */
+            background-color: #e5e5e5;
+            padding: 0.5rem 0.5rem;
+            font-size: 1rem;
+            border-radius: 0.5rem;
+            overflow-inline: scroll;
+        }
+
+        div.space-y-3.my-5 blockquote {
+            display: block;
+            margin-top: 0.5rem;
+            padding-left: 0.5rem;
+            /* Margin atas */
+            margin-bottom: 0.5rem;
+            /* Margin bawah */
+            margin-inline-start: 0.5rem;
+            /* Indentasi kiri */
+            margin-inline-end: 0.5rem;
+            /* Indentasi kanan */
+            font-size: inherit;
+            /* Ukuran font sesuai elemen induk */
+            font-style: italic;
+            /* Teks miring */
+            border-left: 4px solid #fbbf24;
+        }
+
+        div.space-y-3.my-5 a {
+            text-decoration: underline;
+            text-decoration-color: #fbbf24;
+            text-decoration-thickness: 3px;
+            text-underline-offset: 2px;
+        }
+
+        div.space-y-3.my-5 a:hover {
+            color: #d97706;
+        }
+    </style>
     <div class="space-y-3 my-5">
         {!! $post->konten !!}
     </div>

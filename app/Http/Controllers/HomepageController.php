@@ -105,21 +105,21 @@ class HomepageController extends Controller
     }
 
     // Blog Post
-    public function blogPost($id)
+    public function blogPost($slug)
     {
         // Ambil data blog
-        $post = Blog::where('id', '=', $id)
+        $post = Blog::where('slug', '=', $slug)
             ->with('user:id,username,nama,jenis_kelamin,profile_pic')
             ->first();
 
         // Jika bukan halaman preview dan Jika status post ==0 (draf)
-        if (empty($post) || ($post['status'] == 0 && $_SERVER['REQUEST_URI'] != '/blog/preview/' . $id)) {
+        if (empty($post) || ($post['status'] == 0 && $_SERVER['REQUEST_URI'] != '/blog/preview/' . $slug)) {
             return $this->error404();
         }
 
         // Jika artikel sudah dipublikasikan, namun url adalah preview, maka redirect
-        if ($_SERVER['REQUEST_URI'] == '/blog/preview/' . $id && $post['status'] == 1) {
-            return redirect('/blog/post/' . $id);
+        if ($_SERVER['REQUEST_URI'] == '/blog/preview/' . $slug && $post['status'] == 1) {
+            return redirect('/blog/post/' . $slug);
         }
 
         // dapatkan url web

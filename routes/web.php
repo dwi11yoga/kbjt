@@ -7,6 +7,7 @@ use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\KosakataController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PoinKontribusiController;
+use App\Http\Controllers\TrixController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +16,7 @@ Route::get('/', [HomepageController::class, 'index']);
 Route::get('/daftar-kosakata', [HomepageController::class, 'daftarKosakata']);
 Route::get('/hall-of-fame', [HomepageController::class, 'hallOfFame']);
 Route::get('/blog', [HomepageController::class, 'blog']);
-Route::get('/blog/post/{id}', [HomepageController::class, 'blogPost']);
+Route::get('/blog/post/{slug}', [HomepageController::class, 'blogPost']);
 Route::get('/donasi', [HomepageController::class, 'donasi']);
 Route::get('/cari', [HomepageController::class, 'pencarian']);
 Route::get('/tambah/kosakata', [KosakataController::class, 'tambahKosakata'])->middleware('auth');
@@ -30,6 +31,12 @@ Route::get('/akses-ditolak', function () {
         'group' => ''
     ]);
 });
+
+// TRIX
+// Upload gambar
+Route::post('/upload-image', [TrixController::class, 'store']);
+// Delete gambar
+Route::post('/delete-image', [TrixController::class, 'delete']);
 
 Route::middleware(['guest'])->group(function () {
     // Login
@@ -66,7 +73,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/artikel/draf/{id}', [BlogController::class, 'draft']);
         // sematkan/tidak post
         Route::put('/artikel/sematkan/{id}', [BlogController::class, 'sematkan']);
-        // hapus definisi
+        // hapus artikel
         Route::delete('/artikel/hapus/{id}', [BlogController::class, 'delete']);
 
         // banner - pengurus & kepala
@@ -116,6 +123,15 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/level/update', [LevelController::class, 'update']);
         // update poin kontribusi - kepala
         Route::put('/poin-kontribusi/update', [PoinKontribusiController::class, 'update']);
+    });
+
+    Route::middleware(['pengurus'])->group(function () {
+        Route::get('/artikel/baru', [BlogController::class, 'tambah']);
+        Route::get('/artikel/edit/{id}', [BlogController::class, 'editPost']);
+        Route::post('/artikel/baru/simpan', [BlogController::class, 'simpanArtikel']);
+        Route::post('/artikel/baru/publikasikan', [BlogController::class, 'simpanArtikel']);
+        Route::put('/artikel/edit/{id}/simpan', [BlogController::class, 'simpanEdit']);
+        Route::put('/artikel/edit/{id}/publikasikan', [BlogController::class, 'simpanEdit']);
     });
 
 

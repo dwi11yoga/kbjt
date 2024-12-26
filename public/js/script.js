@@ -4,6 +4,18 @@ function muatDropdown(dropdown) {
     dropdown.form.submit();
 }
 
+// TAMPILKAN GAMBAR YANG DIUPLOAD
+function previewImage(input, preview) {
+    const pp_preview = document.getElementById(preview);
+    const oFReader = new FileReader();
+
+    oFReader.readAsDataURL(input.files[0]);
+
+    oFReader.onload = function (oFREvent) {
+        pp_preview.src = oFREvent.target.result;
+    };
+}
+
 // Toggle menu - untuk halaman kosakata
 function dropdown(button, menu) {
     var menu = document.getElementById(menu);
@@ -166,4 +178,15 @@ function openWindow(component) {
 function closeWindow(component) {
     var component = document.getElementById(component);
     component.classList.add("invisible");
+}
+
+// Buat slug
+function buatSlug(inputFrom, inputTarget) {
+    var target = document.getElementById(inputTarget);
+    var slug = inputFrom.value
+        .toLowerCase() //convert ke huruf kecil
+        .trim() //hialngkan spasi di awal dan akhir
+        .replace(/[\s\W-]+/g, "-") //ganti karakter khusus dan spasi dengan '-'
+        .replace(/^-+|-+$/g, ""); // Hilangkan '-' di awal/akhir
+    target.value = slug;
 }

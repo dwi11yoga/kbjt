@@ -81,7 +81,8 @@
                         </div>
 
                         {{-- input file foto --}}
-                        <input type="file" name="profile_pic" id="profile_pic" onchange="previewImage()" class="hidden">
+                        <input type="file" name="profile_pic" id="profile_pic" onchange="previewImage(this,'pp_preview')"
+                            class="hidden">
 
                         @error('profile_pic')
                             <div class="text-xs mt-2 text-red-600">*{{ $message }}</div>
@@ -507,18 +508,6 @@
             })
         };
         arrayInput.forEach(showSave);
-
-        // TAMPILKAN GAMBAR YANG DIUPLOAD
-        function previewImage() {
-            const pp_preview = document.getElementById('pp_preview');
-            const oFReader = new FileReader();
-
-            oFReader.readAsDataURL(profile_pic.files[0]);
-
-            oFReader.onload = function(oFREvent) {
-                pp_preview.src = oFREvent.target.result;
-            }
-        }
 
         // TRIGGER INPUT FILE
         document.getElementById('pp_trigger').addEventListener('click', () => {

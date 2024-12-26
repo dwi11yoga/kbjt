@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\File;
 
 class BlogController extends Controller
 {
@@ -29,6 +31,7 @@ class BlogController extends Controller
         }
 
         if (isset($author) && $author != '') {
+            // $query->where('user_id', '=', $author);
             $query->whereHas('user', function ($q) use ($author) {
                 $q->where('username', '=', $author);
             });
@@ -38,11 +41,131 @@ class BlogController extends Controller
             ->orderBy('updated_at', 'desc')
             ->paginate(40)
             ->appends(request()->query());
+
         return view('dashboard.artikel', [
             'title' => 'Artikel',
             'group' => 'artikel',
             'posts' => $blog
         ]);
+    }
+
+    // view tambah post/artikel
+    public function tambah()
+    {
+        return view('dashboard.artikel-buat', [
+            'title' => 'Buat artikel',
+            'group' => 'artikel',
+            'url' => $this->getUrl()
+        ]);
+    }
+
+    // Simpan artikel baru sebagai draft/publikasikan
+    public function simpanArtikel(Request $request)
+    {
+        $apakahSimpan = $request->getRequestUri() == "/artikel/baru/simpan"; //true jika artikel disimpan
+        $apakahPublish = $request->getRequestUri() == "/artikel/baru/publikasikan"; //true jika artikel dipublikasikan
+        // Validasi
+        if ($apakahSimpan == true) {
+            $validatedData = $request->validate([
+                'judul' => 'string|min:6',
+                'slug' => 'string|regex:/^[a-z0-9-]+$/',
+                'thumbnail' => [File::types(['jpg', 'jpeg', 'png', 'webp'])->max(1024)],
+            ]);
+        } elseif ($apakahPublish == true) {
+            $validatedData = $request->validate([
+                'judul' => 'required|string|min:6',
+                'slug' => 'required|string|regex:/^[a-z0-9-]+$/',
+                'thumbnail' => [File::types(['jpg', 'jpeg', 'png', 'webp'])->max(1024)],
+            ]);
+        } else {
+            return back()->with('failed', 'Gagal menyimpan artikel');
+        }
+
+        // simpan data
+        $data = [
+            'user_id' => Auth::user()->id,
+            'judul' => $validatedData['judul'],
+            'slug' => $validatedData['slug'],
+            'subjudul' => $request->subjudul,
+            'konten' => $request->konten,
+        ];
+        if ($apakahPublish == true) {
+            $data['status'] = 1;
+        }
+
+        // simpan gambar
+        if (isset($validatedData['thumbnail'])) {
+            $validatedData['thumbnail'] = $request->file('thumbnail')->store('post-thumbnail');
+            $data['thumbnail'] = $validatedData['thumbnail'];
+        }
+
+        // Simpan
+        Blog::create($data);
+
+        // redirect ke halaman edit
+        if ($apakahSimpan == true) {
+            $post = Blog::select('id', 'slug')->where('slug', '=', $validatedData['slug'])->first();
+            return redirect('/artikel/edit/' . $post->id)->with('success', 'Artikel berhasil disimpan sebagai draf');
+        } elseif ($apakahPublish == true) {
+            return redirect('/artikel')->with('success', 'Artikel berhasil dipublikasikan');
+        }
+    }
+
+    // Simpan artikel lama sebagai draft/publikasikan
+    public function simpanEdit(Request $request, $id)
+    {
+        $post = Blog::select('id', 'slug', 'thumbnail')->where('id', '=', $id)->first();
+
+        $apakahSimpan = $request->getRequestUri() == "/artikel/edit/" . $id . "/simpan"; //true jika artikel disimpan
+        $apakahPublish = $request->getRequestUri() == "/artikel/edit/" . $id . "/publikasikan"; //true jika artikel dipublikasikan
+        // Validasi
+        if ($apakahSimpan == true) {
+            $validatedData = $request->validate([
+                'judul' => 'string|min:6',
+                'slug' => 'string|regex:/^[a-z0-9-]+$/|unique:blog,slug,' . $id . ',id',
+                'thumbnail' => [File::types(['jpg', 'jpeg', 'png', 'webp'])->max(1024)],
+            ]);
+        } elseif ($apakahPublish == true) {
+            $validatedData = $request->validate([
+                'judul' => 'required|string|min:6',
+                'slug' => 'required|string|regex:/^[a-z0-9-]+$/|unique:blog,slug,' . $id . ',id',
+                'thumbnail' => [File::types(['jpg', 'jpeg', 'png', 'webp'])->max(1024)],
+            ]);
+        } else {
+            return back()->with('failed', 'Gagal menyimpan perubahan pada artikel');
+        }
+
+        // simpan data
+        $data = [
+            'user_id' => Auth::user()->id,
+            'judul' => $validatedData['judul'],
+            'slug' => $validatedData['slug'],
+            'subjudul' => $request->subjudul,
+            'konten' => $request->konten,
+        ];
+        if ($apakahPublish == true) {
+            $data['status'] = 1;
+        }
+
+        // simpan gambar
+        if (isset($validatedData['thumbnail'])) {
+            // hapus gambar jika sudah ada.
+            if (isset($post['thumbnail'])) {
+                Storage::delete($post->thumbnail);
+            }
+            $validatedData['thumbnail'] = $request->file('thumbnail')->store('post-thumbnail');
+            $data['thumbnail'] = $validatedData['thumbnail'];
+        }
+
+        // Simpan
+        Blog::find($id)->update($data);
+
+        // redirect ke halaman edit
+        if ($apakahSimpan == true) {
+            return redirect('/artikel/edit/' . $post->id)->with('success', 'Artikel berhasil disimpan sebagai draf');
+        } elseif ($apakahPublish == true) {
+            return redirect('/artikel')->with('success', 'Artikel berhasil dipublikasikan');
+        }
     }
 
     // edit artikel / post
@@ -64,7 +187,8 @@ class BlogController extends Controller
         return view('dashboard.artikel-edit', [
             'title' => 'Edit Post',
             'group' => 'artikel',
-            'post' => $post
+            'post' => $post,
+            'url' => $this->getUrl()
         ]);
     }
 

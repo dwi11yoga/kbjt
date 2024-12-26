@@ -9,25 +9,23 @@
 
 @section('body')
     <form action="" method="POST" id="form" enctype="multipart/form-data" class="space-y-3">
-        @method('put')
         @csrf
         <div class="flex space-x-3">
             {{-- judul --}}
-            <input type="text" id="judul" name="judul" placeholder="Judul" value="{{ old('judul', $post->judul) }}"
+            <input type="text" id="judul" name="judul" placeholder="Judul" value="{{ old('judul') }}"
                 oninput="buatSlug(this, 'slug')"
                 class="w-full py-4 px-5 bg-white rounded-xl font-semibold focus:outline-none focus:outline-amber-400 @error('judul')
             border-red-600 border-2
             @enderror">
             {{-- tombol simpan --}}
-            <button type="submit" id="simpan"
-                onclick="document.getElementById('form').action='/artikel/edit/{{ $post->id }}/simpan'"
+            <button type="submit" id="simpan" onclick="document.getElementById('form').action='/artikel/baru/simpan'"
                 title="Simpan sebagai draf" class="bg-white rounded-xl py-4 px-5 hover:bg-amber-300">
                 <i data-feather='save' class="w-5"></i>
             </button>
             {{-- tombol publish --}}
             <button type="submit" id="publish"
-                onclick="document.getElementById('form').action='/artikel/edit/{{ $post->id }}/publikasikan'"
-                title="Publikasikan artikel" class="bg-white rounded-xl py-4 px-5 hover:bg-amber-300">
+                onclick="document.getElementById('form').action='/artikel/baru/publikasikan'" title="Publikasikan artikel"
+                class="bg-white rounded-xl py-4 px-5 hover:bg-amber-300">
                 <i data-feather='send' class="w-5"></i>
             </button>
         </div>
@@ -36,7 +34,7 @@
         @enderror
 
         {{-- slug --}}
-        <input type="text" name="slug" id="slug" value="{{ old('slug', $post->slug) }}"
+        <input type="text" name="slug" id="slug" value="{{ old('slug') }}"
             placeholder="URL ({{ $url }}/blog/post/...)"
             class="w-full py-4 px-5 bg-white rounded-xl focus:outline-none focus:outline-amber-400 @error('slug')
             border-red-600 border-2
@@ -46,16 +44,14 @@
         @enderror
 
         {{-- subtitle --}}
-        <input type="text" name="subjudul" id="subjudul" value="{{ old('subjudul', $post->subjudul) }}"
-            placeholder="Subjudul (opsional)"
+        <input type="text" name="subjudul" id="subjudul" value="{{ old('subjudul') }}" placeholder="Subjudul (opsional)"
             class="w-full py-4 px-5 bg-white rounded-xl focus:outline-none focus:outline-amber-400">
         {{-- tambah thumbnail/gambar --}}
 
         <div class="flex space-x-3">
             {{-- Thumbnail --}}
             <div class="w-full py-4 px-5 bg-white rounded-xl text-neutral-400">
-                <img id="thumbmailPreview" src="{{ asset('storage/' . $post->thumbnail) }}" alt="Thumbnail"
-                    class="object-cover max-h-72 rounded-xl">
+                <img id="thumbmailPreview" src="" alt="Thumbnail" class="object-cover max-h-72 rounded-xl">
                 @error('thumbnail')
                     <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
                 @enderror
@@ -149,7 +145,7 @@
                 <div class="more-stuff-inbetween"></div>
             </div>
             <div class="px-5 mt-1">
-                <input id="konten" type="hidden" name="konten" value="{{ old('konten', $post->konten) }}">
+                <input id="konten" type="hidden" name="konten" value="{{ old('konten') }}">
                 <trix-editor toolbar="my_toolbar" input="konten"
                     class="rounded-xl min-h-52 focus:outline-none focus:outline-amber-300 focus:outline-offset-0 space-y-2"></trix-editor>
             </div>

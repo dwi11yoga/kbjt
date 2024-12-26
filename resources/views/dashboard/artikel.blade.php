@@ -45,14 +45,14 @@
 
             @if (auth()->user()->role == 'pengurus')
                 {{-- Buat artikel --}}
-                <a href="#" class="py-4 px-5 bg-white rounded-xl hover:outline hover:outline-amber-200">
+                <a href="/artikel/baru" class="py-4 px-5 bg-white rounded-xl hover:outline hover:outline-amber-200">
                     <i data-feather='plus' class="w-5 inline-block"></i>
                     <span>Buat Artikel</span>
                 </a>
             @endif
         </div>
 
-        @if (empty($posts) || $posts == [] || $posts == '')
+        @if ($posts->isEmpty())
             <?php $notFound = 'Tidak ada definisi yang dapat ditampilkan'; ?>
             @include('partials.not-found')
         @else
@@ -60,7 +60,7 @@
             @foreach ($posts as $d)
                 <div
                     class="relative grid grid-cols-12 items-center py-4 px-5 bg-white rounded-xl group hover:bg-neutral-100 hover:outline hover:outline-amber-200">
-                    <a href="{{ $d->user_id == auth()->user()->id ? '/artikel/edit/' . $d->id : '#' }}"
+                    <a href="{{ $d->user_id == auth()->user()->id ? '/artikel/edit/' . $d->id : ($d->status == 1 ? '/blog/post/' . $d->slug : '/blog/preview/' . $d->slug) }}"
                         class="col-span-11 grid grid-cols-11 space-x-10">
                         {{-- Judul --}}
                         <div class="col-span-5 line-clamp-1">
@@ -102,7 +102,7 @@
                         <ul>
                             @if ($d->status == 1)
                                 {{-- Lihat --}}
-                                <a href="/blog/post/{{ $d->id }}">
+                                <a href="/blog/post/{{ $d->slug }}">
                                     <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
                                         <div>Lihat</div>
                                         <i data-feather='eye' class="w-5"></i>
@@ -126,7 +126,7 @@
                                         <button type="submit"
                                             class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
                                             <div>Publikasikan</div>
-                                            <i data-feather='printer' class="w-5"></i>
+                                            <i data-feather='send' class="w-5"></i>
                                         </button>
                                     @endif
                                 </form>
@@ -135,7 +135,7 @@
 
                             @if ($d->status == 0)
                                 {{-- preview --}}
-                                <a href="/blog/preview/{{ $d->id }}">
+                                <a href="/blog/preview/{{ $d->slug }}">
                                     <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
                                         <div>Preview</div>
                                         <i data-feather='eye' class="w-5"></i>

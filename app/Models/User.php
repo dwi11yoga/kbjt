@@ -57,6 +57,7 @@ class User extends Authenticatable
         //konversi json jadi array
         'media_sosial' => 'array',
         'donasi' => 'array',
+        'sembunyikan_data' => 'array',
         'tgl_lahir' => 'datetime'
     ];
 

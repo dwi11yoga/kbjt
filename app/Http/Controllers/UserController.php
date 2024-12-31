@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use App\Models\Definisi;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -89,7 +90,7 @@ class UserController extends Controller
     public function profile($username)
     {
         // Data user
-        $user = User::select(['id', 'nama', 'username', 'email', 'tampilkan_email', 'role', 'tgl_lahir', 'kota', 'jenis_kelamin', 'profile_pic', 'bio', 'telp', 'tautan', 'media_sosial', 'donasi', 'poin', 'achivement', 'terakhir_aktif', 'created_at'])
+        $user = User::select(['id', 'nama', 'username', 'email', 'sembunyikan_data', 'role', 'tgl_lahir', 'kota', 'jenis_kelamin', 'profile_pic', 'bio', 'telp', 'tautan', 'media_sosial', 'donasi', 'poin', 'achivement', 'terakhir_aktif', 'created_at'])
             ->where('username', $username)
             ->first();
         $user['level'] = $this->levelCalculator($user['poin']);
@@ -110,22 +111,41 @@ class UserController extends Controller
             ->definisi()
             ->with('kosakata:id,kosakata,slug')
             ->orderBy('updated_at', 'desc')
-            ->get();
+            ->paginate(10, ['*'], 'definisi-page')
+            ->appends(request()->query());
         foreach ($definisi as $d) {
             $d['slug'] = $d->kosakata['slug'];
             $d['kosakata'] = $d->kosakata['kosakata'];
         }
 
-        // Dapatkan kosakata dari user
-        $kosakata = User::find($user['id'])->kosakata()->orderBy('updated_at', 'desc')->get();
 
-        // return
-        return view('homepage.profile', [
+        // Dapatkan kosakata dari user
+        $kosakata = User::find($user['id'])
+            ->kosakata()
+            ->orderBy('updated_at', 'desc')
+            ->paginate(10, ['*'], 'kosakata-page')
+            ->appends(request()->query());
+
+        $kirim = [
             'title' => $user['nama'] . ' ' . '(' . $username . '',
             'user' => $user,
             'definisi' => $definisi,
             'kosakata' => $kosakata
-        ]);
+        ];
+
+        // dapatkan daftar artikel by user
+        if ($user['role'] == 'pengurus') {
+            $posts = Blog::select('id', 'judul', 'slug', 'user_id', 'status', 'updated_at', 'thumbnail')
+                ->with('user:id,username,nama')
+                ->where('user_id', '=', $user['id'])
+                ->orderBy('updated_at', 'desc')
+                ->paginate(10, ['*'], 'artikel-page')
+                ->appends(request()->query());
+            $kirim['posts'] = $posts;
+        }
+
+        // return
+        return view('homepage.profile', $kirim);
     }
 
     // Edit data user
@@ -250,5 +270,46 @@ class UserController extends Controller
         User::find(Auth::user()->id)->update(['password' => $validatedData['newPassword2']]);
 
         return back()->with('success', 'Kata sandi berhasil diubah');
+    }
+
+    // Update email user
+    public function updateEmail(Request $request)
+    {
+        // validasi data
+        $validatedData = $request->validate([
+            'oldEmail' => 'required|email',
+            'newEmail' => 'required|email|different:oldEmail|unique:users,email'
+        ]);
+
+        if ($validatedData['oldEmail'] != Auth::user()->email) {
+            return back()->withErrors(['oldEmail' => 'Old email are wrong, try again'])->withInput();
+        }
+
+        // Kirimkan konfirmasi lewat email
+        // Belom
+
+        //Simpan perubahan - sementara, harus dipisah nantinya
+        User::find(Auth::user()->id)->update(['email' => $validatedData['newEmail']]);
+        return back()->with('success', 'Alamat email berhasil diperbarui');
+    }
+
+    public function dataSensitif(Request $request)
+    {
+        // Simpan
+        $data = [];
+        if (isset($request['email'])) {
+            $data['email'] = true;
+        } else {
+            $data['email'] = false;
+        }
+
+        if (isset($request['telp'])) {
+            $data['telp'] = true;
+        } else {
+            $data['telp'] = false;
+        }
+
+        User::find(Auth::user()->id)->update(['sembunyikan_data' => $data]);
+        return back()->with('success', 'Preferensi berhasil disimpan');
     }
 }

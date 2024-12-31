@@ -24,7 +24,14 @@
 
                         {{-- Nama & username --}}
                         <div>
-                            <h3 class="font-bold">{{ $user->nama }}</h3>
+                            <h3 class="font-bold">{{ $user->nama }}
+                                @if (auth()->user()->id == $user->id)
+                                    <a href="/pengaturan/edit-user" title="Ke pengaturan"
+                                        class="rounded-full w-9 h-9 -ml-1 inline-flex justify-center items-center hover:bg-neutral-200">
+                                        <i data-feather='settings' class="inline-block w-5 stroke-neutral-700"></i>
+                                    </a>
+                                @endif
+                            </h3>
                             <div>&#64;{{ $user->username }}
                                 @isset($user->kota)
                                     • {{ $user->kota }}
@@ -45,8 +52,8 @@
                         </div>
 
                         {{-- Bergabung --}}
-                        <div class="text-neutral-600">
-                            Bergabung sejak {{ $user->created_at->translatedFormat('d F Y') }}.
+                        <div class="text-neutral-600 capitalize">
+                            {{ $user->role }} • Bergabung sejak {{ $user->created_at->translatedFormat('d F Y') }}.
                         </div>
 
                         {{-- Website & Media sosial --}}
@@ -77,6 +84,11 @@
                 <a id="kosakatatab" href="#kosakata" onclick="tab(this)"
                     class="-mb-0.5 py-3 hover:border-amber-400 hover:text-black">
                     Kosakata</a>
+                @if ($user->role == 'pengurus')
+                    <a id="artikeltab" href="#artikel" onclick="tab(this)"
+                        class="-mb-0.5 py-3 hover:border-amber-400 hover:text-black">
+                        Artikel</a>
+                @endif
                 <a id="achivementtab" href="#achivement" onclick="tab(this)"
                     class="-mb-0.5 py-3 hover:border-amber-400 hover:text-black">
                     Achievements</a>
@@ -105,7 +117,11 @@
                             <?php $notFound = 'Belum ada definisi yang ditambahkan oleh pengguna.'; ?>
                             @include('partials.not-found')
                         @endif
+                        <div>
+                            {{ $definisi->links() }}
+                        </div>
                     </div>
+
                     {{-- Kosakata --}}
                     <div id="kosakatapane" class="space-y-3">
                         @if (!$kosakata->isEmpty())
@@ -143,11 +159,34 @@
                                     </div>
                                 </a>
                             @endforeach
+                            <div>
+                                {{ $kosakata->links() }}
+                            </div>
                         @else
                             <?php $notFound = 'Belum ada kosakata yang ditambahkan oleh pengguna.'; ?>
                             @include('partials.not-found')
                         @endif
                     </div>
+
+                    @if ($user->role == 'pengurus')
+                        {{-- Artikel --}}
+                        <div id="artikelpane" class="space-y-3">
+                            @if (!$posts->isEmpty())
+                                @foreach ($posts as $d)
+                                    @include('partials.artikel-list')
+                                @endforeach
+
+                                {{-- paginate --}}
+                                <div>
+                                    {{ $posts->links() }}
+                                </div>
+                            @else
+                                <?php $notFound = 'Belum ada artikel yang ditulis oleh pengguna.'; ?>
+                                @include('partials.not-found')
+                            @endif
+                        </div>
+                    @endif
+
                     {{-- Achivement --}}
                     <div id="achivementpane" class="">
                         <?php $notFound = 'Belum ada achievement yang diperoleh pengguna.'; ?>
@@ -235,7 +274,8 @@
                                         <div>
                                             <div class="text-sm text-neutral-700">Instagram</div>
                                             <a href="https://www.instagram.com/{{ $user->media_sosial['ig'] }}"
-                                                target="_blank" class="inline-block bg-neutral-50 rounded-full py-0.5 px-2">
+                                                target="_blank"
+                                                class="inline-block bg-neutral-50 rounded-full py-0.5 px-2">
                                                 {{ $user->media_sosial['ig'] }} <i data-feather='arrow-up-right'
                                                     class="w-4 inline-block"></i>
                                             </a>
@@ -301,18 +341,27 @@
                         {{-- Kontak --}}
                         <div class="p-4 border border-neutral-200 rounded-2xl space-y-2">
                             <div class="font-semibold">Kontak</div>
-                            <div class="space-y-1.5">
-                                <div>
+                            <div class="md:flex block">
+                                <div class="md:w-1/2 w-full">
                                     <div class="text-sm text-neutral-700">Email</div>
-                                    <a href="mailto:{{ $user->email }}" target="_blank"
-                                        class="inline-block bg-neutral-50 rounded-full py-0.5 px-2">
-                                        <i data-feather='mail' class="w-4 inline-block"></i>
-                                        {{ $user->email ?? '-' }}
-                                    </a>
+                                    @if (isset($user->sembunyikan_data['email']) && $user->sembunyikan_data['email'] == false)
+                                        <a href="mailto:{{ $user->email }}" target="_blank"
+                                            class="inline-block bg-neutral-50 rounded-full py-0.5 px-2">
+                                            <i data-feather='mail' class="w-4 inline-block"></i>
+                                            {{ $user->email }}
+                                        </a>
+                                    @else
+                                        <div class="py-0.5 px-2">-</div>
+                                    @endif
                                 </div>
-                                <div>
+                                <div class="md:w-1/2 w-full">
                                     <div class="text-sm text-neutral-700">Telepon</div>
-                                    <div>{{ $user->telp ?? '-' }}</div>
+                                    @if (isset($user->telp) && isset($user->sembunyikan_data['telp']) && $user->sembunyikan_data['telp'] == false)
+                                        <div class="py-0.5 px-2">{{ $user->telp }}</div>
+                                    @else
+                                        <div class="py-0.5 px-2">-</div>
+                                    @endif
+                                    {{-- <div>{{ $user->telp ?? '-' }}</div> --}}
                                 </div>
                             </div>
                         </div>
@@ -380,13 +429,13 @@
 
     <script>
         // Pindah-pindah tab
-        const tabButtons = [
+        var tabButtons = [
             document.getElementById('definisitab'),
             document.getElementById('kosakatatab'),
             document.getElementById('achivementtab'),
             document.getElementById('tentangtab')
         ];
-        const tabPanes = [
+        var tabPanes = [
             document.getElementById('definisipane'),
             document.getElementById('kosakatapane'),
             document.getElementById('achivementpane'),
@@ -424,4 +473,10 @@
             }
         });
     </script>
+    @if ($user->role == 'pengurus')
+        <script>
+            tabButtons.push(document.getElementById('artikeltab'));
+            tabPanes.push(document.getElementById('artikelpane'));
+        </script>
+    @endif
 @endsection

@@ -143,6 +143,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/pengaturan/edit-user', [UserController::class, 'update']);
     // Simpan edit password
     Route::put('/pengaturan/ganti-password', [UserController::class, 'updatePassword']);
+    // Simpan edit email
+    Route::put('/pengaturan/ganti-email', [UserController::class, 'updateEmail']);
+    // sembunyikan data sensitif
+    Route::put('/pengaturan/data-sensitif', [UserController::class, 'dataSensitif']);
 
     // Tambah definisi
     Route::post('/kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create']);

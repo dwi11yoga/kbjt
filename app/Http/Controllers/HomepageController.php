@@ -147,47 +147,61 @@ class HomepageController extends Controller
     public function pencarian(Request $request)
     {
         $keyword = $request->keyword;
-        // Cari kosakata
-        $kosakata = Kosakata::select('id', 'kosakata', 'slug', 'aksara', 'ragam', 'jenis', 'arti_indo')
-            ->where('kosakata', 'like', '%' . $keyword . '%')
-            ->orWhere('arti_indo', 'like', '%' . $keyword . '%')
-            ->orWhere('aksara', 'like', '%' . $keyword . '%')
-            ->get();
-        foreach ($kosakata as $d) {
-            $d['jmlDefinisi'] = Definisi::select('id')
-                ->where('kosakata_id', '=', $d->id)
-                ->count();
-            if ($d['jmlDefinisi'] > 0) {
-                $d['jmlTerverifikasi'] = Definisi::select('id')
+        $filter = $request->filter;
+
+        if ($filter == 'kosakata' || empty($filter)) {
+            // Cari kosakata
+            $data = Kosakata::select('id', 'kosakata', 'slug', 'aksara', 'ragam', 'jenis', 'arti_indo')
+                ->where('kosakata', 'like', '%' . $keyword . '%')
+                ->orWhere('arti_indo', 'like', '%' . $keyword . '%')
+                ->orWhere('aksara', 'like', '%' . $keyword . '%')
+                ->paginate(10)
+                ->appends(request()->query());
+            foreach ($data as $d) {
+                $d['jmlDefinisi'] = Definisi::select('id')
                     ->where('kosakata_id', '=', $d->id)
-                    ->whereNotNull('verifikasi')
                     ->count();
-            } else {
-                $d['jmlTerverifikasi'] = 0;
+                if ($d['jmlDefinisi'] > 0) {
+                    $d['jmlTerverifikasi'] = Definisi::select('id')
+                        ->where('kosakata_id', '=', $d->id)
+                        ->whereNotNull('verifikasi')
+                        ->count();
+                } else {
+                    $d['jmlTerverifikasi'] = 0;
+                }
             }
+        } elseif ($filter == 'artikel') {
+            // cari artikel
+            $data = Blog::select('id', 'judul', 'slug', 'user_id', 'thumbnail', 'status', 'updated_at')
+                ->with('user:id,username,nama,jenis_kelamin,profile_pic')
+                ->where('judul', 'like', '%' . $keyword . '%')
+                ->orderBy('updated_at', 'desc')
+                ->paginate(10)
+                ->appends(request()->query());
+        } elseif ($filter == 'pengguna') {
+            // Cari pengguna
+            $data = User::select('username', 'nama', 'profile_pic', 'poin', 'jenis_kelamin', 'poin')
+                ->where('username', 'like', '%' . $keyword . '%')
+                ->orWhere('nama', 'like', '%' . $keyword . '%')
+                ->orderBy('poin', 'desc')
+                ->paginate(10)
+                ->appends(request()->query());
+
+            // Hitung & tambahkan level pada $user
+            foreach ($data as $d) {
+                $d['level'] = $this->levelCalculator($d['poin']);
+            }
+        } else {
+            $data = [];
         }
-        $jumlahKosakata = count($kosakata);
+        $jumlah = count($data);
 
-        // Cari pengguna
-        $user = User::select(['username', 'nama', 'profile_pic', 'poin', 'jenis_kelamin'])
-            ->whereLike('username', '%' . $keyword . '%')
-            ->orWhereLike('nama', '%' . $keyword . '%')
-            ->get();
-        $jumlahUser = count($user);
-
-        // Hitung & tambahkan level pada $user
-        $user = $user->map(function ($item) {
-            $item->level = $this->levelCalculator($item->poin); // Tambahkan atribut 'level'
-            return $item;
-        });
 
         return view('homepage.pencarian', [
             'group' => 'pencarian',
             'title' => 'Pencarian',
-            'kosakata' => $kosakata,
-            'jumlahKosakata' => $jumlahKosakata,
-            'user' => $user,
-            'jumlahUser' => $jumlahUser
+            'data' => $data,
+            'jumlah' => $jumlah,
         ]);
     }
 

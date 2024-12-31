@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('nama');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->boolean('tampilkan_email')->default(true);
+            // $table->boolean('tampilkan_email')->default(true);
             $table->string('password');
             $table->string('role', 20)->default('kontributor');
             $table->date('tgl_lahir')->nullable();
@@ -34,6 +34,7 @@ return new class extends Migration {
             $table->integer('poin')->default(10);
             $table->timestamp('poin_diperbarui')->nullable();
             $table->text('achivement')->nullable();
+            $table->json('sembunyikan_data')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

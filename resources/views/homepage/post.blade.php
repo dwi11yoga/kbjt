@@ -42,8 +42,10 @@
         {{ $post->updated_at->format('d F Y') }}</div> --}}
 
     {{-- Thumbnail --}}
-    <img alt="" class="aspect-video overflow-hidden object-cover w-full rounded-lg mb-5"
-        src="{{ isset($post->thumbnail) ? asset('storage/' . $post->thumbnail) : 'https://www.agoda.com/wp-content/uploads/2024/07/Featured-image-Lawang-Sewu-Semarang-Indonesia.jpg' }}">
+    @isset($post->thumbnail)
+        <img alt="" class="aspect-video overflow-hidden object-cover w-full rounded-lg mb-5"
+            src="{{ asset('storage/' . $post->thumbnail) }}">
+    @endisset
 
     {{-- Iklan atas --}}
     <a href="#">

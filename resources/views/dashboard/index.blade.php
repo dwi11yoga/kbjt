@@ -2,7 +2,7 @@
 
 @section('body')
     {{-- Pemberitahuan untuk melengkapi data diri --}}
-    @if ($lengkap == true)
+    @if ($lengkap == false)
         <div class="md:flex md:justify-between bg-white border border-neutral-200 rounded-xl p-3 shadow-sm mb-4">
             <div>Segera lengkapi profil kamu.</div>
             <a href="/pengaturan" class="text-blue-600 md:text-base text-sm">Pergi ke pengaturan<i
@@ -10,6 +10,7 @@
         </div>
     @endif
 
+    {{-- Overview --}}
     {{-- Level & Poin --}}
     <div class="">
         <div class="mb-3">Overview</div>

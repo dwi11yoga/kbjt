@@ -44,12 +44,10 @@ class DashboardController extends Controller
         }
 
         // Cek data lengkap/tidak untuk pemberitahuan
-        $lengkap = true;
-        $field = ['tgl_lahir', 'kota', 'jenis_kelamin', 'profile_pic', 'bio', 'telp'];
-        $user = DB::table('users')->where('id', Auth::user()->id)->get($field)->first();
-        if ($user->tgl_lahir === null || $user->kota === null || $user->jenis_kelamin === null || $user->kota === null || $user->kota === null || $user->kota === null) {
-            $lengkap = false;
-        }
+        $user = User::select('tgl_lahir', 'kota', 'jenis_kelamin', 'profile_pic', 'bio', 'telp')
+            ->where('id', Auth::user()->id)
+            ->first();
+        $lengkap = empty($user['jenis_kelamin']) || empty($user['tgl_lahir']) ? false : true;
 
         return view('dashboard.index', [
             'group' => 'dashboard',

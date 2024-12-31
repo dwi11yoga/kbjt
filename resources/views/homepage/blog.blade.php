@@ -6,14 +6,14 @@
     {{-- List artikel --}}
     <div class="space-y-3">
 
-        {{-- Artikel biasa --}}
+        {{-- Artikel --}}
         @foreach ($posts as $d)
             <a href="/blog/post/{{ $d->slug }}"
                 class="grid md:grid-cols-10 grid-cols-12 group w-full rounded-2xl border border-gray-200 hover:border-yellow-100 hover:bg-yellow-100 hover:outline hover:outline-2 hover:outline-offset-4 hover:outline-yellow-300 active:bg-yellow-200">
                 <div class="md:col-span-3 col-span-4">
                     <div
                         class="md:rounded-none md:rounded-l-2xl rounded-l-2xl w-full h-full md:aspect-video aspect-square overflow-hidden">
-                        <img src="{{ isset($d->thumbnail) ? asset('storage/' . $d->thumbnail) : 'https://static.vecteezy.com/system/resources/previews/004/639/366/non_2x/error-404-not-found-text-design-vector.jpg' }}"
+                        <img src="{{ isset($d->thumbnail) ? asset('storage/' . $d->thumbnail) : asset('img/no-image.png') }}"
                             class="w-full h-full object-cover" alt="">
                     </div>
                 </div>

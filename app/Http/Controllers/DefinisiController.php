@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Definisi;
+use App\Models\PoinKontribusi;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -12,29 +14,31 @@ class DefinisiController extends Controller
     // Tambah definisi
     public function create(Request $request)
     {
-        // dd($request);
         $validatedData = $request->validate([
             'kosakata_id' => 'required|exists:kosakata,id',
             'definisi' => 'required|min:10',
-            'contoh' => '',
             'referensi' => '',
         ]);
 
-        $arrayContoh = null;
         $arrayReferensi = null;
-        if (isset($validatedData['contoh'])) {
-            $arrayContoh = array_map('trim', explode(';', $validatedData['contoh']));
-        }
         if (isset($validatedData['referensi'])) {
             $arrayReferensi = array_map('trim', explode(';', $validatedData['referensi']));
+        }
+
+        // tambah poin
+        $tambahPoin = PoinKontribusi::where('kontribusi', '=', 'Menambah definisi')
+            ->where('role', '=', Auth::user()->role)
+            ->value('poin');
+        if (!empty($tambahPoin)) {
+            User::where('id', '=', Auth::user()->id)->increment('poin', $tambahPoin);
         }
 
         Definisi::create([
             'kosakata_id' => $validatedData['kosakata_id'],
             'user_id' => Auth::user()->id,
             'definisi' => $validatedData['definisi'],
-            'contoh' => $arrayContoh,
             'referensi' => $arrayReferensi,
+            'poin' => $tambahPoin ?? 0
         ]);
 
         return back()->with('success', 'Definisi berhasil ditambahkan');
@@ -54,11 +58,7 @@ class DefinisiController extends Controller
                 ->withInput();
         }
 
-        $arrayContoh = null;
         $arrayReferensi = null;
-        if (isset($request->editContoh)) {
-            $arrayContoh = array_map('trim', explode(';', $request->editContoh));
-        }
         if (isset($request->editReferensi)) {
             $arrayReferensi = array_map('trim', explode(';', $request->editReferensi));
         }
@@ -66,7 +66,6 @@ class DefinisiController extends Controller
         // Simpan
         Definisi::find($userId)->update([
             'definisi' => $validatedData['editDefinisi'],
-            'contoh' => $arrayContoh,
             'referensi' => $arrayReferensi
         ]);
 

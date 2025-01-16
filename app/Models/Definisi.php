@@ -13,8 +13,7 @@ class Definisi extends Model
     protected $table = 'definisi';
     protected $guarded = ['id'];
     protected $casts = [
-        'verifikasi' => 'array',
-        'contoh' => 'array',
+        'verifikasi_detail' => 'array',
         'referensi' => 'array'
     ];
 

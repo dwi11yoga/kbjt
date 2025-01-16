@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\EditKosakata;
 use App\Models\Kosakata;
+use App\Models\PoinKontribusi;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -56,6 +58,14 @@ class KosakataController extends Controller
         // Membuat array serupa
         $arraySerupa = array_map('trim', explode(';', $request->serupa));
 
+        // tambah poin
+        $tambahPoin = PoinKontribusi::where('kontribusi', '=', 'Menambah kosakata')
+            ->where('role', '=', Auth::user()->role)
+            ->value('poin');
+        if (!empty($tambahPoin)) {
+            User::where('id', '=', Auth::user()->id)->increment('poin', $tambahPoin);
+        }
+
         Kosakata::create([
             'user_id' => Auth::user()->id,
             'kosakata' => $validatedData['kosakata'],
@@ -67,6 +77,7 @@ class KosakataController extends Controller
             'arti_indo' => $request->arti_indo,
             'etimologi' => $etimologi,
             'serupa' => $arraySerupa,
+            'poin' => $tambahPoin ?? 0
         ]);
 
         return redirect('/kosakata/' . $validatedData['slug'], )->with('success', 'Kosakata berhasil ditambahkan');
@@ -93,7 +104,6 @@ class KosakataController extends Controller
         } else {
             $kosakata['etimologi'] = $etimologi;
         }
-        // dd($kosakata);
 
         if ($kosakata != null) {
             // Jika kosakata ditemukan

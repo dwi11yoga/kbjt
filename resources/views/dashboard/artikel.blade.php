@@ -53,7 +53,7 @@
         </div>
 
         @if ($posts->isEmpty())
-            <?php $notFound = 'Tidak ada definisi yang dapat ditampilkan'; ?>
+            <?php $notFound = 'Tidak ada artikel yang dapat ditampilkan'; ?>
             @include('partials.not-found')
         @else
             <?php $artikelUser = 0; ?>

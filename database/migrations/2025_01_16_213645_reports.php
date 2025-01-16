@@ -10,17 +10,16 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('definisi', function (Blueprint $table) {
+        //
+        Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('kosakata_id');
             $table->bigInteger('user_id');
-            $table->integer('poin')->default(0);
-            $table->text('definisi');
-            $table->json('referensi')->nullable();
-            $table->enum('verifikasi', [0, 1])->nullable();
-            $table->json('verifikasi_detail')->nullable();
+            $table->bigInteger('definisi_id');
+            $table->bigInteger('pengurus_id')->nullable();
+            $table->dateTime('status')->nullable();
+            $table->string('jenis');
+            $table->text('keterangan')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -29,6 +28,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::drop('definisi');
+        //
+        Schema::dropIfExists('reports');
     }
 };

@@ -22,6 +22,9 @@
 
     {{-- Feathericon --}}
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    {{-- import lainnya --}}
+    @yield('head')
 </head>
 
 <body>

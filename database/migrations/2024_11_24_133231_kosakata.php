@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('kosakata', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id');
+            $table->integer('poin')->default(0);
             $table->string('kosakata', 100);
             $table->string('slug', length: 100);
             $table->enum('ragam', ['Krama', 'Ngoko'])->nullable();

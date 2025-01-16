@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefinisiController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\KosakataController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PoinKontribusiController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TrixController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -61,6 +63,9 @@ Route::middleware(['auth'])->group(function () {
     // sertifikat - kontributor & pengurus
     Route::get('/sertifikat', [DashboardController::class, 'sertifikat']);
 
+    // laporkan definisi
+    Route::post('/laporkan/definisi', [ReportController::class, 'definisi']);
+
     Route::middleware(['pengurusKepala'])->group(function () {
 
         // artikel - pengurus & kepala
@@ -114,6 +119,9 @@ Route::middleware(['auth'])->group(function () {
                 'group' => 'donasi'
             ]);
         });
+
+        // banner
+        Route::get('/banner', [BannerController::class, 'index']);
 
         // level - kepala
         Route::get('/level', [LevelController::class, 'index']);

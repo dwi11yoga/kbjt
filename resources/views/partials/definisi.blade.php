@@ -5,7 +5,7 @@
         <h5 class="font-semibold mb-4 capitalize"><a href="/kosakata/{{ $d->slug }}">{{ $d->kosakata }}</a></h5>
 
         {{-- Definisi --}}
-        <p class="mb-3">{{ $d->definisi }}</p>
+        <p class="mb-3">{!! $d->definisi !!}</p>
 
         {{-- Contoh kalimat --}}
         @if (isset($d->contoh) && $d->contoh != [''])
@@ -72,12 +72,11 @@
                                 </li>
                             @endif
                             @if ($d->user_id != auth()->user()->id)
-                                <a href="#">
-                                    <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500">
-                                        <div>Laporkan</div>
-                                        <i data-feather='flag' class="w-5"></i>
-                                    </li>
-                                </a>
+                                <li onclick="openWindow('laporkan-{{ $d->id }}')"
+                                    class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500 cursor-pointer">
+                                    <div>Laporkan</div>
+                                    <i data-feather='flag' class="w-5"></i>
+                                </li>
                             @endif
                         </ul>
                     </div>
@@ -87,6 +86,62 @@
         </div>
     </div>
 </div>
+
+@if (isset(auth()->user()->id))
+    {{-- laporkan definisi --}}
+    <div id="laporkan-{{ $d->id }}"
+        class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
+
+            <h5 class="font-semibold capitalize">Laporkan</h5>
+            <div class="mb-5">Mengapa kamu melaporkan definisi yang disubmit oleh {{ $d->user->nama }}?</div>
+
+            <form action="/laporkan/definisi?id={{ $d->id }}" method="POST">
+                @csrf
+                <div class="overflow-auto max-h-[27rem] space-y-2">
+                    {{-- Referensi --}}
+                    <div>
+                        <label for="alasan" class="block">Alasan</label>
+                        <select name="alasan" id="alasan"
+                            class="w-full rounded-xl p-3 border bg-white focus:outline-none focus:border-amber-300 cursor-pointer @error('alasan')
+                                border-red-400 @else border-neutral-400 @enderror">
+                            <option value="">Pilih</option>
+                            <option {{ old('alasan') == 'Spam' ? 'selected' : '' }}>Spam</option>
+                            <option {{ old('alasan') == 'Definisi tidak akurat' ? 'selected' : '' }}>Definisi tidak
+                                akurat
+                            </option>
+                            <option {{ old('alasan') == 'Mengandung unsur SARA' ? 'selected' : '' }}>Mengandung unsur
+                                SARA
+                            </option>
+                            <option {{ old('alasan') == 'Scam/Penipuan' ? 'selected' : '' }}>Scam/Penipuan</option>
+                            <option {{ old('alasan') == 'Mempromosikan barang/jasa' ? 'selected' : '' }}>Mempromosikan
+                                barang/jasa</option>
+                            <option {{ old('alasan') == 'Melanggar hukum' ? 'selected' : '' }}>Melanggar hukum</option>
+                        </select>
+                        @error('alasan')
+                            <div class="text-xs text-red-600 mt-1 mb-2">*{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div>
+                        <label for="keterangan">Keterangan</label>
+                        <textarea id="keterangan" name="keterangan"
+                            class="w-full resize-none text-neutral-800 focus:outline-none focus:border-amber-300 mb-3 max-h-52 border border-neutral-400 rounded-xl p-2"
+                            placeholder="Tambahkan keterangan untuk memperkuat laporan (opsional)" oninput="textareaHeight(this)">{{ old('keterangan') }}</textarea>
+                    </div>
+                </div>
+
+                {{-- Button --}}
+                <div class="flex space-x-2">
+                    <div onclick="closeWindow('laporkan-{{ $d->id }}')"
+                        class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
+                        Batal</div>
+                    <button type="submit"
+                        class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endif
 
 @if (isset(auth()->user()->id) && $d->user_id == auth()->user()->id)
     {{-- Edit definisi --}}
@@ -99,30 +154,33 @@
             <form action="/kosakata/{{ $d->slug }}/{{ $d->id }}/update" method="POST">
                 @method('put')
                 @csrf
-                <div class="overflow-auto max-h-[27rem]">
+                <div class="overflow-auto max-h-[27rem] space-y-2">
                     {{-- Definisi --}}
-                    <label for="editDefinisi" class="block">Definisi</label>
-                    <textarea id="editDefinisi" name="editDefinisi" placeholder="Pengertian, dialek, dan semacamnya..."
-                        oninput="textareaHeight(this)"
-                        class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 @error('editDefinisi')
-                border-b border-red-600
-            @enderror">{{ old('editDefinisi', $d->definisi) }}</textarea>
-                    @error('editDefinisi')
-                        <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
-                    @enderror
+                    <div>
+                        <label for="editDefinisi" class="block">Definisi</label>
 
-                    {{-- Contoh --}}
-                    <label for="editContoh" class="block">Contoh<span class="text-xs text-red-500">*</span></label>
-                    <textarea id="editContoh" name="editContoh"
-                        class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 max-h-52 whitespace-pre-line"
-                        placeholder="Contoh kosakata (opsional)..." oninput="textareaHeight(this)">{{ old('editContoh', isset($d->contoh) ? implode('; ', $d->contoh) : '') }}</textarea>
+                        <?php
+                        $trixId = 'editDefinisi';
+                        $trixImg = 0;
+                        $trixUndoRedo = 1;
+                        $trixBlockTool = 0;
+                        $updateInput = $d->definisi;
+                        ?>
+                        @include('partials.trix-editor')
+
+                        @error('editDefinisi')
+                            <div class="text-xs text-red-600 mt-1 mb-2">*{{ $message }}</div>
+                        @enderror
+                    </div>
 
                     {{-- Referensi --}}
-                    <label for="editReferensi" class="block">Referensi<span
-                            class="text-xs text-red-500">*</span></label>
-                    <textarea id="editReferensi" name="editReferensi"
-                        class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 max-h-52"
-                        placeholder="Sumber referensi (opsional)..." oninput="textareaHeight(this)">{{ old('editReferensi', isset($d->referensi) ? implode('; ', $d->referensi) : '') }}</textarea>
+                    <div>
+                        <label for="editReferensi" class="block">Referensi<span
+                                class="text-xs text-red-500">*</span></label>
+                        <textarea id="editReferensi" name="editReferensi"
+                            class="w-full resize-none text-neutral-800 focus:outline-none focus:outline-amber-300 focus:outline-offset-0 mb-3 max-h-52 border border-neutral-400 rounded-xl p-2"
+                            placeholder="Sumber referensi (opsional)..." oninput="textareaHeight(this)">{{ old('editReferensi', isset($d->referensi) ? implode('; ', $d->referensi) : '') }}</textarea>
+                    </div>
                 </div>
 
                 {{-- Button --}}

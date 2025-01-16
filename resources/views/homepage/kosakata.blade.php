@@ -1,5 +1,12 @@
 @extends('layouts.homepage-with-banner')
 
+@section('head')
+    {{-- import trix editor 2.0.8 --}}
+    <link rel="stylesheet" href="{{ asset('css/trix.css') }}">
+    <script src="{{ asset('js/trix.umd.min.js') }}"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
+
 @section('body')
 
     @isset($data)
@@ -11,8 +18,8 @@
                 {{-- Menu --}}
                 <div class="relative">
                     @isset(auth()->user()->id)
-                        <button id="dropdownBtn" onclick="dropdown(this, 'dropdown')" class="p-2 rounded-full hover:bg-neutral-100"><i
-                                data-feather='more-horizontal'></i></button>
+                        <button id="dropdownBtn" onclick="dropdown(this, 'dropdown')"
+                            class="p-2 rounded-full hover:bg-neutral-100"><i data-feather='more-horizontal'></i></button>
                         <div id="dropdown"
                             class="absolute hidden bg-white right-0 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
                             <ul>
@@ -119,29 +126,36 @@
                         @csrf
                         <div class="md:col-start-2 md:col-span-3 col-span-6">
                             <div
-                                class="bg-white rounded-2xl p-6 mb-4 border border-neutral-200 hover:outline hover:outline-2 hover:outline-amber-400">
+                                class="bg-white rounded-2xl p-6 mb-4 border border-neutral-200 hover:outline hover:outline-2 hover:outline-amber-400 space-y-3">
                                 {{-- Kosakata --}}
-                                <h5 class="font-semibold mb-4 capitalize">{{ $data->kosakata }}</h5>
-                                <input type="number" name="kosakata_id" value="{{ $data->id }}" readonly hidden>
+                                <div>
+                                    <h5 class="font-semibold mb-4 capitalize">{{ $data->kosakata }}</h5>
+                                    <input type="number" name="kosakata_id" value="{{ $data->id }}" readonly hidden>
+                                </div>
 
                                 {{-- Definisi --}}
-                                <textarea id="definisi" name="definisi" placeholder="Definisi baru..." oninput="textareaHeight(this)"
-                                    class="w-full appearance-none resize-none focus:outline-none mb-3 max-h-52 @error('definisi')
-                                    border-b border-red-600
-                                @enderror">{{ old('definisi') }}</textarea>
-                                @error('definisi')
-                                    <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
-                                @enderror
+                                <div>
+                                    <?php
+                                    $trixId = 'definisi';
+                                    $trixImg = 0;
+                                    $trixUndoRedo = 1;
+                                    $trixBlockTool = 0;
+                                    $updateInput = null;
+                                    ?>
 
-                                {{-- Contoh kalimat --}}
-                                <label for="contoh">Contoh kalimat</label>
-                                <textarea id="contoh" name="contoh" class="w-full appearance-none resize-none focus:outline-none mb-3 max-h-52"
-                                    placeholder="Pisahkan contoh dengan tanda titik koma (;)" oninput="textareaHeight(this)">{{ old('contoh') }}</textarea>
+                                    @include('partials.trix-editor')
+
+                                    @error('definisi')
+                                        <div class="text-xs text-red-600 mt-2 mb-2">*{{ $message }}</div>
+                                    @enderror
+                                </div>
 
                                 {{-- Referensi --}}
-                                <label for="referensi">Referensi</label>
-                                <textarea id="referensi" name="referensi" class="w-full appearance-none resize-none focus:outline-none mb-3 max-h-52"
-                                    placeholder="Pisahkan referensi dengan tanda titik koma (;)" oninput="textareaHeight(this)">{{ old('referensi') }}</textarea>
+                                <div>
+                                    <label for="referensi">Referensi</label>
+                                    <textarea id="referensi" name="referensi" class="w-full appearance-none resize-none focus:outline-none mb-3 max-h-52"
+                                        placeholder="Pisahkan referensi dengan tanda titik koma (;)" oninput="textareaHeight(this)">{{ old('referensi') }}</textarea>
+                                </div>
 
                                 {{-- Author --}}
                                 <p class="mb-2">Disubmit oleh</p>
@@ -178,6 +192,7 @@
                             </div>
                         </div>
                     </form>
+
                     <script>
                         // Tampilkan dan semunyikan tambah definisi
                         const newDefButton = document.getElementById('newDefButton');

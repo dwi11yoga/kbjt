@@ -15,93 +15,143 @@
     <div class="">
         <div class="mb-3">Overview</div>
         <div class="grid grid-cols-3 gap-3 ">
-            <div
-                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
-                <div>
-                    Level <br>
-                    <h1 class="font-bold -mt-2 inline-block">{{ $userProgress['lvl'] }}</h1>
-                </div>
-                <div class="relative mb-3">
-                    <div class="absolute top-0 w-full bg-neutral-300 h-2 rounded-full"></div>
-                    <div title="{{ $userProgress['progress'] }}%"
-                        class="absolute top-0 min-w-[2%] bg-amber-400 h-2 rounded-full hover:outline hover:outline-4 hover:outline-amber-400"
-                        style="width: {{ $userProgress['progress'] }}%">
+            @if (auth()->user()->role == 'kontributor' || auth()->user()->role == 'pengurus')
+                {{-- Level --}}
+                <div
+                    class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                    <div>
+                        Level <br>
+                        <h1 class="font-bold -mt-2 inline-block">{{ $userProgress['lvl'] }}</h1>
+                    </div>
+                    <div class="relative mb-3">
+                        <div class="absolute top-0 w-full bg-neutral-300 h-2 rounded-full"></div>
+                        <div title="{{ $userProgress['progress'] }}%"
+                            class="absolute top-0 min-w-[2%] bg-amber-400 h-2 rounded-full hover:outline hover:outline-4 hover:outline-amber-400"
+                            style="width: {{ $userProgress['progress'] }}%">
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div
-                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
-                <div>Poin <br>
-                    <div class="flex items-baseline">
-                        <h1 class="font-bold -mt-2">{{ number_format(auth()->user()->poin, 0, ',', '.') }}</h1>
-                        <span class="text-green-600"><i data-feather='arrow-up'
-                                class="inline-block w-5 -mt-1"></i>210</span>
+                {{-- Poin --}}
+                <div
+                    class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                    <div>Poin <br>
+                        <div class="flex items-baseline">
+                            <h1 class="font-bold -mt-2">{{ number_format(auth()->user()->poin, 0, ',', '.') }}</h1>
+                        </div>
+                    </div>
+                    <div class="text-sm">
+                        @if ($userProgress['poinKurang'] != null)
+                            <span class="font-bold">{{ $userProgress['poinKurang'] }} poin</span> lagi sebelum naik level
+                        @else
+                            Kamu telah mencapai level maksimal 🙌
+                        @endif
                     </div>
                 </div>
-                <div class="text-sm">
-                    @if ($userProgress['poinKurang'] != null)
-                        <span class="font-bold">{{ $userProgress['poinKurang'] }} poin</span> lagi sebelum naik level
-                    @else
-                        Kamu telah mencapai level maksimal 🙌
-                    @endif
+                {{-- Popularitas --}}
+                <div
+                    class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                    <div>Popularitas<br>
+                        <h1 class="font-bold -mt-2">52.000</h1>
+                    </div>
+                    <div class="text-sm">Jumlah kunjungan ke akun kamu</div>
                 </div>
+            @endif
+
+            @if (auth()->user()->role == 'pengurus' || auth()->user()->role == 'kepala')
+                {{-- Pengunjung --}}
+                <div
+                    class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                    <div>Pengunjung bulan ini<br>
+                        <h1 class="font-bold -mt-2">3.000</h1>
+                    </div>
+                    <div class="text-sm">Bulan sebelumnya 2.167 pengunjung</div>
+                </div>
+
+                {{-- Anggota --}}
+                <div
+                    class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                    <div>Anggota<br>
+                        <h1 class="font-bold -mt-2">{{ $statistik['anggota'] }}</h1>
+                    </div>
+                    <div class="text-sm">Bulan ini bertambah {{ $statistik['anggotaBlnIni'] }} anggota</div>
+                </div>
+
+                {{-- kosakata --}}
+                <div
+                    class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                    <div>Kosakata<br>
+                        <h1 class="font-bold -mt-2">{{ $statistik['kosakata'] }}</h1>
+                    </div>
+                    <div class="text-sm">Bulan ini bertambah {{ $statistik['kosakataBlnIni'] }} kosakata</div>
+                </div>
+
+                {{-- definisi --}}
+                <div
+                    class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                    <div>Definisi<br>
+                        <h1 class="font-bold -mt-2">{{ $statistik['definisi'] }}</h1>
+                    </div>
+                    <div class="text-sm">Bulan ini bertambah {{ $statistik['definisiBlnIni'] }} definisi</div>
+                </div>
+
+                {{-- Post --}}
+                <div
+                    class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                    <div>Artikel<br>
+                        <h1 class="font-bold -mt-2">{{ $statistik['post'] }}</h1>
+                    </div>
+                    <div class="text-sm">{{ $statistik['postPublish'] }} artikel dipublikasikan</div>
+                </div>
+            @endif
+        </div>
+    </div>
+
+    @if (auth()->user()->role != 'kepala')
+        {{-- Kontribusi --}}
+        <div class="p-5 bg-white rounded-2xl">
+            <div class="flex justify-between">
+                <div>Kontribusi Terbaru</div>
+                <a href="/kontribusi" class="text-blue-600"><span class="md:inline-block hidden">Lebih lengkap</span><i
+                        data-feather='arrow-right'class="w-5 inline-block"></i></a>
             </div>
-
-            <div
-                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
-                <div>Popularitas<br>
-                    <h1 class="font-bold -mt-2">52.000</h1>
+            @foreach ($kontribusi as $d)
+                <div class="md:flex md:justify-between border border-neutral-200 p-3 mt-3 rounded-xl">
+                    <div>{{ $d['kontribusi'] }}</div>
+                    <div class="md:text-base text-sm"><i data-feather='stop-circle'
+                            class="inline-block w-5 text-amber-600"></i>
+                        {{ $d['poin'] }}
+                        poin</div>
                 </div>
-                <div class="text-sm">Jumlah kunjungan ke akun kamu</div>
+            @endforeach
+        </div>
+    @endif
+
+    @if (auth()->user()->role != 'kepala')
+        {{-- Achivement --}}
+        <div class="bg-white rounded-2xl p-5">
+            <div class="mb-3">Achivement</div>
+            <div class="space-x-3 flex">
+                <?php for ($i=0; $i < 4; $i++) { ?>
+                <a href="#"
+                    class="w-2/5 bg-neutral-100 rounded-xl p-4 h-44 flex justify-start items-end hover:outline hover:outline-amber-400 hover:outline-offset-4">
+                    <div>
+                        <img alt="simple 10 icon png" class="object-cover max-w-12 max-h-12"
+                            src="https://www.freeiconspng.com/thumbs/number-10-icon/number-10-11.gif">
+                        <div>Novice Contributor</div>
+                        <p class="text-xs line-clamp-1">Menambahkan 10 definisi baru</p>
+                    </div>
+                </a>
+                <?php } ?>
+
+                <a href="/achivement" title="Lebih lengkap"
+                    class="w-1/12 bg-neutral-100 rounded-xl p-4 h-44 flex justify-center items-center hover:bg-yellow-300 hover:outline hover:outline-amber-400 hover:outline-offset-4">
+                    <div>
+                        <i data-feather='chevron-right'></i>
+                    </div>
+                </a>
             </div>
         </div>
-    </div>
-
-    {{-- Kontribusi --}}
-    <div class="p-5 bg-white rounded-2xl">
-        <div class="flex justify-between">
-            <div>Kontribusi Terbaru</div>
-            <a href="/kontribusi" class="text-blue-600"><span class="md:inline-block hidden">Lebih lengkap</span><i
-                    data-feather='arrow-right'class="w-5 inline-block"></i></a>
-        </div>
-        <?php 
-    for ($i=0; $i < 5; $i++) { 
-        ?>
-        <div class="md:flex md:justify-between border border-neutral-200 p-3 mt-3 rounded-xl">
-            <div>Lorem ipsum dolor sit amet.</div>
-            <div class="md:text-base text-sm"><i data-feather='stop-circle' class="inline-block w-5 text-amber-600"></i> 10
-                poin</div>
-        </div>
-        <?php
-    }
-     ?>
-    </div>
-
-    {{-- Achivement --}}
-    <div class="bg-white rounded-2xl p-5">
-        <div class="mb-3">Achivement</div>
-        <div class="space-x-3 flex">
-            <?php for ($i=0; $i < 4; $i++) { ?>
-            <a href="#"
-                class="w-2/5 bg-neutral-100 rounded-xl p-4 h-44 flex justify-start items-end hover:outline hover:outline-amber-400 hover:outline-offset-4">
-                <div>
-                    <img alt="simple 10 icon png" class="object-cover max-w-12 max-h-12"
-                        src="https://www.freeiconspng.com/thumbs/number-10-icon/number-10-11.gif">
-                    <div>Novice Contributor</div>
-                    <p class="text-xs line-clamp-1">Menambahkan 10 definisi baru</p>
-                </div>
-            </a>
-            <?php } ?>
-
-            <a href="/achivement" title="Lebih lengkap"
-                class="w-1/12 bg-neutral-100 rounded-xl p-4 h-44 flex justify-center items-center hover:bg-yellow-300 hover:outline hover:outline-amber-400 hover:outline-offset-4">
-                <div>
-                    <i data-feather='chevron-right'></i>
-                </div>
-            </a>
-        </div>
-    </div>
+    @endif
 
     {{-- Sertifikat, donasi, ajak teman --}}
     <div class="flex space-x-3">

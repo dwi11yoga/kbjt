@@ -21,7 +21,7 @@ class BlogFactory extends Factory
             'judul' => fake()->sentence(),
             'subjudul' => fake()->sentence(10),
             'user_id' => random_int(1, 101),
-            'konten' => fake()->text(400),
+            'konten' => fake()->text(4000),
             'status' => random_int(0, 1),
         ];
     }

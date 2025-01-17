@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->integer('poin')->default(0);
             $table->text('definisi');
             $table->json('referensi')->nullable();
-            $table->enum('verifikasi', [0, 1])->nullable();
-            $table->json('verifikasi_detail')->nullable();
+            $table->dateTime('verifikasi')->nullable();
+            $table->bigInteger('verifikasi_oleh')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

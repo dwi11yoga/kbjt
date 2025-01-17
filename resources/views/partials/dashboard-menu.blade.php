@@ -1,5 +1,5 @@
 {{-- Menu --}}
-<div class="">
+<div class="bg-white p-6 border-r border-neutral-200 top-0 fixed left-0 h-screen w-[17rem] md:block hidden">
     {{-- logo --}}
     <div class="ml-4">
         <a href="/">

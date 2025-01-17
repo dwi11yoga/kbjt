@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Models\Definisi;
 use App\Models\Kosakata;
 use App\Models\Level;
+use App\Models\Report;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -140,9 +141,53 @@ class DashboardController extends Controller
     // Kontribusi - Kontributor
     public function kontribusi()
     {
+        // Kosakata
+        $data['kosakata'] = Kosakata::where('user_id', '=', Auth::user()->id);
+        $statistik['kosakataTotal'] = $data['kosakata']->count(); //kosakata total
+        $statistik['kosakataBln'] = $data['kosakata']->whereMonth('created_at', '=', Carbon::now()->month)->count();
+        $data['kosakata'] = $data['kosakata']->orderBy('updated_at', 'desc')
+            ->paginate(10, ['*'], 'kosakata-page')
+            ->appends(request()->query());
+        // tambah edit kosakata
+
+        // definisi
+        $data['definisi'] = Definisi::select('id', 'kosakata_id', 'user_id', 'poin', 'definisi', 'verifikasi', 'updated_at')
+            ->with('kosakata:id,kosakata')
+            ->where('user_id', '=', Auth::user()->id);
+        $statistik['definisiTotal'] = $data['definisi']->count();
+        $statistik['definisiBln'] = $data['definisi']->whereMonth('updated_at', '=', Carbon::now()->month)->count();
+        $data['definisi'] = $data['definisi']->orderBy('updated_at', 'desc')
+            ->paginate(10, ['*'], 'definisi-page')
+            ->appends(request()->query());
+
+        // laporan
+        $data['laporan'] = Report::select('id', 'user_id', 'definisi_id', 'jenis', 'status', 'updated_at')
+            ->with('definisi:id,kosakata_id')
+            ->where('user_id', '=', Auth::user()->id);
+        $statistik['laporanPending'] = (clone $data['laporan'])->whereNull('status')->count(); //pakai "clone" agar query  didalam $data['laporan'] tidak berubah
+        $statistik['laporanTotal'] = $data['laporan']->count();
+
+        if (isset($_REQUEST['filter_laporan']) && $_REQUEST['filter_laporan'] == 'Pending') {
+            $data['laporan'] = $data['laporan']->whereNull('status');
+        } elseif (isset($_REQUEST['filter_laporan']) && $_REQUEST['filter_laporan'] == 'Ditangani') {
+            $data['laporan'] = $data['laporan']->whereNotNull('status');
+        }
+
+        $data['laporan'] = $data['laporan']->orderBy('updated_at', 'desc')
+            ->paginate(10, ['*'], 'report-page')
+            ->appends(request()->query());
+        foreach ($data['laporan'] as $d) {
+            $d['kosakata'] = Kosakata::select('id', 'kosakata')
+                ->where('id', '=', $d->definisi->kosakata_id)
+                ->value('kosakata');
+        }
+
         return view('dashboard.kontribusi', [
             'group' => 'kontribusi',
-            'title' => 'Kontribusi'
+            'title' => 'Kontribusi',
+            'statistik' => $statistik,
+            'data' => $data,
+            'query' => request()->query() // Menyertakan semua parameter di URL
         ]);
     }
 

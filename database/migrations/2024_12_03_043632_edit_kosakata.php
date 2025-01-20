@@ -13,8 +13,8 @@ return new class extends Migration {
         //
         Schema::create('editkosakata', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
-            $table->bigInteger('kosakata_id');
+            $table->foreignId('user_id');
+            $table->foreignId('kosakata_id');
             $table->string('slug', length: 100);
             $table->enum('ragam', ['Krama', 'Ngoko'])->nullable();
             $table->string('aksara')->nullable();

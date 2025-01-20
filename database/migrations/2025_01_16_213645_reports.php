@@ -13,12 +13,15 @@ return new class extends Migration {
         //
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
-            $table->bigInteger('definisi_id');
-            $table->bigInteger('pengurus_id')->nullable();
+            $table->foreignId('user_id');
+            $table->foreignId('definisi_id');
+            $table->foreignId('pengurus_id')->nullable();
             $table->dateTime('status')->nullable();
-            $table->string('jenis');
-            $table->text('keterangan')->nullable();
+            $table->string('alasan');
+            $table->text('catatan')->nullable();
+            $table->text('def_dilaporkan');
+            $table->json('ref_dilaporkan')->nullable();
+            $table->dateTime('waktu_definisi');
             $table->timestamps();
         });
     }

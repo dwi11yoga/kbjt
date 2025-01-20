@@ -12,6 +12,11 @@ class Report extends Model
     //
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'ref_dilaporkan' => 'array',
+        'waktu_definisi' => 'datetime'
+    ];
+
     // Relasi dengan definisi
     /**
      * Get the definisi that owns the Report

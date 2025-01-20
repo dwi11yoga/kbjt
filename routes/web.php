@@ -65,6 +65,8 @@ Route::middleware(['auth'])->group(function () {
 
     // laporkan definisi
     Route::post('/laporkan/definisi', [ReportController::class, 'definisi']);
+    // detail laporan (kontributor)
+    Route::get('/kontribusi/laporan/{id}', [ReportController::class, 'kontributorView']);
 
     Route::middleware(['pengurusKepala'])->group(function () {
 

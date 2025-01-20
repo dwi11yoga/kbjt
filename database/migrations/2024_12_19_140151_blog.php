@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('judul');
             $table->string('subjudul')->nullable();
             $table->string('slug')->unique();
-            $table->bigInteger('user_id');
+            $table->foreignId('user_id');
             $table->string('thumbnail')->nullable();
             $table->text('konten')->nullable();
             $table->boolean('status')->default(0);

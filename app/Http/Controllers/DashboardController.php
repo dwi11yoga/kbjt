@@ -143,25 +143,27 @@ class DashboardController extends Controller
     {
         // Kosakata
         $data['kosakata'] = Kosakata::where('user_id', '=', Auth::user()->id);
-        $statistik['kosakataTotal'] = $data['kosakata']->count(); //kosakata total
-        $statistik['kosakataBln'] = $data['kosakata']->whereMonth('created_at', '=', Carbon::now()->month)->count();
+        $statistik['kosakataTotal'] = (clone $data['kosakata'])->count(); //kosakata total
+        $statistik['kosakataBln'] = (clone $data['kosakata'])->whereMonth('created_at', '=', Carbon::now()->month)->count();
         $data['kosakata'] = $data['kosakata']->orderBy('updated_at', 'desc')
             ->paginate(10, ['*'], 'kosakata-page')
+            ->onEachSide(2)
             ->appends(request()->query());
         // tambah edit kosakata
 
         // definisi
         $data['definisi'] = Definisi::select('id', 'kosakata_id', 'user_id', 'poin', 'definisi', 'verifikasi', 'updated_at')
-            ->with('kosakata:id,kosakata')
+            ->with('kosakata:id,kosakata,slug')
             ->where('user_id', '=', Auth::user()->id);
         $statistik['definisiTotal'] = $data['definisi']->count();
         $statistik['definisiBln'] = $data['definisi']->whereMonth('updated_at', '=', Carbon::now()->month)->count();
         $data['definisi'] = $data['definisi']->orderBy('updated_at', 'desc')
             ->paginate(10, ['*'], 'definisi-page')
+            ->onEachSide(2)
             ->appends(request()->query());
 
         // laporan
-        $data['laporan'] = Report::select('id', 'user_id', 'definisi_id', 'jenis', 'status', 'updated_at')
+        $data['laporan'] = Report::select('id', 'user_id', 'definisi_id', 'alasan', 'status', 'updated_at')
             ->with('definisi:id,kosakata_id')
             ->where('user_id', '=', Auth::user()->id);
         $statistik['laporanPending'] = (clone $data['laporan'])->whereNull('status')->count(); //pakai "clone" agar query  didalam $data['laporan'] tidak berubah
@@ -175,6 +177,7 @@ class DashboardController extends Controller
 
         $data['laporan'] = $data['laporan']->orderBy('updated_at', 'desc')
             ->paginate(10, ['*'], 'report-page')
+            ->onEachSide(2)
             ->appends(request()->query());
         foreach ($data['laporan'] as $d) {
             $d['kosakata'] = Kosakata::select('id', 'kosakata')

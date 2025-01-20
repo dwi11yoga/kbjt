@@ -40,7 +40,7 @@
 
                 {{-- header --}}
                 <div
-                    class="grid grid-cols-8 space-x-1 mb-5 md:py-0 py-2 md:static sticky top-0 flex items-center bg-neutral-50">
+                    class="grid grid-cols-8 space-x-1 mb-5 md:py-0 py-2 md:static sticky top-0 flex items-center bg-neutral-50 z-50">
 
                     {{-- Menu mobile --}}
                     <div class="col-span-1 md:hidden">

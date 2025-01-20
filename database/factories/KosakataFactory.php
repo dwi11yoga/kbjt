@@ -17,7 +17,7 @@ class KosakataFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => 1,
+            'user_id' => random_int(1, 100),
             'poin' => 20,
             'kosakata' => fake()->word(),
             'slug' => fake()->word(),

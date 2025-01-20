@@ -225,13 +225,24 @@ class HomepageController extends Controller
         // ambil data definisi
         $definisi = [];
         if (isset($kosakata)) {
-            $definisi = Kosakata::find($kosakata['id'])
-                ->definisi()
-                ->with('user:id,username,nama,profile_pic,jenis_kelamin')
+            // $definisi = Kosakata::find($kosakata['id'])
+            //     ->definisi()
+            //     ->with('user:id,username,nama,profile_pic,jenis_kelamin,role')
+            //     ->get();
+            $definisi = Definisi::where('kosakata_id', '=', $kosakata->id)
+                ->with('user:id,username,nama,profile_pic,jenis_kelamin,role');
+            if (isset(request()->definisi)) {
+                $definisi = $definisi->orderByRaw('id=? DESC', [request()->definisi]);
+            }
+            $definisi = $definisi->orderBy('updated_at', 'desc')
                 ->get();
+
             foreach ($definisi as $d) {
                 $d['kosakata'] = $kosakata->kosakata;
                 $d['slug'] = $kosakata->slug;
+                if (isset(request()->definisi) && request()->definisi == $d->id) {
+                    $d['selected'] = 1;
+                }
             }
         }
 

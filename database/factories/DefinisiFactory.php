@@ -18,7 +18,7 @@ class DefinisiFactory extends Factory
     {
         return [
             'kosakata_id' => random_int(1, 50),
-            'user_id' => 1,
+            'user_id' => random_int(1, 100),
             'poin' => 10,
             'definisi' => fake()->text(300),
             'verifikasi' => random_int(0, 1) === 1 ? now() : NULL,

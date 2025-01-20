@@ -20,8 +20,10 @@ class ReportFactory extends Factory
             'user_id' => 1,
             'definisi_id' => random_int(1, 100),
             'status' => random_int(0, 1) === 1 ? now() : NULL,
-            'jenis' => 'SPAM',
-            'keterangan' => fake()->sentence(15),
+            'alasan' => 'SPAM',
+            'catatan' => fake()->sentence(15),
+            'def_dilaporkan' => fake()->text(100),
+            'waktu_definisi' => now(),
             'created_at' => now(),
             'updated_at' => now()
         ];

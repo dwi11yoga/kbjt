@@ -12,13 +12,13 @@ return new class extends Migration {
     {
         Schema::create('definisi', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('kosakata_id');
-            $table->bigInteger('user_id');
+            $table->foreignId('kosakata_id');
+            $table->foreignId('user_id');
             $table->integer('poin')->default(0);
             $table->text('definisi');
             $table->json('referensi')->nullable();
             $table->dateTime('verifikasi')->nullable();
-            $table->bigInteger('verifikasi_oleh')->nullable();
+            $table->foreignId('verifikasi_oleh')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

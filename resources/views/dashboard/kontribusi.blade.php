@@ -6,7 +6,7 @@
         <div class="mb-3">Overview</div>
         <div class="grid grid-cols-3 gap-3 ">
             {{-- Kosakata --}}
-            <div
+            <a href="#kosakata"
                 class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
                 <div>Kosakata disubmit<br>
                     <div class="flex items-baseline">
@@ -16,10 +16,10 @@
                 <div class="text-sm">
                     Bulan ini, kamu men-submit {{ $statistik['kosakataBln'] }} kosakata!
                 </div>
-            </div>
+            </a>
 
             {{-- Definisi --}}
-            <div
+            <a href="#definisi"
                 class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
                 <div>Definisi disubmit<br>
                     <div class="flex items-baseline">
@@ -29,10 +29,10 @@
                 <div class="text-sm">
                     Bulan ini, kamu men-submit {{ $statistik['definisiBln'] }} definisi!
                 </div>
-            </div>
+            </a>
 
             {{-- Laporan --}}
-            <div
+            <a href="#laporan"
                 class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
                 <div>Laporan pending<br>
                     <div class="flex items-baseline">
@@ -42,20 +42,21 @@
                 <div class="text-sm">
                     Total {{ number_format($statistik['laporanTotal'], 0, ',', '.') }} laporan telah kamu submit.
                 </div>
-            </div>
+            </a>
 
         </div>
     </div>
 
     {{-- Kosakata --}}
-    <div class="p-5 bg-white rounded-2xl">
+    <div class="p-5 bg-white rounded-2xl" id="kosakata">
         <div>Kosakata</div>
         <div class="space-y-3">
             @foreach ($data['kosakata'] as $d)
                 <a href="/kosakata/{{ $d->slug }}"
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 hover:outline hover:outline-offset-2 hover:outline-amber-400">
                     <div class="line-clamp-1 col-span-3 flex items-center">Mensubmit kosakata
-                        "{{ $d->kosakata }}".</div>
+                        <span class="capitalize">"{{ $d->kosakata }}"</span>.
+                    </div>
                     <div class="md:text-base text-sm col-span-1 flex justify-center">
                         <div class="md:text-base text-sm col-span-1 flex items-center justify-center space-x-1">
                             <i data-feather='stop-circle' class="inline-block w-5 text-amber-600" title="Poin"></i>
@@ -81,13 +82,14 @@
     </div>
 
     {{-- Definisi --}}
-    <div class="p-5 bg-white rounded-2xl">
+    <div class="p-5 bg-white rounded-2xl" id="definisi">
         <div>Definisi</div>
         <div class="space-y-3">
             @foreach ($data['definisi'] as $d)
-                <div class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6">
+                <a href="/kosakata/{{ $d->kosakata->slug }}?definisi={{ $d->id }}"
+                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 hover:outline hover:outline-offset-2 hover:outline-amber-400">
                     <div class="line-clamp-1 col-span-3 flex items-center">Mensubmit definisi untuk kosakata
-                        "{{ $d->kosakata->kosakata }}".
+                        <span class="capitalize">"{{ $d->kosakata->kosakata }}"</span>.
                     </div>
                     <div class="md:text-base text-sm col-span-1 flex items-center justify-center space-x-1">
                         <i data-feather='stop-circle' class="inline-block w-5 text-amber-600" title="Poin"></i>
@@ -109,7 +111,7 @@
                         @endif
                     </div>
                     <div class="col-span-1 flex items-center">24 December 2024</div>
-                </div>
+                </a>
             @endforeach
             @if ($data['definisi']->isEmpty())
                 <div class="border border-neutral-200 p-3 mt-3 rounded-xl">Tidak ada data</div>
@@ -123,7 +125,7 @@
     </div>
 
     {{-- Laporan --}}
-    <div class="p-5 bg-white rounded-2xl">
+    <div class="p-5 bg-white rounded-2xl" id="laporan">
         <div class="flex items-center justify-between">
             <span>Laporan</span>
             <form action="/kontribusi" method="GET" class="relative">
@@ -139,9 +141,10 @@
 
         <div class="space-y-3">
             @foreach ($data['laporan'] as $d)
-                <div class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6">
+                <a href="/kontribusi/laporan/{{ $d->id }}"
+                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 hover:outline hover:outline-offset-2 hover:outline-amber-400">
                     <div class="line-clamp-1 col-span-3 flex items-center">Melaporkan definisi dari kosakata
-                        "{{ $d->kosakata }}".
+                        <span class="capitalize">"{{ $d->kosakata }}"</span>.
                     </div>
                     <div class="md:text-base text-sm col-span-1 flex items-center justify-center space-x-1">
                         <i data-feather='stop-circle' class="inline-block w-5 text-amber-600" title="Poin"></i>
@@ -161,7 +164,7 @@
                         @endif
                     </div>
                     <div class="col-span-1 flex items-center">24 December 2024</div>
-                </div>
+                </a>
             @endforeach
             @if ($data['laporan']->isEmpty())
                 <div class="border border-neutral-200 p-3 mt-3 rounded-xl">Tidak ada data</div>

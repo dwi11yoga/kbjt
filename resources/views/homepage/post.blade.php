@@ -33,9 +33,9 @@
     {{-- Waktu --}}
     <div class="text-neutral-800 inline-flex items-center">
         <i data-feather='calendar' class="w-5 mr-1"></i>
-        {{ $post->updated_at->format('d F Y') }}
+        {{ $post->updated_at->translatedformat('d F Y') }}
         <i data-feather='clock' class="w-5 ml-3 mr-1"></i>
-        {{ $post->updated_at->format('h:iA') }}
+        {{ $post->updated_at->format('h:i A') }}
     </div>
 
     {{-- <div class="mt-2 mb-5">Oleh <span class="font-bold">{{ $post->user->nama }}</span> •

@@ -25,7 +25,6 @@ class DatabaseSeeder extends Seeder
         DB::table('editkosakata')->insert([
             'user_id' => 1,
             'kosakata_id' => 1,
-            'slug' => 'madaran',
             'ragam' => 'Krama',
             'aksara' => 'ꦩꦢꦫꦤ꧀',
             'jenis' => 'Nomina',
@@ -33,6 +32,22 @@ class DatabaseSeeder extends Seeder
             'arti_indo' => 'Perut',
             'etimologi' => json_encode(['Asli']),
             'serupa' => json_encode(['weteng']),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+        // Edit kosakata
+        DB::table('editkosakata')->insert([
+            'user_id' => 29,
+            'kosakata_id' => 1,
+            'ragam' => 'Ngoko',
+            'jenis' => 'Verba',
+            'notasi_fonetik' => 'ma-da-ra-n',
+            'arti_indo' => 'Malam',
+            'etimologi' => json_encode(['Asli']),
+            'serupa' => json_encode(['bengi']),
+            'catatan' => 'Cuando calienta el sol aqui en la playa siento tu cuerpo vibrar cerca de mi',
+            'created_at' => now(),
+            'updated_at' => now()
         ]);
 
         $this->call([

@@ -90,8 +90,10 @@ class KosakataController extends Controller
         $kosakata = Kosakata::where('slug', $slug)->first();
 
         // Ubah json ke text
-        $kosakata['serupa'] = implode('; ', $kosakata['serupa']);
-        $kosakata['serupa'] = str_replace('"', '', $kosakata['serupa']);
+        if (isset($kosakata['serupa'])) {
+            $kosakata['serupa'] = implode('; ', $kosakata['serupa']);
+            $kosakata['serupa'] = str_replace('"', '', $kosakata['serupa']);
+        }
         $etimologi = str_replace('"', '', $kosakata['etimologi']);
         if ($etimologi != '') {
             $etimologi = implode('; ', $kosakata['etimologi']) ?? null;
@@ -122,15 +124,8 @@ class KosakataController extends Controller
     {
         $id = Kosakata::select('id')->where('slug', $slug)->first();
 
-        // Buat slug
-        $request['slug'] = strtolower($request->slug);
-
-        // dd($request);
-
         // Validasi
         $rules = [
-            'kosakata' => ['required', Rule::unique('kosakata', 'kosakata')->ignore($id->id, 'id')],
-            'slug' => ['required', Rule::unique('kosakata', 'slug')->ignore($id->id, 'id')],
             'ragam' => 'required',
         ];
 
@@ -159,14 +154,14 @@ class KosakataController extends Controller
         EditKosakata::create([
             'user_id' => Auth::user()->id,
             'kosakata_id' => $id->id,
-            'slug' => $validatedData['slug'],
             'ragam' => $validatedData['ragam'],
             'aksara' => $request->aksara,
             'jenis' => $request->jenis,
             'notasi_fonetik' => $request->notasi_fonetik,
             'arti_indo' => $request->arti_indo,
-            'etimologi' => json_encode($etimologi),
-            'serupa' => json_encode($arraySerupa)
+            'etimologi' => $etimologi,
+            'serupa' => $arraySerupa,
+            'catatan' => $request->catatan
         ]);
 
         return redirect('/kosakata/' . $slug)->with('success', 'Permintaan edit akan segera diproses');

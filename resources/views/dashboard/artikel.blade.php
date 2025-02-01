@@ -4,7 +4,7 @@
     <div class="space-y-3">
 
         {{-- Filter --}}
-        <div class="flex justify-between">
+        <div class="md:flex md:justify-between">
             <form action="/artikel" method="GET">
                 <div class="inline-flex space-x-2">
                     {{-- Status --}}
@@ -45,9 +45,11 @@
 
             @if (auth()->user()->role == 'pengurus')
                 {{-- Buat artikel --}}
-                <a href="/artikel/baru" class="py-4 px-5 bg-white rounded-xl hover:outline hover:outline-amber-200">
-                    <i data-feather='plus' class="w-5 inline-block"></i>
-                    <span>Buat Artikel</span>
+                <a href="/artikel/baru">
+                    <div class="md:mt-0 mt-2 py-4 px-5 bg-white rounded-xl hover:outline hover:outline-amber-200">
+                        <i data-feather='plus' class="w-5 inline-block"></i>
+                        <span>Buat Artikel</span>
+                    </div>
                 </a>
             @endif
         </div>
@@ -61,9 +63,9 @@
                 <div
                     class="relative grid grid-cols-12 items-center py-4 px-5 bg-white rounded-xl group hover:bg-neutral-100 hover:outline hover:outline-amber-200">
                     <a href="{{ $d->user_id == auth()->user()->id ? '/artikel/edit/' . $d->id : ($d->status == 1 ? '/blog/post/' . $d->slug : '/blog/preview/' . $d->slug) }}"
-                        class="col-span-11 grid grid-cols-11 space-x-10">
+                        class="col-span-11 grid md:grid-cols-11 grid-col-3 md:space-x-10 space-y-2">
                         {{-- Judul --}}
-                        <div class="col-span-5 line-clamp-1">
+                        <div class="md:col-span-5 col-span-3 line-clamp-1">
                             @if ($d->pinned == 1)
                                 <span>📌</span>
                             @endif
@@ -79,12 +81,17 @@
                         </div>
 
                         {{-- Status --}}
-                        <div class="col-span-3">
+                        <div class="md:col-span-2 col-span-2">
                             @if ($d->status == 1)
                                 Dipublikasikan
                             @else
                                 Draf
                             @endif
+                        </div>
+
+                        {{-- tgl --}}
+                        <div class="col-span-1 flex justify-end">
+                            {{ $d->updated_at->translatedformat('d/m/Y') }}
                         </div>
                     </a>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Blog;
 use App\Models\Definisi;
+use App\Models\EditKosakata;
 use App\Models\Kosakata;
 use App\Models\User;
 use Carbon\Carbon;
@@ -151,7 +152,8 @@ class HomepageController extends Controller
 
         if ($filter == 'kosakata' || empty($filter)) {
             // Cari kosakata
-            $data = Kosakata::select('id', 'kosakata', 'slug', 'aksara', 'ragam', 'jenis', 'arti_indo')
+            $data = Kosakata::select('id', 'kosakata', 'user_id', 'slug', 'aksara', 'ragam', 'jenis', 'arti_indo')
+                ->with('user:id,username,nama,jenis_kelamin,profile_pic')
                 ->where('kosakata', 'like', '%' . $keyword . '%')
                 ->orWhere('arti_indo', 'like', '%' . $keyword . '%')
                 ->orWhere('aksara', 'like', '%' . $keyword . '%')
@@ -209,10 +211,30 @@ class HomepageController extends Controller
     public function kosakata($slug)
     {
         // ambil data kosakata
-        $kosakata = Kosakata::firstWhere('slug', $slug);
-        $cekKolom = ['ragam', 'aksara', 'jenis', 'notasi_fonetik', 'arti_indo', 'etimologi', 'serupa'];
+        $kosakata = Kosakata::where('slug', '=', $slug)
+            ->with('user:id,username,nama,jenis_kelamin,profile_pic')
+            ->first();
+
+        // tampilkan data edit (jika ada)
+        $cekEdit = EditKosakata::where('kosakata_id', '=', $kosakata->id)
+            ->whereNotNull('pengurus_id')
+            ->with('user:id,username,nama,jenis_kelamin,profile_pic')
+            ->orderBy('updated_at', 'desc')
+            ->first();
+        if (isset($cekEdit)) {
+            $kosakata->aksara = $cekEdit->aksara;
+            $kosakata->ragam = $cekEdit->ragam;
+            $kosakata->jenis = $cekEdit->jenis;
+            $kosakata->notasi_fonetik = $cekEdit->notasi_fonetik;
+            $kosakata->arti_indo = $cekEdit->arti_indo;
+            $kosakata->etimologi = $cekEdit->etimologi;
+            $kosakata->serupa = $cekEdit->serupa;
+        }
+
+        // dd($kosakata);
 
         // Hitung jumlah kolom null
+        $cekKolom = ['ragam', 'aksara', 'jenis', 'notasi_fonetik', 'arti_indo', 'etimologi', 'serupa'];
         $nullCount = 0;
         if (isset($kosakata)) {
             foreach ($cekKolom as $d) {
@@ -230,12 +252,14 @@ class HomepageController extends Controller
             //     ->with('user:id,username,nama,profile_pic,jenis_kelamin,role')
             //     ->get();
             $definisi = Definisi::where('kosakata_id', '=', $kosakata->id)
-                ->with('user:id,username,nama,profile_pic,jenis_kelamin,role');
+                ->with('user:id,username,nama,profile_pic,jenis_kelamin,role')
+                ->whereNull('hukuman_edit')
+                ->orWhere('hukuman_edit', '!=', 1);
             if (isset(request()->definisi)) {
                 $definisi = $definisi->orderByRaw('id=? DESC', [request()->definisi]);
             }
             $definisi = $definisi->orderBy('updated_at', 'desc')
-                ->get();
+                ->paginate(10);
 
             foreach ($definisi as $d) {
                 $d['kosakata'] = $kosakata->kosakata;
@@ -266,6 +290,27 @@ class HomepageController extends Controller
             'dataNull' => $nullCount,
             'definisi' => $definisi,
             'cekDefinisiUser' => $cekDefinisiUser
+        ]);
+    }
+
+    // view riwayat kosakata
+    public function riwayatKosakata($slug)
+    {
+        $kosakata = Kosakata::where('slug', '=', $slug)->first();
+
+        $riwayat = EditKosakata::where('kosakata_id', '=', $kosakata->id);
+        if (empty(Auth::user()->role) || Auth::user()->role != 'pengurus') {
+            $riwayat = $riwayat->whereNotNull('status');
+        }
+        $riwayat = $riwayat->with('user:id,username,nama,jenis_kelamin,profile_pic')
+            ->with('pengurus:id,username,nama,jenis_kelamin,profile_pic')
+            ->orderBy('updated_at', 'desc')
+            ->paginate(10);
+        // dd($riwayat);
+        return view('homepage.riwayat-kosakata', [
+            'title' => 'Riwayat',
+            'kosakata' => $kosakata,
+            'riwayat' => $riwayat
         ]);
     }
 }

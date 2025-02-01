@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Report extends Model
 {
@@ -14,7 +15,8 @@ class Report extends Model
 
     protected $casts = [
         'ref_dilaporkan' => 'array',
-        'waktu_definisi' => 'datetime'
+        'waktu_definisi' => 'datetime',
+        'status' => 'datetime'
     ];
 
     // Relasi dengan definisi
@@ -47,6 +49,16 @@ class Report extends Model
      */
     public function pengurus(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'id', 'pengurus_id');
+        return $this->belongsTo(User::class, 'pengurus_id', 'id');
+    }
+
+    /**
+     * Get the hukuman associated with the Report
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function hukuman(): HasOne
+    {
+        return $this->hasOne(Hukuman::class, 'laporan_id');
     }
 }

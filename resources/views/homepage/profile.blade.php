@@ -2,30 +2,32 @@
 
 @section('body')
     {{-- Header profil --}}
-    <section class="px-28 pt-14 mx-auto bg-neutral-100">
+    <section class="md:px-28 px-5 pt-14 mx-auto bg-neutral-100">
         <div class="container mx-auto">
-            <div class="flex space-x-20">
+            <div class="grid grid-cols-4 md:space-x-20 space-y-4">
 
-                <div class="relative">
-                    {{-- Foto profil --}}
-                    <div
-                        class="overflow-hidden h-64 w-64 ml-2 rounded-full flex justify-center hover:outline hover:outline-amber-400 hover:outline-offset-4 hover:outline-4">
-                        <?php $d = $user; ?>
-                        @include('partials.profile-pic-general')
-                    </div>
-                    <div
-                        class="absolute top-3 -right-4 bg-amber-400 border-4 border-neutral-100 rounded-full py-2 px-4 font-semibold text-lg">
-                        Lv.{{ $user->level }}
+                <div class="md:col-span-1 col-span-4">
+                    <div class="relative">
+                        {{-- Foto profil --}}
+                        <div
+                            class="overflow-hidden md:h-64 md:w-64 w-40 h-40 ml-2 rounded-full flex justify-center hover:outline hover:outline-amber-400 hover:outline-offset-4 hover:outline-4">
+                            <?php $d = $user; ?>
+                            @include('partials.profile-pic-general')
+                        </div>
+                        <div
+                            class="absolute top-3 md:left-48 left-32 bg-amber-400 border-4 border-neutral-100 rounded-full py-2 px-4 font-semibold md:text-lg text-base">
+                            Lv.{{ $user->level }}
+                        </div>
                     </div>
                 </div>
 
-                <div class="col-span-2 flex items-center">
+                <div class="md:col-span-3 col-span-4 flex items-center">
                     <div class="space-y-2">
 
                         {{-- Nama & username --}}
                         <div>
                             <h3 class="font-bold">{{ $user->nama }}
-                                @if (auth()->user()->id == $user->id)
+                                @if (isset(auth()->user()->id) && auth()->user()->id == $user->id)
                                     <a href="/pengaturan/edit-user" title="Ke pengaturan"
                                         class="rounded-full w-9 h-9 -ml-1 inline-flex justify-center items-center hover:bg-neutral-200">
                                         <i data-feather='settings' class="inline-block w-5 stroke-neutral-700"></i>
@@ -77,7 +79,7 @@
                 </div>
             </div>
             {{-- Tab --}}
-            <div class="flex mt-7 space-x-7 border-b-2 border-neutral-200">
+            <div class="flex mt-7 space-x-7 border-b-2 border-neutral-200 md:overflow-hidden overflow-x-scroll">
                 <a id="definisitab" href="#definisi" onclick="tab(this)"
                     class="-mb-0.5 py-3 hover:border-amber-400 hover:text-black">
                     Definisi</a>
@@ -101,12 +103,12 @@
     </section>
 
     {{-- Detail user dam banner --}}
-    <section class="px-28 my-8">
+    <section class="md:px-28 px-5 my-8">
         <div class="container mx-auto">
-            <div class="grid grid-cols-4 space-x-7 mt-2">
+            <div class="grid grid-cols-4 md:space-x-7 space-y-5 mt-2">
 
                 {{-- detail user --}}
-                <div class="col-span-3 text-justify">
+                <div class="md:col-span-3 col-span-4 text-justify">
                     {{-- Definisi --}}
                     <div id="definisipane" class="">
                         @if (!$definisi->isEmpty())
@@ -369,8 +371,8 @@
                 </div>
 
                 {{-- banner --}}
-                <div class="col-span-1">
-                    <div class="sticky top-24 space-y-3">
+                <div class="md:col-span-1 col-span-4">
+                    <div class="sticky top-40 space-y-3">
                         @include('partials.sidebar-banner')
                     </div>
                 </div>
@@ -383,7 +385,7 @@
     @if (!empty($user->donasi) && $user->donasi['metode'] != null && $user->donasi['rekening'] != null)
         {{-- Modal donasi --}}
         <div id="donasiModal" class="fixed inset-0 hidden bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div class="w-1/2 relative">
+            <div class="md:w-1/2 w-11/12 relative">
                 {{-- Tutup modal --}}
                 <div title="Tutup" onclick="modal(document.getElementById('donasiModal'))"
                     class="absolute right-2 top-2 rounded-full p-2 text-red-500 cursor-pointer hover:bg-white"><i

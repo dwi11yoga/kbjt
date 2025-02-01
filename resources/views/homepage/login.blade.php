@@ -14,7 +14,7 @@
         </p>
         <p class="hidden mb-2 group-hover:block text-sm text-gray-800">Gambar oleh Rijksmuseum, diambil dari
             <a target="_blank" title="Kunjungi Google Arts & Culture"
-                class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-2"
+                class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-2"
                 href="https://artsandculture.google.com/asset/basreli%C3%ABf-in-de-muur-aan-de-zuidzijde-van-de-borobudur-met-een-gandavyuha-vertelling-kinsbergen-isidore/0AHdFTaZGHOyXg">Google
                 Arts & Culture<i data-feather='arrow-up-right' class="inline-block w-4"></i></a>.
         </p>
@@ -38,8 +38,8 @@
         @csrf
         <label for="user">Username/Email</label>
         <input name="user" id="user" type="text" placeholder="" value="{{ old('user') }}"
-            class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3 @error('user')
-                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+            class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3 appearance-none @error('user')
+                    outline outline-2 outline-red-600 @else focus:outline focus:outline-2 focus:outline-amber-400
                 @enderror">
         @error('user')
             <div class="text-xs text-red-600 -mt-2">*{{ $message }}</div>
@@ -47,8 +47,8 @@
 
         <label for="password">Kata sandi</label>
         <input name="password" id="password" type="password" placeholder="" value="{{ old('password') }}"
-            class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3 @error('password')
-                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+            class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3 appearance-none @error('password')
+                    outline outline-2 outline-red-600 @else focus:outline focus:outline-2 focus:outline-amber-400
                 @enderror">
         @error('password')
             <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
@@ -60,18 +60,18 @@
             <label for="remember">Ingat saya</label>
             <div class="text-right">
                 <a href="#"
-                    class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-[3px] active:text-blue-800">Lupa
+                    class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-[3px] active:text-blue-800">Lupa
                     kata sandi</a>
             </div>
         </div>
-        {{-- <a href="/dashboard" class="block mt-6 bg-yellow-400 text-center p-3 w-full rounded-full cursor-pointer hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-yellow-400 active:bg-yellow-300">Masuk</a> --}}
+        {{-- <a href="/dashboard" class="block mt-6 bg-amber-400 text-center p-3 w-full rounded-full cursor-pointer hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-amber-400 active:bg-amber-300">Masuk</a> --}}
         <input type="submit" value="Masuk"
-            class="block mt-6 bg-yellow-400 text-center p-3 w-full rounded-full cursor-pointer hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-yellow-400 active:bg-yellow-300">
+            class="block mt-6 bg-amber-400 text-center p-3 w-full rounded-full cursor-pointer hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-amber-400 active:bg-amber-300">
     </form>
 
     <p class="mt-3">Belum punya akun?
         <a href="/daftar"
-            class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-[3px] active:text-blue-800">Daftar
+            class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-[3px] active:text-blue-800">Daftar
             sekarang</a>
     </p>
 @endsection

@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('kosakata_id');
-            $table->string('slug', length: 100);
+            $table->foreignId('pengurus_id')->nullable();
             $table->enum('ragam', ['Krama', 'Ngoko'])->nullable();
             $table->string('aksara')->nullable();
             $table->string('jenis', 50)->nullable();
@@ -23,8 +23,8 @@ return new class extends Migration {
             $table->string('arti_indo')->nullable();
             $table->json('etimologi')->nullable();
             $table->json('serupa')->nullable();
-            $table->enum('status', ['accepted', 'rejected'])->nullable();
-            $table->text('message')->nullable();
+            $table->dateTime('status')->nullable();
+            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }

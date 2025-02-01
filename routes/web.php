@@ -4,7 +4,9 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefinisiController;
+use App\Http\Controllers\EditKosakataController;
 use App\Http\Controllers\HomepageController;
+use App\Http\Controllers\HukumanController;
 use App\Http\Controllers\KosakataController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PoinKontribusiController;
@@ -15,17 +17,30 @@ use Illuminate\Support\Facades\Route;
 
 // HOMEPAGE
 Route::get('/', [HomepageController::class, 'index']);
+// daftar kosakata
 Route::get('/daftar-kosakata', [HomepageController::class, 'daftarKosakata']);
+// hall of fame
 Route::get('/hall-of-fame', [HomepageController::class, 'hallOfFame']);
+// blog
 Route::get('/blog', [HomepageController::class, 'blog']);
+// post/artikel
 Route::get('/blog/post/{slug}', [HomepageController::class, 'blogPost']);
+// donasi
 Route::get('/donasi', [HomepageController::class, 'donasi']);
+// pencarian
 Route::get('/cari', [HomepageController::class, 'pencarian']);
+
+// tambah kosakata
 Route::get('/tambah/kosakata', [KosakataController::class, 'tambahKosakata'])->middleware('auth');
+// simpan kosakata
 Route::post('/tambah/kosakata', [KosakataController::class, 'store'])->middleware('auth');
+// tampilkan definisi & kosakata
 Route::get('/kosakata/{slug}', [HomepageController::class, 'kosakata']);
+// riwayat edit
+Route::get('/kosakata/{slug}/riwayat', [HomepageController::class, 'riwayatKosakata']);
 // Profil user
 Route::get('/u/{username}', [UserController::class, 'profile']);
+
 // Akses ditolak
 Route::get('/akses-ditolak', function () {
     return view('403', [
@@ -66,7 +81,7 @@ Route::middleware(['auth'])->group(function () {
     // laporkan definisi
     Route::post('/laporkan/definisi', [ReportController::class, 'definisi']);
     // detail laporan (kontributor)
-    Route::get('/kontribusi/laporan/{id}', [ReportController::class, 'kontributorView']);
+    Route::get('/kontribusi/laporan/{id}', [ReportController::class, 'detailLaporan']);
 
     Route::middleware(['pengurusKepala'])->group(function () {
 
@@ -105,12 +120,8 @@ Route::middleware(['auth'])->group(function () {
             ]);
         });
         // laporan - pengurus
-        Route::get('/laporan', function () {
-            return view('dashboard.artikel', [
-                'title' => 'Laporan',
-                'group' => 'laporan'
-            ]);
-        });
+        Route::get('/laporan', [ReportController::class, 'index']);
+        Route::get('/laporan/{id}', [ReportController::class, 'detailLaporan']);
     });
 
     Route::middleware(['kepala'])->group(function () {
@@ -136,12 +147,26 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['pengurus'])->group(function () {
+        // buat artikel
         Route::get('/artikel/baru', [BlogController::class, 'tambah']);
+        // edit artikel
         Route::get('/artikel/edit/{id}', [BlogController::class, 'editPost']);
+        // simpan artikel
         Route::post('/artikel/baru/simpan', [BlogController::class, 'simpanArtikel']);
+        // publikasikan artikel
         Route::post('/artikel/baru/publikasikan', [BlogController::class, 'simpanArtikel']);
+        // simpan artikel (draft)
         Route::put('/artikel/edit/{id}/simpan', [BlogController::class, 'simpanEdit']);
+        // publikasikan artikel yang disimpan sebagai draft
         Route::put('/artikel/edit/{id}/publikasikan', [BlogController::class, 'simpanEdit']);
+
+        // simpan perubahan pada data laporan
+        Route::put('/laporan/{id}/tindaklanjut', [ReportController::class, 'tindaklanjut']);
+        // simpan hukuman yang diberikan
+        // Route::post('/laporan/{id}/hukuman', [HukumanController::class, 'tindaklanjut']);
+
+        // setujui edit definisi
+        Route::put('/kosakata/{slug}/riwayat/{id}/setujui', [EditKosakataController::class, 'setujui']);
     });
 
 

@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->json('referensi')->nullable();
             $table->dateTime('verifikasi')->nullable();
             $table->foreignId('verifikasi_oleh')->nullable();
+            $table->tinyInteger('hukuman_edit')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

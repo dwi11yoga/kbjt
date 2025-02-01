@@ -16,16 +16,22 @@ class ReportFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            'user_id' => 1,
+        $data = [
+            'user_id' => random_int(1, 100),
             'definisi_id' => random_int(1, 100),
-            'status' => random_int(0, 1) === 1 ? now() : NULL,
             'alasan' => 'SPAM',
+            // 'status' => random_int(0, 1) === 1 ? now() : NULL,
             'catatan' => fake()->sentence(15),
             'def_dilaporkan' => fake()->text(100),
             'waktu_definisi' => now(),
             'created_at' => now(),
             'updated_at' => now()
         ];
+        // $random = random_int(0, 1);
+        // if ($random == 1) {
+        //     $data['pengurus_id'] = 1;
+        //     $data['status'] = now();
+        // }
+        return $data;
     }
 }

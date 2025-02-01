@@ -24,7 +24,6 @@ return new class extends Migration {
             $table->json('etimologi')->nullable();
             $table->integer('view')->default(0);
             $table->json('serupa')->nullable();
-            $table->json('diedit_oleh')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

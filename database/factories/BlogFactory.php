@@ -19,9 +19,10 @@ class BlogFactory extends Factory
         return [
             //
             'judul' => fake()->sentence(),
+            'slug' => fake()->slug(),
             'subjudul' => fake()->sentence(10),
-            'user_id' => random_int(1, 101),
-            'konten' => fake()->text(4000),
+            'user_id' => 1,
+            'konten' => fake()->text(10000),
             'status' => random_int(0, 1),
         ];
     }

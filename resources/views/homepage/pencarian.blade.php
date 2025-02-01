@@ -74,29 +74,19 @@
                             </div>
 
                             {{-- Kontributor --}}
-                            <div class="flex mt-1 items-center">
-                                <div class="flex -space-x-3">
-                                    <div
-                                        class="overflow-hidden h-8 w-8 rounded-full z-20 border-white group-hover:border-amber-100 border-2">
-                                        <img class="object-cover w-full h-full"
-                                            src="https://img.freepik.com/free-photo/portrait-volunteer-who-organized-donations-charity_23-2149230567.jpg?w=360"
-                                            alt="">
-                                    </div>
-                                    <div
-                                        class="overflow-hidden h-8 w-8 rounded-full z-10 border-white group-hover:border-amber-100 border-2">
-                                        <img class="object-cover w-full h-full"
-                                            src="https://img.freepik.com/free-photo/portrait-interesting-young-man-winter-clothes_158595-914.jpg?w=360"
-                                            alt="">
-                                    </div>
-                                    <div
-                                        class="overflow-hidden h-8 w-8 rounded-full border-white group-hover:border-amber-100 border-2">
-                                        <img class="object-cover w-full h-full"
-                                            src="https://img.freepik.com/free-photo/portrait-smiling-blonde-woman_23-2148316635.jpg?w=360"
-                                            alt="">
-                                    </div>
+                            <div class="flex space-x-2 items-center">
+                                <div class="overflow-hidden h-8 w-8 rounded-full z-20 border-white border-2">
+                                    <?php
+                                    $sementara = $d;
+                                    $d = $d->user;
+                                    ?>
+                                    @include('partials.profil-pic-general-array2')
+                                    <?php $d = $sementara; ?>
                                 </div>
-                                <div class="ml-2">26 Kontributor</div>
+                                <div class="line-clamp-1">Diinisialisasi oleh {{ $d->user->nama }}
+                                </div>
                             </div>
+
                             {{-- Ragam dan jenis kosakata --}}
                             <div class="text-sm mt-2">
                                 @if ($d->ragam)

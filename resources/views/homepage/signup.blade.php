@@ -15,7 +15,7 @@
         <p class="hidden mb-2 group-hover:block text-sm text-gray-800">Gambar oleh PT. Taman Wisata Candi Borobudur Prambanan
             dan Ratu Boko, diambil dari
             <a target="_blank" title="Kunjungi Google Arts & Culture"
-                class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-2"
+                class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-2"
                 href="https://artsandculture.google.com/asset/sudhana-and-goddess-of-the-night-pt-taman-wisata-candi-borobudur-prambanan-ratu-boko-persero/iQEbnyg1J3PQUQ">Google
                 Arts & Culture<i data-feather='arrow-up-right' class="inline-block w-4"></i></a>.
         </p>
@@ -39,9 +39,11 @@
         <div id="pertama">
             <label for="nama">Nama</label>
             <input name="nama" id="nama" type="text" value="{{ old('nama') }}" placeholder=""
-                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3
+                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3 appearance-none
                 @error('nama')
-                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+                    outline outline-2 outline-red-600
+                    @else
+                    focus:outline focus:outline-2 focus:outline-amber-400
                 @enderror
                 ">
             @error('nama')
@@ -50,9 +52,11 @@
 
             <label for="email">Email</label>
             <input name="email" id="email" type="text" value="{{ old('email') }}" placeholder=""
-                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3
+                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3 appearance-none
                 @error('email')
-                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+                    outline outline-2 outline-red-600
+                    @else
+                    focus:outline focus:outline-2 focus:outline-amber-400
                 @enderror
                 ">
             @error('email')
@@ -61,9 +65,11 @@
 
             <label for="username">Username</label>
             <input name="username" id="username" type="text" value="{{ old('username') }}" placeholder=""
-                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3
+                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3 appearance-none
                 @error('username')
-                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+                    outline outline-2 outline-red-600
+                    @else
+                    focus:outline focus:outline-2 focus:outline-amber-400
                 @enderror
                 ">
             @error('username')
@@ -78,9 +84,11 @@
         <div id="kedua" class="hidden md:mt-[3.75rem]">
             <label for="password">Kata sandi</label>
             <input name="password" id="password" type="password" placeholder=""
-                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3
+                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3 appearance-none
                 @error('password')
-                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+                    outline outline-2 outline-red-600
+                    @else
+                    focus:outline focus:outline-2 focus:outline-amber-400
                 @enderror
                 ">
             @error('password')
@@ -89,9 +97,11 @@
 
             <label for="password2">Ulangi kata sandi</label>
             <input name="password2" id="password2" type="password" placeholder=""
-                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3
+                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3 appearance-none
                 @error('password2')
-                    border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
+                    outline outline-2 outline-red-600
+                    @else
+                    focus:outline focus:outline-2 focus:outline-amber-400
                 @enderror
                 ">
             @error('password2')
@@ -113,13 +123,13 @@
                 </div>
                 <div class="col-span-6">
                     <input type="submit" value="Buat akun"
-                        class="block bg-yellow-400 text-center p-3 w-full rounded-full cursor-pointer hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-yellow-400 active:bg-yellow-300">
+                        class="block bg-amber-400 text-center p-3 w-full rounded-full cursor-pointer hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-amber-400 active:bg-amber-300">
                 </div>
             </div>
         </div>
     </form>
     <p id="masuk" class="mt-3 hidden">Sudah punya akun? <a href="/masuk"
-            class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-[3px] active:text-blue-800">Masuk</a>.
+            class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-[3px] active:text-blue-800">Masuk</a>.
     </p>
 
     {{-- Javascript --}}

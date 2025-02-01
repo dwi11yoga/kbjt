@@ -17,33 +17,31 @@
 
                 {{-- Menu --}}
                 <div class="relative">
-                    @isset(auth()->user()->id)
-                        <button id="dropdownBtn" onclick="dropdown(this, 'dropdown')"
-                            class="p-2 rounded-full hover:bg-neutral-100"><i data-feather='more-horizontal'></i></button>
-                        <div id="dropdown"
-                            class="absolute hidden bg-white right-0 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
-                            <ul>
-                                <a href="{{ $data->slug }}/edit">
-                                    <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
-                                        <div>Edit</div>
-                                        <i data-feather='edit-3' class="w-5"></i>
-                                    </li>
-                                </a>
-                                <a href="#">
-                                    <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
-                                        <div>Riwayat edit</div>
-                                        <i data-feather='clock' class="w-5"></i>
-                                    </li>
-                                </a>
-                                <a href="#">
-                                    <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500">
-                                        <div>Laporkan</div>
-                                        <i data-feather='flag' class="w-5"></i>
-                                    </li>
-                                </a>
-                            </ul>
-                        </div>
-                    @endisset
+
+                    <button id="dropdownBtn" onclick="dropdown(this, 'dropdown')"
+                        class="p-2 rounded-full hover:bg-neutral-100"><i data-feather='more-horizontal'></i></button>
+                    <div id="dropdown"
+                        class="absolute hidden bg-white right-0 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
+                        <ul>
+                            <a href="{{ $data->slug }}/edit">
+                                <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
+                                    <div>Edit</div>
+                                    <i data-feather='edit-3' class="w-5"></i>
+                                </li>
+                            </a>
+                            <a href="/kosakata/{{ $data->slug }}/riwayat">
+                                <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
+                                    <div>Riwayat edit</div>
+                                    <i data-feather='clock' class="w-5"></i>
+                                </li>
+                            </a>
+                            <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500 cursor-pointer"
+                                onclick="openWindow('hapausKosakata')">
+                                <div>Hapus</div>
+                                <i data-feather='trash' class="w-5"></i>
+                            </li>
+                        </ul>
+                    </div>
 
                 </div>
             </div>
@@ -58,31 +56,24 @@
                 @endif
             </div>
             {{-- <div>Dalam Bahasa Indonesia, kata ini berarti "Perut".</div> --}}
-            <div class="flex space-x-2 items-center mt-1">
-                @isset($data->ragam)
-                    <div class="py-1 px-2 bg-blue-100 rounded-lg">{{ $data->ragam }}</div>
-                @endisset
-                @isset($data->jenis)
-                    <div class="py-1 px-2 bg-red-100 rounded-lg">{{ $data->jenis }}</div>
-                @endisset
-                <div class="flex -space-x-3">
+            <div class="md:flex block md:space-x-2 space-x-0 md:space-y-0 space-y-2 items-center mt-1">
+                <div class="flex space-x-2">
+                    @isset($data->ragam)
+                        <div class="py-1 px-2 bg-blue-100 rounded-lg">{{ $data->ragam }}</div>
+                    @endisset
+                    @isset($data->jenis)
+                        <div class="py-1 px-2 bg-red-100 rounded-lg">{{ $data->jenis }}</div>
+                    @endisset
+                </div>
+
+                <div class="flex space-x-2 items-center">
                     <div class="overflow-hidden h-8 w-8 rounded-full z-20 border-white border-2">
-                        <img class="object-cover w-full h-full"
-                            src="https://img.freepik.com/free-photo/portrait-volunteer-who-organized-donations-charity_23-2149230567.jpg?w=360"
-                            alt="">
+                        <?php $d = $data->user; ?>
+                        @include('partials.profile-pic-general')
                     </div>
-                    <div class="overflow-hidden h-8 w-8 rounded-full z-10 border-white border-2">
-                        <img class="object-cover w-full h-full"
-                            src="https://img.freepik.com/free-photo/portrait-interesting-young-man-winter-clothes_158595-914.jpg?w=360"
-                            alt="">
-                    </div>
-                    <div class="overflow-hidden h-8 w-8 rounded-full border-white border-2">
-                        <img class="object-cover w-full h-full"
-                            src="https://img.freepik.com/free-photo/portrait-smiling-blonde-woman_23-2148316635.jpg?w=360"
-                            alt="">
+                    <div class="line-clamp-1">Diinisialisasi oleh <a href="/u/{{ $d->username }}">{{ $d->nama }}</a>
                     </div>
                 </div>
-                <div class="ml-2">26 Kontributor</div>
             </div>
             @if ($dataNull > 3)
                 <div class="mt-1 text-sm">Detail kosakata belum lengkap. <a href="{{ $data->slug }}/edit"
@@ -117,6 +108,55 @@
                 </div>
             @endif
         @endauth
+
+        {{-- hapus/Minta hapus definisi --}}
+        <div id="hapausKosakata"
+            class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
+
+                <h5 class="font-semibold capitalize">Minta pengurus menghapus kosakata</h5>
+                <div class="mb-5">Apa alasan kamu ingin menghapus kosakata ini?</div>
+
+                <form action="/laporkan/definisi?id" method="POST">
+                    @csrf
+                    <div class="overflow-auto max-h-[27rem] space-y-2">
+                        {{-- Referensi --}}
+                        <div>
+                            <label for="alasan" class="block">Alasan</label>
+                            <select name="alasan" id="alasan"
+                                class="w-full rounded-xl p-3 border bg-white focus:outline-none focus:border-amber-300 cursor-pointer @error('alasan')
+                                border-red-400 @else border-neutral-400 @enderror">
+                                <option value="">Pilih</option>
+                                <option {{ old('alasan') == 'SPAM' ? 'selected' : '' }}>SPAM</option>
+                                <option {{ old('alasan') == 'Duplikasi' ? 'selected' : '' }}>Duplikasi</option>
+                                <option {{ old('alasan') == 'Bukan kosakata jawa' ? 'selected' : '' }}>Bukan kosakata jawa
+                                </option>
+                                <option {{ old('alasan') == 'Lain-lain' ? 'selected' : '' }}>Lain-lain
+                                </option>
+                            </select>
+                            @error('alasan')
+                                <div class="text-xs text-red-600 mt-1 mb-2">*{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="catatan">Catatan</label>
+                            <textarea id="catatan" name="catatan"
+                                class="w-full resize-none text-neutral-800 focus:outline-none focus:border-amber-300 mb-3 max-h-52 border border-neutral-400 rounded-xl p-2"
+                                placeholder="Tambahkan catatan untuk memperkuat laporan (opsional)" oninput="textareaHeight(this)">{{ old('catatan') }}</textarea>
+                        </div>
+                    </div>
+
+                    {{-- Button --}}
+                    <div class="flex space-x-2">
+                        <div onclick="closeWindow('hapausKosakata')"
+                            class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
+                            Batal</div>
+                        <button type="submit"
+                            class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <div class="space-y-1">
             @auth

@@ -49,19 +49,31 @@
         {{-- <div class="rounded-full w-12 h-12 bg-yellow-400 float-left mr-3"></div> --}}
         <div class="flex justify-between items-end">
             <div class="flex items-center">
-                <a href="/u/{{ $d->user->username }}">
-                    <div class="h-12 w-12 rounded-full overflow-hidden mr-3">
-                        @include('partials.profil-pic-general-array2')
+                @if (isset($d->user->username))
+                    <a href="/u/{{ $d->user->username }}">
+                        <div class="h-12 w-12 rounded-full overflow-hidden mr-3">
+                            @include('partials.profil-pic-general-array2')
+                        </div>
+                    </a>
+                    <a href="/u/{{ $d->user->username }}">
+                        <div>{{ $d->user->nama }}</div>
+                        <div class="small-text">{{ $d->updated_at->translatedformat('d F Y') }}</div>
+                    </a>
+                @else
+                    <div>
+                        <div class="h-12 w-12 rounded-full overflow-hidden mr-3">
+                            @include('partials.profil-pic-general-array2')
+                        </div>
                     </div>
-                </a>
-                <a href="/u/{{ $d->user->username }}">
-                    <div>{{ $d->user->nama }}</div>
-                    <div class="small-text">{{ $d->updated_at->format('d F Y') }}</div>
-                </a>
+                    <div>
+                        <div>{{ $d->user->nama ?? '[Akun terhapus]' }}</div>
+                        <div class="small-text">{{ $d->updated_at->translatedformat('d F Y') }}</div>
+                    </div>
+                @endif
             </div>
 
             {{-- Menu --}}
-            @if (empty($d->menu)) {{-- sembunyikan jika tidak ada $d->menu (untuk halaman laporan) --}}
+            @if (empty($d->menu) && isset($d->user->username)) {{-- sembunyikan jika tidak ada $d->menu (untuk halaman laporan) --}}
                 <div class="relative">
                     @isset(auth()->user()->id)
                         <button id="dropdownBtn" onclick="dropdown(this, 'dropdown{{ $d->id }}')"
@@ -99,7 +111,7 @@
 </div>
 
 @if (empty($d->menu)) {{-- sembunyikan jika tidak ada $d->menu (untuk halaman laporan) --}}
-    @if (isset(auth()->user()->id))
+    @if (isset(auth()->user()->id) && isset($d->user->username))
         {{-- laporkan definisi --}}
         <div id="laporkan-{{ $d->id }}"
             class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">

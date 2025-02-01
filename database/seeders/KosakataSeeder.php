@@ -25,6 +25,8 @@ class KosakataSeeder extends Seeder
             'etimologi' => json_encode(['Asli']),
             'user_id' => 1,
             'serupa' => json_encode(['weteng']),
+            'created_at' => now(),
+            'updated_at' => now()
         ]);
 
         Kosakata::insert([
@@ -32,6 +34,8 @@ class KosakataSeeder extends Seeder
             'slug' => 'dalu',
             'user_id' => 1,
             'serupa' => json_encode(['bengi']),
+            'created_at' => now(),
+            'updated_at' => now()
         ]);
         Kosakata::factory(50)->create();
     }

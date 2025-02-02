@@ -80,6 +80,8 @@ Route::middleware(['auth'])->group(function () {
 
     // laporkan definisi
     Route::post('/laporkan/definisi', [ReportController::class, 'definisi']);
+    // laporkan (hapus) kosakata 
+    route::post('/kosakata/{slug}/laporkan', [ReportController::class, 'kosakata']);
     // detail laporan (kontributor)
     Route::get('/kontribusi/laporan/{id}', [ReportController::class, 'detailLaporan']);
 

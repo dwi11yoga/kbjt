@@ -18,8 +18,13 @@ class ReportController extends Controller
     // Tampilan halaman laporan
     public function index()
     {
-        // Laporan
+        // Laporan (definisi)
         $laporan = Report::select('id', 'user_id', 'definisi_id', 'pengurus_id', 'status', 'alasan', 'created_at', 'updated_at')
+            ->with([
+                'definisi' => function ($query) {
+                    $query->withTrashed(); //ambil data softdelete juga
+                }
+            ])
             ->whereNotNull('definisi_id');
 
         // filter
@@ -77,7 +82,13 @@ class ReportController extends Controller
             ->appends(request()->query());
 
         // Permintaan hapus kosakata
-        $kosakata = Report::select('id', 'user_id', 'definisi_id', 'pengurus_id', 'status', 'alasan', 'created_at', 'updated_at')
+        $kosakata = Report::select('id', 'user_id', 'kosakata_id', 'pengurus_id', 'status', 'alasan', 'created_at', 'updated_at')
+            // ->with('kosakata:id,kosakata')
+            ->with([
+                'kosakata' => function ($query) {
+                    $query->withTrashed(); //ambil data softdelete juga
+                }
+            ])
             ->whereNotNull('kosakata_id');
 
         // filter
@@ -146,6 +157,37 @@ class ReportController extends Controller
         return back()->with('success', 'Definisi berhasil dilaporkan');
     }
 
+    // laporkan kosakata
+    public function kosakata(Request $request, $slug)
+    {
+        // dapatkan id kosakata
+        $kosakata = Kosakata::where('slug', '=', $slug)->value('id');
+
+        // cek apakah laporan sudah dilaporkan/belum
+        $cek = Report::where('kosakata_id', '=', $kosakata)
+            ->whereNull('status')
+            ->first();
+        if (isset($cek)) {
+            return back()->with('failed', 'Permintaan menghapus kosakata sudah dibuat')->withInput();
+        }
+
+        // validasi
+        $validatedData = $request->validate([
+            'alasan' => 'required'
+        ]);
+
+        // simpan
+        Report::create([
+            'user_id' => Auth::user()->id,
+            'kosakata_id' => $kosakata,
+            'alasan' => $validatedData['alasan'],
+            'catatan' => $request->catatan,
+        ]);
+
+        // kembali ke halaman
+        return back()->with('success', 'Permintaan menghapus kosakata berhasil disubmit');
+    }
+
     // Detail Laporan
     public function detailLaporan($id)
     {
@@ -156,23 +198,38 @@ class ReportController extends Controller
             ->select('id', 'username', 'nama', 'role')
             ->where('id', '=', $laporan->user_id)
             ->first();
-        $laporan->definisi = Definisi::withTrashed()
-            ->select('id', 'kosakata_id', 'user_id', 'definisi', 'referensi', 'updated_at')
-            ->where('id', '=', $laporan->definisi_id)
-            ->first();
-        $laporan->author = User::withTrashed()
-            ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin')
-            ->where('id', '=', $laporan->definisi->user_id)
-            ->first();
-        $laporan->kosakata = Kosakata::select('id', 'kosakata', 'slug')->where('id', '=', $laporan->definisi->kosakata_id)->first();
+
+        if (isset($laporan->definisi_id)) {
+            // jika definisi yang dilaporkan
+            $laporan->definisi = Definisi::withTrashed()
+                ->select('id', 'kosakata_id', 'user_id', 'definisi', 'referensi', 'updated_at')
+                ->where('id', '=', $laporan->definisi_id)
+                ->first();
+            $laporan->author = User::withTrashed()
+                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin')
+                ->where('id', '=', $laporan->definisi->user_id)
+                ->first();
+            $laporan->kosakata = Kosakata::select('id', 'kosakata', 'slug')->where('id', '=', $laporan->definisi->kosakata_id)->first();
+        } elseif (isset($laporan->kosakata_id)) {
+            // jika kosakata yang dilaporkan
+            $laporan->kosakata = Kosakata::withTrashed()
+                ->where('id', '=', $laporan->kosakata_id)
+                ->first();
+            $laporan->author = User::withTrashed()
+                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin')
+                ->where('id', '=', $laporan->kosakata->user_id)
+                ->first();
+        }
+
         if (isset($laporan->pengurus_id)) {
             $laporan->pengurus = User::select('id', 'username', 'nama')->where('id', '=', $laporan->pengurus_id)->first();
         }
+
         $laporan->idZerofill = str_pad($laporan->id, 10, '0', STR_PAD_LEFT);
-        // dd($laporan);
 
         // menentukan grup halaman
         $group = str_contains($_SERVER['REQUEST_URI'], 'kontribusi') == true ? 'kontribusi' : 'laporan';
+
         // jangan tampilkan jika user tidak berhak
         if ($group == 'kontribusi' && ($laporan->user_id != Auth::user()->id || $laporan->author->id)) {
             return view('error.403', [
@@ -180,96 +237,151 @@ class ReportController extends Controller
             ]);
         }
 
-        // definisi
-        $definisi = new stdClass(); //inisiasi object definisi
-        $definisi->menu = 12;
-        $definisi->slug = $laporan->kosakata->slug;
-        $definisi->kosakata = $laporan->kosakata->kosakata;
-        $definisi->definisi = $laporan->def_dilaporkan;
-        $definisi->referensi = $laporan->ref_dilaporkan;
-        $definisi->updated_at = $laporan->waktu_definisi;
-        $definisi->user = $laporan->author;
-        $definisi->copies = 1;
-        // cek apakah definisi yang asli sudah diupdate
-        $definisi->updated = $laporan->def_dilaporkan == $laporan->definisi->definisi ? 1 : 0;
-
-        return view('dashboard.laporan-detail', [
+        // data yang akan dikirimkan
+        $data = [
             'title' => 'Laporan',
             'group' => $group,
             'laporan' => $laporan,
-            'definisi' => $definisi,
-        ]);
+        ];
+
+        if (isset($laporan->definisi_id)) {
+            // preview definisi
+            $definisi = new stdClass(); //inisiasi object definisi
+            $definisi->menu = 12;
+            $definisi->slug = $laporan->kosakata->slug;
+            $definisi->kosakata = $laporan->kosakata->kosakata;
+            $definisi->definisi = $laporan->def_dilaporkan;
+            $definisi->referensi = $laporan->ref_dilaporkan;
+            $definisi->updated_at = $laporan->waktu_definisi;
+            $definisi->user = $laporan->author;
+            $definisi->copies = 1;
+            // cek apakah definisi yang asli sudah diupdate
+            $definisi->updated = $laporan->def_dilaporkan == $laporan->definisi->definisi ? 1 : 0;
+            $data['definisi'] = $definisi;
+        } elseif (isset($laporan->kosakata_id)) {
+            // preview kosakata
+            $kosakata = Kosakata::withTrashed()
+                ->where('id', '=', $laporan->kosakata_id)
+                ->first();
+            $data['kosakata'] = $kosakata;
+        }
+
+        return view('dashboard.laporan-detail', $data);
     }
 
     // Tindaklanjuti laporan
     public function tindaklanjut(Request $request, $id)
     {
+        // dapatkan data laporan
+        $laporan = Report::where('id', '=', $id)->first();
+
         // Cek apakah laporan yang dikirim sudah ditangani/belum (kuatir di inspect)
-        $cek = Report::where('id', '=', $id)->value('status');
-        if (isset($cek)) {
-            return back()->with('failed', 'Gagal menyimpan aksi')->withInput();
+        if (isset($laporan->status)) {
+            return back()->with('failed', 'Laporan sudah selesai ditangani oleh pengurus lain')->withInput();
         }
 
-        // validasi
+        // atur data hukuman
+        if ($request->hukuman == 'tidak-ada') {
+            $hukuman = 'Tidak ada';
+            $hukuman_berakhir = null;
+        } elseif ($request->hukuman == 'peringatan') {
+            $hukuman = 'Peringatan';
+            $hukuman_berakhir = null;
+        } elseif ($request->hukuman == 'blokir') {
+            $hukuman = 'Blokir akun pengguna';
+            $hukuman_berakhir = null;
+        } elseif ($request->hukuman == '3hr') {
+            $hukuman = 'Suspend selama 3 hari';
+            $hukuman_berakhir = Carbon::now()->addDays(3);
+        } elseif ($request->hukuman == '7hr') {
+            $hukuman = 'Suspend selama 7 hari';
+            $hukuman_berakhir = Carbon::now()->addDays(7);
+        } elseif ($request->hukuman == '14hr') {
+            $hukuman = 'Suspend selama 14 hari';
+            $hukuman_berakhir = Carbon::now()->addDays(14);
+        } elseif ($request->hukuman == '30hr') {
+            $hukuman = 'Suspend selama 30 hari';
+            $hukuman_berakhir = Carbon::now()->addMonth();
+        } else {
+            $hukuman = null;
+            $hukuman_berakhir = null;
+        }
+
         $rules = [
             'pelanggaran' => 'required',
         ];
 
-        if ($request->pelanggaran == 'true') {
-            $rules = array_merge($rules, [
-                'tindakanDefinisi' => 'required',
-                'hukuman' => 'required',
-            ]);
-        }
-        $validatedData = $request->validate($rules);
+        if (isset($laporan->definisi_id)) {
+            // tindaklanjut untuk definisi
 
-
-        if ($validatedData['pelanggaran'] == 'true') {
-            // simpan data hukuman ke tabel "Hukuman" (Jika ada)
-            $data = [
-                'laporan_id' => $id,
-                'tindakan_definisi' => $validatedData['tindakanDefinisi']
-            ];
-
-            if ($validatedData['hukuman'] == 'tidak-ada') {
-                $data['hukuman'] = 'Tidak ada';
-            } elseif ($validatedData['hukuman'] == 'peringatan') {
-                $data['hukuman'] = 'Peringatan';
-            } elseif ($validatedData['hukuman'] == 'blokir') {
-                $data['hukuman'] = 'Blokir akun pengguna';
-            } elseif ($validatedData['hukuman'] == '3hr') {
-                $data['hukuman'] = 'Suspand selama 3 hari';
-                $data['hukuman_berakhir'] = Carbon::now()->addDays(3);
-            } elseif ($validatedData['hukuman'] == '7hr') {
-                $data['hukuman'] = 'Suspand selama 7 hari';
-                $data['hukuman_berakhir'] = Carbon::now()->addDays(7);
-            } elseif ($validatedData['hukuman'] == '14hr') {
-                $data['hukuman'] = 'Suspand selama 14 hari';
-                $data['hukuman_berakhir'] = Carbon::now()->addDays(14);
-            } elseif ($validatedData['hukuman'] == '30hr') {
-                $data['hukuman'] = 'Suspand selama 30 hari';
-                $data['hukuman_berakhir'] = Carbon::now()->addMonth();
-            }
-            Hukuman::create($data);
-
-
-            // tindakan untuk definisi (jika ada)
-            $report = Report::where('id', '=', $id)->first();
-            if ($validatedData['tindakanDefinisi'] == 'edit') {
-                Definisi::find($report->definisi_id)->update([
-                    'hukuman_edit' => 1
+            // validasi
+            if ($request->pelanggaran == 'true') {
+                $rules = array_merge($rules, [
+                    'tindakanDefinisi' => 'required',
+                    'hukuman' => 'required',
                 ]);
-            } elseif ($validatedData['tindakanDefinisi'] == 'hapus') {
-                Definisi::find($report->definisi_id)->delete();
             }
+            $validatedData = $request->validate($rules);
 
-            // Jika user diblokir, maka hapus user
-            if ($validatedData['hukuman'] == 'blokir') {
-                $definisi = Definisi::withTrashed()->select('id', 'user_id')->where('id', '=', $report->definisi_id)->first();
-                User::find($definisi->user_id)->delete();
+
+            if ($validatedData['pelanggaran'] == 'true') {
+                // simpan data hukuman ke tabel "Hukuman" (Jika ada)
+                $data = [
+                    'laporan_id' => $id,
+                    'tindakan' => $validatedData['tindakanDefinisi'],
+                    'hukuman' => $hukuman,
+                    'hukuman_berakhir' => $hukuman_berakhir
+                ];
+                Hukuman::create($data);
+
+
+                // tindakan untuk definisi (jika ada)
+                $report = Report::where('id', '=', $id)->first();
+                if ($validatedData['tindakanDefinisi'] == 'edit') {
+                    Definisi::find($report->definisi_id)->update([
+                        'hukuman_edit' => 1
+                    ]);
+                } elseif ($validatedData['tindakanDefinisi'] == 'hapus') {
+                    Definisi::find($report->definisi_id)->delete();
+                }
+
+                // Jika user diblokir, maka hapus user
+                if ($validatedData['hukuman'] == 'blokir') {
+                    $definisi = Definisi::withTrashed()->select('id', 'user_id')->where('id', '=', $report->definisi_id)->first();
+                    User::find($definisi->user_id)->delete();
+                }
+            }
+        } elseif (isset($laporan->kosakata_id)) {
+            // tindaklanjut untuk kosakata
+
+            // validasi
+            if ($request->pelanggaran == 'true') {
+                $rules = array_merge($rules, [
+                    'hukuman' => 'required',
+                ]);
+            }
+            $validatedData = $request->validate($rules);
+
+            // tindakan
+            if ($validatedData['pelanggaran'] == 'true') {
+                // hapus kosakata
+                Kosakata::find($laporan->kosakata_id)->delete();
+
+                // Jika user diblokir, maka hapus user
+                if ($validatedData['hukuman'] == 'blokir') {
+                    $terlapor = Kosakata::where('id', '=', $laporan->kosakata_id)->value('user_id');
+                    User::find($terlapor)->delete();
+                }
+
+                // simpan data hukuman
+                Hukuman::create([
+                    'laporan_id' => $id,
+                    'tindakan' => 'hapus',
+                    'hukuman' => $hukuman,
+                    'hukuman_berakhir' => $hukuman_berakhir
+                ]);
             }
         }
-
 
         // ubah status laporan
         Report::find($id)->update([

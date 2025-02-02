@@ -14,7 +14,7 @@
                 </div>
                 <div class="">
                     <div class="text-sm text-neutral-600">Pelapor</div>
-                    <a href="/u/{{ $laporan->author->username }}" class="">{{ $laporan->user->nama }}
+                    <a href="/u/{{ $laporan->user->username }}" class="">{{ $laporan->user->nama }}
                         (&#64;{{ $laporan->user->username }})</a>
                 </div>
                 <div class="">
@@ -52,27 +52,75 @@
                 </div>
             </div>
 
-            {{-- preview definisi dilaporkan --}}
+            {{-- preview --}}
             <div class="">
 
-                <div class="sticky top-5">
-                    <?php $d = $definisi; ?>
-                    {{-- import tampilan definisi --}}
-                    @include('partials.definisi')
+                @if (isset($laporan->definisi_id))
+                    {{-- preview definisi dilaporkan --}}
+                    <div class="sticky top-5">
+                        <?php $d = $definisi; ?>
+                        {{-- import tampilan definisi --}}
+                        @include('partials.definisi')
 
-                    {{-- kunjungi definisi --}}
-                    <div class="flex justify-center">
-                        <a href="/kosakata/{{ $laporan->kosakata->slug }}?definisi={{ $laporan->definisi_id }}"
-                            class="rounded-full flex items-center space-x-1 py-2 px-4 border border-neutral-200 w-fit hover:bg-amber-400">
-                            @if ($d->updated == 1)
-                                <span>Lihat definisi asli</span>
-                            @else
-                                <span>Definisi asli sudah diubah, cek</span>
-                            @endif
-                            <i data-feather='arrow-right' class="w-5"></i>
-                        </a>
+                        {{-- kunjungi definisi --}}
+                        <div class="flex justify-center">
+                            <a href="/kosakata/{{ $laporan->kosakata->slug }}?definisi={{ $laporan->definisi_id }}"
+                                class="rounded-full flex items-center space-x-1 py-2 px-4 border border-neutral-200 w-fit hover:bg-amber-400">
+                                @if ($d->updated == 1)
+                                    <span>Lihat definisi asli</span>
+                                @else
+                                    <span>Definisi asli sudah diubah, cek</span>
+                                @endif
+                                <i data-feather='arrow-right' class="w-5"></i>
+                            </a>
+                        </div>
                     </div>
-                </div>
+                @elseif (isset($laporan->kosakata_id))
+                    {{-- preview kosakata --}}
+                    <div class="rounded-2xl border border-neutral-200 p-5">
+
+                        <div class="flex flex-wrap justify-between">
+                            <h4 class="capitalize md:order-1 order-2">{{ $kosakata->kosakata }} <span
+                                    class="text-sm jawa">{{ $kosakata->aksara }}</span>
+                            </h4>
+                            <div class="text-sm rounded-full py-1 px-3 bg-blue-300 h-fit md:order-2 order-1">
+                                👀 Preview
+                            </div>
+                        </div>
+                        @if ($kosakata->notasi_fonetik)
+                            <div>/{{ $kosakata->notasi_fonetik }}/</div>
+                        @endif
+                        <div>
+                            @if (isset($kosakata->etimologi) && $kosakata->etimologi != [''] && $kosakata->etimologi[0] == 'Asli')
+                                Kosakata asli Bahasa Jawa.
+                            @elseif (isset($kosakata->etimologi) && $kosakata->etimologi != [''])
+                                Kata serapan dari bahasa {{ $kosakata->etimologi[0] }} "{{ $kosakata->etimologi[1] }}"
+                            @endif
+                        </div>
+
+                        <div>
+                            @if (isset($kosakata->arti_indo))
+                                🇮🇩 Perut
+                            @endif
+
+                            @if (isset($kosakata->serupa) && $kosakata->serupa != [''])
+                                🏴󠁩󠁤󠁪󠁷󠁿 {!! implode(',&nbsp;', array_map(fn($d) => "<span class=\"capitalize\">{$d}</span>", $kosakata->serupa)) !!}
+                            @endif
+                        </div>
+
+                        <div class="md:flex block md:space-x-2 space-x-0 md:space-y-0 space-y-2 items-center mt-1">
+                            <div class="flex space-x-2">
+                                @isset($kosakata->ragam)
+                                    <div class="py-1 px-2 bg-blue-100 rounded-lg">{{ $kosakata->ragam }}</div>
+                                @endisset
+                                @isset($kosakata->jenis)
+                                    <div class="py-1 px-2 bg-red-100 rounded-lg">{{ $kosakata->jenis }}</div>
+                                @endisset
+                            </div>
+                        </div>
+
+                    </div>
+                @endif
 
             </div>
         </div>
@@ -98,18 +146,24 @@
                             {{ isset($laporan->hukuman) ? 'Pelanggaran ditemukan' : 'Pelanggaran tidak ditemukan' }}
                         </div>
                     </div>
-                    <div class="">
-                        <div class="text-sm text-neutral-600">Hukuman</div>
-                        <ul class="list-disc list-inside">
-                            <li>{{ isset($laporan->hukuman) && $laporan->hukuman->hukuman != 'Tidak ada' ? $laporan->hukuman->hukuman : 'Hukuman tidak diberikan untuk terlapor' }}
-                            </li>
-                            @if (isset($laporan->hukuman) && $laporan->hukuman->tindakan_definisi == 'edit')
-                                <li>Definisi perlu diedit oleh terlapor</li>
-                            @elseif (isset($laporan->hukuman) && $laporan->hukuman->tindakan_definisi == 'hapus')
-                                <li>Definisi dihapus</li>
-                            @endif
-                        </ul>
-                    </div>
+                    @if (isset($laporan->hukuman))
+                        <div class="">
+                            <div class="text-sm text-neutral-600">Hukuman</div>
+                            <ul class="list-disc list-inside">
+                                <li>{{ $laporan->hukuman->hukuman != 'Tidak ada' ? $laporan->hukuman->hukuman : 'Hukuman tidak diberikan kepada terlapor' }}
+                                </li>
+                                @if ($laporan->hukuman->tindakan == 'edit')
+                                    <li>Definisi perlu diedit oleh terlapor</li>
+                                @elseif ($laporan->hukuman->tindakan == 'hapus')
+                                    @if (isset($laporan->definisi_id))
+                                        <li>Definisi dihapus</li>
+                                    @elseif (isset($laporan->kosakata_id))
+                                        <li>Kosakata dihapus</li>
+                                    @endif
+                                @endif
+                            </ul>
+                        </div>
+                    @endif
                     <div class="">
                         <div class="text-sm text-neutral-600">Catatan dari pengurus</div>
                         <div class="">
@@ -132,83 +186,228 @@
         @else
             @if (auth()->user()->role == 'pengurus')
                 {{-- tindakan yang bisa diambil admin --}}
-                <form action="/laporan/{{ $laporan->id }}/tindaklanjut" method="POST">
-                    @method('PUT')
-                    @csrf
-                    <div class="space-y-3">
+                @if (isset($laporan->definisi_id))
+                    <form action="/laporan/{{ $laporan->id }}/tindaklanjut" method="POST">
+                        @method('PUT')
+                        @csrf
+                        <div class="space-y-3">
 
-                        {{-- menentukan pelanggaran --}}
-                        <div>
-                            <div class="mb-2">Buat keputusan</div>
-                            @error('pelanggaran')
-                                <div class="text-sm text-red-600 -mt-2 mb-2">{{ $message }}</div>
-                            @enderror
+                            {{-- menentukan pelanggaran --}}
+                            <div>
+                                <div class="mb-2">Buat keputusan</div>
+                                @error('pelanggaran')
+                                    <div class="text-sm text-red-600 -mt-2 mb-2">{{ $message }}</div>
+                                @enderror
 
-                            <div class="flex gap-2">
-                                <div class="w-1/2 flex">
-                                    <input type="radio" name="pelanggaran" id="false" value="false"
-                                        class="hidden peer" {{ old('pelanggaran') == 'false' ? 'checked' : '' }}
-                                        onchange="document.getElementById('hukuman').classList.add('hidden')">
-                                    <label for="false"
-                                        class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
-                                        <i data-feather='x' class="md:w-5 w-12"></i>
-                                        <span>Tidak ditemukan adanya pelanggaran</span>
-                                    </label>
+                                <div class="flex gap-2">
+                                    <div class="w-1/2 flex">
+                                        <input type="radio" name="pelanggaran" id="false" value="false"
+                                            class="hidden peer" {{ old('pelanggaran') == 'false' ? 'checked' : '' }}
+                                            onchange="document.getElementById('hukuman').classList.add('hidden')">
+                                        <label for="false"
+                                            class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                            <i data-feather='x' class="md:w-5 w-12"></i>
+                                            <span>Tidak ditemukan adanya pelanggaran</span>
+                                        </label>
+                                    </div>
+                                    <div class="w-1/2 flex">
+                                        <input type="radio" name="pelanggaran" id="true" value="true"
+                                            class="hidden peer" {{ old('pelanggaran') == 'true' ? 'checked' : '' }}
+                                            onchange="document.getElementById('hukuman').classList.remove('hidden')">
+                                        <label for="true"
+                                            class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                            <i data-feather='check' class="md:w-5 w-12"></i>
+                                            <span>Ditemukan adanya pelanggaran</span>
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="w-1/2 flex">
-                                    <input type="radio" name="pelanggaran" id="true" value="true"
-                                        class="hidden peer" {{ old('pelanggaran') == 'true' ? 'checked' : '' }}
-                                        onchange="document.getElementById('hukuman').classList.remove('hidden')">
-                                    <label for="true"
-                                        class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
-                                        <i data-feather='check' class="md:w-5 w-12"></i>
-                                        <span>Ditemukan adanya pelanggaran</span>
-                                    </label>
+                            </div>
+
+                            <div class="space-y-3 hidden" id="hukuman">
+                                {{-- Tindakan terhadap definisi --}}
+                                <div class="">
+                                    <div class="mb-2">Tindakan terhadap definisi</div>
+                                    @error('tindakanDefinisi')
+                                        <div class="text-sm text-red-600 -mt-2 mb-2">{{ $message }}</div>
+                                    @enderror
+                                    <div class="space-y-2">
+
+                                        <div class="">
+                                            <input type="radio" name="tindakanDefinisi" id="edit" value="edit"
+                                                class="hidden peer"
+                                                {{ old('tindakanDefinisi') == 'edit' ? 'checked' : '' }}>
+                                            <label for="edit"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Minta {{ $laporan->author->nama }} untuk mengedit definisi</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="">
+                                            <input type="radio" name="tindakanDefinisi" id="hapus" value="hapus"
+                                                class="hidden peer"
+                                                {{ old('tindakanDefinisi') == 'hapus' ? 'checked' : '' }}>
+                                            <label for="hapus"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Hapus definisi</span>
+                                            </label>
+                                        </div>
+
+                                    </div>
                                 </div>
+
+                                {{-- Tindakan terhadap terlapor --}}
+                                <div class="">
+                                    <div class="mb-2">Hukuman untuk {{ $laporan->author->nama }}</div>
+                                    @error('hukuman')
+                                        <div class="text-sm text-red-600 -mt-2 mb-2">{{ $message }}</div>
+                                    @enderror
+
+                                    <div class="space-y-2">
+
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="peringatan" value="peringatan"
+                                                class="hidden peer" {{ old('hukuman') == 'peringatan' ? 'checked' : '' }}>
+                                            <label for="peringatan"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Beri peringatan</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="3hr" value="3hr"
+                                                class="hidden peer" {{ old('hukuman') == '3hr' ? 'checked' : '' }}>
+                                            <label for="3hr"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Cegah untuk berkontribusi selama 3 hari</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="7hr" value="7hr"
+                                                class="hidden peer" {{ old('hukuman') == '7hr' ? 'checked' : '' }}>
+                                            <label for="7hr"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Cegah untuk berkontribusi selama 7 hari</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="14hr" value="14hr"
+                                                class="hidden peer" {{ old('hukuman') == '14hr' ? 'checked' : '' }}>
+                                            <label for="14hr"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Cegah untuk berkontribusi selama 14 hari</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="30hr" value="30hr"
+                                                class="hidden peer" {{ old('hukuman') == '30hr' ? 'checked' : '' }}>
+                                            <label for="30hr"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Cegah untuk berkontribusi selama 30 hari</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="blokir" value="blokir"
+                                                class="hidden peer" {{ old('hukuman') == 'blokir' ? 'checked' : '' }}>
+                                            <label for="blokir"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Blokir akun secara permanen</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="tidak-ada" value="tidak-ada"
+                                                class="hidden peer" {{ old('hukuman') == 'tidak-ada' ? 'checked' : '' }}>
+                                            <label for="tidak-ada"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Tidak ada</span>
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Catatan --}}
+                            <div class="">
+                                <div class="mb-2">Tambahkan catatan (opsional)</div>
+                                <textarea id="catatan" name="catatan"
+                                    class="w-full border border-neutral-200 rounded-xl px-6 py-5 focus:outline focus:outline-2 focus:outline-amber-400 appearance-none resize-none focus:outline-none mb-3 max-h-52"
+                                    placeholder="Ketik disini..." oninput="textareaHeight(this)">{{ old('catatan') }}</textarea>
                             </div>
                         </div>
 
-                        <div class="space-y-3 hidden" id="hukuman">
-                            {{-- Tindakan terhadap definisi --}}
-                            <div class="">
-                                <div class="mb-2">Tindakan terhadap definisi</div>
-                                @error('tindakanDefinisi')
+                        {{-- Tombol simpan --}}
+                        <div id="save" class="">
+                            <div class="w-full bg-white rounded-xl p-4 mb-5 flex justify-between items-center">
+                                <div>
+                                    <div>Simpan tindakan?</div>
+                                    <div class="text-sm">Tindakan yang disimpan tidak dapat diubah.</div>
+                                </div>
+                                <button type="submit" class="text-blue-700 flex items-center">
+                                    <i data-feather='check' class="w-5"></i>
+                                    <span class="ml-1">Simpan</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                @elseif (isset($laporan->kosakata_id))
+                    <form action="/laporan/{{ $laporan->id }}/tindaklanjut" method="POST">
+                        @method('PUT')
+                        @csrf
+                        <div class="space-y-3">
+
+                            {{-- menentukan pelanggaran --}}
+                            <div>
+                                <div class="mb-2">Buat keputusan</div>
+                                @error('pelanggaran')
                                     <div class="text-sm text-red-600 -mt-2 mb-2">{{ $message }}</div>
                                 @enderror
-                                <div class="space-y-2">
 
-                                    <div class="">
-                                        <input type="radio" name="tindakanDefinisi" id="edit" value="edit"
-                                            class="hidden peer" {{ old('tindakanDefinisi') == 'edit' ? 'checked' : '' }}>
-                                        <label for="edit"
+                                <div class="flex gap-2">
+                                    <div class="w-1/2 flex">
+                                        <input type="radio" name="pelanggaran" id="false" value="false"
+                                            class="hidden peer" {{ old('pelanggaran') == 'false' ? 'checked' : '' }}
+                                            onchange="document.getElementById('hukuman').classList.add('hidden')">
+                                        <label for="false"
                                             class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
-                                            <i data-feather='chevron-right' class="md:w-5 w-12"></i>
-                                            <span>Minta {{ $laporan->author->nama }} untuk mengedit definisi</span>
+                                            <i data-feather='x' class="md:w-5 w-12"></i>
+                                            <span>Tidak ditemukan adanya pelanggaran</span>
                                         </label>
                                     </div>
-
-                                    <div class="">
-                                        <input type="radio" name="tindakanDefinisi" id="hapus" value="hapus"
-                                            class="hidden peer" {{ old('tindakanDefinisi') == 'hapus' ? 'checked' : '' }}>
-                                        <label for="hapus"
+                                    <div class="w-1/2 flex">
+                                        <input type="radio" name="pelanggaran" id="true" value="true"
+                                            class="hidden peer" {{ old('pelanggaran') == 'true' ? 'checked' : '' }}
+                                            onchange="document.getElementById('hukuman').classList.remove('hidden')">
+                                        <label for="true"
                                             class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
-                                            <i data-feather='chevron-right' class="md:w-5 w-12"></i>
-                                            <span>Hapus definisi</span>
+                                            <i data-feather='check' class="md:w-5 w-12"></i>
+                                            <span>Hapus kosakata</span>
                                         </label>
                                     </div>
-
                                 </div>
                             </div>
 
-                            {{-- Tindakan terhadap terlapor --}}
-                            <div class="">
-                                <div class="mb-2">Hukuman untuk {{ $laporan->author->nama }}</div>
-                                @error('hukuman')
-                                    <div class="text-sm text-red-600 -mt-2 mb-2">{{ $message }}</div>
-                                @enderror
-
+                            <div class="space-y-3 hidden" id="hukuman">
+                                {{-- Tindakan terhadap terlapor --}}
                                 <div class="space-y-2">
-
+                                    <div class="mb-2">Hukuman untuk terlapor</div>
+                                    @error('hukuman')
+                                        <div class="text-sm text-red-600 -mt-2 mb-2">{{ $message }}</div>
+                                    @enderror
                                     <div class="">
                                         <input type="radio" name="hukuman" id="peringatan" value="peringatan"
                                             class="hidden peer" {{ old('hukuman') == 'peringatan' ? 'checked' : '' }}>
@@ -278,36 +477,34 @@
                                             <span>Tidak ada</span>
                                         </label>
                                     </div>
-
                                 </div>
                             </div>
-                        </div>
 
-                        {{-- Catatan --}}
-                        <div class="">
-                            <div class="mb-2">Tambahkan catatan (opsional)</div>
-                            <textarea id="catatan" name="catatan"
-                                class="w-full border border-neutral-200 rounded-xl px-6 py-5 focus:outline focus:outline-2 focus:outline-amber-400 appearance-none resize-none focus:outline-none mb-3 max-h-52"
-                                placeholder="Ketik disini..." oninput="textareaHeight(this)">{{ old('catatan') }}</textarea>
-                        </div>
-                    </div>
-
-                    {{-- Tombol simpan --}}
-                    <div id="save" class="">
-                        <div class="w-full bg-white rounded-xl p-4 mb-5 flex justify-between items-center">
-                            <div>
-                                <div>Simpan tindakan?</div>
-                                <div class="text-sm">Tindakan yang disimpan tidak dapat diubah.</div>
+                            {{-- Catatan --}}
+                            <div class="">
+                                <div class="mb-2">Tambahkan catatan (opsional)</div>
+                                <textarea id="catatan" name="catatan"
+                                    class="w-full border border-neutral-200 rounded-xl px-6 py-5 focus:outline focus:outline-2 focus:outline-amber-400 appearance-none resize-none focus:outline-none mb-3 max-h-52"
+                                    placeholder="Ketik disini..." oninput="textareaHeight(this)">{{ old('catatan') }}</textarea>
                             </div>
-                            <button type="submit" class="text-blue-700 flex items-center">
-                                <i data-feather='check' class="w-5"></i>
-                                <span class="ml-1">Simpan</span>
-                            </button>
                         </div>
-                    </div>
 
+                        {{-- Tombol simpan --}}
+                        <div id="save" class="">
+                            <div class="w-full bg-white rounded-xl p-4 flex justify-between items-center">
+                                <div>
+                                    <div>Simpan tindakan?</div>
+                                    <div class="text-sm">Tindakan yang disimpan tidak dapat diubah.</div>
+                                </div>
+                                <button type="submit" class="text-blue-700 flex items-center">
+                                    <i data-feather='check' class="w-5"></i>
+                                    <span class="ml-1">Simpan</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                @endif
     </div>
-    </form>
 
     {{-- js --}}
     <script>

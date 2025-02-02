@@ -121,14 +121,15 @@
                         {{ $d->user->nama }} ingin mengganti detail kosakata "{{ $d->kosakata->kosakata }}".
                     </div>
                     @if (isset($d->pengurus_id))
-                        <div class="md:col-span-1 col-span-2 flex items-center">
+                        <div class="col-span-1 flex items-center">
                             <div class="flex items-center text-sm rounded-full px-3 py-1 bg-green-300 w-fit space-x-1">
                                 <i data-feather='check-circle' class="w-5 stroke-neutral-800"></i>
                                 <span>Selesai</span>
                             </div>
                         </div>
                     @endif
-                    <div class="md:col-span-1 col-span-8 flex items-center md:text-base text-sm">
+                    <div
+                        class="md:col-span-1 @if (isset($d->pengurus_id)) col-span-6 @else col-span-8 @endif flex items-center md:text-base text-sm">
                         {{ $d->created_at->translatedformat('d M Y') }}
                     </div>
                 </a>
@@ -141,7 +142,7 @@
 
     </div>
 
-    {{-- laporan kosakata --}}
+    {{-- laporan (hapus) kosakata --}}
     <div class="p-5 bg-white rounded-2xl">
         <div class="flex justify-between items-center">
             <div>Permintaan menghapus kosakata</div>
@@ -171,7 +172,7 @@
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid md:grid-cols-8 md:gap-1 gap-2 hover:outline hover:outline-offset-2 hover:outline-amber-400">
                     <div class="line-clamp-1 md:col-span-4 col-span-8 flex items-center">
                         {{ $d->user->username }} meminta agar kosakata
-                        "{{ $d->kosakata }}" dihapus.
+                        "{{ $d->kosakata->kosakata }}" dihapus.
                     </div>
                     <div class="md:flex hidden md:text-base text-sm col-span-2 items-center space-x-1">
                         @if (isset($d->status))
@@ -195,7 +196,7 @@
                         @endif
                     </div>
                     <div class="md:col-span-1 col-span-5 flex items-center md:text-base text-sm">
-                        {{ $d->created_at->translatedformat('d F Y') }}
+                        {{ $d->created_at->translatedformat('d M Y') }}
                     </div>
                 </a>
             @endforeach

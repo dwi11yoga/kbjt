@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('hukuman', function (Blueprint $table) {
             $table->id();
             $table->foreignId('laporan_id');
-            $table->string('tindakan_definisi');
+            $table->string('tindakan');
             $table->string('hukuman');
             $table->dateTime('hukuman_berakhir')->nullable();
             $table->timestamps();

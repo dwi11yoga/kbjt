@@ -61,4 +61,14 @@ class Report extends Model
     {
         return $this->hasOne(Hukuman::class, 'laporan_id');
     }
+
+    /**
+     * Get the kosakata that owns the Report
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function kosakata(): BelongsTo
+    {
+        return $this->belongsTo(Kosakata::class);
+    }
 }

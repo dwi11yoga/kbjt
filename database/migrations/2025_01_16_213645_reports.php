@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->text('catatan_pengurus')->nullable();
             $table->text('def_dilaporkan')->nullable();
             $table->json('ref_dilaporkan')->nullable();
-            $table->dateTime('waktu_definisi');
+            $table->dateTime('waktu_definisi')->nullable();
             $table->timestamps();
         });
     }

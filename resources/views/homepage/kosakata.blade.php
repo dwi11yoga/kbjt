@@ -109,7 +109,7 @@
             @endif
         @endauth
 
-        {{-- hapus/Minta hapus definisi --}}
+        {{-- hapus/Minta hapus kosakata --}}
         <div id="hapausKosakata"
             class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
             <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
@@ -117,13 +117,13 @@
                 <h5 class="font-semibold capitalize">Minta pengurus menghapus kosakata</h5>
                 <div class="mb-5">Apa alasan kamu ingin menghapus kosakata ini?</div>
 
-                <form action="/laporkan/definisi?id" method="POST">
+                <form action="/kosakata/{{ $data->slug }}/laporkan" method="POST">
                     @csrf
                     <div class="overflow-auto max-h-[27rem] space-y-2">
                         {{-- Referensi --}}
                         <div>
                             <label for="alasan" class="block">Alasan</label>
-                            <select name="alasan" id="alasan"
+                            <select name="alasan" id="kosakata_alasan"
                                 class="w-full rounded-xl p-3 border bg-white focus:outline-none focus:border-amber-300 cursor-pointer @error('alasan')
                                 border-red-400 @else border-neutral-400 @enderror">
                                 <option value="">Pilih</option>
@@ -140,7 +140,7 @@
                         </div>
                         <div>
                             <label for="catatan">Catatan</label>
-                            <textarea id="catatan" name="catatan"
+                            <textarea id="kosakata_catatan" name="catatan"
                                 class="w-full resize-none text-neutral-800 focus:outline-none focus:border-amber-300 mb-3 max-h-52 border border-neutral-400 rounded-xl p-2"
                                 placeholder="Tambahkan catatan untuk memperkuat laporan (opsional)" oninput="textareaHeight(this)">{{ old('catatan') }}</textarea>
                         </div>

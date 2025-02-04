@@ -100,27 +100,14 @@ Route::middleware(['auth'])->group(function () {
         // hapus artikel
         Route::delete('/artikel/hapus/{id}', [BlogController::class, 'delete']);
 
-        // banner - pengurus & kepala
-        Route::get('/banner', function () {
-            return view('dashboard.artikel', [
-                'title' => 'Banner',
-                'group' => 'banner'
-            ]);
-        });
+        // banner
+        Route::get('/banner', [BannerController::class, 'index']);
+
         // kontributor - pengurus
-        Route::get('/kontributor', function () {
-            return view('dashboard.artikel', [
-                'title' => 'Kontributor',
-                'group' => 'kontributor'
-            ]);
-        });
+        Route::get('/kontributor', [DashboardController::class, 'kontributor']);
+
         // pengurus - pengurus
-        Route::get('/pengurus', function () {
-            return view('dashboard.artikel', [
-                'title' => 'Pengurus',
-                'group' => 'pengurus'
-            ]);
-        });
+        Route::get('/pengurus', [DashboardController::class, 'pengurus']);
         // laporan - pengurus
         Route::get('/laporan', [ReportController::class, 'index']);
         Route::get('/laporan/{id}', [ReportController::class, 'detailLaporan']);
@@ -134,9 +121,6 @@ Route::middleware(['auth'])->group(function () {
                 'group' => 'donasi'
             ]);
         });
-
-        // banner
-        Route::get('/banner', [BannerController::class, 'index']);
 
         // level - kepala
         Route::get('/level', [LevelController::class, 'index']);

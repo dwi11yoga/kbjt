@@ -16,14 +16,15 @@ class KosakataFactory extends Factory
      */
     public function definition(): array
     {
+        $date = fake()->dateTimeBetween('-1 year', 'now');
         return [
             'user_id' => random_int(1, 100),
             'poin' => 20,
             'kosakata' => fake()->word(),
-            'slug' => fake()->word(),
+            'slug' => fake()->unique()->word,
             'ragam' => random_int(1, 2) === '1' ? 'Krama' : 'Ngoko',
-            'created_at' => now(),
-            'updated_at' => now()
+            'created_at' => $date,
+            'updated_at' => $date
         ];
     }
 }

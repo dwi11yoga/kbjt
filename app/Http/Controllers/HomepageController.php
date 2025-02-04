@@ -114,12 +114,12 @@ class HomepageController extends Controller
             ->first();
 
         // Jika bukan halaman preview dan Jika status post ==0 (draf)
-        if (empty($post) || ($post['status'] == 0 && $_SERVER['REQUEST_URI'] != '/blog/preview/' . $slug)) {
+        if (empty($post) || (empty($post['status']) && $_SERVER['REQUEST_URI'] != '/blog/preview/' . $slug)) {
             return $this->error404();
         }
 
         // Jika artikel sudah dipublikasikan, namun url adalah preview, maka redirect
-        if ($_SERVER['REQUEST_URI'] == '/blog/preview/' . $slug && $post['status'] == 1) {
+        if ($_SERVER['REQUEST_URI'] == '/blog/preview/' . $slug && isset($post['status'])) {
             return redirect('/blog/post/' . $slug);
         }
 
@@ -207,7 +207,7 @@ class HomepageController extends Controller
         ]);
     }
 
-    // Halaman kosakata & definisi
+    // View halaman kosakata & definisi
     public function kosakata($slug)
     {
         // ambil data kosakata
@@ -230,8 +230,6 @@ class HomepageController extends Controller
             $kosakata->etimologi = $cekEdit->etimologi;
             $kosakata->serupa = $cekEdit->serupa;
         }
-
-        // dd($kosakata);
 
         // Hitung jumlah kolom null
         $cekKolom = ['ragam', 'aksara', 'jenis', 'notasi_fonetik', 'arti_indo', 'etimologi', 'serupa'];

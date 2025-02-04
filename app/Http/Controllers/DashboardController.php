@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Blog;
 use App\Models\Definisi;
+use App\Models\EditKosakata;
 use App\Models\Kosakata;
 use App\Models\Level;
 use App\Models\Report;
@@ -194,7 +195,199 @@ class DashboardController extends Controller
         ]);
     }
 
-    // HAlaman achievement
+    // view halaman kontributor
+    public function kontributor()
+    {
+
+        // overview
+        $overview['kontributor'] = number_format(User::where('role', '=', 'kontributor')->count('id'), 0, ',', '.');
+        $overview['kontributorBlnIni'] = User::where('role', '=', 'kontributor')->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->count('id');
+
+        $definisi = Definisi::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'kontributor');
+        })->count();
+        $kosakata = Kosakata::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'kontributor');
+        })->count();
+        $editkosakata = EditKosakata::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'kontributor');
+        })->count();
+        $laporan = Report::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'kontributor');
+        })->count();
+        $overview['kontribusi'] = $definisi + $kosakata + $editkosakata + $laporan;
+
+        $definisi = Definisi::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'kontributor');
+        })->count();
+        $kosakata = Kosakata::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'kontributor');
+        })->count();
+        $editkosakata = EditKosakata::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'kontributor');
+        })->count();
+        $laporan = Report::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'kontributor');
+        })->count();
+        $overview['kontribusiBlnKemarin'] = $definisi + $kosakata + $editkosakata + $laporan;
+
+        // data kontributor
+        $kontributor = User::where('role', '=', 'kontributor')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, '*', 'kontributor')
+            ->onEachSide(2)
+            ->appends(request()->query());
+        foreach ($kontributor as $d) {
+            // level
+            $d['level'] = $this->levelCalculator($d->poin);
+            // kontribusi total
+            $definisi = Definisi::where('user_id', '=', $d->id)->count();
+            $kosakata = Kosakata::where('user_id', '=', $d->id)->count();
+            $editkosakata = EditKosakata::where('user_id', '=', $d->id)->count();
+            $laporan = Report::where('user_id', '=', $d->id)->count();
+            $d['kontribusiTotal'] = $definisi + $kosakata + $editkosakata + $laporan;
+            // kontribusi bulan ini
+            $definisi = Definisi::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->count();
+            $kosakata = Kosakata::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->count();
+            $editkosakata = EditKosakata::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->count();
+            $laporan = Report::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->count();
+            $d['kontribusiBlnIni'] = $definisi + $kosakata + $editkosakata + $laporan;
+        }
+
+        // data kosakata & definisi baru
+        $kosakata = Kosakata::whereHas('user', function ($query) {
+            $query->where('role', 'kontributor');
+        })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, '*', 'kosakata')
+            ->onEachSide(2)
+            ->appends(request()->query());
+        $definisi = Definisi::whereHas('user', function ($query) {
+            $query->where('role', 'kontributor');
+        })
+            ->with('kosakata:id,kosakata,slug')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, '*', 'definisi')
+            ->onEachSide(2)
+            ->appends(request()->query());
+
+        // dd($definisi);
+
+        return view('dashboard.kontributor', [
+            'title' => 'Kontributor',
+            'group' => 'kontributor',
+            'overview' => $overview,
+            'kontributor' => $kontributor,
+            'kosakata' => $kosakata,
+            'definisi' => $definisi
+        ]);
+    }
+
+    // view halaman pengurus
+    public function pengurus()
+    {
+        // jumlah pengurus
+        $overview['jmlPengurus'] = User::where('role', '=', 'pengurus')->count();
+        $overview['jmlUser'] = User::count();
+        $overview['rasioUser'] = number_format($overview['jmlPengurus'] / $overview['jmlUser'] * 10, 1, ',');
+
+        // kontributsi pengurus bulan ini
+        $kosakata = Kosakata::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'pengurus');
+        })->count();
+        $definisi = Definisi::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'pengurus');
+        })->count();
+        $editkosakata = EditKosakata::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'pengurus');
+        })->count();
+        $laporan = Report::whereNotNull('status')->whereMonth('status', '=', Carbon::now()->month)->count();
+        $blog = Blog::whereNotNull('status')->whereMonth('status', '=', Carbon::now()->month)->count();
+        // kurang banner
+        $overview['kontribusiBlnIni'] = $kosakata + $definisi + $editkosakata + $laporan + $blog;
+
+        // kontributsi pengurus bulan lalu
+        $kosakata = Kosakata::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'pengurus');
+        })->count();
+        $definisi = Definisi::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'pengurus');
+        })->count();
+        $editkosakata = EditKosakata::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereHas('user', function ($query) {
+            $query->where('role', 'pengurus');
+        })->count();
+        $laporan = Report::whereNotNull('status')->whereMonth('status', '=', Carbon::now()->subMonth()->month)->count();
+        $blog = Blog::whereNotNull('status')->whereMonth('status', '=', Carbon::now()->subMonth()->month)->count();
+        // kurang banner
+        $overview['kontribusiBlnKmrn'] = $kosakata + $definisi + $editkosakata + $laporan + $blog;
+
+        // data pengurus
+        $pengurus = User::where('role', '=', 'pengurus')
+            ->orderBy('poin', 'desc')
+            ->paginate(10, '*', 'pengurus')
+            ->onEachSide(2)
+            ->appends(request()->query());
+        foreach ($pengurus as $d) {
+            // level
+            $d['level'] = $this->levelCalculator($d->poin);
+            // kontribusi total
+            $definisi = Definisi::where('user_id', '=', $d->id)->count();
+            $kosakata = Kosakata::where('user_id', '=', $d->id)->count();
+            $editkosakata = EditKosakata::where('user_id', '=', $d->id)->count();
+            $laporan = Report::where('pengurus_id', '=', $d->id)->count();
+            $blog = Blog::whereNotNull('status')->where('user_id', '=', $d->id)->count();
+            $d['kontribusiTotal'] = $definisi + $kosakata + $editkosakata + $laporan + $blog;
+            // kontribusi bulan ini
+            $definisi = Definisi::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->count();
+            $kosakata = Kosakata::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->count();
+            $editkosakata = EditKosakata::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->count();
+            $laporan = Report::where('pengurus_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->count();
+            $blog = Blog::whereNotNull('status')->where('user_id', '=', $d->id)->whereMonth('status', '=', Carbon::now()->month)->count();
+            $d['kontribusiBlnIni'] = $definisi + $kosakata + $editkosakata + $laporan + $blog;
+        }
+
+        // data kosakata & definisi baru
+        $kosakata = Kosakata::whereHas('user', function ($query) {
+            $query->where('role', 'pengurus');
+        })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, '*', 'kosakata')
+            ->onEachSide(2)
+            ->appends(request()->query());
+        $definisi = Definisi::whereHas('user', function ($query) {
+            $query->where('role', 'pengurus');
+        })
+            ->with('kosakata:id,kosakata,slug')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, '*', 'definisi')
+            ->onEachSide(2)
+            ->appends(request()->query());
+
+        $editKosakata = EditKosakata::whereNotNull('pengurus_id')
+            ->with('kosakata:id,kosakata,slug')
+            ->with('user:id,username,nama,jenis_kelamin,profile_pic')
+            ->with('pengurus:id,username,nama,jenis_kelamin,profile_pic')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, '*', 'edit-kosakata')
+            ->onEachSide(2)
+            ->appends(request()->query());
+
+        // dd($overview);
+
+        return view('dashboard.pengurus', [
+            'title' => 'Pengurus',
+            'group' => 'pengurus',
+            'overview' => $overview,
+            'pengurus' => $pengurus,
+            'kosakata' => $kosakata,
+            'definisi' => $definisi,
+            'editKosakata' => $editKosakata
+        ]);
+    }
+
+    // Halaman achievement
     public function achivement()
     {
         return view('dashboard.achivement', [

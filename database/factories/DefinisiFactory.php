@@ -16,14 +16,15 @@ class DefinisiFactory extends Factory
      */
     public function definition(): array
     {
+        $date = fake()->dateTimeBetween('-1 year', 'now');
         return [
             'kosakata_id' => random_int(1, 50),
             'user_id' => random_int(1, 100),
             'poin' => 10,
             'definisi' => fake()->text(300),
             'verifikasi' => random_int(0, 1) === 1 ? now() : NULL,
-            'created_at' => now(),
-            'updated_at' => now()
+            'created_at' => $date,
+            'updated_at' => $date
         ];
     }
 }

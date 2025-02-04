@@ -55,7 +55,7 @@
         <div class="space-y-3">
             @foreach ($data['kosakata'] as $d)
                 <a href="/kosakata/{{ $d->slug }}"
-                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-offset-2 hover:outline-amber-400">
+                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                     <div class="line-clamp-1 md:col-span-3 col-span-6 flex items-center">Mensubmit kosakata
                         "{{ $d->kosakata }}".
                     </div>
@@ -90,7 +90,7 @@
         <div class="space-y-3">
             @foreach ($data['definisi'] as $d)
                 <a href="/kosakata/{{ $d->kosakata->slug }}?definisi={{ $d->id }}"
-                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-offset-2 hover:outline-amber-400">
+                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                     <div class="line-clamp-1 md:col-span-3 col-span-6 flex items-center">Mensubmit definisi untuk kosakata
                         "{{ $d->kosakata->kosakata }}".
                     </div>
@@ -149,7 +149,7 @@
             <div class="space-y-3">
                 @foreach ($data['laporan'] as $d)
                     <a href="/kontribusi/laporan/{{ $d->id }}"
-                        class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-offset-2 hover:outline-amber-400">
+                        class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                         <div class="line-clamp-1 md:col-span-3 col-span-6 flex items-center">Melaporkan definisi dari
                             kosakata "{{ $d->kosakata }}".
                         </div>

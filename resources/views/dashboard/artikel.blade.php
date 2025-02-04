@@ -61,11 +61,11 @@
             <?php $artikelUser = 0; ?>
             @foreach ($posts as $d)
                 <div
-                    class="relative grid grid-cols-12 items-center py-4 px-5 bg-white rounded-xl group hover:bg-neutral-100 hover:outline hover:outline-amber-200">
-                    <a href="{{ $d->user_id == auth()->user()->id ? '/artikel/edit/' . $d->id : ($d->status == 1 ? '/blog/post/' . $d->slug : '/blog/preview/' . $d->slug) }}"
-                        class="col-span-11 grid md:grid-cols-11 grid-col-3 md:space-x-10 space-y-2">
+                    class="relative grid grid-cols-12 items-center py-4 px-5 bg-white rounded-xl group hover:outline hover:outline-amber-200">
+                    <a href="{{ $d->user_id == auth()->user()->id ? '/artikel/edit/' . $d->id : (isset($d->status) ? '/blog/post/' . $d->slug : '/blog/preview/' . $d->slug) }}"
+                        class="col-span-11 grid md:grid-cols-11 grid-cols-5 md:space-x-10 space-y-2">
                         {{-- Judul --}}
-                        <div class="md:col-span-5 col-span-3 line-clamp-1">
+                        <div class="md:col-span-5 col-span-5 line-clamp-2 flex items-center md:font-normal font-semibold">
                             @if ($d->pinned == 1)
                                 <span>📌</span>
                             @endif
@@ -73,25 +73,25 @@
                         </div>
 
                         {{-- author --}}
-                        <div class="col-span-3 flex items-center space-x-1 text-neutral-700">
+                        <div class="md:col-span-3 col-span-5 flex items-center space-x-1 text-neutral-700">
                             <div class="md:w-7 md:h-7 w-8 h-8 rounded-full overflow-hidden">
                                 @include('partials.profil-pic-general-array2')
                             </div>
-                            <div class="line-clamp-1">{{ $d->user->nama }}</div>
+                            <div class="line-clamp-2">{{ $d->user->nama }}</div>
                         </div>
 
                         {{-- Status --}}
-                        <div class="md:col-span-2 col-span-2">
-                            @if ($d->status == 1)
-                                Dipublikasikan
+                        <div class="col-span-1 flex items-center">
+                            @if (isset($d->status))
+                                Rilis
                             @else
                                 Draf
                             @endif
                         </div>
 
                         {{-- tgl --}}
-                        <div class="col-span-1 flex justify-end">
-                            {{ $d->updated_at->translatedformat('d/m/Y') }}
+                        <div class="col-span-2 flex md:justify-end items-center">
+                            {{ $d->updated_at->translatedformat('d M Y') }}
                         </div>
                     </a>
 
@@ -107,10 +107,10 @@
                     <div id="dropdown{{ $d->id }}"
                         class="absolute hidden bg-white right-14 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
                         <ul>
-                            @if ($d->status == 1)
+                            @if (isset($d->status))
                                 {{-- Lihat --}}
                                 <a href="/blog/post/{{ $d->slug }}">
-                                    <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
+                                    <li class="flex justify-between py-2 px-3 rounded-lg">
                                         <div>Lihat</div>
                                         <i data-feather='eye' class="w-5"></i>
                                     </li>
@@ -121,29 +121,27 @@
                                 <form action="/artikel/draf/{{ $d->id }}" method="POST">
                                     @method('put')
                                     @csrf
-                                    @if ($d->status == 1)
+                                    @if (isset($d->status))
                                         {{-- jadikan draft --}}
-                                        <button type="submit"
-                                            class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
+                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg">
                                             <div>Jadikan draf</div>
                                             <i data-feather='archive' class="w-5"></i>
                                         </button>
                                     @else
                                         {{-- publikasikan --}}
-                                        <button type="submit"
-                                            class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
+                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg">
                                             <div>Publikasikan</div>
                                             <i data-feather='send' class="w-5"></i>
                                         </button>
                                     @endif
                                 </form>
-                            @elseif ((auth()->user()->role == 'kepala' && $d->status == 0) || ($d->user_id == auth()->user()->id && $d->status == 0))
+                            @elseif ((auth()->user()->role == 'kepala' && empty($d->status)) || ($d->user_id == auth()->user()->id && empty($d->status)))
                             @endif
 
-                            @if ($d->status == 0)
+                            @if (empty($d->status))
                                 {{-- preview --}}
                                 <a href="/blog/preview/{{ $d->slug }}">
-                                    <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
+                                    <li class="flex justify-between py-2 px-3 rounded-lg">
                                         <div>Preview</div>
                                         <i data-feather='eye' class="w-5"></i>
                                     </li>
@@ -151,14 +149,13 @@
                             @endif
 
                             {{-- Pin artikel --}}
-                            @if (auth()->user()->role == 'kepala' && $d->status == 1)
+                            @if (auth()->user()->role == 'kepala' && isset($d->status))
                                 <form action="/artikel/sematkan/{{ $d->id }}" method="POST">
                                     @method('put')
                                     @csrf
                                     @if ($d->pinned == 0)
                                         {{-- Pin artikel --}}
-                                        <button type="submit"
-                                            class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
+                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg">
                                             <div>Sematkan</div>
                                             <div>
                                                 <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none"
@@ -170,8 +167,7 @@
                                         </button>
                                     @elseif ($d->pinned == 1)
                                         {{-- Unpin artikel --}}
-                                        <button type="submit"
-                                            class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
+                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg">
                                             <div>Lepas semat</div>
                                             <div>
                                                 <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none"
@@ -202,7 +198,7 @@
                             @if (auth()->user()->role == 'kepala' || $d->user_id == auth()->user()->id)
                                 <button type="submit" id="{{ $d->id }}"
                                     onclick="deleteMessage(this,'hapusArtikel', 'formHapus')"
-                                    class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500">
+                                    class="flex w-full justify-between py-2 px-3 rounded-lg text-red-500">
                                     <div>Hapus</div>
                                     <i data-feather='trash-2' class="w-5"></i>
                                 </button>
@@ -211,7 +207,7 @@
                                     @method('delete')
                                     @csrf
                                     <button type="submit"
-                                        class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500">
+                                        class="flex w-full justify-between py-2 px-3 rounded-lg text-red-500">
                                         <div>Hapus</div>
                                         <i data-feather='trash-2' class="w-5"></i>
                                     </button>

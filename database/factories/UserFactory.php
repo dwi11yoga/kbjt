@@ -23,15 +23,18 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $date = fake()->dateTimeBetween('-1 year', 'now');
         return [
             'nama' => fake()->name(),
-            'username' => fake()->userName(),
+            'username' => fake()->unique()->userName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'jenis_kelamin' => rand(0, 1) === 1 ? 'Laki-laki' : 'Perempuan',
             'password' => static::$password ??= Hash::make('password'),
             'poin' => random_int(10, 500),
             'remember_token' => Str::random(10),
+            'created_at' => $date,
+            'updated_at' => $date
         ];
     }
 

@@ -16,6 +16,9 @@ class Blog extends Model
     // lindungi
     protected $guarded = ['id'];
 
+    // cast
+    protected $casts = ['status' => 'datetime'];
+
     /**
      * Get the user that owns the Blog
      *

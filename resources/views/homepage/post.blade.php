@@ -2,7 +2,7 @@
 
 @section('body')
 
-    @if ($post->status == 0)
+    @if (empty($post['status']))
         {{-- peringatan jika preview --}}
         <div
             class="bg-red-600 text-white w-full rounded-md py-3 uppercase inline-flex overflow-hidden justify-center font-semibold">

@@ -16,6 +16,7 @@ class BlogFactory extends Factory
      */
     public function definition(): array
     {
+        $date = fake()->dateTimeBetween('-1 year', 'now');
         return [
             //
             'judul' => fake()->sentence(),
@@ -23,7 +24,9 @@ class BlogFactory extends Factory
             'subjudul' => fake()->sentence(10),
             'user_id' => 1,
             'konten' => fake()->text(10000),
-            'status' => random_int(0, 1),
+            'status' => random_int(0, 1) === 1 ? fake()->dateTimeBetween('-1 year', 'now') : null,
+            'created_at' => $date,
+            'updated_at' => $date
         ];
     }
 }

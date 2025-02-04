@@ -69,16 +69,18 @@
         <div class="space-y-3">
             @foreach ($definisi as $d)
                 <a href="/laporan/{{ $d->id }}"
-                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid md:grid-cols-8 md:gap-1 gap-2 hover:outline hover:outline-offset-2 hover:outline-amber-400">
+                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid md:grid-cols-8 gap-2 hover:outline hover:outline-amber-400">
                     <div class="line-clamp-1 md:col-span-4 col-span-8 flex items-center">
                         {{ $d->user->username }} melaporkan definisi {{ $d->terlapor }} dalam kosakata
                         "{{ $d->kosakata }}".
                     </div>
                     <div class="md:flex hidden md:text-base text-sm col-span-2 items-center space-x-1">
                         @if (isset($d->status))
-                            <div class="flex items-center text-sm rounded-full px-3 py-1 bg-purple-300 w-fit space-x-1">
-                                <i data-feather='user' class="w-5 stroke-neutral-800"></i>
-                                <span>{{ $d->pengurus->username }}</span>
+                            <div class="flex items-center text-sm space-x-1">
+                                <div class="md:w-7 md:h-7 w-8 h-8 rounded-full overflow-hidden">
+                                    @include('partials.profil-pic-general-array2')
+                                </div>
+                                <div class="line-clamp-1">{{ $d->pengurus->username }}</div>
                             </div>
                         @endif
                     </div>
@@ -115,7 +117,7 @@
         <div class="space-y-3">
             @foreach ($editKosakata as $d)
                 <a href="/kosakata/{{ $d->kosakata->slug }}/riwayat"
-                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid md:grid-cols-8 md:gap-1 gap-2 hover:outline hover:outline-offset-2 hover:outline-amber-400">
+                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid md:grid-cols-8 gap-2 hover:outline hover:outline-amber-400">
                     <div
                         class="line-clamp-1 @if (isset($d->pengurus_id)) md:col-span-6 @else md:col-span-7 @endif col-span-8 flex items-center">
                         {{ $d->user->nama }} ingin mengganti detail kosakata "{{ $d->kosakata->kosakata }}".
@@ -169,16 +171,18 @@
         <div class="space-y-3">
             @foreach ($kosakata as $d)
                 <a href="/laporan/{{ $d->id }}"
-                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid md:grid-cols-8 md:gap-1 gap-2 hover:outline hover:outline-offset-2 hover:outline-amber-400">
+                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid md:grid-cols-8 gap-2 hover:outline hover:outline-amber-400">
                     <div class="line-clamp-1 md:col-span-4 col-span-8 flex items-center">
                         {{ $d->user->username }} meminta agar kosakata
                         "{{ $d->kosakata->kosakata }}" dihapus.
                     </div>
-                    <div class="md:flex hidden md:text-base text-sm col-span-2 items-center space-x-1">
+                    <div class="md:flex hidden md:text-base text-sm col-span-2 items-center space-x-2">
                         @if (isset($d->status))
-                            <div class="flex items-center text-sm rounded-full px-3 py-1 bg-purple-300 w-fit space-x-1">
-                                <i data-feather='user' class="w-5 stroke-neutral-800"></i>
-                                <span>{{ $d->pengurus->username }}</span>
+                            <div class="flex items-center text-sm space-x-1">
+                                <div class="md:w-7 md:h-7 w-8 h-8 rounded-full overflow-hidden">
+                                    @include('partials.profil-pic-general-array2')
+                                </div>
+                                <div class="line-clamp-1">{{ $d->pengurus->username }}</div>
                             </div>
                         @endif
                     </div>

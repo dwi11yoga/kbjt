@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->foreignId('user_id');
             $table->string('thumbnail')->nullable();
             $table->text('konten')->nullable();
-            $table->boolean('status')->default(0);
+            $table->timestamp('status')->nullable();
             $table->boolean('pinned')->default(0);
             $table->timestamps();
             $table->softDeletes();

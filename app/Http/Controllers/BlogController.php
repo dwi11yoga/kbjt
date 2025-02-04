@@ -24,9 +24,9 @@ class BlogController extends Controller
 
         if (isset($status) && $status != '') {
             if ($status == 'dipublikasikan') {
-                $query->where('status', '=', 1);
+                $query->whereNotNull('status');
             } elseif ($status == 'draf') {
-                $query->where('status', '=', 0);
+                $query->whereNull('status');
             }
         }
 
@@ -90,7 +90,7 @@ class BlogController extends Controller
             'konten' => $request->konten,
         ];
         if ($apakahPublish == true) {
-            $data['status'] = 1;
+            $data['status'] = now();
         }
 
         // simpan gambar
@@ -142,9 +142,10 @@ class BlogController extends Controller
             'slug' => $validatedData['slug'],
             'subjudul' => $request->subjudul,
             'konten' => $request->konten,
+            'status' => null
         ];
         if ($apakahPublish == true) {
-            $data['status'] = 1;
+            $data['status'] = now();
         }
 
         // simpan gambar
@@ -204,18 +205,18 @@ class BlogController extends Controller
 
         $data = [];
         $pesan = 'Tidak ada pesan';
-        if ($post['status'] == 0) {
+        if (empty($post['status'])) {
             // Ubah status jadi dipublikasikan
-            $data['status'] = 1;
+            $data['status'] = now();
             $pesan = 'Artikel berhasil dipublikasikan';
-        } elseif ($post['status'] == 1) {
+        } elseif (isset($post['status'])) {
             // Ubah status jadi draf
-            $data['status'] = 0;
+            $data['status'] = null;
             $pesan = 'Artikel berhasil disimpan sebagai draf';
         }
 
         // Unpin jika post adalah pinned
-        if ($post['status'] == 1 && $post['pinned'] == 1) {
+        if (isset($post['status']) && $post['pinned'] == 1) {
             $data['pinned'] = 0;
         }
 

@@ -16,6 +16,7 @@ class ReportFactory extends Factory
      */
     public function definition(): array
     {
+        $date = fake()->dateTimeBetween('-1 year', 'now');
         $data = [
             'user_id' => random_int(1, 100),
             'definisi_id' => random_int(1, 100),
@@ -23,9 +24,9 @@ class ReportFactory extends Factory
             // 'status' => random_int(0, 1) === 1 ? now() : NULL,
             'catatan' => fake()->sentence(15),
             'def_dilaporkan' => fake()->text(100),
-            'waktu_definisi' => now(),
-            'created_at' => now(),
-            'updated_at' => now()
+            'waktu_definisi' => $date,
+            'created_at' => $date,
+            'updated_at' => $date
         ];
         // $random = random_int(0, 1);
         // if ($random == 1) {

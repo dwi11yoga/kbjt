@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('user_id');
             $table->integer('poin')->default(0);
             $table->string('kosakata', 100);
-            $table->string('slug', length: 100);
+            $table->string('slug', length: 100)->unique();
             $table->enum('ragam', ['Krama', 'Ngoko'])->nullable();
             $table->string('aksara')->nullable();
             $table->string('jenis', 50)->nullable();

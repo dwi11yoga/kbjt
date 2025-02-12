@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefinisiController;
+use App\Http\Controllers\DonasiController;
 use App\Http\Controllers\EditKosakataController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\HukumanController;
@@ -74,7 +76,7 @@ Route::middleware(['auth'])->group(function () {
     // kontribusi - kontributor
     Route::get('/kontribusi', [DashboardController::class, 'kontribusi']);
     // achivement - kontributor & pengurus
-    Route::get('/achivement', [DashboardController::class, 'achivement']);
+    Route::get('/achievement', [AchievementController::class, 'index']);
     // sertifikat - kontributor & pengurus
     Route::get('/sertifikat', [DashboardController::class, 'sertifikat']);
 
@@ -115,12 +117,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['kepala'])->group(function () {
         // donasi - kepala
-        Route::get('/metode-donasi', function () {
-            return view('dashboard.artikel', [
-                'title' => 'Donasi',
-                'group' => 'donasi'
-            ]);
-        });
+        Route::get('/metode-donasi', [DonasiController::class, 'index']);
+        // tambah donasi - kepala
+        Route::get('/metode-donasi/baru', [DonasiController::class, 'tambah']);
+        // simpan tambah donasi donasi
+        Route::post('/metode-donasi/baru', [DonasiController::class, 'save']);
+        // edit donasi - kepala
+        Route::get('/metode-donasi/{id}/edit', [DonasiController::class, 'edit']);
+        // simpan edit donasi
+        Route::put('/metode-donasi/{id}/edit', [DonasiController::class, 'store']);
 
         // level - kepala
         Route::get('/level', [LevelController::class, 'index']);

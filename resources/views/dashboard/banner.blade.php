@@ -5,9 +5,9 @@
         @csrf
         <div class="bg-white p-5 rounded-2xl">
             <div class="mb-3">Sidebar</div>
-            <div class="grid grid-cols-6 space-x-4">
+            <div class="grid grid-cols-6 md:space-x-4 space-y-4">
                 {{-- konten --}}
-                <div class="col-span-4 animate-pulse space-y-2">
+                <div class="md:col-span-4 col-span-6 animate-pulse space-y-2">
                     <div class="w-full h-52 bg-gray-200 rounded-xl flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -47,7 +47,7 @@
                 </div>
 
                 {{-- iklan/banner --}}
-                <div class="col-span-2 space-y-3">
+                <div class="md:col-span-2 col-span-6 space-y-3">
 
                     {{-- banner 1 --}}
                     <div class="relative w-full rounded-xl overflow-hidden" onmouseover="toggleShowElement('side-1')"
@@ -79,18 +79,7 @@
                             class="px-3 py-2 w-full border border-gray-400 rounded-lg mb-3">
                         <div class="group p-2.5 max-h-11 bg-amber-300 hover:bg-amber-500 rounded-lg cursor-pointer"
                             onclick="document.getElementById('input-side-1').click()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-image">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"
-                                    class="fill-gray-800 stroke-gray-800">
-                                </rect>
-                                <circle cx="8.5" cy="8.5" r="1.5"
-                                    class="stroke-amber-300 group-hover:stroke-amber-500">
-                                </circle>
-                                <polyline points="21 15 16 10 5 21" class="stroke-amber-300 group-hover:stroke-amber-500">
-                                </polyline>
-                            </svg>
+                            <i data-feather='upload' class="w-5"></i>
                         </div>
                     </div>
                     <input id="input-side-1" type="file" class="hidden">
@@ -99,8 +88,7 @@
                     <div class="relative w-full rounded-xl overflow-hidden" onmouseover="toggleShowElement('side-2')"
                         onmouseout="toggleShowElement('side-2')">
                         @if (isset($banner['2']['img']))
-                            <img class="object-cover"
-                                src="{{ asset('img/Relief Gandavyuha Borobudur (TWC) recolor.jpg') }}"
+                            <img class="object-cover" src="{{ asset('img/Relief Gandavyuha Borobudur (TWC) recolor.jpg') }}"
                                 alt="Side banner 1">
                         @else
                             <div
@@ -126,18 +114,7 @@
                             class="px-3 py-2 w-full border border-gray-400 rounded-lg mb-3">
                         <div class="group p-2.5 max-h-11 bg-amber-300 hover:bg-amber-500 rounded-lg cursor-pointer"
                             onclick="document.getElementById('input-side-2').click()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-image">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"
-                                    class="fill-gray-800 stroke-gray-800">
-                                </rect>
-                                <circle cx="8.5" cy="8.5" r="1.5"
-                                    class="stroke-amber-300 group-hover:stroke-amber-500">
-                                </circle>
-                                <polyline points="21 15 16 10 5 21" class="stroke-amber-300 group-hover:stroke-amber-500">
-                                </polyline>
-                            </svg>
+                            <i data-feather='upload' class="w-5"></i>
                         </div>
                     </div>
                     <input id="input-side-2" type="file" class="hidden">
@@ -215,18 +192,7 @@
                         class="px-3 py-2 w-full border border-gray-400 rounded-lg mb-3">
                     <div class="group p-2.5 max-h-11 bg-amber-300 hover:bg-amber-500 rounded-lg cursor-pointer"
                         onclick="document.getElementById('input-artikel-1').click()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-image">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"
-                                class="fill-gray-800 stroke-gray-800">
-                            </rect>
-                            <circle cx="8.5" cy="8.5" r="1.5"
-                                class="stroke-amber-300 group-hover:stroke-amber-500">
-                            </circle>
-                            <polyline points="21 15 16 10 5 21" class="stroke-amber-300 group-hover:stroke-amber-500">
-                            </polyline>
-                        </svg>
+                        <i data-feather='upload' class="w-5"></i>
                     </div>
                 </div>
                 <input id="input-artikel-1" type="file" class="hidden">
@@ -275,18 +241,7 @@
                         class="px-3 py-2 w-full border border-gray-400 rounded-lg mb-3">
                     <div class="group p-2.5 max-h-11 bg-amber-300 hover:bg-amber-500 rounded-lg cursor-pointer"
                         onclick="document.getElementById('input-artikel-2').click()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-image">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"
-                                class="fill-gray-800 stroke-gray-800">
-                            </rect>
-                            <circle cx="8.5" cy="8.5" r="1.5"
-                                class="stroke-amber-300 group-hover:stroke-amber-500">
-                            </circle>
-                            <polyline points="21 15 16 10 5 21" class="stroke-amber-300 group-hover:stroke-amber-500">
-                            </polyline>
-                        </svg>
+                        <i data-feather='upload' class="w-5"></i>
                     </div>
                 </div>
                 <input id="input-artikel-2" type="file" class="hidden">

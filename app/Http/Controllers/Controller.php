@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Achievement;
 use App\Models\Level;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 abstract class Controller
@@ -33,6 +36,13 @@ abstract class Controller
         }
     }
 
+    // untuk menghitung persentase
+    public function persentase($nilai, $total)
+    {
+        $hasil = round(($nilai / $total) * 100) . '%';
+        return $hasil;
+    }
+
     // mengetahui url web
     public function getUrl()
     {
@@ -56,5 +66,30 @@ abstract class Controller
         return response()->view('error.404', [
             'title' => 'Halaman tidak ditemukan'
         ], 403);
+    }
+
+    // cek apakah dapat achievement/tidak
+    public function achievement(int $userId, string $rule, int $value)
+    {
+        $didapat = User::where('id', '=', $userId)->value('achievement');
+        $data = Achievement::where('rule', '=', $rule)->whereNotIn('id', array_keys($didapat))->get();
+
+        // perulangan terhadap achievement yang belum didapatkan
+        $simpan = $didapat;
+        foreach ($data as $d) {
+            if ($value >= $d->requirement) {
+                $simpan[$d->id] = Carbon::now();
+            }
+        }
+
+        // simpan data
+        if ($didapat != $simpan) {
+            User::find(Auth::user()->id)->update([
+                'achievement' => $simpan
+            ]);
+        }
+
+        // buat notifikasi - belum
+        return true;
     }
 }

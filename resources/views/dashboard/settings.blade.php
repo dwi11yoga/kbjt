@@ -164,7 +164,10 @@
         class="fixed inset-0 m-auto invisible z-50 flex items-center justify-center bg-black bg-opacity-50">
         <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6 space-y-4">
 
-            <h5 class="font-semibold">Sembunyikan data sensitif</h5>
+            <div>
+                <h5 class="font-semibold">Sembunyikan data sensitif</h5>
+                <div class="text-sm">Centang data sensitif yang ingin disembunyikan dari halaman profil.</div>
+            </div>
 
             <form action="/pengaturan/data-sensitif" method="POST">
                 @method('put')
@@ -178,7 +181,7 @@
                             onclick="checkbox_check(this, 'email_icon')"
                             {{ isset($sembunyikan_data) && $sembunyikan_data['email'] == true ? 'checked' : '' }}>
                         <label for="email"
-                            class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center">
+                            class="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center">
                             <div id="email_icon"
                                 class="{{ isset($sembunyikan_data) && old('email', $sembunyikan_data['email']) == true ? 'bg-green-400 w-8 h-8 rounded-full flex justify-center items-center' : 'hidden' }}">
                                 <i data-feather='check' class="w-4 stroke-green-800"></i>
@@ -190,7 +193,7 @@
                         <input type="checkbox" name="telp" id="telp" onclick="checkbox_check(this, 'telp_icon')"
                             hidden {{ isset($sembunyikan_data) && $sembunyikan_data['telp'] == true ? 'checked' : '' }}>
                         <label for="telp"
-                            class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center">
+                            class="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center">
                             <div id="telp_icon"
                                 class="{{ isset($sembunyikan_data) && old('email', $sembunyikan_data['email']) == true ? 'bg-green-400 w-8 h-8 rounded-full flex justify-center items-center' : 'hidden' }}">
                                 <i data-feather='check' class="w-4 stroke-green-800"></i>

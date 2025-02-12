@@ -29,27 +29,25 @@
                         </div>
                     </div>
                     <div class="md:col-span-1 col-span-10 md:justify-end justify-start flex items-center space-x-1">
-                        @if (isset(auth()->user()->role) && auth()->user()->role == 'pengurus')
-                            @if (empty($r->pengurus_id))
-                                <form action="/kosakata/{{ $kosakata->slug }}/riwayat/{{ $r->id }}/setujui"
-                                    method="POST">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" class="w-fit text-amber-700 flex hover:text-amber-800">
-                                        <i data-feather='check' class="w-5 inline"></i>
-                                        Setujui
-                                    </button>
-                                </form>
-                            @else
-                                <?php $d = $r->pengurus; ?>
-                                <a href="/u/{{ $d->username }}"
-                                    class="rounded-full overflow-hidden w-8 h-8 hover:outline hover:outline-offset-2 hover:outline-amber-400"
-                                    title="Disetujui oleh {{ $d->nama }}">
-                                    @include('partials.profile-pic-general')
-                                </a>
-                                <span class="md:hidden block text-sm line-clamp-1">Disetujui oleh <a
-                                        href="/u/{{ $d->username }}">{{ $d->nama }}</a></span>
-                            @endif
+                        @if (isset(auth()->user()->role) && auth()->user()->role == 'pengurus' && empty($r->pengurus_id))
+                            <form action="/kosakata/{{ $kosakata->slug }}/riwayat/{{ $r->id }}/setujui"
+                                method="POST">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="w-fit text-amber-700 flex hover:text-amber-800">
+                                    <i data-feather='check' class="w-5 inline"></i>
+                                    Setujui
+                                </button>
+                            </form>
+                        @elseif (isset(auth()->user()->role) && auth()->user()->role != 'kontributor' && isset($r->pengurus_id))
+                            <?php $d = $r->pengurus; ?>
+                            <a href="/u/{{ $d->username }}"
+                                class="rounded-full overflow-hidden w-8 h-8 hover:outline hover:outline-offset-2 hover:outline-amber-400"
+                                title="Disetujui oleh {{ $d->nama }}">
+                                @include('partials.profile-pic-general')
+                            </a>
+                            <span class="md:hidden block text-sm line-clamp-1">Disetujui oleh <a
+                                    href="/u/{{ $d->username }}">{{ $d->nama }}</a></span>
                         @endif
                     </div>
 

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Achievement;
+use App\Models\Donasi;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -50,7 +52,10 @@ class DatabaseSeeder extends Seeder
             'updated_at' => now()
         ]);
 
+        Donasi::factory(11)->create();
+
         $this->call([
+            AchievementSeeder::class,
             BannerSeeder::class,
             BlogSeeder::class,
             DefinisiSeeder::class,

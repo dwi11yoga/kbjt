@@ -58,7 +58,8 @@ class User extends Authenticatable
         'media_sosial' => 'array',
         'donasi' => 'array',
         'sembunyikan_data' => 'array',
-        'tgl_lahir' => 'datetime'
+        'tgl_lahir' => 'datetime',
+        'achievement' => 'array'
     ];
 
     /**

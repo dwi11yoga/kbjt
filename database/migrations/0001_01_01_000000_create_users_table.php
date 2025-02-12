@@ -33,7 +33,7 @@ return new class extends Migration {
             $table->datetime('terakhir_aktif')->nullable();
             $table->integer('poin')->default(10);
             $table->timestamp('poin_diperbarui')->nullable();
-            $table->text('achivement')->nullable();
+            $table->json('achievement')->nullable();
             $table->json('sembunyikan_data')->nullable();
             $table->rememberToken();
             $table->timestamps();

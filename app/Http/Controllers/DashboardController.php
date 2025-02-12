@@ -387,14 +387,6 @@ class DashboardController extends Controller
         ]);
     }
 
-    // Halaman achievement
-    public function achivement()
-    {
-        return view('dashboard.achivement', [
-            'group' => 'achivement',
-            'title' => 'Achivement'
-        ]);
-    }
     // Halaman sertifikat
     public function sertifikat()
     {

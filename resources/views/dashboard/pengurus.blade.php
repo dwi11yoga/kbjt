@@ -190,8 +190,7 @@
         <div class="py-2">Artikel terbaru</div>
 
         <div class="space-y-3">
-            <div href="/kontribusi/laporan/{{ $d->id }}"
-                class="border border-neutral-200 p-3 mt-3 rounded-xl text-center"> Beralih ke halaman <a href="/artikel"
+            <div class="border border-neutral-200 p-3 mt-3 rounded-xl text-center"> Beralih ke halaman <a href="/artikel"
                     class="underline underline-offset-2 decoration-amber-400 decoration-2">Artikel</a>.
             </div>
         </div>
@@ -202,8 +201,7 @@
         <div class="py-2">Laporan</div>
 
         <div class="space-y-3">
-            <div href="/kontribusi/laporan/{{ $d->id }}"
-                class="border border-neutral-200 p-3 mt-3 rounded-xl text-center"> Beralih ke halaman <a href="/laporan"
+            <div class="border border-neutral-200 p-3 mt-3 rounded-xl text-center"> Beralih ke halaman <a href="/laporan"
                     class="underline underline-offset-2 decoration-amber-400 decoration-2">Laporan</a>.
             </div>
         </div>

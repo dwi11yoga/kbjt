@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Blog;
 use App\Models\Definisi;
+use App\Models\Donasi;
 use App\Models\EditKosakata;
 use App\Models\Kosakata;
 use App\Models\User;
@@ -92,7 +93,7 @@ class HomepageController extends Controller
     // Blog
     public function blog()
     {
-        $blog = Blog::where('status', '=', 1)
+        $blog = Blog::whereNotNull('status')
             ->with('user:id,nama')
             ->orderBy('pinned', 'desc')
             ->orderBy('updated_at', 'desc')
@@ -138,9 +139,19 @@ class HomepageController extends Controller
     // Donasi
     public function donasi()
     {
+
+        $metode = Donasi::select('metode')->orderBy('metode', 'asc')->get();
+        if (!empty(request('metode-pembayaran'))) {
+            $metode_dipilih = request('metode-pembayaran');
+        } else {
+            $metode_dipilih = Donasi::orderBy('metode', 'asc')->value('metode');
+        }
+        $donasi = Donasi::where('metode', '=', $metode_dipilih)->first();
         return view('homepage.donasi', [
             'group' => 'donasi',
-            'title' => 'Donasi'
+            'title' => 'Donasi',
+            'donasi' => $donasi,
+            'metode' => $metode
         ]);
     }
 
@@ -297,7 +308,7 @@ class HomepageController extends Controller
         $kosakata = Kosakata::where('slug', '=', $slug)->first();
 
         $riwayat = EditKosakata::where('kosakata_id', '=', $kosakata->id);
-        if (empty(Auth::user()->role) || Auth::user()->role != 'pengurus') {
+        if (empty(Auth::user()->role) || Auth::user()->role == 'kontributor') {
             $riwayat = $riwayat->whereNotNull('status');
         }
         $riwayat = $riwayat->with('user:id,username,nama,jenis_kelamin,profile_pic')

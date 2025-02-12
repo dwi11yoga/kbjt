@@ -30,18 +30,20 @@
             </div>
         </div>
 
-        {{-- Laporan yang kamu tangani --}}
-        <div
-            class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
-            <div>Laporan yang kamu tangani<br>
-                <div class="flex items-baseline">
-                    <h1 class="font-bold -mt-2">{{ number_format($stat->ditanganiUser, 0, ',', '.') }}</h1>
+        @if (auth()->user()->role == 'pengurus')
+            {{-- Laporan yang kamu tangani --}}
+            <div
+                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                <div>Laporan yang kamu tangani<br>
+                    <div class="flex items-baseline">
+                        <h1 class="font-bold -mt-2">{{ number_format($stat->ditanganiUser, 0, ',', '.') }}</h1>
+                    </div>
+                </div>
+                <div class="text-sm">
+                    Bulan ini kamu menangani {{ number_format($stat->ditanganiBlnIni, 0, ',', '.') }} laporan
                 </div>
             </div>
-            <div class="text-sm">
-                Bulan ini kamu menangani {{ number_format($stat->ditanganiBlnIni, 0, ',', '.') }} laporan
-            </div>
-        </div>
+        @endif
     </div>
 
     {{-- laporan definisi --}}
@@ -59,9 +61,11 @@
                     <option {{ request()->filter == 'selesai-ditangani' ? 'selected' : '' }} value="selesai-ditangani">
                         Selesai ditangani
                     </option>
-                    <option {{ request()->filter == 'kamu-tangani' ? 'selected' : '' }} value="kamu-tangani">
-                        Kamu tangani
-                    </option>
+                    @if (auth()->user()->role == 'pengurus')
+                        <option {{ request()->filter == 'kamu-tangani' ? 'selected' : '' }} value="kamu-tangani">
+                            Kamu tangani
+                        </option>
+                    @endif
                 </select>
             </form>
         </div>
@@ -161,9 +165,11 @@
                         value="selesai-ditangani">
                         Selesai ditangani
                     </option>
-                    <option {{ request()->filterKosakata == 'kamu-tangani' ? 'selected' : '' }} value="kamu-tangani">
-                        Kamu tangani
-                    </option>
+                    @if (auth()->user()->role == 'pengurus')
+                        <option {{ request()->filterKosakata == 'kamu-tangani' ? 'selected' : '' }} value="kamu-tangani">
+                            Kamu tangani
+                        </option>
+                    @endif
                 </select>
             </form>
         </div>

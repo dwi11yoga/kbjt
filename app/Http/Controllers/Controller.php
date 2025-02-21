@@ -72,24 +72,35 @@ abstract class Controller
     public function achievement(int $userId, string $rule, int $value)
     {
         $didapat = User::where('id', '=', $userId)->value('achievement');
-        $data = Achievement::where('rule', '=', $rule)->whereNotIn('id', array_keys($didapat))->get();
+        $data = Achievement::where('rule', '=', $rule)
+            ->whereNotIn('id', array_keys(is_array($didapat) ? $didapat : []))
+            ->orderBy('requirement', 'asc')
+            ->get();
 
         // perulangan terhadap achievement yang belum didapatkan
         $simpan = $didapat;
+        $poin = 0;
         foreach ($data as $d) {
             if ($value >= $d->requirement) {
-                $simpan[$d->id] = Carbon::now();
+                $simpan[$d->id] = now();
+                $poin = $poin + $d->reward;
+            } else {
+                break;
             }
         }
 
-        // simpan data
         if ($didapat != $simpan) {
-            User::find(Auth::user()->id)->update([
+            // simpan data
+            User::find($userId)->update([
                 'achievement' => $simpan
             ]);
+
+            // tambah poin exp
+            User::find($userId)->increment('poin', $poin);
+
+            // buat notifikasi - belum
         }
 
-        // buat notifikasi - belum
         return true;
     }
 }

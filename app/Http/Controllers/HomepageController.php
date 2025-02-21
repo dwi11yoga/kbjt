@@ -127,6 +127,12 @@ class HomepageController extends Controller
         // dapatkan url web
         $url = $this->getUrl();
 
+        // tambahkan view di database
+        // cek apakah user sudah mengunjungi halaman tsb hari ini - [belom]
+        if (empty(Auth::user()->role) || Auth::user()->role == 'kontributor') {
+            Blog::find($post->id)->increment('view', 1);
+        }
+
         // dd($post);
         return view('homepage.post', [
             'group' => 'blog',
@@ -187,6 +193,7 @@ class HomepageController extends Controller
             // cari artikel
             $data = Blog::select('id', 'judul', 'slug', 'user_id', 'thumbnail', 'status', 'updated_at')
                 ->with('user:id,username,nama,jenis_kelamin,profile_pic')
+                ->whereNotNull('status')
                 ->where('judul', 'like', '%' . $keyword . '%')
                 ->orderBy('updated_at', 'desc')
                 ->paginate(10)
@@ -290,6 +297,12 @@ class HomepageController extends Controller
             return false;
         }
         $cekDefinisiUser = cariDefinisiUser($definisi, Auth::user()->id ?? 0);
+
+        // tambahkan view di database
+        // cek apakah user sudah mengunjungi halaman tsb hari ini - [belom]
+        if (empty(Auth::user()->role) || Auth::user()->role == 'kontributor') {
+            Kosakata::find($kosakata->id)->increment('view', 1);
+        }
 
         return view('homepage.kosakata', [
             'group' => 'pencarian',

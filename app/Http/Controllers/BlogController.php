@@ -107,6 +107,22 @@ class BlogController extends Controller
             $post = Blog::select('id', 'slug')->where('slug', '=', $validatedData['slug'])->first();
             return redirect('/artikel/edit/' . $post->id)->with('success', 'Artikel berhasil disimpan sebagai draf');
         } elseif ($apakahPublish == true) {
+
+            // cek achievement
+            $userId = Auth::user()->id;
+
+            // jumlah artikel
+            $value = Blog::where('user_id', $userId)->whereNotNull('status')->count();
+            $this->achievement($userId, 'artikel', $value);
+
+            // cek achievement view blog
+            $value = Blog::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
+            $this->achievement($userId, 'viewKosakata', $value);
+
+            // cek achievement total view blog
+            $value = Blog::where('user_id', '=', $userId)->sum('view') ?? 0;
+            $this->achievement($userId, 'totalViewBlog', $value);
+
             return redirect('/artikel')->with('success', 'Artikel berhasil dipublikasikan');
         }
     }
@@ -165,11 +181,26 @@ class BlogController extends Controller
         if ($apakahSimpan == true) {
             return redirect('/artikel/edit/' . $post->id)->with('success', 'Artikel berhasil disimpan sebagai draf');
         } elseif ($apakahPublish == true) {
+            // cek achievement
+            $userId = Auth::user()->id;
+
+            // jumlah artikel
+            $value = Blog::where('user_id', $userId)->whereNotNull('status')->count();
+            $this->achievement($userId, 'artikel', $value);
+
+            // cek achievement view blog
+            $value = Blog::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
+            $this->achievement($userId, 'viewKosakata', $value);
+
+            // cek achievement total view blog
+            $value = Blog::where('user_id', '=', $userId)->sum('view') ?? 0;
+            $this->achievement($userId, 'totalViewBlog', $value);
+
             return redirect('/artikel')->with('success', 'Artikel berhasil dipublikasikan');
         }
     }
 
-    // edit artikel / post
+    // view edit artikel / post
     public function editPost($id)
     {
         // dapatkan data artikel
@@ -222,6 +253,23 @@ class BlogController extends Controller
 
         // Simpan
         Blog::where('id', '=', $id)->update($data);
+
+        // cek achievement
+        if (isset($post['status'])) {
+            $userId = $post->user_id;
+            // jumlah artikel
+            $value = Blog::where('user_id', $userId)->whereNotNull('status')->count();
+            $this->achievement($userId, 'artikel', $value);
+
+            // cek achievement view blog
+            $value = Blog::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
+            $this->achievement($userId, 'viewKosakata', $value);
+
+            // cek achievement total view blog
+            $value = Blog::where('user_id', '=', $userId)->sum('view') ?? 0;
+            $this->achievement($userId, 'totalViewBlog', $value);
+        }
+
         return back()->with('success', $pesan);
     }
 
@@ -262,5 +310,17 @@ class BlogController extends Controller
 
         Blog::destroy($id);
         return back()->with('success', 'Artikel berhasil dihapus');
+    }
+
+    function cekAchievement()
+    {
+        $userId = Auth::user()->id;
+        // cek achievement view blog
+        $value = Blog::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
+        $this->achievement($userId, 'viewKosakata', $value);
+
+        // cek achievement total view blog
+        $value = Blog::where('user_id', '=', $userId)->sum('view') ?? 0;
+        $this->achievement($userId, 'totalViewBlog', $value);
     }
 }

@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->text('konten')->nullable();
             $table->timestamp('status')->nullable();
             $table->boolean('pinned')->default(0);
+            $table->integer('view')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

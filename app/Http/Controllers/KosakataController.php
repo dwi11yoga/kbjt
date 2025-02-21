@@ -66,6 +66,7 @@ class KosakataController extends Controller
             User::where('id', '=', Auth::user()->id)->increment('poin', $tambahPoin);
         }
 
+        // simpan
         Kosakata::create([
             'user_id' => Auth::user()->id,
             'kosakata' => $validatedData['kosakata'],
@@ -80,90 +81,21 @@ class KosakataController extends Controller
             'poin' => $tambahPoin ?? 0
         ]);
 
+        // cek achievement
+        $userId = Auth::user()->id;
+        // jumlah kosakata
+        $value = Kosakata::where('user_id', '=', $userId)->count() ?? 0; // jumlah kosakata
+        $this->achievement(Auth::user()->id, 'kosakata', $value);
+
+        // cek achievement view kosakata
+        $value = Kosakata::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
+        $this->achievement($userId, 'viewKosakata', $value);
+
+        // cek achievement total view kosakata
+        $value = Kosakata::where('user_id', '=', $userId)->sum('view') ?? 0;
+        $this->achievement($userId, 'totalViewKosakata', $value);
+
         return redirect('/kosakata/' . $validatedData['slug'], )->with('success', 'Kosakata berhasil ditambahkan');
 
-    }
-
-    // Edit kosakata
-    public function edit($slug)
-    {
-        $kosakata = Kosakata::where('slug', $slug)->first();
-
-        // Ubah json ke text
-        if (isset($kosakata['serupa'])) {
-            $kosakata['serupa'] = implode('; ', $kosakata['serupa']);
-            $kosakata['serupa'] = str_replace('"', '', $kosakata['serupa']);
-        }
-        $etimologi = str_replace('"', '', $kosakata['etimologi']);
-        if ($etimologi != '') {
-            $etimologi = implode('; ', $kosakata['etimologi']) ?? null;
-        }
-
-        // Jika etimologi diisi dan bukan berisi "Asli"
-        if ($etimologi != '' && $etimologi != "Asli") {
-            $kosakata['bahasa'] = $kosakata['etimologi'][0];
-            $kosakata['kata_diserap'] = $kosakata['etimologi'][1];
-        } else {
-            $kosakata['etimologi'] = $etimologi;
-        }
-
-        if ($kosakata != null) {
-            // Jika kosakata ditemukan
-            return view('homepage.edit-kosakata', [
-                'title' => 'Edit kosakata',
-                'data' => $kosakata
-            ]);
-        } else {
-            // Jika kosakata tidak ditemukan
-            return redirect('/kosakata/' . $slug)->with('failed', 'Kosakata yang diedit tidak ditemukan');
-        }
-    }
-
-    // Simpan edit kosakata
-    public function simpanEdit(Request $request, $slug)
-    {
-        $id = Kosakata::select('id')->where('slug', $slug)->first();
-
-        // Validasi
-        $rules = [
-            'ragam' => 'required',
-        ];
-
-        if (isset($request->bahasa)) {
-            $rules['kata_diserap'] = 'required';
-        }
-
-        if (isset($request->kata_diserap)) {
-            $rules['bahasa'] = 'required';
-        }
-
-        $validatedData = $request->validate($rules);
-
-
-        // Buat array etimologi
-        $etimologi = [""];
-        if ($request->etimologi == 'Asli') {
-            $etimologi = [$request->etimologi];
-        } elseif (isset($request->bahasa) && isset($request->kata_diserap)) {
-            $etimologi = [$request->bahasa, $request->kata_diserap];
-        }
-
-        // Membuat array serupa
-        $arraySerupa = array_map('trim', explode(';', $request->serupa));
-
-        EditKosakata::create([
-            'user_id' => Auth::user()->id,
-            'kosakata_id' => $id->id,
-            'ragam' => $validatedData['ragam'],
-            'aksara' => $request->aksara,
-            'jenis' => $request->jenis,
-            'notasi_fonetik' => $request->notasi_fonetik,
-            'arti_indo' => $request->arti_indo,
-            'etimologi' => $etimologi,
-            'serupa' => $arraySerupa,
-            'catatan' => $request->catatan
-        ]);
-
-        return redirect('/kosakata/' . $slug)->with('success', 'Permintaan edit akan segera diproses');
     }
 }

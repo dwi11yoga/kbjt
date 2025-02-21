@@ -4,7 +4,7 @@
     <h3 class="font-bold mb-7">Daftar Kosakata</h3>
     {{-- Dropdown huruf --}}
     <form action="/daftar-kosakata" method="GET" class="relative justify-between">
-        <select name="filter" id="filter" onchange="muatDropdown(this)"
+        {{-- <select name="filter" id="filter" onchange="muatDropdown(this)"
             class="w-full py-3 px-5 rounded-md bg-white border border-gray-200 cursor-pointer font-bold appearance-none">
             <option value="A" {{ $filter == 'A' ? 'selected' : '' }}>A</option>
             <option value="B" {{ $filter == 'B' ? 'selected' : '' }}>B</option>
@@ -34,8 +34,16 @@
             <option value="Z" {{ $filter == 'Z' ? 'selected' : '' }}>Z</option>
         </select>
 
-        <span class="absolute flex right-4 top-3"><i data-feather='chevron-down'></i></span>
+        <span class="absolute flex right-4 top-3"><i data-feather='chevron-down'></i></span> --}}
+        <div class="space-y-1">
+            @foreach (range('A', 'Z') as $d)
+                <button type="submit" name="filter" value="{{ $d }}"
+                    class="w-10 h-10 rounded-md @if ((empty(request()->filter) && $d == 'A') || request()->filter == $d) bg-amber-400 @else bg-amber-200 @endif hover:bg-amber-300">
+                    {{ $d }}
+                </button>
+            @endforeach
     </form>
+    </div>
 
     @if ($kosakata->isEmpty())
         <?php $notFound = "Belum ada data. <a href='/kosakata/buat' class='text-blue-500'>Tambahkan?</a>"; ?>

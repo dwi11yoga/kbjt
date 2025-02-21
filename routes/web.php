@@ -15,6 +15,7 @@ use App\Http\Controllers\PoinKontribusiController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TrixController;
 use App\Http\Controllers\UserController;
+use App\Models\EditKosakata;
 use Illuminate\Support\Facades\Route;
 
 // HOMEPAGE
@@ -135,6 +136,15 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/level/update', [LevelController::class, 'update']);
         // update poin kontribusi - kepala
         Route::put('/poin-kontribusi/update', [PoinKontribusiController::class, 'update']);
+
+        // tambah achievement
+        Route::get('/achievement/baru', [AchievementController::class, 'tambah']);
+        // simpan achievement baru
+        Route::post('/achievement/baru', [AchievementController::class, 'save']);
+        // edit achievement
+        Route::get('achievement/{id}/edit', [AchievementController::class, 'edit']);
+        // simpan edit achievement
+        Route::put('/achievement/{id}/edit', [AchievementController::class, 'simpanEdit']);
     });
 
     Route::middleware(['pengurus'])->group(function () {
@@ -182,6 +192,6 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/kosakata/{slug}/{definisiId}/delete', [DefinisiController::class, 'delete']);
 
     // Edit kosakata
-    Route::get('/kosakata/{slug}/edit', [KosakataController::class, 'edit']);
-    Route::post('/kosakata/{slug}/edit', [KosakataController::class, 'simpanEdit']);
+    Route::get('/kosakata/{slug}/edit', [EditKosakataController::class, 'edit']);
+    Route::post('/kosakata/{slug}/edit', [EditKosakataController::class, 'simpanEdit']);
 });

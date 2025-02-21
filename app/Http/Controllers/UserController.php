@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Achievement;
 use App\Models\Blog;
 use App\Models\Definisi;
+use App\Models\Kosakata;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -46,8 +48,32 @@ class UserController extends Controller
         // Authentikasi
         if (Auth::attempt([$fieldType => $credentials['user'], 'password' => $credentials['password']], $remember)) {
             $request->session()->regenerate(); //untuk mencegah serangan session fixation
+
+            // cek achievement
+            $userId = Auth::user()->id;
+            // cek achievement lama bergabung
+            $value = round(Auth::user()->created_at->diffInDays(now())) ?? 0;
+            $this->achievement($userId, 'keanggotaan', $value);
+
+            // cek achievement view kosakata
+            $value = Kosakata::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
+            $this->achievement($userId, 'viewKosakata', $value);
+
+            // cek achievement total view kosakata
+            $value = Kosakata::where('user_id', '=', $userId)->sum('view') ?? 0;
+            $this->achievement($userId, 'totalViewKosakata', $value);
+
+            // cek achievement view blog
+            $value = Blog::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
+            $this->achievement($userId, 'viewKosakata', $value);
+
+            // cek achievement total view blog
+            $value = Blog::where('user_id', '=', $userId)->sum('view') ?? 0;
+            $this->achievement($userId, 'totalViewBlog', $value);
+
             return redirect()->intended('/dashboard');
         }
+
 
         return back()->with('failed', 'Username, email, atau password salah')->withInput();
     }
@@ -90,9 +116,7 @@ class UserController extends Controller
     public function profile($username)
     {
         // Data user
-        $user = User::select(['id', 'nama', 'username', 'email', 'sembunyikan_data', 'role', 'tgl_lahir', 'kota', 'jenis_kelamin', 'profile_pic', 'bio', 'telp', 'tautan', 'media_sosial', 'donasi', 'poin', 'achivement', 'terakhir_aktif', 'created_at'])
-            ->where('username', $username)
-            ->first();
+        $user = User::where('username', $username)->first();
         $user['level'] = $this->levelCalculator($user['poin']);
         // url user
         $user['url'] = $this->getUrl() . '/u/' . $user['username'];

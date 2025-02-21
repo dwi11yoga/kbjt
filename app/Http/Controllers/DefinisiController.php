@@ -33,6 +33,7 @@ class DefinisiController extends Controller
             User::where('id', '=', Auth::user()->id)->increment('poin', $tambahPoin);
         }
 
+        // simpan
         Definisi::create([
             'kosakata_id' => $validatedData['kosakata_id'],
             'user_id' => Auth::user()->id,
@@ -40,6 +41,10 @@ class DefinisiController extends Controller
             'referensi' => $arrayReferensi,
             'poin' => $tambahPoin ?? 0
         ]);
+
+        // cek achievement
+        $jumlahDefinisi = Definisi::where('user_id', '=', Auth::user()->id)->count();
+        $this->achievement(Auth::user()->id, 'definisi', $jumlahDefinisi);
 
         return back()->with('success', 'Definisi berhasil ditambahkan');
     }

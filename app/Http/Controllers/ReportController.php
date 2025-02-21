@@ -43,7 +43,7 @@ class ReportController extends Controller
         foreach ($laporan as $d) {
             // dibuat seperti ini agar tidak error ketika ada user/definisi yang dihapus
             $d->user = User::withTrashed()
-                ->select('id', 'username', 'nama', 'role')
+                ->select('id', 'username', 'nama', 'role', 'jenis_kelamin', 'profile_pic')
                 ->where('id', '=', $d->user_id)
                 ->first();
             $d->definisi = Definisi::withTrashed()
@@ -389,6 +389,10 @@ class ReportController extends Controller
             'pengurus_id' => Auth::user()->id,
             'catatan_pengurus' => $request->catatan
         ]);
+
+        // cek achievement
+        $value = Report::where('user_id', $laporan->user_id)->whereNotNull('status')->count();
+        $this->achievement($laporan->user_id, 'laporan', $value);
 
         // kembali ke halaman detail laporan
         return back()->with('success', 'Tindakan berhasil disimpan');

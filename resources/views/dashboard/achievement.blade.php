@@ -6,7 +6,7 @@
         <div class="">
             <div class="mb-3">Overview</div>
             <div class="grid grid-cols-3 gap-3 ">
-                {{-- Kosakata --}}
+                {{-- total achievement --}}
                 <div
                     class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
                     <div>Achievement diperoleh<br>

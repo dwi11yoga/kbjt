@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('sertifikat', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
+            $table->string('role')->nullable();
             $table->string('rule');
             $table->integer('requirement')->default(0);
             $table->integer('reward')->default(0);

@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Achievement;
+use App\Models\Blog;
+use App\Models\Definisi;
+use App\Models\EditKosakata;
+use App\Models\Kosakata;
 use App\Models\Level;
+use App\Models\Report;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -102,5 +107,30 @@ abstract class Controller
         }
 
         return true;
+    }
+
+    public function hitungRequirementSertifikat(string $rule, int $userId)
+    {
+        if ($rule == 'keanggotaan') { // hitung lama user terdaftar
+            $nilai = User::where('id', $userId)->value('created_at')->diffInDays(now());
+        } elseif ($rule == 'kontribusi') { // hitung kontribusi user
+            $kosakata = Kosakata::where('user_id', $userId)->count();
+            $editKosakata = EditKosakata::where('user_id', $userId)->whereNotNull('status')->count();
+            $definisi = Definisi::where('user_id', $userId)->count();
+            $laporan = Report::with('hukuman')->where('user_id', $userId)->whereNotNull('status')->whereHas('hukuman')->count();
+            $nilai = $kosakata + $editKosakata + $definisi + $laporan;
+        } elseif ($rule == 'kontribusiPengurus') { // hitung kontribusi user sebagai pengurus
+            $editKosakata = EditKosakata::where('pengurus_id', $userId)->whereNotNull('status')->count();
+            $definisi = Definisi::where('verifikasi_oleh', $userId)->count();
+            $laporan = Report::where('pengurus_id', $userId)->whereNotNull('status')->count();
+            // banner - belom
+            $banner = 0;
+            $blog = Blog::where('user_id', $userId)->whereNotNull('status')->count();
+            $nilai = $editKosakata + $definisi + $laporan + $blog + $banner;
+        } else {
+            $nilai = 0;
+        }
+
+        return $nilai;
     }
 }

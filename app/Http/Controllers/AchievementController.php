@@ -36,7 +36,7 @@ class AchievementController extends Controller
         ];
         $overview['persentase'] = $this->persentase($overview['achievement'], $overview['total']);
 
-        // data achievement
+        // dapatkan data achievement
         if (isset($achieved)) {
             if (Auth::user()->role == 'kontributor') {
                 $achievement = Achievement::where('role', '=', Auth::user()->role)
@@ -54,7 +54,7 @@ class AchievementController extends Controller
             }
         }
 
-        $achievement = $achievement->orderBy('rule', 'asc') //sementara, diganti berdasarkan sing wis diunlock
+        $achievement = $achievement->orderBy('rule', 'asc')
             ->paginate(20)
             ->onEachSide(2)
             ->appends(request()->query());
@@ -64,7 +64,7 @@ class AchievementController extends Controller
         $poin = 0;
 
         foreach ($achievement as $d) {
-            // cek apakah achievement sudah didapatkan
+            // cek apakah achievement sudah didapatkan (untuk ditampilkan)
             foreach (array_keys(is_array($achieved) ? $achieved : []) as $i) {
                 if ($d->id == $i) {
                     $d->achieved = 1;
@@ -73,7 +73,7 @@ class AchievementController extends Controller
                 }
             }
 
-            // hitung progress
+            // hitung progress, cek apakah ada achievement yang harusnya didapat oleh user
             if (empty($d->achieved) || $d->achieved == 0) {
                 $nilai = 0;
                 if ($d->rule == 'keanggotaan') {
@@ -93,19 +93,9 @@ class AchievementController extends Controller
                 } elseif ($d->rule == 'totalViewBlog') {
                     $nilai = Blog::where('user_id', '=', Auth::user()->id)->sum('view');
                 } elseif ($d->rule == 'viewKosakata') {
-                    $kosakata = Kosakata::select('view')->where('user_id', '=', Auth::user()->id)->get();
-                    foreach ($kosakata as $k) {
-                        if ($k->view > $nilai) {
-                            $nilai = $k->view;
-                        }
-                    }
+                    $nilai = Kosakata::where('user_id', '=', Auth::user()->id)->orderBy('view', 'desc')->value('view');
                 } elseif ($d->rule == 'viewBlog') {
-                    $blog = Blog::select('view')->where('user_id', '=', Auth::user()->id)->get();
-                    foreach ($blog as $k) {
-                        if ($k->view > $nilai) {
-                            $nilai = $k->view;
-                        }
-                    }
+                    $nilai = Blog::where('user_id', '=', Auth::user()->id)->orderBy('view', 'desc')->value('view');
                 }
 
                 // jika nilai lebih besar daripada requirement

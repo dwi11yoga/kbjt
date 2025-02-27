@@ -34,6 +34,7 @@ return new class extends Migration {
             $table->integer('poin')->default(10);
             $table->timestamp('poin_diperbarui')->nullable();
             $table->json('achievement')->nullable();
+            $table->json('sertifikat')->nullable();
             $table->json('sembunyikan_data')->nullable();
             $table->rememberToken();
             $table->timestamps();

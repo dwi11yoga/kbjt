@@ -63,6 +63,7 @@ class DatabaseSeeder extends Seeder
             ReportSeeder::class,
             LevelSeeder::class,
             PoinKontribusiSeeder::class,
+            SertifikatSeeder::class,
             UserSeeder::class,
         ]);
     }

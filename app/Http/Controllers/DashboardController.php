@@ -387,14 +387,6 @@ class DashboardController extends Controller
         ]);
     }
 
-    // Halaman sertifikat
-    public function sertifikat()
-    {
-        return view('dashboard.sertifikat', [
-            'group' => 'sertifikat',
-            'title' => 'Sertifikat'
-        ]);
-    }
     // Halaman setting
     public function settings()
     {

@@ -13,6 +13,7 @@ use App\Http\Controllers\KosakataController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PoinKontribusiController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SertifikatController;
 use App\Http\Controllers\TrixController;
 use App\Http\Controllers\UserController;
 use App\Models\EditKosakata;
@@ -76,10 +77,15 @@ Route::middleware(['auth'])->group(function () {
 
     // kontribusi - kontributor
     Route::get('/kontribusi', [DashboardController::class, 'kontribusi']);
-    // achivement - kontributor & pengurus
+    // achivement - semua achievement
     Route::get('/achievement', [AchievementController::class, 'index']);
-    // sertifikat - kontributor & pengurus
-    Route::get('/sertifikat', [DashboardController::class, 'sertifikat']);
+
+    // sertifikat - semua
+    Route::get('/sertifikat', [SertifikatController::class, 'index']);
+    // klaim sertifikat
+    Route::post('/sertifikat/klaim/{id}', [SertifikatController::class, 'klaim'])->middleware('kontributorPengurus');
+    // tampilan sertifikat
+    Route::get('/sertifikat/detail/{userId}/{sertifikatId}', [SertifikatController::class, 'detail']);
 
     // laporkan definisi
     Route::post('/laporkan/definisi', [ReportController::class, 'definisi']);

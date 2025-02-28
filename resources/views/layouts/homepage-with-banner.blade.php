@@ -12,6 +12,7 @@
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
+    {{-- Import js --}}
     <script src="{{ asset('js/script.js') }}"></script>
 
     {{-- Import font --}}

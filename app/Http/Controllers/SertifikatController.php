@@ -112,4 +112,28 @@ class SertifikatController extends Controller
 
         return back()->with('success', 'Sertifikat berhasil diklaim');
     }
+
+    // View detail sertifikat
+    public function detail($userId, $sertifikatId)
+    {
+        // dapatkan data dari db
+        $user = User::select('nama', 'id', 'sertifikat')->where('username', $userId)->first();
+        $user->idZerofill = str_pad($user->id, 10, '0', STR_PAD_LEFT);
+
+        // tampilkan halaman kosong jika user belum dapat sertifikat
+        if (empty($user->sertifikat[$sertifikatId])) {
+            return $this->error404();
+        }
+
+        $sertifikat = Sertifikat::find($sertifikatId);
+        $sertifikat->didapat = Carbon::parse($user->sertifikat[$sertifikat->id])->setTimezone('Asia/Jakarta')->translatedFormat('d F Y');
+        $kepala = User::select('nama')->where('role', 'kepala')->first();
+        // tampilkan view
+        return view('homepage.sertifikat-detail', [
+            'title' => 'Sertifikat',
+            'sertifikat' => $sertifikat,
+            'user' => $user,
+            'kepala' => $kepala
+        ]);
+    }
 }

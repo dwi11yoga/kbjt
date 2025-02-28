@@ -70,7 +70,7 @@ abstract class Controller
     {
         return response()->view('error.404', [
             'title' => 'Halaman tidak ditemukan'
-        ], 403);
+        ], 404);
     }
 
     // cek apakah dapat achievement/tidak

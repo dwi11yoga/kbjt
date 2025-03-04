@@ -330,8 +330,7 @@
     <div class="container mx-auto px-10 py-28 bg-amber-400 rounded-xl">
         <div class="grid grid-cols-2">
             <div class="text-center col-span-2 md:col-span-1 mb-10 mt-8">
-                <span class="text-6xl font-bold text-white"
-                    style="font-family: 'Noto Sans Javanese', sans-serif">ꦕꦼꦥꦼ<br>ꦠ꧀ꦒꦧꦸꦁ!</span>
+                <span class="text-6xl jawa font-bold text-white">ꦕꦼꦥꦼ<br>ꦠ꧀ꦒꦧꦸꦁ!</span>
             </div>
             <div class="pr-16 col-span-2 md:col-span-1">
                 <h3 class="font-semibold mb-3">Gabung sekarang juga!</h3>

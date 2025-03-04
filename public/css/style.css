@@ -1,5 +1,16 @@
 /* Fonts */
-.noto-sans > {
+@font-face {
+    font-family: 'Noto Sans Javanese';
+    src: url('/fonts/NotoSansJavanese.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('/fonts/NotoSans.ttf') format('truetype');
+}
+
+
+.noto-sans {
     font-family: "Noto Sans", serif;
     font-optical-sizing: auto;
     font-weight: 100, 200, 300, 400, 500, 600, 700, 800, 900;
@@ -30,7 +41,7 @@
 }
 
 .jawa {
-    font-family: "Noto Sans Javanese", sans-serif;
+    font-family: "Noto Sans Javanese", sans-serif !important;
 }
 
 /* Warna */

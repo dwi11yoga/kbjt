@@ -117,7 +117,7 @@ class SertifikatController extends Controller
     public function detail($userId, $sertifikatId)
     {
         // dapatkan data dari db
-        $user = User::select('nama', 'id', 'sertifikat')->where('username', $userId)->first();
+        $user = User::select('nama', 'id', 'sertifikat')->where('id', $userId)->first();
         $user->idZerofill = str_pad($user->id, 10, '0', STR_PAD_LEFT);
 
         // tampilkan halaman kosong jika user belum dapat sertifikat

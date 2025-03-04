@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Achievement;
 use App\Models\Blog;
 use App\Models\Definisi;
 use App\Models\EditKosakata;
@@ -92,9 +93,11 @@ class DashboardController extends Controller
             $data['statistik'] = $statistik;
         }
 
-        // Kontribusi terbaru
+        // Tampilkan kontribusi dan achievement untuk pengurus kontributor
         if (Auth::user()->role == 'pengurus' || Auth::user()->role == 'kontributor') {
+            // Kontribusi terbaru
             $kontribusi = [];
+
             // definisi by user
             $userDefinisi = Definisi::select('id', 'user_id', 'kosakata_id', 'poin', 'updated_at')
                 ->where('user_id', '=', Auth::user()->id)
@@ -105,7 +108,7 @@ class DashboardController extends Controller
             foreach ($userDefinisi as $d) {
                 $kontribusi['definisi-' . $d->id] = [
                     'kontribusi' => 'Menambahkan definisi untuk kosakata ' . $d->kosakata->kosakata,
-                    'poin' => $d->poin,
+                    'poin' => $d->poin ?? 0,
                     'waktu' => $d->updated_at
                 ];
             }
@@ -119,9 +122,73 @@ class DashboardController extends Controller
             foreach ($userKosakata as $d) {
                 $kontribusi['kosakata-' . $d->id] = [
                     'kontribusi' => 'Menambahkan kosakata ' . $d->kosakata,
-                    'poin' => $d->poin,
+                    'poin' => $d->poin ?? 0,
                     'waktu' => $d->created_at
                 ];
+            }
+
+            // edit kosakata by user
+            $userKosakata = EditKosakata::where('user_id', '=', Auth::user()->id)
+            ->with('kosakata:id,kosakata')
+                ->orderBy('created_at', 'desc')
+                ->limit(5)
+                ->get();
+            foreach ($userKosakata as $d) {
+                $kontribusi['editKosakata-' . $d->id] = [
+                    'kontribusi' => 'Mengedit kosakata ' . $d->kosakata->kosakata,
+                    'poin' => $d->poin ?? 0,
+                    'waktu' => $d->created_at
+                ];
+            }
+
+            // laporan by user
+            $userLaporan = Report::where('user_id', '=', Auth::user()->id)
+                ->with('definisi:id,user_id')
+                ->orderBy('created_at', 'desc')
+                ->limit(5)
+                ->get();
+
+                foreach ($userLaporan as $d) {
+                    $d->terlapor=User::find($d->definisi->user_id)->nama;
+                }
+
+            foreach ($userLaporan as $d) {
+                $kontribusi['kosakata-' . $d->id] = [
+                    'kontribusi' => 'Melaporkan definisi yang disubmit ' . $d->terlapor,
+                    'poin' => $d->poin ?? 0,
+                    'waktu' => $d->created_at
+                ];
+            }
+
+            if (Auth::user()->role == 'pengurus') {
+                // artikel by pengurus
+                $kontribusiArtikel = Blog::where('user_id', '=', Auth::user()->id)
+                    ->whereNotNull('status')
+                    ->orderBy('status', 'desc')
+                    ->limit(5)
+                    ->get();
+                foreach ($kontribusiArtikel as $d) {
+                    $kontribusi['artikel-' . $d->id] = [
+                        'kontribusi' => 'Mempublikasikan artikel &#34;' . $d->judul . '&#34;',
+                        'poin' => $d->poin ?? 0, //kudu diganti
+                        'waktu' => $d->status
+                    ];
+                }
+
+                // tindak lanjut laporan by pengurus
+                $kontribusiArtikel = Report::where('pengurus_id', '=', Auth::user()->id)
+                    ->whereNotNull('status')
+                    ->with('user:id,username')
+                    ->orderBy('status', 'desc')
+                    ->limit(5)
+                    ->get();
+                foreach ($kontribusiArtikel as $d) {
+                    $kontribusi['artikel-' . $d->id] = [
+                        'kontribusi' => 'Menindaklanjuti laporan' . $d->user->username,
+                        'poin' => 0, //kudu diganti
+                        'waktu' => $d->status
+                    ];
+                }
             }
 
             // urutkan berdasarkan waktu
@@ -131,9 +198,15 @@ class DashboardController extends Controller
 
             $data['kontribusi'] = array_slice($kontribusi, 0, 5);
 
-            if (Auth::user()->role == 'pengurus') {
-                $kontribusiArtikel = Blog::where('user_id', '=', Auth::user()->id)->get();
+
+            // Achievement
+            $achieved = Auth::user()->achievement ?? [];
+            $achievement = Achievement::whereIn('id', array_keys($achieved))->limit(4)->get();
+            foreach ($achievement as $d) {
+                $d->date_achieved = Carbon::parse($achieved[$d->id])->timezone('Asia/Jakarta');
             }
+            $achievement = $achievement->sortByDesc('date_achieved')->take(4); //urutkan achievement
+            $data['achievement'] = $achievement;
         }
 
         return view('dashboard.index', $data);

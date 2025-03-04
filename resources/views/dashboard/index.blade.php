@@ -107,6 +107,7 @@
     </div>
 
     @if (auth()->user()->role != 'kepala')
+
         {{-- Kontribusi --}}
         <div class="p-5 bg-white rounded-2xl">
             <div class="flex justify-between">
@@ -116,7 +117,7 @@
             </div>
             @foreach ($kontribusi as $d)
                 <div class="md:flex md:justify-between border border-neutral-200 p-3 mt-3 rounded-xl">
-                    <div>{{ $d['kontribusi'] }}</div>
+                    <div>{!! $d['kontribusi'] !!}</div>
                     <div class="md:text-base text-sm"><i data-feather='stop-circle'
                             class="inline-block w-5 text-amber-600"></i>
                         {{ $d['poin'] }}
@@ -127,23 +128,23 @@
     @endif
 
     @if (auth()->user()->role != 'kepala')
-        {{-- Achivement --}}
+        {{-- achievement --}}
         <div class="bg-white rounded-2xl p-5">
-            <div class="mb-3">Achivement</div>
+            <div class="mb-3">Achievement</div>
             <div class="space-x-3 flex">
-                <?php for ($i=0; $i < 4; $i++) { ?>
+                @foreach ($achievement as $d)
                 <a href="#"
-                    class="w-2/5 bg-neutral-100 rounded-xl p-4 h-44 flex justify-start items-end hover:outline hover:outline-amber-400 hover:outline-offset-4">
-                    <div>
-                        <img alt="simple 10 icon png" class="object-cover max-w-12 max-h-12"
-                            src="https://www.freeiconspng.com/thumbs/number-10-icon/number-10-11.gif">
-                        <div>Novice Contributor</div>
-                        <p class="text-xs line-clamp-1">Menambahkan 10 definisi baru</p>
-                    </div>
-                </a>
-                <?php } ?>
+                class="w-2/5 bg-neutral-100 rounded-xl p-4 h-44 flex justify-start items-end hover:outline hover:outline-amber-400 hover:outline-offset-4">
+                <div>
+                    <img alt="simple 10 icon png" class="object-cover max-w-12 max-h-12"
+                        src="https://www.freeiconspng.com/thumbs/number-10-icon/number-10-11.gif">
+                    <div>{{$d->nama}}</div>
+                    <p class="text-xs line-clamp-1">{{$d->deskripsi}}</p>
+                </div>
+            </a>
+                @endforeach
 
-                <a href="/achivement" title="Lebih lengkap"
+                <a href="/achievement" title="Lebih lengkap"
                     class="w-1/12 bg-neutral-100 rounded-xl p-4 h-44 flex justify-center items-center hover:bg-yellow-300 hover:outline hover:outline-amber-400 hover:outline-offset-4">
                     <div>
                         <i data-feather='chevron-right'></i>

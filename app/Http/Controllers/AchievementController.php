@@ -68,7 +68,7 @@ class AchievementController extends Controller
             foreach (array_keys(is_array($achieved) ? $achieved : []) as $i) {
                 if ($d->id == $i) {
                     $d->achieved = 1;
-                    $d->date_achieved = Carbon::parse($achieved[$i]);
+                    $d->date_achieved = Carbon::parse($achieved[$i])->timezone('Asia/Jakarta');
                     $d->progress = '100%';
                 }
             }

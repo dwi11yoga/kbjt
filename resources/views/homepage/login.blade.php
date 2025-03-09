@@ -37,6 +37,11 @@
     <form action="/masuk" method="POST">
         @csrf
         <label for="user">Username/Email</label>
+        {{-- <input type="text" id="user" name="user" placeholder="" value="{{ old('nama') }}"
+                class="w-full font-semibold focus:outline-none border-b-2 py-1 @error('user') 
+                border-red-600 text-red-600 @else focus:border-amber-400
+                @enderror"> --}}
+
         <input name="user" id="user" type="text" placeholder="" value="{{ old('user') }}"
             class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3 appearance-none @error('user')
                     outline outline-2 outline-red-600 @else focus:outline focus:outline-2 focus:outline-amber-400
@@ -46,6 +51,12 @@
         @enderror
 
         <label for="password">Kata sandi</label>
+        
+        {{-- <input type="password" id="password" name="password" placeholder="" value="{{ old('nama') }}"
+                class="w-full font-semibold focus:outline-none border-b-2 py-1 @error('password') 
+                border-red-600 text-red-600 @else focus:border-amber-400
+                @enderror"> --}}
+
         <input name="password" id="password" type="password" placeholder="" value="{{ old('password') }}"
             class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-md block mb-3 appearance-none @error('password')
                     outline outline-2 outline-red-600 @else focus:outline focus:outline-2 focus:outline-amber-400

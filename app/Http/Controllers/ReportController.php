@@ -195,7 +195,7 @@ class ReportController extends Controller
             ->with('hukuman')
             ->first();
         $laporan->user = User::withTrashed()
-            ->select('id', 'username', 'nama', 'role')
+            ->select('id', 'username', 'nama', 'role', 'poin', 'created_at')
             ->where('id', '=', $laporan->user_id)
             ->first();
 
@@ -206,7 +206,7 @@ class ReportController extends Controller
                 ->where('id', '=', $laporan->definisi_id)
                 ->first();
             $laporan->author = User::withTrashed()
-                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin')
+                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin', 'poin', 'created_at')
                 ->where('id', '=', $laporan->definisi->user_id)
                 ->first();
             $laporan->kosakata = Kosakata::select('id', 'kosakata', 'slug')->where('id', '=', $laporan->definisi->kosakata_id)->first();
@@ -216,7 +216,7 @@ class ReportController extends Controller
                 ->where('id', '=', $laporan->kosakata_id)
                 ->first();
             $laporan->author = User::withTrashed()
-                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin')
+                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin', 'poin', 'created_at')
                 ->where('id', '=', $laporan->kosakata->user_id)
                 ->first();
         }
@@ -264,6 +264,62 @@ class ReportController extends Controller
                 ->where('id', '=', $laporan->kosakata_id)
                 ->first();
             $data['kosakata'] = $kosakata;
+        }
+
+        // statistik pelapor dan terlapor
+        if (empty($laporan->status)) { //jalankan jika laporan belum ditindaklanjuti
+            // pelapor
+            $pelapor['1'] = Report::where('user_id', $laporan->user_id)->count(); //Definisi & Kosakata dilaporkan pelapor
+            $pelapor['2'] = Report::where('user_id', $laporan->user_id)->whereHas('hukuman')->count(); //Definisi & Kosakata terbukti bersalah yang dilaporkan pelapor
+            $pelapor['3'] = Report::where('user_id', $laporan->user_id)->whereMonth('created_at', Carbon::now()->month)->count(); //Definisi & Kosakata dilaporkan bulan ini
+            $pelapor['4'] = $this->levelCalculator($laporan->user->poin);
+            $pelapor['5'] = $laporan->user->created_at->translatedFormat('d F Y');
+            $data['detailPelapor'] = $pelapor;
+
+            // terlapor
+            $terlapor['1'] = Report::whereHas('definisi', function ($query) use ($laporan) {
+                $query->where('user_id', $laporan->author->id);
+            })->orWhereHas('kosakata', function ($query) use ($laporan) {
+                $query->where('user_id', $laporan->author->id);
+            })->count(); //Jumlah dilaporkan pengguna lain
+
+            $kodeDefinisi = Report::whereHas('hukuman')->whereHas('definisi', function ($query) use ($laporan) {
+                $query->where('user_id', $laporan->author->id);
+            });
+            $kodeKosakata = Report::whereHas('hukuman')->WhereHas('kosakata', function ($query) use ($laporan) {
+                $query->where('user_id', $laporan->author->id);
+            });
+            $terlapor['2'] = (clone $kodeDefinisi)->count() + (clone $kodeKosakata)->count(); //Jumlah dinyatakan bersalah
+
+            $terlapor['3'] = (clone $kodeDefinisi)->whereHas('hukuman', function ($query) use ($laporan) {
+                $query->whereNot('hukuman', 'peringatan');
+            })->count() +
+                (clone $kodeKosakata)->whereHas('hukuman', function ($query) use ($laporan) {
+                    $query->whereNot('hukuman', 'peringatan');
+                })
+                ->count(); //Jumlah hukuman yang pernah diterima
+
+            $terlapor['4'] = $this->levelCalculator($laporan->author->poin);
+            $terlapor['5'] = $laporan->author->created_at->translatedFormat('d F Y');
+
+            $data['detailTerlapor'] = $terlapor;
+
+            // riwayat hukuman terlapor
+            $riwayatHukuman = Report::with('definisi')
+                ->with('kosakata')
+                ->with('hukuman')
+                ->with('user:username,nama,id')
+                ->whereNotNull('status')
+                ->where(function ($query) use ($laporan) {
+                    $query->whereHas('definisi', function ($subQuery) use ($laporan) {
+                        $subQuery->where('user_id', $laporan->author->id);
+                    })->orWhereHas('kosakata', function ($subQuery) use ($laporan) {
+                        $subQuery->where('user_id', $laporan->author->id);
+                    });
+                })
+                ->orderby('updated_at', 'desc')
+                ->paginate(10);
+            $data['riwayatHukuman'] = $riwayatHukuman;
         }
 
         return view('dashboard.laporan-detail', $data);

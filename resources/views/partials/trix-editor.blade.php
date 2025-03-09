@@ -123,7 +123,7 @@ note: 1=enabled, 0=disabled
     <input id="{{ $trixId }}" type="hidden" name="{{ $trixId }}"
         value="{{ isset($updateInput) ? old('trixId', $updateInput) : old($trixId) }}">
     <trix-editor toolbar="my_toolbar" input="{{ $trixId }}"
-        class="rounded-xl min-h-52 focus:outline-none focus:outline-amber-300 focus:outline-offset-0 space-y-2"></trix-editor>
+        class="rounded-xl min-h-52 focus:outline-none focus:outline-amber-400 focus:outline-offset-0 space-y-2"></trix-editor>
 </div>
 
 @if ($trixUndoRedo == 0)

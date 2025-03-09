@@ -71,7 +71,7 @@
 
         {{-- requirement --}}
         <div class="bg-white px-5 py-4 rounded-xl">
-            <label for="requirement" class="text-sm">Nilai minimal</label>
+            <label for="requirement" class="text-sm">Nilai kontribusi minimal</label>
             <input type="number" min="1" id="requirement" name="requirement" placeholder="Masukkan angka"
                 value="{{ old('requirement') }}" oninput="buatSlug(this, 'slug')"
                 class="w-full focus:outline-none focus:border-b-2 py-1 @error('requirement')

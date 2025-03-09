@@ -46,7 +46,7 @@ Route::get('/kosakata/{slug}/riwayat', [HomepageController::class, 'riwayatKosak
 Route::get('/u/{username}', [UserController::class, 'profile']);
 
 // tampilan sertifikat
-Route::get('/s/{userId}{sertifikatId}', [SertifikatController::class, 'detail']);
+Route::get('/s/{userId}/{sertifikatId}', [SertifikatController::class, 'credential']);
 
 // Akses ditolak
 Route::get('/akses-ditolak', function () {
@@ -87,6 +87,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sertifikat', [SertifikatController::class, 'index']);
     // klaim sertifikat
     Route::post('/sertifikat/klaim/{id}', [SertifikatController::class, 'klaim'])->middleware('kontributorPengurus');
+    // tambah sertifikat
+    Route::get('/sertifikat/tambah', [SertifikatController::class, 'tambah'])->middleware('kepala');
+    Route::post('/sertifikat/tambah', [SertifikatController::class, 'simpanTambah'])->middleware('kepala');
+    // edit sertifikat
+    Route::get('/sertifikat/edit/{id}', [SertifikatController::class, 'edit'])->middleware('kepala');
+    Route::post('/sertifikat/edit/{id}', [SertifikatController::class, 'simpanEdit'])->middleware('kepala');
 
     // laporkan definisi
     Route::post('/laporkan/definisi', [ReportController::class, 'definisi']);

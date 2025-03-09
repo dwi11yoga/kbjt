@@ -126,6 +126,115 @@
         </div>
     </div>
 
+
+
+    @if (empty($laporan->status))
+        {{-- detail terlapor dan pelapor --}}
+        <div class="grid grid-cols-2 md:space-x-5 md:space-y-0 space-x-0 space-y-5">
+            {{-- Tentang pelapor --}}
+            <div class="md:col-span-1 col-span-2 p-5 bg-white rounded-2xl">
+                <div class="mb-3">Tentang pelapor</div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600">Definisi & Kosakata dilaporkan</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="">{{ $detailPelapor['1'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600">Definisi & Kosakata terbukti bersalah</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="">{{ $detailPelapor['2'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600">Definisi & Kosakata dilaporkan bulan ini</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="">{{ $detailPelapor['3'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600">Level</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="">{{ $detailPelapor['4'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600">Bergabung sejak</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="">{{ $detailPelapor['5'] }}</div>
+                </div>
+            </div>
+
+            {{-- tentang terlapor --}}
+            <div class="md:col-span-1 col-span-2 p-5 bg-white rounded-2xl">
+                <div class="mb-3">Tentang terlapor</div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600">Jumlah dilaporkan pengguna lain</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="">{{ $detailTerlapor['1'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600">Jumlah dinyatakan bersalah</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="">{{ $detailTerlapor['2'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600">Jumlah hukuman yang pernah diterima</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="">{{ $detailTerlapor['3'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600">Level</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="">{{ $detailTerlapor['4'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600">Bergabung sejak</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="">{{ $detailTerlapor['5'] }}</div>
+                </div>
+
+            </div>
+        </div>
+
+        {{-- Riwayat Hukuman terlapor --}}
+        <div class="p-5 bg-white rounded-2xl">
+            <div class="mb-3">Riwayat hukuman terlapor</div>
+            @if (!$riwayatHukuman->isEmpty())
+                @foreach ($riwayatHukuman as $d)
+                    <a href="/laporan/{{ $d->id }}"
+                        class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-8 gap-2 hover:outline hover:outline-amber-400">
+                        <div class="line-clamp-1 md:col-span-4 col-span-8 flex items-center">
+                            {{ isset($d->definisi_id) ? 'Definisi' : 'Kosakata' }} dilaporkan oleh {{ $d->user->nama }}.
+                        </div>
+                        <div class="md:col-span-1 col-span-2 flex items-center md:order-1 order-2">
+                            <div class="flex items-center text-sm rounded-full px-3 py-1 bg-green-100 w-fit space-x-1">
+                                <i data-feather='tag' class="w-4 stroke-neutral-800"></i>
+                                <span>{{ $d->alasan }}</span>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2 col-span-8 flex items-center md:text-base text-sm md:order-2 order-1">
+                            {{ isset($d->hukuman) ? $d->hukuman->hukuman : 'Pelanggaran tidak ditemukan' }}
+                        </div>
+                        <div class="md:col-span-1 col-span-4 flex items-center md:text-base text-sm order-3">
+                            {{ $d->updated_at->translatedFormat('d F Y') }}
+                        </div>
+                    </a>
+                @endforeach
+            @else
+                <div class="border border-neutral-200 p-3 mt-3 rounded-xl hover:outline hover:outline-amber-400">
+                    Belum ada data
+                </div>
+            @endif
+        </div>
+    @endif
+
     {{-- Tindakan --}}
     <div class="p-5 bg-white rounded-2xl">
         <div class="mb-3">Tindakan</div>

@@ -8,7 +8,7 @@
             {{-- Filter --}}
             <div class="md:flex md:justify-between">
                 {{-- Buat artikel --}}
-                <a href="/achievement/baru">
+                <a href="/sertifikat/tambah">
                     <div class="md:mt-0 mt-2 py-4 px-5 bg-white rounded-xl hover:outline hover:outline-amber-200">
                         <i data-feather='plus' class="w-5 inline-block"></i>
                         <span>Tambah</span>
@@ -21,7 +21,7 @@
             @foreach ($sertifikat as $d)
                 {{-- tampilan untuk pengurus dan kontributor --}}
                 <div class="grid grid-cols-10 md:space-x-2 md:space-y-0 space-y-1">
-                    <a href="{{$d->didapat==1?'/s/'.auth()->user()->id.$d->id:'#'}}"
+                    <a href="{{ auth()->user()->role == 'kepala' ? '/sertifikat/edit/' . $d->id : ($d->didapat == 1 ? '/s/' . auth()->user()->username . '/' . $d->id : '#') }}"
                         class="{{ auth()->user()->role != 'kepala' && $d->progress >= $d->requirement ? 'md:col-span-9' : 'md:col-span-10' }}  col-span-10 px-5 py-6 bg-white rounded-2xl grid md:grid-cols-12 grid-cols-10 space-x-4 hover:outline hover:outline-amber-400">
 
                         @if (auth()->user()->role != 'kepala' && isset($d->didapat) && $d->didapat == 1)
@@ -60,6 +60,7 @@
                                                 — Diperoleh pada {{ $d->tglDiperoleh->translatedFormat('d F Y H:i') }} WIB.
                                             @else
                                                 — {{ $d->progress }}/{{ $d->requirement }}
+                                                {{ $d->rule == 'keanggotaan' ? ' hari' : ' kontribusi' }}
                                             @endisset
                                         </div>
                                     </div>

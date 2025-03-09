@@ -113,11 +113,11 @@ class SertifikatController extends Controller
         return back()->with('success', 'Sertifikat berhasil diklaim');
     }
 
-    // View detail sertifikat
-    public function detail($userId, $sertifikatId)
+    // View sertifikat
+    public function credential($userId, $sertifikatId)
     {
         // dapatkan data dari db
-        $user = User::select('nama', 'id', 'sertifikat')->where('id', $userId)->first();
+        $user = User::select('nama', 'id', 'sertifikat')->where('username', $userId)->first();
         $user->idZerofill = str_pad($user->id, 10, '0', STR_PAD_LEFT);
 
         // tampilkan halaman kosong jika user belum dapat sertifikat
@@ -129,11 +129,103 @@ class SertifikatController extends Controller
         $sertifikat->didapat = Carbon::parse($user->sertifikat[$sertifikat->id])->setTimezone('Asia/Jakarta')->translatedFormat('d F Y');
         $kepala = User::select('nama')->where('role', 'kepala')->first();
         // tampilkan view
-        return view('homepage.sertifikat-detail', [
-            'title' => 'Sertifikat',
+        return view('homepage.sertifikat-view', [
+            'title' => 'Sertifikat ' . $user->nama,
             'sertifikat' => $sertifikat,
             'user' => $user,
             'kepala' => $kepala
         ]);
+    }
+
+    // view tambah sertifikat
+    public function tambah()
+    {
+        return view('dashboard.sertifikat-tambah', [
+            'title' => 'Sertifikat baru',
+            'group' => 'sertifikat'
+        ]);
+    }
+
+    // Simpan tambah sertifikat
+    public function simpanTambah(Request $request)
+    {
+
+        // validasi
+        $rules = [
+            'nama' => 'required|min:6|unique:sertifikat,nama',
+            'role' => 'required',
+            'requirement' => 'required|numeric|min:1',
+            'reward' => 'required|numeric|min:0',
+        ];
+        if ($request->role != 'pengurus') {
+            $rules['rule'] = 'required|not_in:kontribusiPengurus';
+        } else {
+            $rules['rule'] = 'required';
+        }
+        $validatedData = $request->validate($rules);
+
+        // ubah role 'semua' jadi null
+        if ($validatedData['role'] == 'semua') {
+            $validatedData['role'] = null;
+        }
+
+        // simpan di database
+        Sertifikat::create($validatedData);
+
+        // kembali ke halaman sertifikat
+        return redirect()->to('/sertifikat')->with('success', 'Sertifikat baru berhasil disimpan');
+    }
+
+    // view edit sertifikat
+    public function edit($id)
+    {
+        // dapatkan data 
+        $sertifikat = Sertifikat::find($id);
+
+        // alihkan ke tampilan 404 jika data tidak ditemukan
+        if (empty($sertifikat)) {
+            return $this->error404();
+        }
+
+        // ubah null jadi 'semua'
+        if (empty($sertifikat->role)) {
+            $sertifikat->role = 'semua';
+        }
+
+        return view('dashboard.sertifikat-edit', [
+            'title' => 'Edit sertifikat',
+            'group' => 'sertifikat',
+            'sertifikat' => $sertifikat
+        ]);
+    }
+
+    // simpan edit
+    public function simpanEdit(Request $request, $id)
+    {
+        // dd($request);
+        // validasi
+        $rules = [
+            'nama' => 'required|min:6|unique:sertifikat,nama,' . $id . ',id',
+            'role' => 'required',
+            'requirement' => 'required|numeric|min:1',
+            'reward' => 'required|numeric|min:0',
+        ];
+        if ($request->role != 'pengurus') {
+            $rules['rule'] = 'required|not_in:kontribusiPengurus';
+        } else {
+            $rules['rule'] = 'required';
+        }
+        $validatedData = $request->validate($rules);
+
+        // ubah role 'semua' jadi null
+        if ($validatedData['role'] == 'semua') {
+            $validatedData['role'] = null;
+        }
+
+        // simpan perubahan
+        Sertifikat::find($id)->update($validatedData);
+
+        // kembalikan ke tampilan
+        return redirect()->to('/sertifikat')->with('success', 'Perubahan berhasil disimpan');
     }
 }

@@ -173,42 +173,40 @@
                 </div>
             </a>
         @endif
-
-        @if (auth()->user()->role != 'kepala')
-            {{-- sertifikat --}}
-            <a href="/sertifikat">
-                <div
-                    class="flex group py-3 px-4 rounded-xl {{ $group == 'sertifikat' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
-                    {{-- <i data-feather='file-text' class="{{ $group == 'sertifikat' ? '' : 'text-neutral-700 group-hover:text-black' }}"></i> --}}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="feather feather-file-text">
-                        <path
-                            class="{{ $group == 'sertifikat' ? 'fill-neutral-800 stroke-none' : 'text-neutral-700 group-hover:text-black' }}"
-                            d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline
-                            class="{{ $group == 'sertifikat' ? 'stroke-amber-100' : 'text-neutral-700 group-hover:text-black' }}"
-                            points="10 9 9 9 8 9"></polyline>
-                        <polyline
-                            class="{{ $group == 'sertifikat' ? 'fill-amber-100 stroke-none' : 'text-neutral-700 group-hover:text-black' }}"
-                            points="14 2 14 8 20 8"></polyline>
-                        <line
-                            class="{{ $group == 'sertifikat' ? 'stroke-amber-100' : 'text-neutral-700 group-hover:text-black' }}"
-                            x1="16" y1="13" x2="8" y2="13"></line>
-                        <line
-                            class="{{ $group == 'sertifikat' ? 'stroke-amber-100' : 'text-neutral-700 group-hover:text-black' }}"
-                            x1="16" y1="17" x2="8" y2="17"></line>
-                    </svg>
-                    <div
-                        class="inline-block ml-3 {{ $group == 'sertifikat' ? '' : 'text-neutral-700 group-hover:text-black' }}">
-                        Sertifikat
-                    </div>
-                </div>
-            </a>
-        @endif
-
+        
         {{-- SEMUA USER --}}
-
+        
+        {{-- sertifikat --}}
+        <a href="/sertifikat">
+            <div
+                class="flex group py-3 px-4 rounded-xl {{ $group == 'sertifikat' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
+                {{-- <i data-feather='file-text' class="{{ $group == 'sertifikat' ? '' : 'text-neutral-700 group-hover:text-black' }}"></i> --}}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" class="feather feather-file-text">
+                    <path
+                        class="{{ $group == 'sertifikat' ? 'fill-neutral-800 stroke-none' : 'text-neutral-700 group-hover:text-black' }}"
+                        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline
+                        class="{{ $group == 'sertifikat' ? 'stroke-amber-100' : 'text-neutral-700 group-hover:text-black' }}"
+                        points="10 9 9 9 8 9"></polyline>
+                    <polyline
+                        class="{{ $group == 'sertifikat' ? 'fill-amber-100 stroke-none' : 'text-neutral-700 group-hover:text-black' }}"
+                        points="14 2 14 8 20 8"></polyline>
+                    <line
+                        class="{{ $group == 'sertifikat' ? 'stroke-amber-100' : 'text-neutral-700 group-hover:text-black' }}"
+                        x1="16" y1="13" x2="8" y2="13"></line>
+                    <line
+                        class="{{ $group == 'sertifikat' ? 'stroke-amber-100' : 'text-neutral-700 group-hover:text-black' }}"
+                        x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                <div
+                    class="inline-block ml-3 {{ $group == 'sertifikat' ? '' : 'text-neutral-700 group-hover:text-black' }}">
+                    Sertifikat
+                </div>
+            </div>
+        </a>
+        
         {{-- Achievement --}}
         <a href="/achievement">
             <div

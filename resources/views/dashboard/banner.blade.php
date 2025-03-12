@@ -1,11 +1,18 @@
 @extends('layouts.dashboard')
 
 @section('body')
-    <form action="" method="POST" class="space-y-5">
+    <form action="" method="POST" class="space-y-5" enctype="multipart/form-data">
         @csrf
+        @method('PUT')
+        <div class="flex items-center justify-between rounded-xl bg-white py-4 px-5">
+            <div>Simpan perubahan?</div>
+            <button type="submit" class="text-amber-600">Simpan</button>
+        </div>
+
+        {{-- sidebar --}}
         <div class="bg-white p-5 rounded-2xl">
             <div class="mb-3">Sidebar</div>
-            <div class="grid grid-cols-6 md:space-x-4 space-y-4">
+            <div class="grid grid-cols-6 md:space-x-4 md:space-y-0 space-y-4">
                 {{-- konten --}}
                 <div class="md:col-span-4 col-span-6 animate-pulse space-y-2">
                     <div class="w-full h-52 bg-gray-200 rounded-xl flex items-center justify-center">
@@ -50,74 +57,38 @@
                 <div class="md:col-span-2 col-span-6 space-y-3">
 
                     {{-- banner 1 --}}
-                    <div class="relative w-full rounded-xl overflow-hidden" onmouseover="toggleShowElement('side-1')"
-                        onmouseout="toggleShowElement('side-1')">
-                        @if (isset($banner['1']['img']))
-                            <img class="object-cover" src="{{ asset('img/Relief Gandavyuha Borobudur (TWC) recolor.jpg') }}"
-                                alt="Side banner 1">
-                        @else
-                            <div
-                                class="w-full h-56 bg-neutral-200 uppercase flex items-center justify-center font-semibold">
-                                gambar belum
-                                disetel</div>
-                        @endif
-                        <div id="side-1" class="hidden absolute inset-0 flex items-center justify-center space-x-1">
-                            <div class="bg-amber-300 rounded-full py-2 px-3 cursor-pointer flex space-x-3">
-                                <i data-feather='edit-3' onclick="toggleShowElement('edit-side-1')" title="Edit"></i>
-                                @if ($banner['1']['status'] == 1)
-                                    <i id="ubahStatus" data-feather='eye-off' title="Sembunyikan"></i>
-                                @else
-                                    <i id="ubahStatus" data-feather='eye' title="Tampilkan"></i>
-                                @endif
-                            </div>
+                    <div class="md:col-span-1 col-span-3">
+                        <div
+                            class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400">
+                            <img id="bannerPreview-1" src="" alt="Banner belum disetel"
+                                class="object-cover max-h-40 h-40 rounded-xl">
                         </div>
-                    </div>
-
-                    <div id="edit-side-1" class="hidden flex space-x-1 bg-amber-300 rounded-b-xl !-mt-2 pt-5 px-2">
-                        <input name="input-link-side-1" placeholder="Link" type="text" oninput="showElement('dialog')"
-                            value="{{ old('input-link-side-1', $banner['1']['link']) }}"
-                            class="px-3 py-2 w-full border border-gray-400 rounded-lg mb-3">
-                        <div class="group p-2.5 max-h-11 bg-amber-300 hover:bg-amber-500 rounded-lg cursor-pointer"
-                            onclick="document.getElementById('input-side-1').click()">
-                            <i data-feather='upload' class="w-5"></i>
+                        <div onclick="openWindow('edit-1')" title="Edit"
+                            class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+                            <div>Edit</div>
+                            <i data-feather='edit-3' class="w-5"></i>
                         </div>
+                        @error('emblem')
+                            <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                        @enderror
                     </div>
-                    <input id="input-side-1" type="file" class="hidden">
 
                     {{-- banner 2 --}}
-                    <div class="relative w-full rounded-xl overflow-hidden" onmouseover="toggleShowElement('side-2')"
-                        onmouseout="toggleShowElement('side-2')">
-                        @if (isset($banner['2']['img']))
-                            <img class="object-cover" src="{{ asset('img/Relief Gandavyuha Borobudur (TWC) recolor.jpg') }}"
-                                alt="Side banner 1">
-                        @else
-                            <div
-                                class="w-full h-56 bg-neutral-200 uppercase flex items-center justify-center font-semibold">
-                                gambar belum
-                                disetel</div>
-                        @endif
-                        <div id="side-2" class="hidden absolute inset-0 flex items-center justify-center space-x-1">
-                            <div class="bg-amber-300 rounded-full py-2 px-3 cursor-pointer flex space-x-3">
-                                <i data-feather='edit-3' onclick="toggleShowElement('edit-side-2')" title="Edit"></i>
-                                @if ($banner['2']['status'] == 1)
-                                    <i id="ubahStatus" data-feather='eye-off' title="Sembunyikan"></i>
-                                @else
-                                    <i id="ubahStatus" data-feather='eye' title="Tampilkan"></i>
-                                @endif
-                            </div>
+                    <div class="md:col-span-1 col-span-3">
+                        <div
+                            class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
+                            <img id="bannerPreview-2" src="" alt="Banner belum disetel"
+                                class="object-cover max-h-40 h-40 rounded-xl">
                         </div>
-                    </div>
-
-                    <div id="edit-side-2" class="hidden flex space-x-1 bg-amber-300 rounded-b-xl !-mt-2 pt-5 px-2">
-                        <input name="input-link-side-2" placeholder="Link" type="text"
-                            oninput="showElement('dialog')" value="{{ old('input-link-side-2', $banner['2']['link']) }}"
-                            class="px-3 py-2 w-full border border-gray-400 rounded-lg mb-3">
-                        <div class="group p-2.5 max-h-11 bg-amber-300 hover:bg-amber-500 rounded-lg cursor-pointer"
-                            onclick="document.getElementById('input-side-2').click()">
-                            <i data-feather='upload' class="w-5"></i>
+                        <div onclick="openWindow('edit-2')" title="Edit"
+                            class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+                            <div>Edit</div>
+                            <i data-feather='edit-3' class="w-5"></i>
                         </div>
+                        @error('emblem')
+                            <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                        @enderror
                     </div>
-                    <input id="input-side-2" type="file" class="hidden">
 
                 </div>
             </div>
@@ -163,39 +134,21 @@
                     </div>
                 </div>
 
-                {{-- banner 1 (atas) --}}
-                <div class="relative w-full max-h-44 overflow-hidden rounded-xl"
-                    onmouseover="toggleShowElement('artikel-1')" onmouseout="toggleShowElement('artikel-1')">
-                    @if (isset($banner['3']['img']))
-                        <img class="object-cover" src="{{ asset('img/Relief Gandavyuha Borobudur (TWC) recolor.jpg') }}"
-                            alt="Side banner 1">
-                    @else
-                        <div class="w-full h-44 bg-neutral-200 uppercase flex items-center justify-center font-semibold">
-                            gambar belum
-                            disetel</div>
-                    @endif
-                    <div id="artikel-1" class="hidden absolute inset-0 flex items-center justify-center space-x-1">
-                        <div class="bg-amber-300 rounded-full py-2 px-3 cursor-pointer flex space-x-3">
-                            <i data-feather='edit-3' onclick="toggleShowElement('edit-artikel-1')" title="Edit"></i>
-                            @if ($banner['3']['status'] == 1)
-                                <i id="ubahStatus" data-feather='eye-off' title="Sembunyikan"></i>
-                            @else
-                                <i id="ubahStatus" data-feather='eye' title="Tampilkan"></i>
-                            @endif
-                        </div>
+                {{-- banner 3 (artikel atas) --}}
+                <div class="md:col-span-1 col-span-3">
+                    <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
+                        <img id="bannerPreview-3" src="" alt="Banner belum disetel"
+                            class="object-cover max-h-36 h-36 rounded-xl">
                     </div>
-                </div>
-
-                <div id="edit-artikel-1" class="hidden flex space-x-1 bg-amber-300 rounded-b-xl !-mt-2 pt-5 px-2">
-                    <input name="input-link-artikel-1" placeholder="Link" type="text" oninput="showElement('dialog')"
-                        value="{{ old('input-link-artikel-1', $banner['3']['link']) }}"
-                        class="px-3 py-2 w-full border border-gray-400 rounded-lg mb-3">
-                    <div class="group p-2.5 max-h-11 bg-amber-300 hover:bg-amber-500 rounded-lg cursor-pointer"
-                        onclick="document.getElementById('input-artikel-1').click()">
-                        <i data-feather='upload' class="w-5"></i>
+                    <div onclick="openWindow('edit-3')" title="Edit"
+                        class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+                        <div>Edit</div>
+                        <i data-feather='edit-3' class="w-5"></i>
                     </div>
+                    @error('emblem')
+                        <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                    @enderror
                 </div>
-                <input id="input-artikel-1" type="file" class="hidden">
 
                 <div class="w-full animate-pulse">
                     {{-- Isi Blog --}}
@@ -211,50 +164,253 @@
                     </div>
                 </div>
 
-                {{-- banner 2 (bawah) --}}
-                <div class="relative w-full max-h-44 overflow-hidden rounded-xl"
-                    onmouseover="toggleShowElement('artikel-2')" onmouseout="toggleShowElement('artikel-2')">
-                    @if (isset($banner['1']['img']))
-                        <img class="object-cover" src="{{ asset('img/Relief Gandavyuha Borobudur (TWC) recolor.jpg') }}"
-                            alt="Side banner 1">
-                    @else
-                        <div class="w-full h-44 bg-neutral-200 uppercase flex items-center justify-center font-semibold">
-                            gambar belum
-                            disetel</div>
-                    @endif
-                    <div id="artikel-2" class="hidden absolute inset-0 flex items-center justify-center space-x-1">
-                        <div class="bg-amber-300 rounded-full py-2 px-3 cursor-pointer flex space-x-3">
-                            <i data-feather='edit-3' onclick="toggleShowElement('edit-artikel-2')" title="Edit">
-                            </i>
-                            @if ($banner['4']['status'] == 1)
-                                <i id="ubahStatus" data-feather='eye-off' title="Sembunyikan"></i>
-                            @else
-                                <i id="ubahStatus" data-feather='eye' title="Tampilkan"></i>
-                            @endif
-                        </div>
+                {{-- banner 4 (artikel bawah) --}}
+                <div class="md:col-span-1 col-span-3">
+                    <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
+                        <img id="bannerPreview-4" src="" alt="Banner belum disetel"
+                            class="object-cover max-h-36 h-36 rounded-xl">
                     </div>
-                </div>
-
-                <div id="edit-artikel-2" class="hidden flex space-x-1 bg-amber-300 rounded-b-xl !-mt-2 pt-5 px-2">
-                    <input name="input-link-artikel-2" placeholder="Link" type="text" oninput="showElement('dialog')"
-                        value="{{ old('input-link-artikel-2', $banner['4']['link']) }}"
-                        class="px-3 py-2 w-full border border-gray-400 rounded-lg mb-3">
-                    <div class="group p-2.5 max-h-11 bg-amber-300 hover:bg-amber-500 rounded-lg cursor-pointer"
-                        onclick="document.getElementById('input-artikel-2').click()">
-                        <i data-feather='upload' class="w-5"></i>
+                    <div onclick="openWindow('edit-4')" title="Edit"
+                        class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+                        <div>Edit</div>
+                        <i data-feather='edit-3' class="w-5"></i>
                     </div>
+                    @error('emblem')
+                        <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                    @enderror
                 </div>
-                <input id="input-artikel-2" type="file" class="hidden">
 
             </div>
         </div>
 
-        {{-- tombol simpan --}}
-        <div id="dialog"
-            class="hidden fixed bottom-8 left-1/2 transform -translate-x-1/2 h-10 w-auto bg-neutral-900 flex justify-between items-center space-x-48 py-7 px-5 rounded-2xl">
-            <div class="text-white">Simpan perubahan?</div>
-            <button type="submit" class="text-amber-300">Simpan</button>
+        {{-- definisi kosakata --}}
+        <div class="bg-white p-5 rounded-2xl">
+            <div class="mb-3">Definisi kosakata</div>
+            <div class="space-y-3">
+
+                <div class="w-full animate-pulse">
+
+                    <div class="border-neutral-200 border rounded-xl p-5 space-y-3">
+                        <div class="flex justify-between">
+                            <h4 class="bg-neutral-200 rounded-full w-1/2"></h4>
+                            <div class="p-2 rounded-full bg-neutral-200 w-8 h-8"></div>
+                        </div>
+
+                        <div class="p-2 rounded-full bg-neutral-200 w-1/6"></div>
+                        <div class="p-2 rounded-full bg-neutral-200 w-1/3"></div>
+
+                        <div class="md:flex block md:space-x-2 space-x-0 md:space-y-0 space-y-2 items-center mt-1">
+                            <div class="flex space-x-2">
+                                <div class="p-2 rounded-full bg-neutral-200 h-8 w-16"></div>
+                                <div class="p-2 rounded-full bg-neutral-200 h-8 w-16"></div>
+                            </div>
+
+                            <div class="flex space-x-2 items-center">
+                                <div class="h-8 w-8 rounded-full z-20 bg-neutral-200"></div>
+                                <div class="p-2 rounded-full bg-neutral-200 w-20"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- banner 5 (kosakata atas) --}}
+                <div class="md:col-span-1 col-span-3">
+                    <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
+                        <img id="bannerPreview-5" src="" alt="Banner belum disetel"
+                            class="object-cover max-h-36 h-36 rounded-xl">
+                    </div>
+                    <div onclick="openWindow('edit-5')" title="Edit"
+                        class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+                        <div>Edit</div>
+                        <i data-feather='edit-3' class="w-5"></i>
+                    </div>
+                    @error('emblem')
+                        <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- definisi --}}
+                @for ($i = 0; $i < 3; $i++)
+                    <div class="w-full animate-pulse">
+
+                        <div class="border-neutral-200 border rounded-xl p-5 space-y-3">
+                            {{-- Kosakata --}}
+                            <div class="bg-neutral-200 h-6 rounded-full w-1/2"></div>
+
+                            {{-- Definisi --}}
+                            <div class="mb-3 space-y-1">
+                                <div class="bg-neutral-200 h-4 rounded-full w-3/4"></div>
+                                <div class="bg-neutral-200 h-4 rounded-full w-1/3"></div>
+                            </div>
+
+                            {{-- Referensi --}}
+                            <div class="mt-4 space-y-1">
+                                <div class="bg-neutral-200 h-4 rounded-full w-16"></div>
+                                <ul class="list-inside  space-y-2">
+                                    <li class="bg-neutral-200 h-4 rounded-full w-1/4"></li>
+                                </ul>
+                            </div>
+
+                            {{-- Author --}}
+                            <div class="space-y-1">
+                                <div class="bg-neutral-200 h-4 rounded-full w-20"></div>
+                                <div class="flex items-center space-x-2">
+                                    <div class="bg-neutral-200 h-10 w-10 rounded-full"></div>
+                                    <div class="bg-neutral-200 h-4 rounded-full w-24"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endfor
+
+                {{-- banner 6 (kosakata bawah) --}}
+                <div class="md:col-span-1 col-span-3">
+                    <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
+                        <img id="bannerPreview-6" src="" alt="Banner belum disetel"
+                            class="object-cover max-h-36 h-36 rounded-xl">
+                    </div>
+                    <div onclick="openWindow('edit-6')" title="Edit"
+                        class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+                        <div>Edit</div>
+                        <i data-feather='edit-3' class="w-5"></i>
+                    </div>
+                    @error('emblem')
+                        <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                    @enderror
+                </div>
+
+            </div>
         </div>
+
+        {{-- dashboard --}}
+        <div class="bg-white p-5 rounded-2xl">
+            <div class="mb-3">Dashboard</div>
+            <div class="space-y-3">
+
+                {{-- banner 7 (dashboard atas) --}}
+                <div class="md:col-span-1 col-span-3">
+                    <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
+                        <img id="bannerPreview-7" src="" alt="Banner belum disetel"
+                            class="object-cover max-h-36 h-36 rounded-xl">
+                    </div>
+                    <div onclick="openWindow('edit-7')" title="Edit"
+                        class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+                        <div>Edit</div>
+                        <i data-feather='edit-3' class="w-5"></i>
+                    </div>
+                    @error('emblem')
+                        <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="w-full animate-pulse mt-2">
+                    <div class="space-y-3">
+                        <div class="rounded-full h-4 bg-neutral-200 w-1/4"></div>
+                        <div class="grid grid-cols-3 gap-3 ">
+                            @for ($i = 0; $i < 3; $i++)
+                                <div class="md:col-span-1 col-span-3 border border-neutral-200 rounded-xl space-y-1 p-5">
+                                    <div class="rounded-full h-4 bg-neutral-200 w-1/3"></div>
+                                    <div class="rounded-full h-12 bg-neutral-200 w-1/5"></div>
+                                    <div class="rounded-full h-3 bg-neutral-200 w-1/2"></div>
+                                </div>
+                            @endfor
+                        </div>
+
+                        <div class="border border-neutral-200 rounded-xl space-y-3 p-5">
+                            <div class="rounded-full h-4 bg-neutral-200 w-1/4"></div>
+                            <div class="rounded-full h-6 bg-neutral-200 w-full"></div>
+                            <div class="rounded-full h-6 bg-neutral-200 w-full"></div>
+                            <div class="rounded-full h-6 bg-neutral-200 w-full"></div>
+                            <div class="rounded-full h-6 bg-neutral-200 w-full"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        {{-- Window/popup --}}
+        @for ($i = 1; $i <= 7; $i++)
+            <div id="edit-{{ $i }}"
+                class="fixed inset-0 m-auto invisible z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
+
+
+                    <div class="flex justify-between">
+                        <div>
+                            <h5 class="font-semibold capitalize">Banner {{ $i }}</h5>
+                            <div class="mb-5">
+                                @if ($i == 1 || $i == 2)
+                                    Banner ini ditampilkan di bagian sidebar
+                                    @elseif ($i == 3 || $i == 4)
+                                    Banner ini ditampilkan pada halaman artikel
+                                    @elseif ($i == 5 || $i == 6)
+                                    Banner ini ditampilkan pada halaman definisi kosakata
+                                    @elseif ($i == 7)
+                                    Banner ini ditampilkan pada halaman dashboard
+                                @endif
+                            </div>
+                        </div>
+                        <div>
+                            <div class="rounded-full p-2 hover:bg-neutral-200 hover:text-red-500 cursor-pointer"
+                                onclick="closeWindow('edit-{{ $i }}')">
+                                <i data-feather='x'></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-auto max-h-[27rem] space-y-2">
+                        {{-- gambar --}}
+                        <div onclick="document.getElementById('img-{{ $i }}').click()" title="Pilih gambar"
+                            class="bg-neutral-100 rounded-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+                            <div>
+                                <div id="upload-{{ $i }}" class="line-clamp-1 md:max-w-80 max-w-64">Pilih gambar</div>
+                                @error('img-{{ $i }}')
+                                    <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <i data-feather='folder' class="w-5"></i>
+                        </div>
+
+                        <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif" id="img-{{ $i }}"
+                            name="img-{{ $i }}" onchange="previewImage(this,'bannerPreview-{{ $i }}'); previewImageDir(this, 'upload-{{ $i }}')" class="hidden">
+
+                        {{-- radiobutton status --}}
+                        <div>
+                            <input type="radio" class="peer/show cursor-pointer" name="status-{{ $i }}" id="show"
+                                value="1" {{ old('status'.$i, $banner[$i]['status'])==1?'checked':'' }}>
+                            <label for="show" class="peer-checked/show:text-blue-600 cursor-pointer">Tampilkan
+                                banner</label>
+                        </div>
+
+                        <div>
+                            <input type="radio" class="peer/hide cursor-pointer" name="status-{{ $i }}" id="hide"
+                                value="0" {{ old('status'.$i, $banner[$i]['status'])==0?'checked':'' }}>
+                            <label for="hide" class="peer-checked/hide:text-blue-600 cursor-pointer">Sembunyikan
+                                banner</label>
+                        </div>
+
+                        <div>
+                            <input type="radio" class="peer/delete cursor-pointer" name="status-{{ $i }}" id="delete"
+                                value="delete" {{ old('status'.$i)=='delete'?'checked':'' }}>
+                            <label for="delete" class="peer-checked/delete:text-blue-600 cursor-pointer">Hapus
+                                gambar</label>
+                        </div>
+
+                        {{-- url --}}
+                        <input type="text" id="url" name="url-{{ $i }}" placeholder="URL" title="URL"
+                            value="{{ old('nama', $banner[$i]['link']) }}"
+                            class="w-full hover:border-b-2 focus:outline-none focus:border-b-2 py-1 @error('nama') 
+                border-red-600 text-red-600 hover:border-red-200 @else hover:border-amber-200 focus:border-amber-400
+                @enderror">
+                    </div>
+                </div>
+            </div>
+        @endfor
+
     </form>
 
     <script>

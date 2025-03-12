@@ -16,6 +16,11 @@ function previewImage(input, preview) {
     };
 }
 
+// TAMPILKAN DIREKTORI GAMBAR YANG DIUPLOAD
+function previewImageDir(input, preview) {
+    document.getElementById(preview).innerText=input.files[0].name;
+}
+
 // Toggle menu - untuk halaman kosakata
 function dropdown(button, menu) {
     var menu = document.getElementById(menu);

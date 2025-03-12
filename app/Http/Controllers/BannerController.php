@@ -10,11 +10,15 @@ class BannerController extends Controller
     public function index()
     {
         $banner = Banner::all()->keyBy('id')->toArray(); //ubah ke data jadi array
-        // dd($banner);
+        // $banner=Banner::all();
         return view('dashboard.banner', [
             'title' => 'Banner',
             'group' => 'banner',
             'banner' => $banner
         ]);
+    }
+
+    public function store(Request $request){
+        dd($request);
     }
 }

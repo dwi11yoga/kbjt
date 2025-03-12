@@ -211,8 +211,8 @@
         <a href="/achievement">
             <div
                 class="flex group py-3 px-4 rounded-xl {{ $group == 'achievement' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
-                {{-- <i data-feather='star' class="{{ $group == 'achievement' ? 'fill-neutral-800 stroke-none' : 'text-neutral-700 group-hover:text-black' }}"></i> --}}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                <i data-feather='star' class="{{ $group == 'achievement' ? 'fill-neutral-800 stroke-neutral-800' : 'text-neutral-700 group-hover:text-black' }}"></i>
+                {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" class="feather feather-award">
                     <polyline
@@ -221,7 +221,7 @@
                     <circle
                         class="{{ $group == 'achievement' ? 'fill-neutral-800 stroke-amber-100' : 'text-neutral-700 group-hover:text-black' }}"
                         cx="12" cy="8" r="7"></circle>
-                </svg>
+                </svg> --}}
                 <div
                     class="inline-block ml-3 {{ $group == 'achievement' ? '' : 'text-neutral-700 group-hover:text-black' }}">
                     Achievement

@@ -94,9 +94,9 @@
     {{-- Statisitk pengguna --}}
     <div class="container mx-auto p-10 bg-neutral-100 rounded-xl">
         <div class="mb-3 md:px-24">
-            <h3 class="font-semibold mb-5">Kamus Bahasa Jawa Terbuka <br>Dalam Statistik</h3>
+            <h3 class="font-semibold mb-5">Kamus Bahasa Jawa Terbuka <br>Dalam Angka</h3>
 
-            <div class="flex md:flex-row flex-col md:space-x-3 space-y-3 mb-3">
+            <div class="flex md:flex-row flex-col md:space-x-3 md:space-y-0 space-y-3 mb-3">
                 <div
                     class="px-10 py-16 bg-white hover:bg-white hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2 rounded-2xl md:w-1/4 w-full text-center">
                     <h2 class="font-bold">{{ $jmlAnggota }}</h2>

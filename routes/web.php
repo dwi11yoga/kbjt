@@ -118,6 +118,8 @@ Route::middleware(['auth'])->group(function () {
 
         // banner
         Route::get('/banner', [BannerController::class, 'index']);
+        // perbarui data banner
+        Route::put('/banner', [BannerController::class, 'store']);
 
         // kontributor - pengurus
         Route::get('/kontributor', [DashboardController::class, 'kontributor']);

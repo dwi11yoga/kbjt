@@ -30,5 +30,17 @@ class BannerSeeder extends Seeder
             'name' => 'artikelbanner-2',
             'link' => 'http://127.0.0.1:8000/hall-of-fame'
         ]);
+        Banner::insert([
+            'name' => 'kosakata-1',
+            'link' => 'http://127.0.0.1:8000/blog/post/lorem-ipsum-dolor-sit-amet'
+        ]);
+        Banner::insert([
+            'name' => 'kosakata-2',
+            'link' => 'http://127.0.0.1:8000/'
+        ]);
+        Banner::insert([
+            'name' => 'dashboard-1',
+            'link' => 'http://127.0.0.1:8000/hall-of-fame'
+        ]);
     }
 }

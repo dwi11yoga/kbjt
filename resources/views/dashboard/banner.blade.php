@@ -58,9 +58,8 @@
 
                     {{-- banner 1 --}}
                     <div class="md:col-span-1 col-span-3">
-                        <div
-                            class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400">
-                            <img id="bannerPreview-1" src="" alt="Banner belum disetel"
+                        <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400">
+                            <img id="bannerPreview-1" src="{{ asset('storage/'.$banner[1]['img']) }}" alt="Banner belum disetel"
                                 class="object-cover max-h-40 h-40 rounded-xl">
                         </div>
                         <div onclick="openWindow('edit-1')" title="Edit"
@@ -77,7 +76,7 @@
                     <div class="md:col-span-1 col-span-3">
                         <div
                             class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
-                            <img id="bannerPreview-2" src="" alt="Banner belum disetel"
+                            <img id="bannerPreview-2" src="{{ asset('storage/'.$banner[2]['img']) }}" alt="Banner belum disetel"
                                 class="object-cover max-h-40 h-40 rounded-xl">
                         </div>
                         <div onclick="openWindow('edit-2')" title="Edit"
@@ -137,7 +136,7 @@
                 {{-- banner 3 (artikel atas) --}}
                 <div class="md:col-span-1 col-span-3">
                     <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
-                        <img id="bannerPreview-3" src="" alt="Banner belum disetel"
+                        <img id="bannerPreview-3" src="{{ asset('storage/'.$banner[3]['img']) }}" alt="Banner belum disetel"
                             class="object-cover max-h-36 h-36 rounded-xl">
                     </div>
                     <div onclick="openWindow('edit-3')" title="Edit"
@@ -167,7 +166,7 @@
                 {{-- banner 4 (artikel bawah) --}}
                 <div class="md:col-span-1 col-span-3">
                     <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
-                        <img id="bannerPreview-4" src="" alt="Banner belum disetel"
+                        <img id="bannerPreview-4" src="{{ asset('storage/'.$banner[4]['img']) }}" alt="Banner belum disetel"
                             class="object-cover max-h-36 h-36 rounded-xl">
                     </div>
                     <div onclick="openWindow('edit-4')" title="Edit"
@@ -217,7 +216,7 @@
                 {{-- banner 5 (kosakata atas) --}}
                 <div class="md:col-span-1 col-span-3">
                     <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
-                        <img id="bannerPreview-5" src="" alt="Banner belum disetel"
+                        <img id="bannerPreview-5" src="{{ asset('storage/'.$banner[5]['img']) }}" alt="Banner belum disetel"
                             class="object-cover max-h-36 h-36 rounded-xl">
                     </div>
                     <div onclick="openWindow('edit-5')" title="Edit"
@@ -267,7 +266,7 @@
                 {{-- banner 6 (kosakata bawah) --}}
                 <div class="md:col-span-1 col-span-3">
                     <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
-                        <img id="bannerPreview-6" src="" alt="Banner belum disetel"
+                        <img id="bannerPreview-6" src="{{ asset('storage/'.$banner[6]['img']) }}" alt="Banner belum disetel"
                             class="object-cover max-h-36 h-36 rounded-xl">
                     </div>
                     <div onclick="openWindow('edit-6')" title="Edit"
@@ -291,7 +290,7 @@
                 {{-- banner 7 (dashboard atas) --}}
                 <div class="md:col-span-1 col-span-3">
                     <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
-                        <img id="bannerPreview-7" src="" alt="Banner belum disetel"
+                        <img id="bannerPreview-7" src="{{ asset('storage/'.$banner[7]['img']) }}" alt="Banner belum disetel"
                             class="object-cover max-h-36 h-36 rounded-xl">
                     </div>
                     <div onclick="openWindow('edit-7')" title="Edit"
@@ -345,11 +344,11 @@
                             <div class="mb-5">
                                 @if ($i == 1 || $i == 2)
                                     Banner ini ditampilkan di bagian sidebar
-                                    @elseif ($i == 3 || $i == 4)
+                                @elseif ($i == 3 || $i == 4)
                                     Banner ini ditampilkan pada halaman artikel
-                                    @elseif ($i == 5 || $i == 6)
+                                @elseif ($i == 5 || $i == 6)
                                     Banner ini ditampilkan pada halaman definisi kosakata
-                                    @elseif ($i == 7)
+                                @elseif ($i == 7)
                                     Banner ini ditampilkan pada halaman dashboard
                                 @endif
                             </div>
@@ -366,46 +365,48 @@
                         {{-- gambar --}}
                         <div onclick="document.getElementById('img-{{ $i }}').click()" title="Pilih gambar"
                             class="bg-neutral-100 rounded-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
-                            <div>
-                                <div id="upload-{{ $i }}" class="line-clamp-1 md:max-w-80 max-w-64">Pilih gambar</div>
-                                @error('img-{{ $i }}')
-                                    <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
-                                @enderror
+                            <div id="upload-{{ $i }}" class="line-clamp-1 md:max-w-80 max-w-64">Pilih gambar
                             </div>
                             <i data-feather='folder' class="w-5"></i>
                         </div>
+                        @error('img-' . $i)
+                            <div class="text-xs text-red-600 mt-2">*{{ $message }}</div>
+                        @enderror
 
-                        <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif" id="img-{{ $i }}"
-                            name="img-{{ $i }}" onchange="previewImage(this,'bannerPreview-{{ $i }}'); previewImageDir(this, 'upload-{{ $i }}')" class="hidden">
+                        <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif"
+                            id="img-{{ $i }}" name="img-{{ $i }}"
+                            onchange="previewImage(this,'bannerPreview-{{ $i }}'); previewImageDir(this, 'upload-{{ $i }}')"
+                            class="hidden">
 
                         {{-- radiobutton status --}}
                         <div>
-                            <input type="radio" class="peer/show cursor-pointer" name="status-{{ $i }}" id="show"
-                                value="1" {{ old('status'.$i, $banner[$i]['status'])==1?'checked':'' }}>
-                            <label for="show" class="peer-checked/show:text-blue-600 cursor-pointer">Tampilkan
+                            <input type="radio" class="peer/show cursor-pointer" name="status-{{ $i }}"
+                                id="show-{{ $i }}" value="1"
+                                {{ old('status-' . $i, $banner[$i]['status']) == 1 ? 'checked' : '' }}>
+                            <label for="show-{{ $i }}" class="peer-checked/show:text-blue-600 cursor-pointer">Tampilkan
                                 banner</label>
                         </div>
 
                         <div>
-                            <input type="radio" class="peer/hide cursor-pointer" name="status-{{ $i }}" id="hide"
-                                value="0" {{ old('status'.$i, $banner[$i]['status'])==0?'checked':'' }}>
-                            <label for="hide" class="peer-checked/hide:text-blue-600 cursor-pointer">Sembunyikan
+                            <input type="radio" class="peer/hide cursor-pointer" name="status-{{ $i }}"
+                                id="hide{{ $i }}" value="0"
+                                {{ old('status-' . $i, $banner[$i]['status']) == 0 ? 'checked' : '' }}>
+                            <label for="hide{{ $i }}" class="peer-checked/hide:text-blue-600 cursor-pointer">Sembunyikan
                                 banner</label>
                         </div>
-
-                        <div>
-                            <input type="radio" class="peer/delete cursor-pointer" name="status-{{ $i }}" id="delete"
-                                value="delete" {{ old('status'.$i)=='delete'?'checked':'' }}>
-                            <label for="delete" class="peer-checked/delete:text-blue-600 cursor-pointer">Hapus
-                                gambar</label>
-                        </div>
+                        @error('status-' . $i)
+                            <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                        @enderror
 
                         {{-- url --}}
-                        <input type="text" id="url" name="url-{{ $i }}" placeholder="URL" title="URL"
-                            value="{{ old('nama', $banner[$i]['link']) }}"
-                            class="w-full hover:border-b-2 focus:outline-none focus:border-b-2 py-1 @error('nama') 
-                border-red-600 text-red-600 hover:border-red-200 @else hover:border-amber-200 focus:border-amber-400
+                        <input type="text" id="url" name="url-{{ $i }}" placeholder="URL"
+                            title="URL" value="{{ old('url-' . $i, $banner[$i]['link']) }}"
+                            class="w-full hover:border-b-2 focus:outline-none focus:border-b-2 py-1 @error('url-' . $i) 
+                border-red-600 text-red-600 hover:border-red-300 @else hover:border-amber-200 focus:border-amber-400
                 @enderror">
+                        @error('url-' . $i)
+                            <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>

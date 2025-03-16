@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Achievement;
+use App\Models\Banner;
 use App\Models\Blog;
 use App\Models\Definisi;
 use App\Models\EditKosakata;
@@ -132,5 +133,21 @@ abstract class Controller
         }
 
         return $nilai;
+    }
+
+    // fungsi untuk mengambil data banner
+    function getBanner(array $id)
+    {
+        // dapatkan data banner -> ubah jadi array
+        $banner = Banner::all()->keyBy('id')->toArray();
+
+        // hanya ambil banner yang dibutuhkan
+        $showBanner = [];
+        foreach ($id as $d) {
+            $showBanner[$d] = $banner[$d];
+        }
+
+        // kembalikan nilai $showbanner
+        return $showBanner;
     }
 }

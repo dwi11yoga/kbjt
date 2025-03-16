@@ -10,6 +10,10 @@
         </div>
     @endif
 
+    {{-- banner --}}
+    <?php $idBanner=7; ?>
+    @include('partials.banner')
+
     {{-- Overview --}}
     {{-- Level & Poin --}}
     <div class="">

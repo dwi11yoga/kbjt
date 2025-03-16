@@ -58,10 +58,18 @@
 
                     {{-- banner 1 --}}
                     <div class="md:col-span-1 col-span-3">
-                        <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400">
-                            <img id="bannerPreview-1" src="{{ asset('storage/'.$banner[1]['img']) }}" alt="Banner belum disetel"
-                                class="object-cover max-h-40 h-40 rounded-xl">
-                        </div>
+                        @if (isset($banner[1]['img']))
+                            <div
+                                class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                                <img id="bannerPreview-1" src="{{ asset('storage/' . $banner[1]['img']) }}"
+                                    alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
+                            </div>
+                        @else
+                            <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400">
+                                <div class="object-cover max-h-40 h-40 rounded-xl"><img id="bannerPreview-1" src="" alt="Belum ada gambar"></div>
+                            </div>
+                        @endif
+
                         <div onclick="openWindow('edit-1')" title="Edit"
                             class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
                             <div>Edit</div>
@@ -74,11 +82,19 @@
 
                     {{-- banner 2 --}}
                     <div class="md:col-span-1 col-span-3">
-                        <div
-                            class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
-                            <img id="bannerPreview-2" src="{{ asset('storage/'.$banner[2]['img']) }}" alt="Banner belum disetel"
-                                class="object-cover max-h-40 h-40 rounded-xl">
-                        </div>
+                        @if (isset($banner[2]['img']))
+                            <div
+                                class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                                <img id="bannerPreview-2" src="{{ asset('storage/' . $banner[2]['img']) }}"
+                                    alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
+                            </div>
+                        @else
+                            <div>
+                                <div class="object-cover min-h-40 rounded-xl flex items-center justify-center">
+                                    <img id="bannerPreview-2" class="rounded-xl" src="" alt="Belum ada gambar">
+                                </div>
+                            </div>
+                        @endif
                         <div onclick="openWindow('edit-2')" title="Edit"
                             class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
                             <div>Edit</div>
@@ -135,10 +151,20 @@
 
                 {{-- banner 3 (artikel atas) --}}
                 <div class="md:col-span-1 col-span-3">
-                    <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
-                        <img id="bannerPreview-3" src="{{ asset('storage/'.$banner[3]['img']) }}" alt="Banner belum disetel"
-                            class="object-cover max-h-36 h-36 rounded-xl">
-                    </div>
+                    @if (isset($banner[3]['img']))
+                        <div
+                            class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                            <img id="bannerPreview-3" src="{{ asset('storage/' . $banner[3]['img']) }}"
+                                alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
+                        </div>
+                    @else
+                        <div
+                            class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
+                            <div class="object-cover min-h-36 rounded-xl flex items-center justify-center">
+                                <img id="bannerPreview-3" class="rounded-xl" src="" alt="Belum ada gambar">
+                            </div>
+                        </div>
+                    @endif
                     <div onclick="openWindow('edit-3')" title="Edit"
                         class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
                         <div>Edit</div>
@@ -165,10 +191,20 @@
 
                 {{-- banner 4 (artikel bawah) --}}
                 <div class="md:col-span-1 col-span-3">
-                    <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
-                        <img id="bannerPreview-4" src="{{ asset('storage/'.$banner[4]['img']) }}" alt="Banner belum disetel"
-                            class="object-cover max-h-36 h-36 rounded-xl">
-                    </div>
+                    @if (isset($banner[4]['img']))
+                        <div
+                            class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                            <img id="bannerPreview-4" src="{{ asset('storage/' . $banner[4]['img']) }}"
+                                alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
+                        </div>
+                    @else
+                        <div
+                            class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
+                            <div class="object-cover min-h-36 rounded-xl flex items-center justify-center">
+                                <img id="bannerPreview-4" class="rounded-xl" src="" alt="Belum ada gambar">
+                            </div>
+                        </div>
+                    @endif
                     <div onclick="openWindow('edit-4')" title="Edit"
                         class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
                         <div>Edit</div>
@@ -215,10 +251,20 @@
 
                 {{-- banner 5 (kosakata atas) --}}
                 <div class="md:col-span-1 col-span-3">
-                    <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
-                        <img id="bannerPreview-5" src="{{ asset('storage/'.$banner[5]['img']) }}" alt="Banner belum disetel"
-                            class="object-cover max-h-36 h-36 rounded-xl">
-                    </div>
+                    @if (isset($banner[5]['img']))
+                        <div
+                            class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                            <img id="bannerPreview-5" src="{{ asset('storage/' . $banner[5]['img']) }}"
+                                alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
+                        </div>
+                    @else
+                        <div
+                            class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
+                            <div class="object-cover min-h-36 rounded-xl flex items-center justify-center">
+                                <img id="bannerPreview-5" class="rounded-xl" src="" alt="Belum ada gambar">
+                            </div>
+                        </div>
+                    @endif
                     <div onclick="openWindow('edit-5')" title="Edit"
                         class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
                         <div>Edit</div>
@@ -265,10 +311,20 @@
 
                 {{-- banner 6 (kosakata bawah) --}}
                 <div class="md:col-span-1 col-span-3">
-                    <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
-                        <img id="bannerPreview-6" src="{{ asset('storage/'.$banner[6]['img']) }}" alt="Banner belum disetel"
-                            class="object-cover max-h-36 h-36 rounded-xl">
-                    </div>
+                    @if (isset($banner[6]['img']))
+                        <div
+                            class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                            <img id="bannerPreview-6" src="{{ asset('storage/' . $banner[6]['img']) }}"
+                                alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
+                        </div>
+                    @else
+                        <div
+                            class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
+                            <div class="object-cover min-h-36 rounded-xl flex items-center justify-center">
+                                <img id="bannerPreview-6" class="rounded-xl" src="" alt="Belum ada gambar">
+                            </div>
+                        </div>
+                    @endif
                     <div onclick="openWindow('edit-6')" title="Edit"
                         class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
                         <div>Edit</div>
@@ -289,10 +345,20 @@
 
                 {{-- banner 7 (dashboard atas) --}}
                 <div class="md:col-span-1 col-span-3">
-                    <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
-                        <img id="bannerPreview-7" src="{{ asset('storage/'.$banner[7]['img']) }}" alt="Banner belum disetel"
-                            class="object-cover max-h-36 h-36 rounded-xl">
-                    </div>
+                    @if (isset($banner[7]['img']))
+                        <div
+                            class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                            <img id="bannerPreview-7" src="{{ asset('storage/' . $banner[7]['img']) }}"
+                                alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
+                        </div>
+                    @else
+                        <div
+                            class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400 border-8 border-neutral-200">
+                            <div class="object-cover min-h-36 rounded-xl flex items-center justify-center">
+                                <img id="bannerPreview-7" class="rounded-xl" src="" alt="Belum ada gambar">
+                            </div>
+                        </div>
+                    @endif
                     <div onclick="openWindow('edit-7')" title="Edit"
                         class="bg-neutral-100 rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
                         <div>Edit</div>
@@ -383,7 +449,8 @@
                             <input type="radio" class="peer/show cursor-pointer" name="status-{{ $i }}"
                                 id="show-{{ $i }}" value="1"
                                 {{ old('status-' . $i, $banner[$i]['status']) == 1 ? 'checked' : '' }}>
-                            <label for="show-{{ $i }}" class="peer-checked/show:text-blue-600 cursor-pointer">Tampilkan
+                            <label for="show-{{ $i }}"
+                                class="peer-checked/show:text-blue-600 cursor-pointer">Tampilkan
                                 banner</label>
                         </div>
 
@@ -391,7 +458,8 @@
                             <input type="radio" class="peer/hide cursor-pointer" name="status-{{ $i }}"
                                 id="hide{{ $i }}" value="0"
                                 {{ old('status-' . $i, $banner[$i]['status']) == 0 ? 'checked' : '' }}>
-                            <label for="hide{{ $i }}" class="peer-checked/hide:text-blue-600 cursor-pointer">Sembunyikan
+                            <label for="hide{{ $i }}"
+                                class="peer-checked/hide:text-blue-600 cursor-pointer">Sembunyikan
                                 banner</label>
                         </div>
                         @error('status-' . $i)

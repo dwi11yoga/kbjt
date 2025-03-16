@@ -248,9 +248,19 @@
 
             {{-- Definisi --}}
             @if ($definisi->isNotEmpty())
+                {{-- tampilkan banner 5 --}}
+                <?php $idBanner = 5; ?>
+                <div class="mb-4">
+                    @include('partials.banner')
+                </div>
+
                 @foreach ($definisi as $d)
                     @include('partials.definisi')
                 @endforeach
+
+                {{-- tampilkan banner 6 --}}
+                <?php $idBanner = 6; ?>
+                @include('partials.banner')
             @else
                 {{-- Jika belum ada definisi --}}
                 <?php $notFound = 'Belum ada definisi untuk kosakata ' . $data->kosakata . '.'; ?>

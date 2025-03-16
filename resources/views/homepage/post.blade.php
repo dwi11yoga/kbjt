@@ -47,11 +47,9 @@
             src="{{ asset('storage/' . $post->thumbnail) }}">
     @endisset
 
-    {{-- Iklan atas --}}
-    <a href="#">
-        <img alt="" class="overflow-hidden object-cover w-full h-44 rounded-lg"
-            src="https://static.vecteezy.com/system/resources/thumbnails/017/554/214/small/black-and-blue-green-banner-with-waves-template-design-wavy-waves-design-vector.jpg">
-    </a>
+    {{-- banner atas/banner 3 --}}
+    <?php $idBanner=3 ?>
+    @include('partials.banner')
 
     {{-- Isi Blog --}}
     <style>
@@ -128,9 +126,7 @@
         {!! $post->konten !!}
     </div>
 
-    {{-- Iklan bawah --}}
-    <a href="#">
-        <img alt="" class="overflow-hidden object-cover w-full h-44 rounded-lg"
-            src="https://media.istockphoto.com/id/1759419033/vector/white-and-blue-modern-abstract-wide-banner-with-geometric-shapes-dark-blue-and-white.jpg?s=612x612&w=is&k=20&c=luMW3Q60EtadjHxxOKWhKPf697DjSRlmz6_EA73hdD0=">
-    </a>
+    {{-- banner bawah/banner 4 --}}
+    <?php $idBanner=4 ?>
+    @include('partials.banner')
 @endsection

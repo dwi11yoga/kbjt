@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Banner;
 use App\Models\Blog;
 use App\Models\Definisi;
 use App\Models\Donasi;
@@ -63,46 +64,62 @@ class HomepageController extends Controller
             ->orderBy('kosakata', 'asc')
             ->get();
 
+        // dapatkan data banner
+        $banner = $this->getBanner([1, 2]);
+
         return view('homepage.daftar-kosakata', [
             'group' => 'kosakata',
             'title' => 'Daftar Kosakata',
             'filter' => $filter,
-            'kosakata' => $kosakata
+            'kosakata' => $kosakata,
+            'banner' => $banner
         ]);
     }
 
     // Hall of Fame
     public function hallOfFame()
     {
+        // dapatkan data user
         $user = User::select('id', 'username', 'poin', 'created_at', 'jenis_kelamin', 'profile_pic')
             ->orderBy('poin', 'desc')
             ->limit(100)
             ->get();
+
+        // hitung level user
         foreach ($user as $d) {
             $d['level'] = $this->levelCalculator($d['poin']);
             $d['poin'] = number_format($d['poin'], 0, ',', '.');
         }
-        // dd($user);
+
+        // dapatkan data banner
+        $banner = $this->getBanner([1, 2]);
+
         return view('homepage.hall-of-fame', [
             'group' => 'hall of fame',
             'title' => 'Hall of Fame',
-            'user' => $user
+            'user' => $user,
+            'banner' => $banner
         ]);
     }
 
     // Blog
     public function blog()
     {
+        // dapatkan daftar artikel
         $blog = Blog::whereNotNull('status')
             ->with('user:id,nama')
             ->orderBy('pinned', 'desc')
             ->orderBy('updated_at', 'desc')
             ->paginate(10);
 
+        // dapatkan data banner
+        $banner = $this->getBanner([1, 2]);
+
         return view('homepage.blog', [
             'group' => 'blog',
             'title' => 'Blog',
-            'posts' => $blog
+            'posts' => $blog,
+            'banner' => $banner
         ]);
     }
 
@@ -133,12 +150,15 @@ class HomepageController extends Controller
             Blog::find($post->id)->increment('view', 1);
         }
 
-        // dd($post);
+        // dapatkan data banner
+        $banner=$this->getBanner([1,2,3,4]);
+
         return view('homepage.post', [
             'group' => 'blog',
             'title' => $post->judul,
             'post' => $post,
-            'url' => $url
+            'url' => $url,
+            'banner'=>$banner
         ]);
     }
 
@@ -146,6 +166,7 @@ class HomepageController extends Controller
     public function donasi()
     {
 
+        // ambil daftar metode donasi
         $metode = Donasi::select('metode')->orderBy('metode', 'asc')->get();
         if (!empty(request('metode-pembayaran'))) {
             $metode_dipilih = request('metode-pembayaran');
@@ -153,11 +174,16 @@ class HomepageController extends Controller
             $metode_dipilih = Donasi::orderBy('metode', 'asc')->value('metode');
         }
         $donasi = Donasi::where('metode', '=', $metode_dipilih)->first();
+
+        // dapatkan data banner
+        $banner=$this->getBanner([1,2]);
+
         return view('homepage.donasi', [
             'group' => 'donasi',
             'title' => 'Donasi',
             'donasi' => $donasi,
-            'metode' => $metode
+            'metode' => $metode,
+            'banner'=>$banner
         ]);
     }
 
@@ -216,12 +242,15 @@ class HomepageController extends Controller
         }
         $jumlah = count($data);
 
+        // dapatkan data banner
+        $banner=$this->getBanner([1,2]);
 
         return view('homepage.pencarian', [
             'group' => 'pencarian',
             'title' => 'Pencarian',
             'data' => $data,
             'jumlah' => $jumlah,
+            'banner'=>$banner
         ]);
     }
 
@@ -304,6 +333,9 @@ class HomepageController extends Controller
             Kosakata::find($kosakata->id)->increment('view', 1);
         }
 
+        // dapatkan data banner
+        $banner=$this->getBanner([1,2,5,6]);
+
         return view('homepage.kosakata', [
             'group' => 'pencarian',
             'title' => 'Kosakata',
@@ -311,7 +343,8 @@ class HomepageController extends Controller
             'data' => $kosakata,
             'dataNull' => $nullCount,
             'definisi' => $definisi,
-            'cekDefinisiUser' => $cekDefinisiUser
+            'cekDefinisiUser' => $cekDefinisiUser,
+            'banner'=>$banner
         ]);
     }
 

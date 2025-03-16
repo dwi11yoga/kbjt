@@ -36,7 +36,12 @@
             <div class="md:col-span-1 col-span-4">
                 <hr class="sm:hidden mb-10 w-1/3 border-2 align-middle mx-auto ">
                 <div class="sticky top-24 space-y-3">
-                    @include('partials.sidebar-banner')
+                    <?php
+                    $i = [1, 2];
+                    ?>
+                    @foreach ($i as $idBanner)
+                        @include('partials.banner')
+                    @endforeach
                 </div>
             </div>
         </div>

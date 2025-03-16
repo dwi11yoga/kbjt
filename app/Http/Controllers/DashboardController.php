@@ -209,6 +209,10 @@ class DashboardController extends Controller
             $data['achievement'] = $achievement;
         }
 
+        // dapatkan data banner
+        $banner=$this->getBanner([7]);
+        $data['banner']=$banner;
+
         return view('dashboard.index', $data);
     }
 

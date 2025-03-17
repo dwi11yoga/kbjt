@@ -102,10 +102,10 @@
         </div>
     </section>
 
-    {{-- Detail user dam banner --}}
+    {{-- Detail user dan banner --}}
     <section class="md:px-28 px-5 my-8">
         <div class="container mx-auto">
-            <div class="grid grid-cols-4 md:space-x-7 space-y-5 mt-2">
+            <div class="grid grid-cols-4 md:space-x-7 md:space-y-0 space-y-5 mt-2">
 
                 {{-- detail user --}}
                 <div class="md:col-span-3 col-span-4 text-justify">
@@ -372,8 +372,11 @@
 
                 {{-- banner --}}
                 <div class="md:col-span-1 col-span-4">
-                    <div class="sticky top-40 space-y-3">
-                        @include('partials.sidebar-banner')
+                    <div class="sticky top-24 space-y-3">
+                        <?php $i = [1, 2]; ?>
+                        @foreach ($i as $idBanner)
+                            @include('partials.banner')
+                        @endforeach
                     </div>
                 </div>
 

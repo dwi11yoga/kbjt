@@ -57,16 +57,41 @@
                 <div class="md:col-span-2 col-span-6 space-y-3">
 
                     {{-- banner 1 --}}
-                    <div class="md:col-span-1 col-span-3">
-                        @if (isset($banner[1]['img']))
+                    <div class="md:col-span-1 col-span-3 relative">
+
+                        {{-- author tarakhir yang mengedit --}}
+                        @if (isset($banner[1]['user_id']))
                             <div
-                                class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                                class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
+
+                                <?php $d = (object) $banner[1]['user']; ?> {{-- convert array jadi object --}}
+                                <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
+                                    @include('partials.profile-pic-general')
+                                </div>
+
+                                <div class="text-sm">
+                                    {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                            </div>
+                        @endif
+
+                        {{-- jika banner disembunyikan  --}}
+                        @if (isset($banner[1]['img']) && $banner[1]['status'] == 0)
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                                title="Banner Disembunyikan">
+                                <i data-feather='eye-off' class="stroke-white"></i>
+                            </div>
+                        @endif
+
+                        {{-- gambar --}}
+                        @if (isset($banner[1]['img']))
+                            <div class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
                                 <img id="bannerPreview-1" src="{{ asset('storage/' . $banner[1]['img']) }}"
                                     alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
                             </div>
                         @else
                             <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400">
-                                <div class="object-cover max-h-40 h-40 rounded-xl"><img id="bannerPreview-1" src="" alt="Belum ada gambar"></div>
+                                <div class="object-cover min-h-40 rounded-xl flex items-center justify-center"><img
+                                        id="bannerPreview-1" src="" alt="Belum ada gambar"></div>
                             </div>
                         @endif
 
@@ -75,23 +100,47 @@
                             <div>Edit</div>
                             <i data-feather='edit-3' class="w-5"></i>
                         </div>
+
                         @error('emblem')
                             <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
                         @enderror
                     </div>
 
                     {{-- banner 2 --}}
-                    <div class="md:col-span-1 col-span-3">
-                        @if (isset($banner[2]['img']))
+                    <div class="md:col-span-1 col-span-3 relative">
+
+                        {{-- author tarakhir yang mengedit --}}
+                        @if (isset($banner[2]['user_id']))
                             <div
-                                class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                                class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
+
+                                <?php $d = (object) $banner[2]['user']; ?> {{-- convert array jadi object --}}
+                                <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
+                                    @include('partials.profile-pic-general')
+                                </div>
+
+                                <div class="text-sm">
+                                    {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                            </div>
+                        @endif
+
+                        {{-- jika banner disembunyikan  --}}
+                        @if (isset($banner[2]['img']) && $banner[2]['status'] == 0)
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                                title="Banner Disembunyikan">
+                                <i data-feather='eye-off' class="stroke-white"></i>
+                            </div>
+                        @endif
+
+                        @if (isset($banner[2]['img']))
+                            <div class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
                                 <img id="bannerPreview-2" src="{{ asset('storage/' . $banner[2]['img']) }}"
                                     alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
                             </div>
                         @else
-                            <div>
+                            <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400">
                                 <div class="object-cover min-h-40 rounded-xl flex items-center justify-center">
-                                    <img id="bannerPreview-2" class="rounded-xl" src="" alt="Belum ada gambar">
+                                    <img id="bannerPreview-2" src="" alt="Belum ada gambar">
                                 </div>
                             </div>
                         @endif
@@ -150,10 +199,33 @@
                 </div>
 
                 {{-- banner 3 (artikel atas) --}}
-                <div class="md:col-span-1 col-span-3">
-                    @if (isset($banner[3]['img']))
+                <div class="md:col-span-1 col-span-3 relative">
+
+                    {{-- author tarakhir yang mengedit --}}
+                    @if (isset($banner[3]['user_id']))
                         <div
-                            class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                            class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
+
+                            <?php $d = (object) $banner[3]['user']; ?> {{-- convert array jadi object --}}
+                            <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
+                                @include('partials.profile-pic-general')
+                            </div>
+
+                            <div class="text-sm">
+                                {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                        </div>
+                    @endif
+
+                    {{-- jika banner disembunyikan  --}}
+                    @if (isset($banner[3]['img']) && $banner[3]['status'] == 0)
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                            title="Banner Disembunyikan">
+                            <i data-feather='eye-off' class="stroke-white"></i>
+                        </div>
+                    @endif
+
+                    @if (isset($banner[3]['img']))
+                        <div class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
                             <img id="bannerPreview-3" src="{{ asset('storage/' . $banner[3]['img']) }}"
                                 alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
                         </div>
@@ -190,10 +262,33 @@
                 </div>
 
                 {{-- banner 4 (artikel bawah) --}}
-                <div class="md:col-span-1 col-span-3">
-                    @if (isset($banner[4]['img']))
+                <div class="md:col-span-1 col-span-3 relative">
+
+                    {{-- author tarakhir yang mengedit --}}
+                    @if (isset($banner[4]['user_id']))
                         <div
-                            class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                            class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
+
+                            <?php $d = (object) $banner[4]['user']; ?> {{-- convert array jadi object --}}
+                            <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
+                                @include('partials.profile-pic-general')
+                            </div>
+
+                            <div class="text-sm">
+                                {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                        </div>
+                    @endif
+
+                    {{-- jika banner disembunyikan  --}}
+                    @if (isset($banner[4]['img']) && $banner[4]['status'] == 0)
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                            title="Banner Disembunyikan">
+                            <i data-feather='eye-off' class="stroke-white"></i>
+                        </div>
+                    @endif
+
+                    @if (isset($banner[4]['img']))
+                        <div class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
                             <img id="bannerPreview-4" src="{{ asset('storage/' . $banner[4]['img']) }}"
                                 alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
                         </div>
@@ -250,10 +345,33 @@
                 </div>
 
                 {{-- banner 5 (kosakata atas) --}}
-                <div class="md:col-span-1 col-span-3">
-                    @if (isset($banner[5]['img']))
+                <div class="md:col-span-1 col-span-3 relative">
+
+                    {{-- author tarakhir yang mengedit --}}
+                    @if (isset($banner[5]['user_id']))
                         <div
-                            class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                            class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
+
+                            <?php $d = (object) $banner[5]['user']; ?> {{-- convert array jadi object --}}
+                            <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
+                                @include('partials.profile-pic-general')
+                            </div>
+
+                            <div class="text-sm">
+                                {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                        </div>
+                    @endif
+
+                    {{-- jika banner disembunyikan  --}}
+                    @if (isset($banner[5]['img']) && $banner[5]['status'] == 0)
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                            title="Banner Disembunyikan">
+                            <i data-feather='eye-off' class="stroke-white"></i>
+                        </div>
+                    @endif
+
+                    @if (isset($banner[5]['img']))
+                        <div class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
                             <img id="bannerPreview-5" src="{{ asset('storage/' . $banner[5]['img']) }}"
                                 alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
                         </div>
@@ -310,10 +428,33 @@
                 @endfor
 
                 {{-- banner 6 (kosakata bawah) --}}
-                <div class="md:col-span-1 col-span-3">
-                    @if (isset($banner[6]['img']))
+                <div class="md:col-span-1 col-span-3 relative">
+
+                    {{-- author tarakhir yang mengedit --}}
+                    @if (isset($banner[6]['user_id']))
                         <div
-                            class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                            class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
+
+                            <?php $d = (object) $banner[6]['user']; ?> {{-- convert array jadi object --}}
+                            <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
+                                @include('partials.profile-pic-general')
+                            </div>
+
+                            <div class="text-sm">
+                                {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                        </div>
+                    @endif
+
+                    {{-- jika banner disembunyikan  --}}
+                    @if (isset($banner[6]['img']) && $banner[6]['status'] == 0)
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                            title="Banner Disembunyikan">
+                            <i data-feather='eye-off' class="stroke-white"></i>
+                        </div>
+                    @endif
+
+                    @if (isset($banner[6]['img']))
+                        <div class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
                             <img id="bannerPreview-6" src="{{ asset('storage/' . $banner[6]['img']) }}"
                                 alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
                         </div>
@@ -344,10 +485,33 @@
             <div class="space-y-3">
 
                 {{-- banner 7 (dashboard atas) --}}
-                <div class="md:col-span-1 col-span-3">
-                    @if (isset($banner[7]['img']))
+                <div class="md:col-span-1 col-span-3 relative">
+
+                    {{-- author tarakhir yang mengedit --}}
+                    @if (isset($banner[7]['user_id']))
                         <div
-                            class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+                            class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
+
+                            <?php $d = (object) $banner[7]['user']; ?> {{-- convert array jadi object --}}
+                            <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
+                                @include('partials.profile-pic-general')
+                            </div>
+
+                            <div class="text-sm">
+                                {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                        </div>
+                    @endif
+
+                    {{-- jika banner disembunyikan  --}}
+                    @if (isset($banner[7]['img']) && $banner[7]['status'] == 0)
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                            title="Banner Disembunyikan">
+                            <i data-feather='eye-off' class="stroke-white"></i>
+                        </div>
+                    @endif
+
+                    @if (isset($banner[7]['img']))
+                        <div class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
                             <img id="bannerPreview-7" src="{{ asset('storage/' . $banner[7]['img']) }}"
                                 alt="Banner belum disetel" class="object-cover w-full rounded-t-xl">
                         </div>
@@ -403,21 +567,11 @@
                 class="fixed inset-0 m-auto invisible z-50 flex items-center justify-center bg-black bg-opacity-50">
                 <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
 
-
+                    {{-- judul & subjudul --}}
                     <div class="flex justify-between">
                         <div>
-                            <h5 class="font-semibold capitalize">Banner {{ $i }}</h5>
-                            <div class="mb-5">
-                                @if ($i == 1 || $i == 2)
-                                    Banner ini ditampilkan di bagian sidebar
-                                @elseif ($i == 3 || $i == 4)
-                                    Banner ini ditampilkan pada halaman artikel
-                                @elseif ($i == 5 || $i == 6)
-                                    Banner ini ditampilkan pada halaman definisi kosakata
-                                @elseif ($i == 7)
-                                    Banner ini ditampilkan pada halaman dashboard
-                                @endif
-                            </div>
+                            <h5 class="font-semibold capitalize">{{ $banner[$i]['name'] }}</h5>
+                            <div class="mb-5">{{ $banner[$i]['catatan'] }}</div>
                         </div>
                         <div>
                             <div class="rounded-full p-2 hover:bg-neutral-200 hover:text-red-500 cursor-pointer"
@@ -427,54 +581,110 @@
                         </div>
                     </div>
 
-                    <div class="overflow-auto max-h-[27rem] space-y-2">
-                        {{-- gambar --}}
-                        <div onclick="document.getElementById('img-{{ $i }}').click()" title="Pilih gambar"
-                            class="bg-neutral-100 rounded-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
-                            <div id="upload-{{ $i }}" class="line-clamp-1 md:max-w-80 max-w-64">Pilih gambar
-                            </div>
-                            <i data-feather='folder' class="w-5"></i>
-                        </div>
-                        @error('img-' . $i)
-                            <div class="text-xs text-red-600 mt-2">*{{ $message }}</div>
-                        @enderror
+                    <div class="overflow-auto max-h-[27rem] space-y-3">
 
-                        <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif"
-                            id="img-{{ $i }}" name="img-{{ $i }}"
-                            onchange="previewImage(this,'bannerPreview-{{ $i }}'); previewImageDir(this, 'upload-{{ $i }}')"
-                            class="hidden">
+                        {{-- keterangan tambahan jika banner ditampilkan namun gambar belum diupload  --}}
+                        @if ($banner[$i]['status'] == 1 && (empty($banner[$i]['img']) || $banner[$i]['img'] == null))
+                            <?php
+                            $alert = [
+                                'warna' => 'green',
+                                'pesan' => 'Meskipun banner diatur untuk ditampilkan, banner tidak akan muncul jika belum ada gambar yang diunggah',
+                                'textsize' => 'sm',
+                            ];
+                            ?>
+                            @include('partials.alert')
+                        @endif
+
+                        {{-- gambar --}}
+                        <div>
+                            <div onclick="document.getElementById('img-{{ $i }}').click()"
+                                title="Pilih gambar"
+                                class="bg-neutral-100 rounded-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+                                <div id="upload-{{ $i }}" class="line-clamp-1 md:max-w-80 max-w-64">Pilih
+                                    gambar
+                                </div>
+                                <i data-feather='folder' class="w-5"></i>
+                            </div>
+                            @error('img-' . $i)
+                                <div class="text-xs text-red-600 mt-2">*{{ $message }}</div>
+                            @enderror
+
+                            <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif"
+                                id="img-{{ $i }}" name="img-{{ $i }}"
+                                onchange="previewImage(this,'bannerPreview-{{ $i }}'); previewImageDir(this, 'upload-{{ $i }}')"
+                                class="hidden">
+                        </div>
 
                         {{-- radiobutton status --}}
                         <div>
-                            <input type="radio" class="peer/show cursor-pointer" name="status-{{ $i }}"
-                                id="show-{{ $i }}" value="1"
-                                {{ old('status-' . $i, $banner[$i]['status']) == 1 ? 'checked' : '' }}>
-                            <label for="show-{{ $i }}"
-                                class="peer-checked/show:text-blue-600 cursor-pointer">Tampilkan
-                                banner</label>
-                        </div>
+                            <div class="mb-1 text-sm">Tampilan banner</div>
+                            <div class="flex space-x-3">
+                                <div>
+                                    <input type="radio" class="peer/show cursor-pointer"
+                                        name="status-{{ $i }}" id="show-{{ $i }}" value="1"
+                                        {{ old('status-' . $i, $banner[$i]['status']) == 1 ? 'checked' : '' }}>
+                                    <label for="show-{{ $i }}"
+                                        class="peer-checked/show:text-blue-600 cursor-pointer">Tampilkan</label>
+                                </div>
 
-                        <div>
-                            <input type="radio" class="peer/hide cursor-pointer" name="status-{{ $i }}"
-                                id="hide{{ $i }}" value="0"
-                                {{ old('status-' . $i, $banner[$i]['status']) == 0 ? 'checked' : '' }}>
-                            <label for="hide{{ $i }}"
-                                class="peer-checked/hide:text-blue-600 cursor-pointer">Sembunyikan
-                                banner</label>
+                                <div>
+                                    <input type="radio" class="peer/hide cursor-pointer"
+                                        name="status-{{ $i }}" id="hide{{ $i }}" value="0"
+                                        {{ old('status-' . $i, $banner[$i]['status']) == 0 ? 'checked' : '' }}>
+                                    <label for="hide{{ $i }}"
+                                        class="peer-checked/hide:text-blue-600 cursor-pointer">Sembunyikan</label>
+                                </div>
+                            </div>
+                            @error('status-' . $i)
+                                <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                            @enderror
                         </div>
-                        @error('status-' . $i)
-                            <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
-                        @enderror
 
                         {{-- url --}}
-                        <input type="text" id="url" name="url-{{ $i }}" placeholder="URL"
-                            title="URL" value="{{ old('url-' . $i, $banner[$i]['link']) }}"
-                            class="w-full hover:border-b-2 focus:outline-none focus:border-b-2 py-1 @error('url-' . $i) 
+                        <div>
+                            <label for="url-{{ $i }}" class="text-sm">URL</label>
+                            <input type="text" id="url" name="url-{{ $i }}"
+                                placeholder="Masukkan tautan..." title="URL"
+                                value="{{ old('url-' . $i, $banner[$i]['url']) }}"
+                                class="w-full hover:border-b-2 focus:outline-none focus:border-b-2 py-1 @error('url-' . $i) 
                 border-red-600 text-red-600 hover:border-red-300 @else hover:border-amber-200 focus:border-amber-400
                 @enderror">
-                        @error('url-' . $i)
-                            <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
-                        @enderror
+                            @error('url-' . $i)
+                                <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- hover teks --}}
+                        <div>
+                            <label for="hover_title-{{ $i }}" class="text-sm">Teks tooltip</label>
+                            <input type="text" id="hover_title" name="hover_title-{{ $i }}"
+                                placeholder="Masukkan teks tooltip..." title="Teks tooltip"
+                                value="{{ old('hover_title-' . $i, $banner[$i]['hover_title']) }}"
+                                class="w-full hover:border-b-2 focus:outline-none focus:border-b-2 py-1 @error('hover_title-' . $i) 
+                            border-red-600 text-red-600 hover:border-red-300 @else hover:border-amber-200 focus:border-amber-400
+                            @enderror">
+                            <div class="text-xs">*Keterangan saat banner dihover</div>
+                            @error('hover_title-' . $i)
+                                <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- author tarakhir yang mengedit --}}
+                        @if (isset($banner[$i]['user_id']))
+                            <div class="rounded-xl py-2 px-3 bg-amber-100 flex items-center space-x-2 w-fit">
+
+                                <?php $d = (object) $banner[$i]['user']; ?> {{-- convert array jadi object --}}
+                                <div class="rounded-full w-8 h-8 overflow-hidden object-cover">
+                                    @include('partials.profile-pic-general')
+                                </div>
+
+                                <div class="text-sm">
+                                    Terakhir diedit oleh <a
+                                        href="/u/{{ $d->username }}">{{ auth()->user()->id == $d->id ? 'kamu' : $d->username }}</a>
+                                </div>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
             </div>

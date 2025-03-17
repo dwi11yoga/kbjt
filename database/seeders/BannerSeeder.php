@@ -15,32 +15,39 @@ class BannerSeeder extends Seeder
     {
         //
         Banner::insert([
-            'name' => 'sidebanner-1',
-            'link' => 'http://127.0.0.1:8000/banner'
+            'name' => 'Banner 1: Sidebar',
+            'url' => 'http://127.0.0.1:8000/banner',
+            'catatan'=>'Banner ini ditampilkan di bagian sidebar. Disasrankan menggunakan gambar berorientasi kotak atau portrait',
         ]);
         Banner::insert([
-            'name' => 'sidebanner-2',
-            'link' => 'http://127.0.0.1:8000/blog/post/lorem-ipsum-dolor-sit-amet'
+            'name' => 'Banner 2: Sidebar',
+            'url' => 'http://127.0.0.1:8000/blog/post/lorem-ipsum-dolor-sit-amet',
+            'catatan'=>'Banner ini ditampilkan di bagian sidebar. Disasrankan menggunakan gambar berorientasi kotak atau portrait',
         ]);
         Banner::insert([
-            'name' => 'artikelbanner-1',
-            'link' => 'http://127.0.0.1:8000/'
+            'name' => 'Banner 3: Artikel',
+            'url' => 'http://127.0.0.1:8000/',
+            'catatan'=>'Banner ini ditampilkan pada halaman artikel. Disasrankan menggunakan gambar berorientasi landscape',
         ]);
         Banner::insert([
-            'name' => 'artikelbanner-2',
-            'link' => 'http://127.0.0.1:8000/hall-of-fame'
+            'name' => 'Banner 4: Artikel',
+            'url' => 'http://127.0.0.1:8000/hall-of-fame',
+            'catatan'=>'Banner ini ditampilkan pada halaman artikel. Disasrankan menggunakan gambar berorientasi landscape',
         ]);
         Banner::insert([
-            'name' => 'kosakata-1',
-            'link' => 'http://127.0.0.1:8000/blog/post/lorem-ipsum-dolor-sit-amet'
+            'name' => 'Banner 5: Definisi Kosakata',
+            'url' => 'http://127.0.0.1:8000/blog/post/lorem-ipsum-dolor-sit-amet',
+            'catatan'=>'Banner ini ditampilkan pada halaman definisi kosakata. Disasrankan menggunakan gambar berorientasi landscape',
         ]);
         Banner::insert([
-            'name' => 'kosakata-2',
-            'link' => 'http://127.0.0.1:8000/'
+            'name' => 'Banner 6: Definisi Kosakata',
+            'url' => 'http://127.0.0.1:8000/',
+            'catatan'=>'Banner ini ditampilkan pada halaman definisi kosakata. Disasrankan menggunakan gambar berorientasi landscape',
         ]);
         Banner::insert([
-            'name' => 'dashboard-1',
-            'link' => 'http://127.0.0.1:8000/hall-of-fame'
+            'name' => 'Banner 7: Dashboard',
+            'url' => 'http://127.0.0.1:8000/hall-of-fame',
+            'catatan'=>'Banner ini ditampilkan pada halaman dashboard. Disasrankan menggunakan gambar berorientasi landscape',
         ]);
     }
 }

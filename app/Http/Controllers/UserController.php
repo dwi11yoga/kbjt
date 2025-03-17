@@ -168,6 +168,10 @@ class UserController extends Controller
             $kirim['posts'] = $posts;
         }
 
+        // dapatkan data banner
+        $banner=$this->getBanner([1,2]);
+        $kirim['banner']=$banner;
+
         // return
         return view('homepage.profile', $kirim);
     }

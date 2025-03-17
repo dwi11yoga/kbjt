@@ -12,10 +12,13 @@ return new class extends Migration {
     {
         Schema::create('banners', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
             $table->tinyInteger('status')->default(0);
+            $table->string('name')->nullable();
             $table->string('img')->nullable();
-            $table->string('link')->nullable();
+            $table->string('url')->nullable();
+            $table->text('catatan')->nullable();
+            $table->string('hover_title')->nullable();
+            $table->foreignId('user_id')->nullable();
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Banner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\ValidationException;
@@ -13,7 +14,8 @@ class BannerController extends Controller
     // View edit banner
     public function index()
     {
-        $banner = Banner::all()->keyBy('id')->toArray(); //ubah ke data jadi array
+        $banner = Banner::with('user:id,username,nama,jenis_kelamin,role,profile_pic')->get()->keyBy('id')->toArray(); //ubah ke data jadi array
+        // dd($banner);
         // $banner=Banner::all();
         return view('dashboard.banner', [
             'title' => 'Banner',
@@ -41,14 +43,25 @@ class BannerController extends Controller
             if (isset($request['status-' . $i]) && $request['status-' . $i] != $banner[$i]['status']) {
                 $rules['status-' . $i] = 'required';
                 $simpan[$i]['status'] = $request['status-' . $i];
+                $simpan[$i]['user_id'] = Auth::user()->id; // pengurus yang mengedit
             }
             // validasi url
-            if ((empty($request['url-' . $i]) || $request['url-' . $i] == null) && $request['url-' . $i] != $banner[$i]['link']) {
+            if ((empty($request['url-' . $i]) || $request['url-' . $i] == null) && $request['url-' . $i] != $banner[$i]['url']) {
                 $rules['url-' . $i] = '';
-                $simpan[$i]['link'] = null;
-            } elseif (isset($request['url-' . $i]) && $request['url-' . $i] != $banner[$i]['link']) {
+                $simpan[$i]['url'] = null;
+                $simpan[$i]['user_id'] = Auth::user()->id; // pengurus yang mengedit
+
+            } elseif (isset($request['url-' . $i]) && $request['url-' . $i] != $banner[$i]['url']) {
                 $rules['url-' . $i] = 'url';
-                $simpan[$i]['link'] = $request['url-' . $i];
+                $simpan[$i]['url'] = $request['url-' . $i];
+                $simpan[$i]['user_id'] = Auth::user()->id; // pengurus yang mengedit
+            }
+
+            // validasi hover title
+            if (isset($request['hover_title-' . $i]) && $request['hover_title-' . $i] != $banner[$i]['hover_title']) {
+                $rules['hover_title-' . $i] = 'required';
+                $simpan[$i]['hover_title'] = $request['hover_title-' . $i];
+                $simpan[$i]['user_id'] = Auth::user()->id; // pengurus yang mengedit
             }
         }
 
@@ -63,7 +76,7 @@ class BannerController extends Controller
 
         // Simpan data
         for ($i = 1; $i <= 7; $i++) {
-            // urus gambar
+            // urus gambar. ditaruh sini supaya validasi dijalankan dulu sebelum proses gambar
             if (isset($validatedData['img-' . $i])) {
                 // hapus foto lama jika ada
                 if (isset($banner[$i]['img'])) {
@@ -71,6 +84,7 @@ class BannerController extends Controller
                 }
                 // simpan gambar
                 $simpan[$i]['img'] = $request->file('img-' . $i)->store('banner');
+                $simpan[$i]['user_id'] = Auth::user()->id; // pengurus yang mengedit
             }
 
             // update data

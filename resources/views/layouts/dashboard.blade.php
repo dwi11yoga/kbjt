@@ -34,15 +34,15 @@
 
                 {{-- header --}}
                 <div
-                    class="grid grid-cols-8 space-x-1 mb-5 md:py-0 py-2 md:static sticky top-0 flex items-center bg-neutral-50 z-50">
+                    class="grid grid-cols-8 space-x-1 mb-5 md:py-0 py-2 md:static sticky top-0 flex items-center bg-neutral-50 z-10">
 
                     {{-- Menu mobile --}}
-                    <div class="col-span-1 md:hidden">
+                    <button class="col-span-1 md:hidden" onclick="openWindow('menu')">
                         <div
                             class="w-12 h-12 rounded-full flex justify-center cursor-pointer items-center hover:bg-gray-200 active:bg-gray-300">
                             <i data-feather='menu'></i>
                         </div>
-                    </div>
+                    </button>
 
                     {{-- Judul halaman --}}
                     <div class="md:col-span-5 col-span-4 flex items-center">

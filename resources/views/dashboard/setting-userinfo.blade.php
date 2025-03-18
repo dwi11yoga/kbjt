@@ -16,7 +16,7 @@
         </div>
 
         {{-- Ganti profil --}}
-        <div class="grid grid-cols-5 space-x-5">
+        <div class="grid md:grid-cols-5 col-span-3 md:space-x-5 md:space-y-0 space-y-5">
             <div class="col-span-3 space-y-5">
                 <div class="bg-white rounded-2xl p-5 text-neutral-800">
                     <div class="mb-3">Informasi akun</div>
@@ -45,35 +45,17 @@
 
                             <div class="ml-1">
                                 {{-- Ganti foto profil --}}
-                                <div class="group flex">
-                                    <div id="pp_trigger"
-                                        class="cursor-pointer bg-white hover:bg-amber-300 rounded-full p-4 ">
-                                        <i data-feather='camera' class="w-5 h-5"></i>
-                                    </div>
-                                    <div id="hover-ganti-pp" class="group-hover:flex hidden items-center ml-2">
-                                        <div class="bg-amber-300 w-4 h-4 rotate-45">
-                                        </div>
-                                        <div class="rounded-md bg-amber-300 p-3 -ml-3 z-10">
-                                            Ganti foto profil
-                                        </div>
-                                    </div>
+                                <div id="pp_trigger" class="cursor-pointer bg-white hover:bg-amber-300 rounded-full p-4"
+                                    title="Ganti foto profil">
+                                    <i data-feather='camera' class="w-5 h-5"></i>
                                 </div>
 
                                 {{-- Hapus foto profil --}}
                                 @if (auth()->user()->profile_pic != null)
-                                    <div class="group flex">
-                                        <div id="pp_remove_trigger"
-                                            class="cursor-pointer hover:bg-amber-300 rounded-full p-4 ">
-                                            <i data-feather='x' class="w-5 h-5"></i>
-                                        </div>
-                                        <div class="group-hover:flex hidden items-center ml-2">
-                                            <div class="bg-amber-300 w-4 h-4 rotate-45">
-                                            </div>
-                                            <div class="rounded-md bg-amber-300 p-3 -ml-3 z-10">
-                                                Hapus foto profil
-                                            </div>
-                                        </div>
+                                    <div id="pp_remove_trigger" class="cursor-pointer hover:bg-amber-300 rounded-full p-4" title="Hapus foto profil">
+                                        <i data-feather='x' class="w-5 h-5"></i>
                                     </div>
+
                                     {{-- remove pp --}}
                                     <input type="checkbox" id="pp_remove" name="pp_remove" class="hidden">
                                 @endif
@@ -178,7 +160,7 @@
             </div>
 
 
-            <div class="col-span-2 space-y-5">
+            <div class="md:col-span-2 col-span-3 space-y-5">
 
                 {{-- Link pengguna --}}
                 <div class="bg-white p-5 rounded-2xl">

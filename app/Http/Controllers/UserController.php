@@ -154,7 +154,8 @@ class UserController extends Controller
             'title' => $user['nama'] . ' ' . '(' . $username . '',
             'user' => $user,
             'definisi' => $definisi,
-            'kosakata' => $kosakata
+            'kosakata' => $kosakata,
+            'group' => 'Profil user',
         ];
 
         // dapatkan daftar artikel by user

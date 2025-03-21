@@ -79,8 +79,120 @@
     </div>
 </nav> --}}
 
+{{-- daftar menu mobile --}}
+<div id="menu" class="fixed w-full h-full grid grid-row-6 bg-white px-5 z-20 invisible">
+
+    {{-- tutup menu --}}
+    <div class="flex justify-between items-center row-span-1">
+        <div class="translate-x-4">
+            <a href="/">
+                <h4 class="font-bold underline decoration-amber-400 underline-offset-4 decoration-4">kbjt</h4>
+            </a>
+        </div>
+
+        <button onclick="closeWindow('menu')"
+            class="flex group px-5 py-3 translate-x-2 w-fit rounded-2xl hover:bg-neutral-100 cursor-pointer space-x-3 active:bg-amber-100">
+            <div>Tutup</div>
+            <i data-feather='x'></i>
+        </button>
+    </div>
+
+    {{-- menu --}}
+    <div class="space-y-1 overflow-y-auto row-span-4">
+        {{-- Home --}}
+        <a href="/">
+            <div
+                class="flex group py-4 px-6 w-fit rounded-2xl {{ $group == 'homepage' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
+                <i data-feather='home'
+                    class="{{ $group == 'homepage' ? '' : 'text-neutral-700 group-hover:text-black' }}"></i>
+                <div
+                    class="inline-block ml-3 {{ $group == 'homepage' ? '' : 'text-neutral-700 group-hover:text-black' }}">
+                    Home
+                </div>
+            </div>
+        </a>
+
+        {{-- Daftar kosakata --}}
+        <a href="/daftar-kosakata">
+            <div
+                class="flex group py-4 px-6 w-fit rounded-2xl {{ $group == 'kosakata' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
+                <i data-feather='list'
+                    class="{{ $group == 'kosakata' ? '' : 'text-neutral-700 group-hover:text-black' }}"></i>
+                <div
+                    class="inline-block ml-3 {{ $group == 'kosakata' ? '' : 'text-neutral-700 group-hover:text-black' }}">
+                    Daftar Kosakata
+                </div>
+            </div>
+        </a>
+
+        {{-- Hall of fame --}}
+        <a href="/hall-of-fame">
+            <div
+                class="flex group py-4 px-6 w-fit rounded-2xl {{ $group == 'hall of fame' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
+                <i data-feather='award'
+                    class="{{ $group == 'hall of fame' ? '' : 'text-neutral-700 group-hover:text-black' }}"></i>
+                <div
+                    class="inline-block ml-3 {{ $group == 'hall of fame' ? '' : 'text-neutral-700 group-hover:text-black' }}">
+                    Hall of Fame
+                </div>
+            </div>
+        </a>
+
+        {{-- blog --}}
+        <a href="/blog">
+            <div
+                class="flex group py-4 px-6 w-fit rounded-2xl {{ $group == 'blog' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
+                <i data-feather='align-left'
+                    class="{{ $group == 'blog' ? '' : 'text-neutral-700 group-hover:text-black' }}"></i>
+                <div class="inline-block ml-3 {{ $group == 'blog' ? '' : 'text-neutral-700 group-hover:text-black' }}">
+                    Blog
+                </div>
+            </div>
+        </a>
+
+        {{-- donasi --}}
+        <a href="/donasi">
+            <div
+                class="flex group py-4 px-6 w-fit rounded-2xl {{ $group == 'donasi' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
+                <i data-feather='gift'
+                    class="{{ $group == 'donasi' ? '' : 'text-neutral-700 group-hover:text-black' }}"></i>
+                <div
+                    class="inline-block ml-3 {{ $group == 'donasi' ? '' : 'text-neutral-700 group-hover:text-black' }}">
+                    Donasi
+                </div>
+            </div>
+        </a>
+    </div>
+
+    {{-- Masuk --}}
+    <div class="row-span-1 flex items-center space-x-2">
+        @auth
+            <a href="/dashboard" class="">
+                <button class="flex items-center group py-4 px-6 w-fit rounded-2xl hover:bg-neutral-100">
+                    <div class="overflow-hidden w-7 h-7 rounded-full flex justify-center">
+                        @include('partials.profile-pic')
+                    </div>
+                    <div class="inline-block ml-3 text-neutral-700 group-hover:text-black">
+                        Dashboard
+                    </div>
+                </button>
+            </a>
+        @else
+            <a href="/masuk" class="">
+                <button class="flex group py-4 px-6 w-fit rounded-2xl bg-amber-100 hover:bg-amber-200 active:bg-amber-300">
+                    <i data-feather='log-in' class="text-neutral-700 group-hover:text-black"></i>
+                    <div class="inline-block ml-3 text-neutral-700 group-hover:text-black">
+                        Masuk
+                    </div>
+                </button>
+            </a>
+        @endauth
+    </div>
+</div>
+
+
 {{-- Navbar 3 --}}
-<nav class="w-full justify-between bg-white shadow-sm py-4 px-9 items-center flex sticky top-0 z-50">
+<nav class="w-full justify-between bg-white shadow-sm py-4 px-9 items-center flex sticky top-0 z-10">
     {{-- Logo & pencarian --}}
     <div class="flex items-center space-x-8">
         {{-- logo --}}
@@ -104,7 +216,7 @@
         @endif
     </div>
 
-    {{-- Menu --}}
+    {{-- menu desktop --}}
     <ul class="md:flex hidden items-center">
         <li>
             <a href="/"
@@ -143,4 +255,11 @@
             @endauth
         </li>
     </ul>
+
+    {{-- button menu mobile --}}
+    <button
+        class="md:hidden w-12 h-12 rounded-full flex justify-center cursor-pointer items-center hover:bg-gray-200 active:bg-gray-300 translate-x-4"
+        onclick="document.getElementById('menu').classList.toggle('invisible');">
+        <i data-feather='menu'></i>
+    </button>
 </nav>

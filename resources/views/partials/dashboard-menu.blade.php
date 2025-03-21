@@ -1,6 +1,5 @@
 {{-- Menu --}}
-<div
-    class="bg-white p-6 border-r border-neutral-200 top-0 fixed left-0 h-full w-[17rem] hidden md:grid md:grid-row-12">
+<div class="bg-white p-6 border-r border-neutral-200 top-0 fixed left-0 h-full w-[17rem] hidden md:grid md:grid-row-12">
     {{-- logo --}}
     <div class="ml-4">
         <a href="/">
@@ -282,9 +281,8 @@
     <div>
         <button onclick="closeWindow('menu')"
             class="mt-10 flex group px-6 py-4 w-fit rounded-2xl hover:bg-neutral-100 cursor-pointer space-x-3 active:bg-amber-100">
-            <i data-feather='x'></i>@auth
-                <div>Tutup</div>
-            @endauth
+            <i data-feather='x'></i>
+            <div>Tutup</div>
         </button>
     </div>
 

@@ -30,7 +30,7 @@ Route::get('/blog', [HomepageController::class, 'blog']);
 // post/artikel
 Route::get('/blog/post/{slug}', [HomepageController::class, 'blogPost']);
 // donasi
-Route::get('/donasi', [HomepageController::class, 'donasi']);
+Route::get('/dukung', [HomepageController::class, 'donasi']);
 // pencarian
 Route::get('/cari', [HomepageController::class, 'pencarian']);
 

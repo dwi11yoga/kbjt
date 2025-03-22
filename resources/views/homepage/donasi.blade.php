@@ -1,7 +1,7 @@
 @extends('.../layouts/homepage-with-banner')
 
 @section('body')
-    <h3 class="mb-3 font-bold">Donasi</h3>
+    <h3 class="mb-3 font-bold">Beri dukungan</h3>
     <p class="mb-7">Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis rerum, accusantium veniam quisquam
         doloremque quo quasi aliquid asperiores recusandae illum.</p>
 

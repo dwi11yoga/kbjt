@@ -110,6 +110,7 @@ abstract class Controller
         return true;
     }
 
+    // hitung requirement sertifikat
     public function hitungRequirementSertifikat(string $rule, int $userId)
     {
         if ($rule == 'keanggotaan') { // hitung lama user terdaftar

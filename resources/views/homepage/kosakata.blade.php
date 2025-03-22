@@ -24,18 +24,18 @@
                         class="absolute hidden bg-white right-0 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
                         <ul>
                             <a href="{{ $data->slug }}/edit">
-                                <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
+                                <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                     <div>Edit</div>
                                     <i data-feather='edit-3' class="w-5"></i>
                                 </li>
                             </a>
                             <a href="/kosakata/{{ $data->slug }}/riwayat">
-                                <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
+                                <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                     <div>Riwayat edit</div>
                                     <i data-feather='clock' class="w-5"></i>
                                 </li>
                             </a>
-                            <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500 cursor-pointer"
+                            <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-red-100 text-red-500 cursor-pointer"
                                 onclick="openWindow('hapausKosakata')">
                                 <div>Hapus</div>
                                 <i data-feather='trash' class="w-5"></i>

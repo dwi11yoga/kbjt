@@ -10,60 +10,74 @@
 @section('body')
     <form action="" method="POST" id="form" enctype="multipart/form-data" class="space-y-3">
         @csrf
-        <div class="flex space-x-3">
-            {{-- judul --}}
-            <input type="text" id="judul" name="judul" placeholder="Judul" value="{{ old('judul') }}"
-                oninput="buatSlug(this, 'slug')"
-                class="w-full py-4 px-5 bg-white rounded-xl font-semibold focus:outline-none focus:outline-amber-400 @error('judul')
-            border-red-600 border-2
-            @enderror">
-            {{-- tombol simpan --}}
-            <button type="submit" id="simpan" onclick="document.getElementById('form').action='/artikel/baru/simpan'"
-                title="Simpan sebagai draf" class="bg-white rounded-xl py-4 px-5 hover:bg-amber-300">
-                <i data-feather='save' class="w-5"></i>
-            </button>
-            {{-- tombol publish --}}
-            <button type="submit" id="publish"
-                onclick="document.getElementById('form').action='/artikel/baru/publikasikan'" title="Publikasikan artikel"
-                class="bg-white rounded-xl py-4 px-5 hover:bg-amber-300">
-                <i data-feather='send' class="w-5"></i>
-            </button>
+
+        {{-- tombol simpan/publikasikan --}}
+        <div class="grid grid-cols-2 rounded-xl bg-white py-4 px-5 md:space-y-0 space-y-2">
+            <div class="md:col-span-1 col-span-2">Simpan/publikasikan artikel?</div>
+            <div class="md:col-span-1 col-span-2 md:text-right space-x-5">
+                <button type="submit" id="publish" title="Publikasikan artikel" class="text-blue-600"
+                    onclick="document.getElementById('form').action='/artikel/baru/publikasikan'">Publikasikan</button>
+                <button type="submit"id="simpan" title="Simpan sebagai draft" class="text-amber-600"
+                    onclick="document.getElementById('form').action='/artikel/baru/simpan'">Simpan sebagai draf</button>
+            </div>
         </div>
-        @error('judul')
-            <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
-        @enderror
+
+        {{-- judul --}}
+        <div class="bg-white px-5 py-4 rounded-xl">
+            <label for="judul" class="text-sm">Judul</label>
+            <input type="text" id="judul" name="judul" placeholder="Masukkan judul" oninput="buatSlug(this, 'slug')" value="{{ old('judul') }}"
+                class="w-full font-semibold focus:outline-none focus:border-b-2 py-1 @error('judul') 
+                border-red-600 text-red-600 @else focus:border-amber-400
+                @enderror">
+            @error('judul')
+                <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+            @enderror
+        </div>
+
+        {{-- subjudul --}}
+        <div class="bg-white px-5 py-4 rounded-xl">
+            <label for="subjudul" class="text-sm">Subjudul</label>
+            <input type="text" id="subjudul" name="subjudul" placeholder="Masukkan subjudul (opsional)"
+                value="{{ old('subjudul') }}"
+                class="w-full focus:outline-none focus:border-b-2 py-1 @error('subjudul') 
+                border-red-600 text-red-600 @else focus:border-amber-400
+                @enderror">
+            @error('subjudul')
+                <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+            @enderror
+        </div>
 
         {{-- slug --}}
-        <input type="text" name="slug" id="slug" value="{{ old('slug') }}"
-            placeholder="URL ({{ $url }}/blog/post/...)"
-            class="w-full py-4 px-5 bg-white rounded-xl focus:outline-none focus:outline-amber-400 @error('slug')
-            border-red-600 border-2
-            @enderror">
-        @error('slug')
-            <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
-        @enderror
-
-        {{-- subtitle --}}
-        <input type="text" name="subjudul" id="subjudul" value="{{ old('subjudul') }}" placeholder="Subjudul (opsional)"
-            class="w-full py-4 px-5 bg-white rounded-xl focus:outline-none focus:outline-amber-400">
-        {{-- tambah thumbnail/gambar --}}
-
-        <div class="flex space-x-3">
-            {{-- Thumbnail --}}
-            <div class="w-full py-4 px-5 bg-white rounded-xl text-neutral-400">
-                <img id="thumbmailPreview" src="" alt="Thumbnail" class="object-cover max-h-72 rounded-xl">
-                @error('thumbnail')
-                    <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
-                @enderror
-            </div>
-            <div onclick="document.getElementById('thumbnail').click()" title="Pilih gambar"
-                class="bg-white rounded-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14">
-                <i data-feather='folder' class="w-5"></i>
-            </div>
+        <div class="bg-white px-5 py-4 rounded-xl">
+            <label for="slug" class="text-sm">Slug*</label>
+            <input type="text" id="slug" name="slug" placeholder="Masukkan slug" value="{{ old('slug') }}"
+                class="w-full focus:outline-none focus:border-b-2 py-1 @error('slug') 
+                border-red-600 text-red-600 @else focus:border-amber-400
+                @enderror">
+            @error('slug')
+                <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+            @enderror
+            <div class="text-xs">*Tulis "{{ (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https:' : 'http' }}://{{ $_SERVER['HTTP_HOST']; }}/lorem-ipsum" menjadi "lorem-ipsum" saja</div>
         </div>
 
-        <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp" id="thumbnail" name="thumbnail"
-            onchange="previewImage(this,'thumbmailPreview')" class="hidden">
+        {{-- thumbnail --}}
+        <div class="md:col-span-1 col-span-3">
+            <div
+                class="w-1/2 py-4 px-5 bg-neutral-100 rounded-t-xl aspect-video text-neutral-400 border-8 border-white">
+                <img id="thumbmailPreview" src="" alt="Thumbnail"
+                    class="object-cover max-h-72 rounded-xl">
+            </div>
+            <div onclick="document.getElementById('thumbnail').click()" title="Pilih gambar"
+                class="w-1/2 bg-white rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+                <div>Thumbnail</div>
+                <i data-feather='folder' class="w-5"></i>
+            </div>
+            @error('thumbnail')
+                <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+            @enderror
+            <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp" id="thumbnail"
+                name="thumbnail" onchange="previewImage(this,'thumbmailPreview')" class="hidden">
+        </div>
 
         {{-- konten/text --}}
         <div class="bg-white py-4 rounded-2xl">

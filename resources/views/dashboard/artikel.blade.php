@@ -62,7 +62,7 @@
             @foreach ($posts as $d)
                 <div
                     class="relative grid grid-cols-12 items-center py-4 px-5 bg-white rounded-xl group hover:outline hover:outline-amber-200">
-                    <a href="{{ $d->user_id == auth()->user()->id ? '/artikel/edit/' . $d->id : (isset($d->status) ? '/blog/post/' . $d->slug : '/blog/preview/' . $d->slug) }}"
+                    <a href="{{ $d->user_id != auth()->user()->id || auth()->user()->role == 'kepala' ? (isset($d->status) ? '/blog/post/' . $d->slug : '/blog/preview/' . $d->slug) : '/artikel/edit/' . $d->id }}"
                         class="col-span-11 grid md:grid-cols-11 grid-cols-5 md:space-x-10 space-y-2">
                         {{-- Judul --}}
                         <div class="md:col-span-5 col-span-5 line-clamp-2 flex items-center md:font-normal font-semibold">
@@ -110,7 +110,7 @@
                             @if (isset($d->status))
                                 {{-- Lihat --}}
                                 <a href="/blog/post/{{ $d->slug }}">
-                                    <li class="flex justify-between py-2 px-3 rounded-lg">
+                                    <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                         <div>Lihat</div>
                                         <i data-feather='eye' class="w-5"></i>
                                     </li>
@@ -123,13 +123,13 @@
                                     @csrf
                                     @if (isset($d->status))
                                         {{-- jadikan draft --}}
-                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg">
+                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                             <div>Jadikan draf</div>
                                             <i data-feather='archive' class="w-5"></i>
                                         </button>
                                     @else
                                         {{-- publikasikan --}}
-                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg">
+                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                             <div>Publikasikan</div>
                                             <i data-feather='send' class="w-5"></i>
                                         </button>
@@ -141,7 +141,7 @@
                             @if (empty($d->status))
                                 {{-- preview --}}
                                 <a href="/blog/preview/{{ $d->slug }}">
-                                    <li class="flex justify-between py-2 px-3 rounded-lg">
+                                    <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                         <div>Preview</div>
                                         <i data-feather='eye' class="w-5"></i>
                                     </li>
@@ -155,7 +155,7 @@
                                     @csrf
                                     @if ($d->pinned == 0)
                                         {{-- Pin artikel --}}
-                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg">
+                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                             <div>Sematkan</div>
                                             <div>
                                                 <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none"
@@ -167,7 +167,7 @@
                                         </button>
                                     @elseif ($d->pinned == 1)
                                         {{-- Unpin artikel --}}
-                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg">
+                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                             <div>Lepas semat</div>
                                             <div>
                                                 <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none"
@@ -198,7 +198,7 @@
                             @if (auth()->user()->role == 'kepala' || $d->user_id == auth()->user()->id)
                                 <button type="submit" id="{{ $d->id }}"
                                     onclick="deleteMessage(this,'hapusArtikel', 'formHapus')"
-                                    class="flex w-full justify-between py-2 px-3 rounded-lg text-red-500">
+                                    class="flex w-full justify-between py-2 px-3 rounded-lg text-red-500 hover:bg-red-100">
                                     <div>Hapus</div>
                                     <i data-feather='trash-2' class="w-5"></i>
                                 </button>

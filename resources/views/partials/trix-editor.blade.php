@@ -113,13 +113,13 @@ note: 1=enabled, 0=disabled
 
 
 {{-- Trix Toolbar --}}
-<div class="sticky top-0 bg-white">
+<div class="sticky top-0 bg-white px-5">
     <trix-toolbar id="my_toolbar"></trix-toolbar>
     <div class="more-stuff-inbetween"></div>
 </div>
 
 {{-- Trix Editor --}}
-<div class="mt-1">
+<div class="mt-1 px-5">
     <input id="{{ $trixId }}" type="hidden" name="{{ $trixId }}"
         value="{{ isset($updateInput) ? old('trixId', $updateInput) : old($trixId) }}">
     <trix-editor toolbar="my_toolbar" input="{{ $trixId }}"

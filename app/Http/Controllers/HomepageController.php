@@ -180,7 +180,7 @@ class HomepageController extends Controller
 
         return view('homepage.donasi', [
             'group' => 'donasi',
-            'title' => 'Donasi',
+            'title' => 'Dukungan',
             'donasi' => $donasi,
             'metode' => $metode,
             'banner'=>$banner

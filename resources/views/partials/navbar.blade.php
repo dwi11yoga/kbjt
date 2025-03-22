@@ -238,8 +238,8 @@
                 class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ isset($group) && $group == 'blog' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Blog</a>
         </li>
         <li>
-            <a href="/donasi"
-                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ isset($group) && $group == 'donasi' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Donasi</a>
+            <a href="/dukung"
+                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ isset($group) && $group == 'donasi' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Dukung</a>
         </li>
         <li>
             @auth

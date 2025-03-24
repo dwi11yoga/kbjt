@@ -1,35 +1,34 @@
 @extends('layouts.dashboard')
 
 @section('body')
-    <form action="/achievement/{{ $achievement->id }}/edit" method="POST" class="space-y-3">
+    <form action="/achievement/{{ $achievement->id }}/edit" method="POST" enctype="multipart/form-data" class="space-y-3">
         @csrf
         @method('PUT')
         <div class="flex items-center justify-between rounded-xl bg-white py-4 px-5">
             <div>Simpan perubahan?</div>
-            <button type="submit">Simpan</button>
+            <button type="submit" class="text-amber-600">Simpan</button>
         </div>
 
         <div class="">
-            <div class="grid grid-cols-5 space-x-2">
-                <div class="md:col-span-1 col-span-3">
+            <div class="grid grid-cols-5 md:space-x-2 md:space-y-0 space-y-3">
+                <div class="md:col-span-1 col-span-3 order-1">
                     {{-- emblem --}}
                     <div
-                        class="w-full py-4 px-5 bg-neutral-100 rounded-t-xl aspect-square text-neutral-400 border-8 border-white">
-                        <img id="thumbmailPreview" src="" alt="Emblem/Icon achievement"
-                            class="object-cover max-h-72 rounded-xl">
+                        class="w-full bg-neutral-100 rounded-t-xl aspect-square text-neutral-400 border-8 border-white overflow-hidden">
+                        <img id="thumbmailPreview"
+                            src="{{ asset(isset($achievement->emblem) ? 'storage/' . $achievement->emblem : 'storage/achievement/no-icon') }}"
+                            alt="Emblem/Icon achievement" class="object-cover">
                     </div>
                     <div onclick="document.getElementById('emblem').click()" title="Pilih gambar"
-                        class="bg-white rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-end">
+                        class="bg-white rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+                        <div>Pilih gambar*</div>
                         <i data-feather='folder' class="w-5"></i>
                     </div>
-                    @error('emblem')
-                        <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
-                    @enderror
                     <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp" id="emblem"
                         name="emblem" onchange="previewImage(this,'thumbmailPreview')" class="hidden">
                 </div>
 
-                <div class="md:col-span-4 col-span-5 bg-white px-5 py-4 space-y-2 rounded-xl">
+                <div class="md:col-span-4 col-span-5 bg-white px-5 py-4 space-y-2 rounded-xl md:order-2 order-3">
                     {{-- nama --}}
                     <div class="">
                         <label for="nama" class="text-sm">Nama</label>
@@ -79,11 +78,20 @@
                             <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
                         @enderror
                     </div>
+                </div>
 
+                {{-- error dan keterangan untuk emblem --}}
+                <div class="col-span-5 md:order-3 order-2 md:pt-3">
+                    @error('emblem')
+                        <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                    @enderror
+                    <div class="text-xs">*Pilih gambar berformat .jpg, .jpeg, .png, atau .webp (maks. 1024KB dengan rasio 1:1).
+                    </div>
                 </div>
 
             </div>
         </div>
+
 
         {{-- kategori/rule --}}
         <div class="bg-white px-5 py-4 rounded-xl">

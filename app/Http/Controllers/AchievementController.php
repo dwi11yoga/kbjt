@@ -12,6 +12,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AchievementController extends Controller
 {
@@ -161,7 +162,7 @@ class AchievementController extends Controller
             'rule' => 'required',
             'requirement' => 'required|numeric|min:0',
             'reward' => 'required|numeric|min:0',
-            'emblem' => '',
+            'emblem' => 'required|mimes:png,jpg,webp,jpeg|image|max:1024|dimensions:ratio=1/1',
         ]);
 
         if ($validatedData['role'] == 'semua') {
@@ -169,6 +170,10 @@ class AchievementController extends Controller
         }
 
         // simpan
+        // simpan gambar
+        $gambar = $request->file('emblem')->store('achievement');
+        $validatedData['emblem'] = $gambar;
+        // simpan data ke database
         Achievement::create($validatedData);
 
         // kembalikan ke halaman achieevement
@@ -195,25 +200,41 @@ class AchievementController extends Controller
     // simpan edit
     public function simpanEdit(Request $request, $id)
     {
-        // validasi
-        $validatedData = $request->validate([
+
+        $rules = [
             'nama' => 'required|min:3|unique:achievements,nama,' . $id . ',id',
             'role' => 'required',
             'deskripsi' => 'required',
             'rule' => 'required',
             'requirement' => 'required|numeric|min:0',
             'reward' => 'required|numeric|min:0',
-            'emblem' => '',
-        ]);
+        ];
+        if (isset($request->emblem)) {
+            $rules['emblem'] = 'mimes:png,jpg,webp,jpeg|image|max:1024|dimensions:ratio=1/1';
+        }
+
+        // validasi
+        $validatedData = $request->validate($rules);
 
         if ($validatedData['role'] == 'semua') {
             $validatedData['role'] = null;
+        }
+
+        // gambar
+        if (isset($request->emblem)) {
+            // hapus gambar semelumnya
+            $emblem = Achievement::where('id', $id)->value('emblem');
+            if (isset($emblem)) {
+                Storage::delete($emblem);
+            }
+            // simpan gambar baru
+            $validatedData['emblem'] = $request->file('emblem')->store('achievement');
         }
 
         // simpan
         Achievement::find($id)->update($validatedData);
 
         // kembalikan ke halaman achieevement
-        return redirect()->to('/achievement')->with('success', 'Achievement baru berhasil disimpan');
+        return redirect()->to('/achievement')->with('success', 'Achievement berhasil diperbarui');
     }
 }

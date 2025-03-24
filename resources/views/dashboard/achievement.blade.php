@@ -48,8 +48,8 @@
                     <div
                         class="px-5 py-6 bg-white rounded-2xl grid md:grid-cols-12 grid-cols-10 space-x-4 hover:outline hover:outline-amber-400">
 
-                        <div class="md:col-span-1 col-span-3 flex items-center justify-center">
-                            <img src="https://static.wikia.nocookie.net/pentiment/images/6/66/F3893dab65dfc92e0cbd0b7c1d052f0b28d7daf9.jpg"
+                        <div class="md:col-span-1 col-span-3 flex items-center justify-center rounded-md overflow-hidden">
+                            <img src="{{ asset(isset($d->emblem)? 'storage/'.$d->emblem:'storage/achievement/no-icon') }}"
                                 class="w-full @if ($d->achieved != 1 && auth()->user()->role != 'kepala') grayscale @endif" alt="Icon">
                         </div>
 
@@ -79,8 +79,8 @@
                     <a href="/achievement/{{ $d->id }}/edit"
                         class="px-5 py-6 bg-white rounded-2xl grid md:grid-cols-12 grid-cols-10 space-x-4 hover:outline hover:outline-amber-400">
 
-                        <div class="md:col-span-1 col-span-3 flex items-center justify-center">
-                            <img src="https://static.wikia.nocookie.net/pentiment/images/6/66/F3893dab65dfc92e0cbd0b7c1d052f0b28d7daf9.jpg"
+                        <div class="md:col-span-1 col-span-3 flex items-center justify-center rounded-md overflow-hidden">
+                            <img src="{{ asset(isset($d->emblem)? 'storage/'.$d->emblem:'storage/d/no-icon') }}"
                                 class="w-full @if ($d->achieved != 1 && auth()->user()->role != 'kepala') grayscale @endif" alt="Icon">
                         </div>
 

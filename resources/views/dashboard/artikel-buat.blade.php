@@ -25,7 +25,8 @@
         {{-- judul --}}
         <div class="bg-white px-5 py-4 rounded-xl">
             <label for="judul" class="text-sm">Judul</label>
-            <input type="text" id="judul" name="judul" placeholder="Masukkan judul" oninput="buatSlug(this, 'slug')" value="{{ old('judul') }}"
+            <input type="text" id="judul" name="judul" placeholder="Masukkan judul"
+                oninput="buatSlug(this, 'slug')" value="{{ old('judul') }}"
                 class="w-full font-semibold focus:outline-none focus:border-b-2 py-1 @error('judul') 
                 border-red-600 text-red-600 @else focus:border-amber-400
                 @enderror">
@@ -57,26 +58,31 @@
             @error('slug')
                 <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
             @enderror
-            <div class="text-xs">*Tulis "{{ (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https:' : 'http' }}://{{ $_SERVER['HTTP_HOST']; }}/lorem-ipsum" menjadi "lorem-ipsum" saja</div>
+            <div class="text-xs">*Tulis
+                "{{ !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https:' : 'http' }}://{{ $_SERVER['HTTP_HOST'] }}/lorem-ipsum"
+                menjadi "lorem-ipsum" saja</div>
         </div>
 
         {{-- thumbnail --}}
         <div class="md:col-span-1 col-span-3">
-            <div
-                class="w-1/2 py-4 px-5 bg-neutral-100 rounded-t-xl aspect-video text-neutral-400 border-8 border-white">
-                <img id="thumbmailPreview" src="" alt="Thumbnail"
-                    class="object-cover max-h-72 rounded-xl">
+            <div class="w-1/2 py-4 px-5 bg-neutral-100 rounded-t-xl aspect-video text-neutral-400 border-8 border-white">
+                <img id="thumbmailPreview" src="" alt="Thumbnail" class="object-cover max-h-72 rounded-xl">
             </div>
             <div onclick="document.getElementById('thumbnail').click()" title="Pilih gambar"
                 class="w-1/2 bg-white rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
-                <div>Thumbnail</div>
+                <div>Pilih thumbnail*</div>
                 <i data-feather='folder' class="w-5"></i>
             </div>
+            <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp" id="thumbnail" name="thumbnail"
+                onchange="previewImage(this,'thumbmailPreview')" class="hidden">
+        </div>
+
+        <div>
             @error('thumbnail')
                 <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
             @enderror
-            <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp" id="thumbnail"
-                name="thumbnail" onchange="previewImage(this,'thumbmailPreview')" class="hidden">
+            <div class="text-xs">*Pilih gambar berformat .jpg, .jpeg, .png, atau .webp (maks. 1024KB).
+            </div>
         </div>
 
         {{-- konten/text --}}
@@ -90,7 +96,6 @@
             $updateInput = null;
             ?>
             @include('partials.trix-editor')
-
         </div>
     </form>
 

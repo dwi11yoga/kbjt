@@ -43,7 +43,7 @@
 
     {{-- Thumbnail --}}
     @isset($post->thumbnail)
-        <img alt="" class="aspect-video overflow-hidden object-cover w-full rounded-lg mb-5"
+        <img alt="" class="object-cover w-full rounded-xl mb-5"
             src="{{ asset('storage/' . $post->thumbnail) }}">
     @endisset
 

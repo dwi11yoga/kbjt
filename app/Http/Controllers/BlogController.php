@@ -62,24 +62,32 @@ class BlogController extends Controller
     // Simpan artikel baru sebagai draft/publikasikan
     public function simpanArtikel(Request $request)
     {
+        // cek apakah artikel mau disimpan atau dipublikasikan
         $apakahSimpan = $request->getRequestUri() == "/artikel/baru/simpan"; //true jika artikel disimpan
         $apakahPublish = $request->getRequestUri() == "/artikel/baru/publikasikan"; //true jika artikel dipublikasikan
+        
         // Validasi
         if ($apakahSimpan == true) {
-            $validatedData = $request->validate([
+            $rules = [
                 'judul' => 'string|min:6',
                 'slug' => 'string|regex:/^[a-z0-9-]+$/',
-                'thumbnail' => [File::types(['jpg', 'jpeg', 'png', 'webp'])->max(1024)],
-            ]);
+            ];
         } elseif ($apakahPublish == true) {
-            $validatedData = $request->validate([
+            $rules = [
                 'judul' => 'required|string|min:6',
                 'slug' => 'required|string|regex:/^[a-z0-9-]+$/',
-                'thumbnail' => [File::types(['jpg', 'jpeg', 'png', 'webp'])->max(1024)],
-            ]);
+                'konten' => 'required|string|min:50'
+            ];
         } else {
             return back()->with('failed', 'Gagal menyimpan artikel');
         }
+
+        // thumbnail
+        if (isset($request->thumbnail)) {
+            $rules['thumbnail'] = 'mimes:png,jpg,jpeg,webp|image|max:1024';
+        }
+
+        $validatedData = $request->validate($rules);
 
         // simpan data
         $data = [
@@ -94,7 +102,7 @@ class BlogController extends Controller
         }
 
         // simpan gambar
-        if (isset($validatedData['thumbnail'])) {
+        if (isset($request->thumbnail)) {
             $validatedData['thumbnail'] = $request->file('thumbnail')->store('post-thumbnail');
             $data['thumbnail'] = $validatedData['thumbnail'];
         }
@@ -130,26 +138,34 @@ class BlogController extends Controller
     // Simpan artikel lama sebagai draft/publikasikan
     public function simpanEdit(Request $request, $id)
     {
+        // dapatkan data artikel yang diedit
         $post = Blog::select('id', 'slug', 'thumbnail')->where('id', '=', $id)->first();
 
+        // cek apakah artikel disimpan/dipublish
         $apakahSimpan = $request->getRequestUri() == "/artikel/edit/" . $id . "/simpan"; //true jika artikel disimpan
         $apakahPublish = $request->getRequestUri() == "/artikel/edit/" . $id . "/publikasikan"; //true jika artikel dipublikasikan
         // Validasi
         if ($apakahSimpan == true) {
-            $validatedData = $request->validate([
+            $rules=[
                 'judul' => 'string|min:6',
                 'slug' => 'string|regex:/^[a-z0-9-]+$/|unique:blog,slug,' . $id . ',id',
-                'thumbnail' => [File::types(['jpg', 'jpeg', 'png', 'webp'])->max(1024)],
-            ]);
+            ];
         } elseif ($apakahPublish == true) {
-            $validatedData = $request->validate([
+            $rules=[
                 'judul' => 'required|string|min:6',
                 'slug' => 'required|string|regex:/^[a-z0-9-]+$/|unique:blog,slug,' . $id . ',id',
-                'thumbnail' => [File::types(['jpg', 'jpeg', 'png', 'webp'])->max(1024)],
-            ]);
+                'konten'=>'required|string|min:50'
+            ];
         } else {
             return back()->with('failed', 'Gagal menyimpan perubahan pada artikel');
         }
+
+        // thumbnail
+        if (isset($request->thumbnail)) {
+            $rules['thumbnail'] = 'mimes:png,jpg,jpeg,webp|image|max:1024';
+        }
+
+        $validatedData=$request->validate($rules);
 
         // simpan data
         $data = [
@@ -165,7 +181,7 @@ class BlogController extends Controller
         }
 
         // simpan gambar
-        if (isset($validatedData['thumbnail'])) {
+        if (isset($request->thumbnail)) {
             // hapus gambar jika sudah ada.
             if (isset($post['thumbnail'])) {
                 Storage::delete($post->thumbnail);
@@ -295,7 +311,6 @@ class BlogController extends Controller
 
         Blog::where('id', '=', $id)->update($data);
         return back()->with('success', $pesan);
-
     }
 
     // Hapus artikel

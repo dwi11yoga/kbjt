@@ -68,19 +68,24 @@
 
         {{-- thumbnail --}}
         <div class="md:col-span-1 col-span-3">
-            <div class="w-1/2 py-4 px-5 bg-neutral-100 rounded-t-xl aspect-video text-neutral-400 border-8 border-white">
-                <img id="thumbmailPreview" src="" alt="Thumbnail" class="object-cover max-h-72 rounded-xl">
+            <div class="w-1/2 bg-neutral-100 rounded-t-xl aspect-video text-neutral-400 border-8 border-white flex items-center justify-center overflow-hidden">
+                <img id="thumbmailPreview" src="{{ asset('storage/'.$post->thumbnail) }}" alt="Thumbnail" class="object-cover w-full h-full">
             </div>
             <div onclick="document.getElementById('thumbnail').click()" title="Pilih gambar"
                 class="w-1/2 bg-white rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
-                <div>Thumbnail</div>
+                <div>Pilih thumbnail*</div>
                 <i data-feather='folder' class="w-5"></i>
             </div>
+            <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp" id="thumbnail" name="thumbnail"
+                onchange="previewImage(this,'thumbmailPreview')" class="hidden">
+        </div>
+
+        <div>
             @error('thumbnail')
                 <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
             @enderror
-            <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp" id="thumbnail" name="thumbnail"
-                onchange="previewImage(this,'thumbmailPreview')" class="hidden">
+            <div class="text-xs">*Pilih gambar berformat .jpg, .jpeg, .png, atau .webp (maks. 1024KB).
+            </div>
         </div>
 
         {{-- konten/text --}}

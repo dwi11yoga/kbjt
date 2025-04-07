@@ -195,3 +195,18 @@ function buatSlug(inputFrom, inputTarget) {
         .replace(/^-+|-+$/g, ""); // Hilangkan '-' di awal/akhir
     target.value = slug;
 }
+
+// INPUT
+
+// ubah tampilan validasi input
+// saat input error kan akan berwarna merah. kode ini kanggo ngubah warna dadi normal nik misal user input data
+// itemIds=array, dadi butuh array
+function removeErrorIndicators(itemIds) {
+    itemIds.forEach(element => {
+        var item = document.getElementById(element);
+        item.addEventListener('input', () => {
+            item.classList.remove('border-red-600', 'text-red-600');
+            item.classList.add('focus:border-amber-400');
+        });
+    });
+}

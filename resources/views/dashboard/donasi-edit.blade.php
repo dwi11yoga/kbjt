@@ -19,26 +19,31 @@
 
         <div class="">
             <div class="grid grid-cols-5 md:space-x-2 md:space-y-0 space-y-2">
-                <div class="md:col-span-1 col-span-3">
-                    
+                <div class="md:col-span-1 col-span-3 order-1">
                     {{-- barcode --}}
                     <div
-                        class="w-full py-4 px-5 bg-neutral-100 rounded-t-xl aspect-square text-neutral-400 border-8 border-white">
-                        <img id="thumbmailPreview" src="" alt="barcode"
-                            class="object-cover max-h-72 rounded-xl">
+                        class="w-full flex items-center justify-center bg-neutral-100 rounded-t-xl aspect-square text-neutral-400 border-8 border-white overflow-hidden">
+                        <img id="thumbmailPreview" src="{{ asset('storage/'.$donasi->barcode) }}" alt="Barcode"
+                            class="object-cover">
                     </div>
-                    <div onclick="document.getElementById('barcode').click()" title="Pilih gambar"
-                        class="bg-white rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-end">
+                    <div onclick="document.getElementById('barcode').click()" title="Pilih barcode"
+                        class="bg-white rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+                        <div>Pilih barcode</div>
                         <i data-feather='folder' class="w-5"></i>
                     </div>
-                    @error('barcode')
-                        <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
-                    @enderror
                     <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp" id="barcode"
                         name="barcode" onchange="previewImage(this,'thumbmailPreview')" class="hidden">
                 </div>
 
-                <div class="md:col-span-4 col-span-5 bg-white px-5 py-4 space-y-2 rounded-xl">
+                <div class="col-span-5 order-2 md:order-3 md:pt-3">
+                    @error('barcode')
+                        <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                    @enderror
+                    <div class="text-xs">*Pilih gambar berformat .jpg, .jpeg, .png, atau .webp (maks. 1024KB dengan rasio 1:1).
+                    </div>
+                </div>
+
+                <div class="md:col-span-4 col-span-5 bg-white px-5 py-4 space-y-2 rounded-xl md:order-2 order-3">
                     {{-- metode --}}
                     <div class="">
                         <label for="metode" class="text-sm">Metode</label>
@@ -89,7 +94,7 @@
         {{-- konten/text --}}
         <div class="bg-white py-4 px-4 rounded-2xl">
 
-            <div class="mb-2">Deskripsi / cara donasi</div>
+            <div class="mb-2 ml-5 mt-2">Deskripsi / cara donasi</div>
 
             <?php
             $trixId = 'cara_donasi';
@@ -104,6 +109,13 @@
     </form>
 
     <script>
+
+        // ubah warna teks dan garis input error jadi normal ketika user menginput
+        var validatedInput = ['metode', 'rekening', 'link', ];
+        document.addEventListener('DOMContentLoaded', () => {
+            removeErrorIndicators(validatedInput);
+        })
+        
         document.addEventListener('DOMContentLoaded', () => {
             // textareaHeight(document.getElementById('konten'));
         })

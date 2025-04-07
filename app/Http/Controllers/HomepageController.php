@@ -31,6 +31,9 @@ class HomepageController extends Controller
             $d['kosakata'] = $d->kosakata->kosakata;
         }
 
+        // ambil 5 artikel terbaru
+        $artikel=Blog::orderBy('created_at','desc')->take(5)->get();
+
         // dapatkan statistik web
         $jmlAnggota = number_format(User::select('id')->count(), 0, ',', '.');
         $jmlKosakata = number_format(Kosakata::select('id')->count(), 0, ',', '.');
@@ -42,6 +45,7 @@ class HomepageController extends Controller
             'title' => 'Selamat datang di Kamus Bahasa Jawa Terbuka!',
             'topContributor' => $topContributor,
             'definisi' => $definisi,
+            'artikel'=>$artikel,
             'jmlAnggota' => $jmlAnggota,
             'jmlKosakata' => $jmlKosakata,
             'jmlDefinisi' => $jmlDefinisi,
@@ -171,7 +175,8 @@ class HomepageController extends Controller
         if (!empty(request('metode-pembayaran'))) {
             $metode_dipilih = request('metode-pembayaran');
         } else {
-            $metode_dipilih = Donasi::orderBy('metode', 'asc')->value('metode');
+            $metode_dipilih = $metode->first()->metode;
+            // $metode_dipilih = Donasi::orderBy('metode', 'asc')->value('metode');
         }
         $donasi = Donasi::where('metode', '=', $metode_dipilih)->first();
 

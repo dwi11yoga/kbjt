@@ -138,9 +138,11 @@
                 @foreach ($achievement as $d)
                     <a href="#"
                         class="w-2/5 bg-neutral-100 rounded-xl p-4 h-44 flex justify-start items-end hover:outline hover:outline-amber-400">
-                        <div>
-                            <img alt="simple 10 icon png" class="object-cover max-w-12 max-h-12"
-                                src="https://www.freeiconspng.com/thumbs/number-10-icon/number-10-11.gif">
+                        <div class="">
+                            <div class="max-w-12 max-h-12 overflow-hidden rounded-md">
+                                <img alt="icon" class="object-cover w-full h-full"
+                                    src="{{ asset('storage/' . $d->emblem) }}">
+                            </div>
                             <div>{{ $d->nama }}</div>
                             <p class="text-xs line-clamp-1">{{ $d->deskripsi }}</p>
                         </div>
@@ -160,18 +162,20 @@
     {{-- Sertifikat, donasi, ajak teman --}}
     <div class="flex space-x-3">
         {{-- Sertifikat --}}
-        <a href="/sertifikat"
-            class="w-1/3 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
-            <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
-                <img class="object-cover w-full h-full"
-                    src="https://img.freepik.com/free-vector/certification-concept-illustration_114360-5171.jpg?w=740"
-                    alt="Certification concept illustration (freepik/storyset)">
-            </div>
-            <div class="p-4">
-                <div>Dapatkan sertifikat</div>
-                <p class="text-xs">Dapatkan penghargaan atas kontribusimu dalam melestarikan Bahasa Jawa!</p>
-            </div>
-        </a>
+        @if (auth()->user()->role != 'kepala')
+            <a href="/sertifikat"
+                class="w-1/3 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
+                <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
+                    <img class="object-cover w-full h-full"
+                        src="https://img.freepik.com/free-vector/certification-concept-illustration_114360-5171.jpg?w=740"
+                        alt="Certification concept illustration (freepik/storyset)">
+                </div>
+                <div class="p-4">
+                    <div>Dapatkan sertifikat</div>
+                    <p class="text-xs">Dapatkan penghargaan atas kontribusimu dalam melestarikan Bahasa Jawa!</p>
+                </div>
+            </a>
+        @endif
 
         {{-- Ajak teman --}}
         <a href="#"
@@ -188,7 +192,7 @@
         </a>
 
         {{-- donasi --}}
-        <a href="/donasi"
+        <a href="/dukung"
             class="w-1/3 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
             <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
                 <img class="object-cover w-full h-full"
@@ -196,7 +200,7 @@
                     alt="Inflation concept illustration (freepik/storyset)">
             </div>
             <div class="p-4">
-                <div>Donasi</div>
+                <div>Beri dukungan</div>
                 <p class="text-xs">Setiap donasi membantu mengembangkan kamus dan meningkatkan akses Bahasa Jawa.</p>
             </div>
         </a>

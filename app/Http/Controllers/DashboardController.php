@@ -275,23 +275,22 @@ class DashboardController extends Controller
     // view halaman kontributor
     public function kontributor()
     {
-
         // overview
         $overview['kontributor'] = number_format(User::where('role', '=', 'kontributor')->count('id'), 0, ',', '.');
         $overview['kontributorBlnIni'] = User::where('role', '=', 'kontributor')->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', Carbon::now()->year)
             ->count('id');
 
-        $definisi = Definisi::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+        $definisi = Definisi::whereMonth('created_at', '=', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->whereHas('user', function ($query) {
             $query->where('role', 'kontributor');
         })->count();
-        $kosakata = Kosakata::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+        $kosakata = Kosakata::whereMonth('created_at', '=', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->whereHas('user', function ($query) {
             $query->where('role', 'kontributor');
         })->count();
-        $editkosakata = EditKosakata::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+        $editkosakata = EditKosakata::whereMonth('created_at', '=', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->whereHas('user', function ($query) {
             $query->where('role', 'kontributor');
         })->count();
-        $laporan = Report::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+        $laporan = Report::whereMonth('created_at', '=', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->whereHas('user', function ($query) {
             $query->where('role', 'kontributor');
         })->count();
         $overview['kontribusi'] = $definisi + $kosakata + $editkosakata + $laporan;
@@ -326,10 +325,10 @@ class DashboardController extends Controller
             $laporan = Report::where('user_id', '=', $d->id)->count();
             $d['kontribusiTotal'] = $definisi + $kosakata + $editkosakata + $laporan;
             // kontribusi bulan ini
-            $definisi = Definisi::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->count();
-            $kosakata = Kosakata::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->count();
-            $editkosakata = EditKosakata::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->count();
-            $laporan = Report::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->count();
+            $definisi = Definisi::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->count();
+            $kosakata = Kosakata::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->count();
+            $editkosakata = EditKosakata::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->count();
+            $laporan = Report::where('user_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->count();
             $d['kontribusiBlnIni'] = $definisi + $kosakata + $editkosakata + $laporan;
         }
 
@@ -371,34 +370,43 @@ class DashboardController extends Controller
         $overview['rasioUser'] = number_format($overview['jmlPengurus'] / $overview['jmlUser'] * 10, 1, ',');
 
         // kontributsi pengurus bulan ini
-        $kosakata = Kosakata::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+        $kosakata = Kosakata::whereMonth('created_at', '=', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->whereHas('user', function ($query) {
             $query->where('role', 'pengurus');
         })->count();
-        $definisi = Definisi::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+        $definisi = Definisi::whereMonth('created_at', '=', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->whereHas('user', function ($query) {
             $query->where('role', 'pengurus');
         })->count();
-        $editkosakata = EditKosakata::whereMonth('created_at', '=', Carbon::now()->month)->whereHas('user', function ($query) {
+        $editkosakata = EditKosakata::whereMonth('created_at', '=', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->whereHas('user', function ($query) {
             $query->where('role', 'pengurus');
         })->count();
-        $laporan = Report::whereNotNull('status')->whereMonth('status', '=', Carbon::now()->month)->count();
-        $blog = Blog::whereNotNull('status')->whereMonth('status', '=', Carbon::now()->month)->count();
+        $laporan = Report::whereNotNull('status')->whereMonth('status', '=', Carbon::now()->month)->whereYear('status', Carbon::now()->year)->count();
+        $blog = Blog::whereNotNull('status')->whereMonth('status', '=', Carbon::now()->month)->whereYear('status', Carbon::now()->year)->count();
         // kurang banner
         $overview['kontribusiBlnIni'] = $kosakata + $definisi + $editkosakata + $laporan + $blog;
 
         // kontributsi pengurus bulan lalu
-        $kosakata = Kosakata::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereHas('user', function ($query) {
+        
+        // menentukan tahun (mencegah error saat di bulan januari)
+        if (Carbon::now()->month=='01') {
+            $tahun=Carbon::now()->subYear()->year;
+        } else{
+            $tahun=Carbon::now()->year;
+        }
+
+        $kosakata = Kosakata::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereYear('created_at', $tahun)->whereHas('user', function ($query) {
             $query->where('role', 'pengurus');
         })->count();
-        $definisi = Definisi::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereHas('user', function ($query) {
+        $definisi = Definisi::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereYear('created_at', $tahun)->whereHas('user', function ($query) {
             $query->where('role', 'pengurus');
         })->count();
-        $editkosakata = EditKosakata::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereHas('user', function ($query) {
+        $editkosakata = EditKosakata::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereYear('created_at', $tahun)->whereHas('user', function ($query) {
             $query->where('role', 'pengurus');
         })->count();
-        $laporan = Report::whereNotNull('status')->whereMonth('status', '=', Carbon::now()->subMonth()->month)->count();
-        $blog = Blog::whereNotNull('status')->whereMonth('status', '=', Carbon::now()->subMonth()->month)->count();
+        $laporan = Report::whereNotNull('status')->whereMonth('status', '=', Carbon::now()->subMonth()->month)->whereYear('status', $tahun)->count();
+        $blog = Blog::whereNotNull('status')->whereMonth('status', '=', Carbon::now()->subMonth()->month)->whereYear('status', $tahun)->count();
         // kurang banner
         $overview['kontribusiBlnKmrn'] = $kosakata + $definisi + $editkosakata + $laporan + $blog;
+        // dd($kosakata);
 
         // data pengurus
         $pengurus = User::where('role', '=', 'pengurus')

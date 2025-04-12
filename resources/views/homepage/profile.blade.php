@@ -210,7 +210,7 @@
                                 </div>
                                 <div>
                                     <div class="text-sm text-neutral-700">Tanggal lahir</div>
-                                    <div>{{ isset($user->tgl_lahir) ? $user->tgl_lahir->format('d F Y') : '-' }}</div>
+                                    <div>{{ isset($user->tgl_lahir) ? $user->tgl_lahir->Translatedformat('d F Y') : '-' }}</div>
                                 </div>
                                 <div>
                                     <div class="text-sm text-neutral-700">Jenis kelamin</div>

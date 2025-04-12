@@ -336,7 +336,7 @@
                                 {{-- Tindakan terhadap definisi --}}
                                 <div class="">
                                     <div class="mb-2">Tindakan terhadap definisi</div>
-                                    @error('tindakanDefinisi')
+                                    @error('tindakanDefinisi')``
                                         <div class="text-sm text-red-600 -mt-2 mb-2">{{ $message }}</div>
                                     @enderror
                                     <div class="space-y-2">
@@ -375,6 +375,18 @@
 
                                     <div class="space-y-2">
 
+                                        {{-- Tidak ada --}}
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="tidak-ada" value="tidak-ada"
+                                                class="hidden peer" {{ old('hukuman') == 'tidak-ada' ? 'checked' : '' }}>
+                                            <label for="tidak-ada"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Tidak ada</span>
+                                            </label>
+                                        </div>
+
+                                        {{-- peringatan --}}
                                         <div class="">
                                             <input type="radio" name="hukuman" id="peringatan" value="peringatan"
                                                 class="hidden peer" {{ old('hukuman') == 'peringatan' ? 'checked' : '' }}>
@@ -385,6 +397,74 @@
                                             </label>
                                         </div>
 
+                                        {{-- kurangi poin --}}
+                                        {{-- 2% poin --}}
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="kurangiPoin002" value="kurangiPoin002"
+                                                class="hidden peer" {{ old('hukuman') == 'kurangiPoin002' ? 'checked' : '' }}>
+                                            <label for="kurangiPoin002"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Kurangi poin sebesar 2% ({{ $laporan->author->poin }} → {{ $hasilPenguranganPoin[2] }} poin)</span>
+                                            </label>
+                                        </div>
+
+                                        {{-- 5% poin --}}
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="kurangiPoin005" value="kurangiPoin005"
+                                                class="hidden peer" {{ old('hukuman') == 'kurangiPoin005' ? 'checked' : '' }}>
+                                            <label for="kurangiPoin005"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Kurangi poin sebesar 5% ({{ $laporan->author->poin }} → {{ $hasilPenguranganPoin[5] }} poin)</span>
+                                            </label>
+                                        </div>
+
+                                        {{-- 8% poin --}}
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="kurangiPoin008" value="kurangiPoin008"
+                                                class="hidden peer" {{ old('hukuman') == 'kurangiPoin008' ? 'checked' : '' }}>
+                                            <label for="kurangiPoin008"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Kurangi poin sebesar 8% ({{ $laporan->author->poin }} → {{ $hasilPenguranganPoin[8] }} poin)</span>
+                                            </label>
+                                        </div>
+
+                                        {{-- 10% poin --}}
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="kurangiPoin010" value="kurangiPoin010"
+                                                class="hidden peer" {{ old('hukuman') == 'kurangiPoin010' ? 'checked' : '' }}>
+                                            <label for="kurangiPoin010"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Kurangi poin sebesar 10% ({{ $laporan->author->poin }} → {{ $hasilPenguranganPoin[10] }} poin)</span>
+                                            </label>
+                                        </div>
+
+                                        {{-- 15% poin --}}
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="kurangiPoin015" value="kurangiPoin015"
+                                                class="hidden peer" {{ old('hukuman') == 'kurangiPoin015' ? 'checked' : '' }}>
+                                            <label for="kurangiPoin015"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Kurangi poin sebesar 15% ({{ $laporan->author->poin }} → {{ $hasilPenguranganPoin[15] }} poin)</span>
+                                            </label>
+                                        </div>
+
+                                        {{-- 20% poin --}}
+                                        <div class="">
+                                            <input type="radio" name="hukuman" id="kurangiPoin020" value="kurangiPoin020"
+                                                class="hidden peer" {{ old('hukuman') == 'kurangiPoin020' ? 'checked' : '' }}>
+                                            <label for="kurangiPoin020"
+                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                                <span>Kurangi poin sebesar 20% ({{ $laporan->author->poin }} → {{ $hasilPenguranganPoin[20] }} poin)</span>
+                                            </label>
+                                        </div>
+
+                                        {{-- Suspend --}}
                                         <div class="">
                                             <input type="radio" name="hukuman" id="3hr" value="3hr"
                                                 class="hidden peer" {{ old('hukuman') == '3hr' ? 'checked' : '' }}>
@@ -435,16 +515,6 @@
                                             </label>
                                         </div>
 
-                                        <div class="">
-                                            <input type="radio" name="hukuman" id="tidak-ada" value="tidak-ada"
-                                                class="hidden peer" {{ old('hukuman') == 'tidak-ada' ? 'checked' : '' }}>
-                                            <label for="tidak-ada"
-                                                class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
-                                                <i data-feather='chevron-right' class="md:w-5 w-12"></i>
-                                                <span>Tidak ada</span>
-                                            </label>
-                                        </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -465,7 +535,7 @@
                                     <div>Simpan tindakan?</div>
                                     <div class="text-sm">Tindakan yang disimpan tidak dapat diubah.</div>
                                 </div>
-                                <button type="submit" class="text-blue-700 flex items-center">
+                                <button type="submit" class="text-amber-600 flex items-center">
                                     <i data-feather='check' class="w-5"></i>
                                     <span class="ml-1">Simpan</span>
                                 </button>
@@ -577,15 +647,6 @@
                                         </label>
                                     </div>
 
-                                    <div class="">
-                                        <input type="radio" name="hukuman" id="tidak-ada" value="tidak-ada"
-                                            class="hidden peer" {{ old('hukuman') == 'tidak-ada' ? 'checked' : '' }}>
-                                        <label for="tidak-ada"
-                                            class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
-                                            <i data-feather='chevron-right' class="md:w-5 w-12"></i>
-                                            <span>Tidak ada</span>
-                                        </label>
-                                    </div>
                                 </div>
                             </div>
 

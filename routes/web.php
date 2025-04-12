@@ -188,10 +188,16 @@ Route::middleware(['auth'])->group(function () {
 
     // Pengaturan
     Route::get('/pengaturan', [DashboardController::class, 'settings']);
+
     // Ubah data diri
     Route::get('/pengaturan/edit-user', [UserController::class, 'editUser']);
     // Simpan perubahan data diri
     Route::put('/pengaturan/edit-user', [UserController::class, 'update']);
+
+    // ubah tautan dan media sosial
+    Route::get('/pengaturan/tautan', [UserController::class, 'tautan']);
+    Route::put('/pengaturan/tautan/simpan', [UserController::class, 'simpanTautan']);
+
     // Simpan edit password
     Route::put('/pengaturan/ganti-password', [UserController::class, 'updatePassword']);
     // Simpan edit email

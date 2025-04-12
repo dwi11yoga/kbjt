@@ -5,7 +5,10 @@
         @csrf
         <div class="flex items-center justify-between rounded-xl bg-white py-4 px-5">
             <div>Simpan data?</div>
-            <button type="submit" class="text-amber-600">Simpan</button>
+            <button type="submit" class="text-amber-600 flex">
+                <i data-feather='check' class="w-5"></i>
+                <span class="ml-1">Simpan</span>
+            </button>
         </div>
 
         {{-- nama --}}

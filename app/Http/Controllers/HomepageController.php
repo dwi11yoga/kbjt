@@ -32,7 +32,7 @@ class HomepageController extends Controller
         }
 
         // ambil 5 artikel terbaru
-        $artikel=Blog::orderBy('created_at','desc')->take(5)->get();
+        $artikel = Blog::orderBy('created_at', 'desc')->take(5)->get();
 
         // dapatkan statistik web
         $jmlAnggota = number_format(User::select('id')->count(), 0, ',', '.');
@@ -45,7 +45,7 @@ class HomepageController extends Controller
             'title' => 'Selamat datang di Kamus Bahasa Jawa Terbuka!',
             'topContributor' => $topContributor,
             'definisi' => $definisi,
-            'artikel'=>$artikel,
+            'artikel' => $artikel,
             'jmlAnggota' => $jmlAnggota,
             'jmlKosakata' => $jmlKosakata,
             'jmlDefinisi' => $jmlDefinisi,
@@ -155,14 +155,14 @@ class HomepageController extends Controller
         }
 
         // dapatkan data banner
-        $banner=$this->getBanner([1,2,3,4]);
+        $banner = $this->getBanner([1, 2, 3, 4]);
 
         return view('homepage.post', [
             'group' => 'blog',
             'title' => $post->judul,
             'post' => $post,
             'url' => $url,
-            'banner'=>$banner
+            'banner' => $banner
         ]);
     }
 
@@ -181,14 +181,18 @@ class HomepageController extends Controller
         $donasi = Donasi::where('metode', '=', $metode_dipilih)->first();
 
         // dapatkan data banner
-        $banner=$this->getBanner([1,2]);
+        $banner = $this->getBanner([1, 2]);
+
+        // dapatkan url web
+        $urlweb=$this->getUrl();
 
         return view('homepage.donasi', [
             'group' => 'donasi',
             'title' => 'Dukungan',
             'donasi' => $donasi,
             'metode' => $metode,
-            'banner'=>$banner
+            'banner' => $banner,
+            'urlweb'=> $urlweb,
         ]);
     }
 
@@ -248,14 +252,14 @@ class HomepageController extends Controller
         $jumlah = count($data);
 
         // dapatkan data banner
-        $banner=$this->getBanner([1,2]);
+        $banner = $this->getBanner([1, 2]);
 
         return view('homepage.pencarian', [
             'group' => 'pencarian',
             'title' => 'Pencarian',
             'data' => $data,
             'jumlah' => $jumlah,
-            'banner'=>$banner
+            'banner' => $banner
         ]);
     }
 
@@ -339,7 +343,7 @@ class HomepageController extends Controller
         }
 
         // dapatkan data banner
-        $banner=$this->getBanner([1,2,5,6]);
+        $banner = $this->getBanner([1, 2, 5, 6]);
 
         return view('homepage.kosakata', [
             'group' => 'pencarian',
@@ -349,11 +353,11 @@ class HomepageController extends Controller
             'dataNull' => $nullCount,
             'definisi' => $definisi,
             'cekDefinisiUser' => $cekDefinisiUser,
-            'banner'=>$banner
+            'banner' => $banner
         ]);
     }
 
-    // view riwayat kosakata
+    // view riwayat edit kosakata
     public function riwayatKosakata($slug)
     {
         $kosakata = Kosakata::where('slug', '=', $slug)->first();
@@ -366,11 +370,16 @@ class HomepageController extends Controller
             ->with('pengurus:id,username,nama,jenis_kelamin,profile_pic')
             ->orderBy('updated_at', 'desc')
             ->paginate(10);
-        // dd($riwayat);
+
+        // dapatkan data banner
+        $banner = $this->getBanner([1, 2]);
+
         return view('homepage.riwayat-kosakata', [
             'title' => 'Riwayat',
+            'group' => null,
             'kosakata' => $kosakata,
-            'riwayat' => $riwayat
+            'riwayat' => $riwayat,
+            'banner' => $banner
         ]);
     }
 }

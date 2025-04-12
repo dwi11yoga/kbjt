@@ -2,41 +2,83 @@
 
 @section('body')
     <div class="space-y-4">
+
+        {{-- profil --}}
         <div class="bg-white p-5 rounded-2xl">
             <div class="mb-3">Profil</div>
             <div class="space-y-2">
+                {{-- ubah data diri --}}
                 <a href="/pengaturan/edit-user"
-                    class="block py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
-                    <i data-feather='user' class="inline-block w-5 mr-2"></i>Ubah data diri
+                    class="py-4 px-5 w-full flex items-center border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
+                    <i data-feather='user' class="inline-block w-5 mr-2"></i>
+                    <div>Ubah data diri</div>
                 </a>
-                <a href="#" onclick="openWindow('gantiEmail')"
-                    class="block py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
-                    <i data-feather='at-sign' class="inline-block w-5 mr-2"></i>Ubah alamat email
+                
+                {{-- tautan dan media sosial --}}
+                <a href="/pengaturan/tautan"
+                    class="py-4 px-5 w-full flex items-center border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
+                    <i data-feather='link' class="inline-block w-5 mr-2"></i>
+                    <div>Tautan dan media sosial</div>
                 </a>
+
+                {{-- sembunyikan data sensitif --}}
                 <a href="#" onclick="openWindow('dataSensitif')"
-                    class="block py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
-                    <i data-feather='eye-off' class="inline-block w-5 mr-2"></i>Sembunyikan data sensitif
+                    class="flex items-center py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
+                    <i data-feather='eye-off' class="inline-block w-5 mr-2"></i>
+                    <div>Sembunyikan data sensitif</div>
                 </a>
-                <button onclick="openWindow('gantiPassword')"
-                    class="block py-4 px-5 text-left w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
-                    <i data-feather='key' class="inline-block w-5 mr-2"></i>Ubah kata sandi
-                </button>
+
+                {{-- donasi --}}
+                <a href="/pengaturan/edit-user"
+                    class="py-4 px-5 w-full flex items-center border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
+                    <i data-feather='dollar-sign' class="inline-block w-5 mr-2"></i>
+                    <div>Terima donasi</div>
+                </a>
             </div>
         </div>
+
+        {{-- akun --}}
         <div class="bg-white rounded-2xl p-5">
             <div class="mb-3">Akun</div>
             <div class="space-y-2">
-                <a href="#"
-                    class="block py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
-                    <i data-feather='user-x' class="inline-block w-5 mr-2"></i>Hapus akun
+                {{-- Ubah username --}}
+                <a href="#" onclick="openWindow('gantiEmail')"
+                    class="flex items-center py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
+                    <i data-feather='at-sign' class="inline-block w-5 mr-2"></i>
+                    <div>Ubah username</div>
                 </a>
+
+                {{-- Ubah alamat email --}}
+                <a href="#" onclick="openWindow('gantiEmail')"
+                    class="flex items-center py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
+                    <i data-feather='mail' class="inline-block w-5 mr-2"></i>
+                    <div>Ubah alamat email</div>
+                </a>
+
+                {{-- Ubah kata sandi --}}
+                <button onclick="openWindow('gantiPassword')"
+                    class="flex items-center py-4 px-5 text-left w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
+                    <i data-feather='key' class="inline-block w-5 mr-2"></i>
+                    <div>Ubah kata sandi</div>
+                </button>
+
+                {{-- Hapus akun --}}
+                <a href="#"
+                    class="flex items-center py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
+                    <i data-feather='user-x' class="inline-block w-5 mr-2"></i>
+                    <div>Hapus akun</div>
+                </a>
+
+                {{-- Keluar --}}
                 <form action="/logout" method="POST">
                     @csrf
                     <button type="submit"
-                        class="block py-4 px-5 w-full text-left border text-red-600 bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
-                        <i data-feather='log-out' class="inline-block w-5 mr-2"></i>Keluar
+                        class="flex items-center py-4 px-5 w-full text-left border text-red-600 bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
+                        <i data-feather='log-out' class="inline-block w-5 mr-2"></i>
+                        <div>Keluar</div>
                     </button>
                 </form>
+
             </div>
         </div>
     </div>

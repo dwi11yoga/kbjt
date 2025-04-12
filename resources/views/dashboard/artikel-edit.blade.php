@@ -15,12 +15,17 @@
         {{-- tombol simpan/publikasikan --}}
         <div class="grid grid-cols-2 rounded-xl bg-white py-4 px-5 md:space-y-0 space-y-2">
             <div class="md:col-span-1 col-span-2">Simpan/publikasikan artikel?</div>
-            <div class="md:col-span-1 col-span-2 md:text-right space-x-5">
-                <button type="submit" id="publish" title="Publikasikan artikel" class="text-blue-600"
-                    onclick="document.getElementById('form').action='/artikel/edit/{{ $post->id }}/publikasikan'">Publikasikan</button>
-                <button type="submit"id="simpan" title="Simpan sebagai draft" class="text-amber-600"
-                    onclick="document.getElementById('form').action='/artikel/edit/{{ $post->id }}/simpan'">Simpan
-                    sebagai draf</button>
+            <div class="md:col-span-1 col-span-2 flex md:justify-end space-x-5">
+                <button type="submit" id="publish" title="Publikasikan artikel" class="text-blue-600 flex"
+                    onclick="document.getElementById('form').action='/artikel/edit/{{ $post->id }}/publikasikan'">
+                    <i data-feather='check' class="w-5"></i>
+                    <span class="ml-1">Publikasikan</span>
+                </button>
+                <button type="submit"id="simpan" title="Simpan sebagai draft" class="text-amber-600 flex"
+                    onclick="document.getElementById('form').action='/artikel/edit/{{ $post->id }}/simpan'">
+                    <i data-feather='save' class="w-5"></i>
+                    <span class="ml-1">Simpan sebagai draf</span>
+                </button>
             </div>
         </div>
 
@@ -68,8 +73,10 @@
 
         {{-- thumbnail --}}
         <div class="md:col-span-1 col-span-3">
-            <div class="w-1/2 bg-neutral-100 rounded-t-xl aspect-video text-neutral-400 border-8 border-white flex items-center justify-center overflow-hidden">
-                <img id="thumbmailPreview" src="{{ asset('storage/'.$post->thumbnail) }}" alt="Thumbnail" class="object-cover w-full h-full">
+            <div
+                class="w-1/2 bg-neutral-100 rounded-t-xl aspect-video text-neutral-400 border-8 border-white flex items-center justify-center overflow-hidden">
+                <img id="thumbmailPreview" src="{{ asset('storage/' . $post->thumbnail) }}" alt="Thumbnail"
+                    class="object-cover w-full h-full">
             </div>
             <div onclick="document.getElementById('thumbnail').click()" title="Pilih gambar"
                 class="w-1/2 bg-white rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">

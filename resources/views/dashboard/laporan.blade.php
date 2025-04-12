@@ -82,7 +82,8 @@
                         @if (isset($d->status))
                             <div class="flex items-center text-sm space-x-1">
                                 <div class="md:w-7 md:h-7 w-8 h-8 rounded-full overflow-hidden">
-                                    @include('partials.profil-pic-general-array2')
+                                    <?php $d->profile_pic = $d->pengurus->profile_pic; ?>
+                                    @include('partials.profile-pic-general')
                                 </div>
                                 <div class="line-clamp-1">{{ $d->pengurus->username }}</div>
                             </div>

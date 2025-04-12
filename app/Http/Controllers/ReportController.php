@@ -6,6 +6,7 @@ use App\Models\Definisi;
 use App\Models\EditKosakata;
 use App\Models\Hukuman;
 use App\Models\Kosakata;
+use App\Models\Level;
 use App\Models\Report;
 use App\Models\User;
 use Carbon\Carbon;
@@ -20,6 +21,7 @@ class ReportController extends Controller
     {
         // Laporan (definisi)
         $laporan = Report::select('id', 'user_id', 'definisi_id', 'pengurus_id', 'status', 'alasan', 'created_at', 'updated_at')
+            ->with('pengurus:id,username,jenis_kelamin,profile_pic')
             ->with([
                 'definisi' => function ($query) {
                     $query->withTrashed(); //ambil data softdelete juga
@@ -191,6 +193,7 @@ class ReportController extends Controller
     // Detail Laporan
     public function detailLaporan($id)
     {
+        // ambil data laporan
         $laporan = Report::where('id', '=', $id)
             ->with('hukuman')
             ->first();
@@ -297,7 +300,7 @@ class ReportController extends Controller
                 (clone $kodeKosakata)->whereHas('hukuman', function ($query) use ($laporan) {
                     $query->whereNot('hukuman', 'peringatan');
                 })
-                ->count(); //Jumlah hukuman yang pernah diterima
+                    ->count(); //Jumlah hukuman yang pernah diterima
 
             $terlapor['4'] = $this->levelCalculator($laporan->author->poin);
             $terlapor['5'] = $laporan->author->created_at->translatedFormat('d F Y');
@@ -322,6 +325,14 @@ class ReportController extends Controller
             $data['riwayatHukuman'] = $riwayatHukuman;
         }
 
+
+        // hitung berapa poin yang dikurangi jika hukuman yang diberikan adalah pengurangan poin
+        $persentasePoinDikurang=[2,5,8,10,15,20];
+        foreach($persentasePoinDikurang as $d){
+            $hasilPenguranganPoin[$d]= (int) round($laporan->author->poin - (($laporan->author->poin * $d)/100)); //bulatkan
+        }
+        $data['hasilPenguranganPoin']=$hasilPenguranganPoin;
+        
         return view('dashboard.laporan-detail', $data);
     }
 
@@ -336,16 +347,68 @@ class ReportController extends Controller
             return back()->with('failed', 'Laporan sudah selesai ditangani oleh pengurus lain')->withInput();
         }
 
+        // Validasi
+        $rules = [
+            'pelanggaran' => 'required',
+        ];
+
+        if (isset($laporan->definisi_id)) {
+            // tindaklanjut untuk definisi
+
+            // validasi
+            if ($request->pelanggaran == 'true') {
+                $rules = array_merge($rules, [
+                    'tindakanDefinisi' => 'required',
+                    'hukuman' => 'required',
+                ]);
+            }
+        } elseif (isset($laporan->kosakata_id)) {
+            // tindaklanjut untuk kosakata
+
+            // validasi
+            if ($request->pelanggaran == 'true') {
+                $rules = array_merge($rules, [
+                    'hukuman' => 'required',
+                ]);
+            }
+        }
+        $validatedData = $request->validate($rules);
+
         // atur data hukuman
         if ($request->hukuman == 'tidak-ada') {
             $hukuman = 'Tidak ada';
             $hukuman_berakhir = null;
+
         } elseif ($request->hukuman == 'peringatan') {
             $hukuman = 'Peringatan';
             $hukuman_berakhir = null;
+
+        } elseif (substr($request->hukuman, 0, 11) == 'kurangiPoin') {
+
+            // dapatkan data terlapor
+            if (isset($laporan->definisi_id)) {
+                $userId = Definisi::find($laporan->definisi_id)->user_id;
+            } elseif (isset($laporan->kosakata_id)) {
+                $userId = Kosakata::find($laporan->kosakata_id)->user_id;
+            }
+            $userPoin = User::find($userId)->poin;
+
+            // hitung poin yang dikurangi
+            $persentase = intval(substr($request->hukuman, 11, 3));
+            $poinDikurangi = ($userPoin * $persentase) / 100; // jumlah poin yang akan dikurangi dari poin milik user.
+            $hasil = round($userPoin - $poinDikurangi);
+
+            // simpan hasil pengurangan
+            User::find($userId)->update(['poin' => $hasil]);
+
+            // data yang akan disimpan
+            $hukuman = 'Penguranagan poin sebesar ' . $persentase . '%, dari ' . $userPoin . ' menjadi ' . $hasil;
+            $hukuman_berakhir = null;
+
         } elseif ($request->hukuman == 'blokir') {
             $hukuman = 'Blokir akun pengguna';
             $hukuman_berakhir = null;
+
         } elseif ($request->hukuman == '3hr') {
             $hukuman = 'Suspend selama 3 hari';
             $hukuman_berakhir = Carbon::now()->addDays(3);
@@ -363,23 +426,9 @@ class ReportController extends Controller
             $hukuman_berakhir = null;
         }
 
-        $rules = [
-            'pelanggaran' => 'required',
-        ];
-
+        // tindakan
         if (isset($laporan->definisi_id)) {
             // tindaklanjut untuk definisi
-
-            // validasi
-            if ($request->pelanggaran == 'true') {
-                $rules = array_merge($rules, [
-                    'tindakanDefinisi' => 'required',
-                    'hukuman' => 'required',
-                ]);
-            }
-            $validatedData = $request->validate($rules);
-
-
             if ($validatedData['pelanggaran'] == 'true') {
                 // simpan data hukuman ke tabel "Hukuman" (Jika ada)
                 $data = [
@@ -407,18 +456,9 @@ class ReportController extends Controller
                     User::find($definisi->user_id)->delete();
                 }
             }
+
         } elseif (isset($laporan->kosakata_id)) {
             // tindaklanjut untuk kosakata
-
-            // validasi
-            if ($request->pelanggaran == 'true') {
-                $rules = array_merge($rules, [
-                    'hukuman' => 'required',
-                ]);
-            }
-            $validatedData = $request->validate($rules);
-
-            // tindakan
             if ($validatedData['pelanggaran'] == 'true') {
                 // hapus kosakata
                 Kosakata::find($laporan->kosakata_id)->delete();
@@ -447,6 +487,7 @@ class ReportController extends Controller
         ]);
 
         // cek achievement
+        // cek apakah pelapor mendapatkan achievement berdasarkan jumlah laporan yang didapat
         $value = Report::where('user_id', $laporan->user_id)->whereNotNull('status')->count();
         $this->achievement($laporan->user_id, 'laporan', $value);
 

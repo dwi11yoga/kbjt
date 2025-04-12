@@ -20,8 +20,13 @@ class KosakataController extends Controller
     // View tambah kosakata
     public function tambahKosakata()
     {
+        // dapatkan data banner
+        $banner=$this->getBanner([1,2]);
+
         return view('homepage.buat-kosakata', [
-            'title' => 'Tambah kosakata'
+            'title' => 'Tambah kosakata',
+            'group'=>null,
+            'banner'=>$banner
         ]);
     }
 

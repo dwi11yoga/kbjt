@@ -170,8 +170,8 @@ class UserController extends Controller
         }
 
         // dapatkan data banner
-        $banner=$this->getBanner([1,2]);
-        $kirim['banner']=$banner;
+        $banner = $this->getBanner([1, 2]);
+        $kirim['banner'] = $banner;
 
         // return
         return view('homepage.profile', $kirim);
@@ -193,31 +193,9 @@ class UserController extends Controller
             'tgl_lahir' => 'required|date',
             'kota' => '',
             'jenis_kelamin' => 'required',
-            'telp' => 'nullable|numeric|digits_between:10,15',
-            'fb' => '',
-            'ig' => '',
-            'x' => '',
-            'tiktok' => '',
-            'wa' => 'nullable|numeric|digits_between:10,15|',
-            'telegram' => '',
-            'linkedin' => '',
-            'github' => '',
-            'bio' => '',
-            'tautan' => 'nullable|url',
-            'profile_pic' => [File::types(['jpg', 'jpeg', 'png', 'webp', 'tiff', 'bmp'])->max(1024)],
+            'profile_pic' => [File::types(['jpg', 'jpeg', 'png', 'webp'])->max(1024)],
+            'bio' => ''
         ];
-
-        // Validasi metode donasi
-        if ($request->metode_donasi != null) {
-            $rules['rekening'] = 'required';
-        }
-
-        // If else username tidak diubah
-        if ($request->username != Auth::user()->username) {
-            $rules['username'] = 'required|min:6|max:255|unique:users,username|regex:/^[A-Za-z0-9_.]+$/';
-        } else {
-            $rules['username'] = '';
-        }
 
         // validasi data
         try {
@@ -230,31 +208,12 @@ class UserController extends Controller
         }
 
         $arraySimpan = [
-            'username' => $validatedData['username'],
             'nama' => $validatedData['nama'],
             'tgl_lahir' => $validatedData['tgl_lahir'],
             'kota' => $validatedData['kota'],
             'jenis_kelamin' => $validatedData['jenis_kelamin'],
             'bio' => $validatedData['bio'],
-            'tautan' => $validatedData['tautan'],
-            'telp' => $validatedData['telp'],
-            'media_sosial' => [
-                'fb' => $validatedData['fb'] ?? null,
-                'x' => $validatedData['x'] ?? null,
-                'ig' => $validatedData['ig'] ?? null,
-                'tiktok' => $validatedData['tiktok'] ?? null,
-                'wa' => $validatedData['wa'] ?? null,
-                'telegram' => $validatedData['telegram'] ?? null,
-                'linkedin' => $validatedData['linkedin'] ?? null,
-                'github' => $validatedData['github'] ?? null
-            ],
-            'donasi' => ['metode' => $request->metode_donasi ?? null, 'rekening' => $validatedData['rekening'] ?? null]
         ];
-
-        // tambahkan metode donasi (jika ada)
-        // if ($request->metode_donasi != null) {
-        //     $arraySimpan['donasi'] = ['metode' => $request->metode_donasi, 'rekening' => $validatedData['rekening']];
-        // }
 
         // simpan gambar ke penyimpanan
         if ($request->pp_remove == 'on') {
@@ -268,16 +227,68 @@ class UserController extends Controller
             $arraySimpan['profile_pic'] = $validatedData['profile_pic'];
         }
 
-        DB::table('users')->where('id', Auth::user()->id)->update($arraySimpan);
-
         // Hapus foto lama
-        if ($request->pp_remove == 'on') {
-            Storage::delete($request->oldPP);
-        } elseif ($request->profile_pic != null && $request->oldPP) {
-            Storage::delete($request->oldPP);
+        if ($request->pp_remove == 'on' && isset(Auth::user()->profile_pic)) {
+            Storage::delete(Auth::user()->profile_pic);
         }
+        // if ($request->pp_remove == 'on') {
+        //     Storage::delete($request->oldPP);
+        // } elseif ($request->profile_pic != null && $request->oldPP) {
+        //     Storage::delete($request->oldPP);
+        // }
 
+        // simpan perubahan di db
+        User::find(Auth::user()->id)->update($arraySimpan);
+
+        // kembali ke tampilan
         return back()->with('success', 'Profil berhasil diperbarui');
+    }
+
+    // view edit tautan
+    public function tautan()
+    {
+        return view('dashboard.setting-tautan', [
+            'title' => 'Ubah tautan',
+            'group' => 'settings'
+        ]);
+    }
+
+    // simpan tautan
+    public function simpanTautan(Request $request)
+    {
+        // validasi
+        $validatedData=$request->validate([
+            'telp' => 'nullable|numeric|digits_between:10,15',
+            'fb' => '',
+            'ig' => '',
+            'x' => '',
+            'tiktok' => '',
+            'wa' => 'nullable|numeric|digits_between:10,15|',
+            'telegram' => '',
+            'linkedin' => '',
+            'github' => '',
+            'tautan' => 'nullable|url',
+        ]);
+
+        // simpan data
+        $data=[
+            'tautan'=>$validatedData['tautan'],
+            'telp' => $validatedData['telp'],
+            'media_sosial' => [
+                'fb' => $validatedData['fb'] ?? null,
+                'x' => $validatedData['x'] ?? null,
+                'ig' => $validatedData['ig'] ?? null,
+                'tiktok' => $validatedData['tiktok'] ?? null,
+                'wa' => $validatedData['wa'] ?? null,
+                'telegram' => $validatedData['telegram'] ?? null,
+                'linkedin' => $validatedData['linkedin'] ?? null,
+                'github' => $validatedData['github'] ?? null
+            ],
+        ];
+        User::find(Auth::user()->id)->update($data);
+
+        // kembali ke view
+        return back()->with('success', 'Informasi user berhasil diperbarui');
     }
 
     // Update Password User

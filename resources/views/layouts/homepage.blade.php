@@ -8,6 +8,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title }}</title>
 
+    {{-- favicon --}}
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+
     {{-- Import CSS --}}
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">

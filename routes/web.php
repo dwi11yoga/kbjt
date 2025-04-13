@@ -202,8 +202,14 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/pengaturan/ganti-password', [UserController::class, 'updatePassword']);
     // Simpan edit email
     Route::put('/pengaturan/ganti-email', [UserController::class, 'updateEmail']);
+    
     // sembunyikan data sensitif
-    Route::put('/pengaturan/data-sensitif', [UserController::class, 'dataSensitif']);
+    Route::get('/pengaturan/data-sensitif', [UserController::class, 'dataSensitif']);
+    Route::put('/pengaturan/data-sensitif/simpan', [UserController::class, 'simpanDataSensitif']);
+
+    // terima donasi
+    Route::get('/pengaturan/donasi', [UserController::class,'userDonasi']);
+    Route::put('/pengaturan/donasi/simpan', [UserController::class, 'simpanUserDonasi']);
 
     // Tambah definisi
     Route::post('/kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create']);

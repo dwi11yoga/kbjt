@@ -86,7 +86,7 @@ class DashboardController extends Controller
             $statistik['definisiBlnIni'] = number_format($statistik['definisiBlnIni'], 0, ',', '.');
 
             $statistik['post'] = Blog::count('id');
-            $statistik['postPublish'] = Blog::where('status', '=', 1)->count('id');
+            $statistik['postPublish'] = Blog::whereNotNull('status')->count('id');
 
 
             $statistik['defTerverify'] = Definisi::where('verifikasi', '=', "1")->count('id');

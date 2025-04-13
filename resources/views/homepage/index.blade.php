@@ -81,7 +81,7 @@
                 </div>
                 {{-- Lihat artikel lainnya --}}
                 <div class="col-span-6 mx-auto">
-                    <a href="#"
+                    <a href="/blog"
                         class="bg-amber-400 p-4 rounded-full hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-amber-400 active:bg-amber-500">Baca
                         artikel lainnya <i data-feather='arrow-right' class="inline-block"></i></a>
                 </div>
@@ -381,9 +381,12 @@
                 <h3 class="font-semibold mb-3">Gabung sekarang juga!</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est in unde tempore quasi ratione incidunt
                     assumenda minus explicabo earum officia temporibus iste voluptatibus illum error sed amet.</p>
-                <button
-                    class="mt-4 rounded-full bg-white py-3 px-6 hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-white active:bg-black active:text-white active:outline-black">Daftar
-                    sekarang!</button>
+                <a href="/daftar">
+                    <button
+                    class="mt-4 rounded-full bg-white py-3 px-6 hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-white active:bg-black active:text-white active:outline-black">
+                    Daftar sekarang!
+                </button>
+                </a>
             </div>
         </div>
     </div>

@@ -257,7 +257,7 @@ class UserController extends Controller
     public function simpanTautan(Request $request)
     {
         // validasi
-        $validatedData=$request->validate([
+        $validatedData = $request->validate([
             'telp' => 'nullable|numeric|digits_between:10,15',
             'fb' => '',
             'ig' => '',
@@ -271,8 +271,8 @@ class UserController extends Controller
         ]);
 
         // simpan data
-        $data=[
-            'tautan'=>$validatedData['tautan'],
+        $data = [
+            'tautan' => $validatedData['tautan'],
             'telp' => $validatedData['telp'],
             'media_sosial' => [
                 'fb' => $validatedData['fb'] ?? null,
@@ -289,6 +289,71 @@ class UserController extends Controller
 
         // kembali ke view
         return back()->with('success', 'Informasi user berhasil diperbarui');
+    }
+
+    // view data sensitif
+    public function dataSensitif()
+    {
+        return view('dashboard.setting-datasensitif', [
+            'title' => 'Sembunyikan data sensitif',
+            'group' => 'settings'
+        ]);
+    }
+    // simpan data sensitif
+    public function simpanDataSensitif(Request $request)
+    {
+        // Simpan
+        $data = [];
+        if (isset($request['email'])) {
+            $data['email'] = true;
+        } else {
+            $data['email'] = false;
+        }
+
+        if (isset($request['telp'])) {
+            $data['telp'] = true;
+        } else {
+            $data['telp'] = false;
+        }
+
+        User::find(Auth::user()->id)->update(['sembunyikan_data' => $data]);
+        return back()->with('success', 'Preferensi berhasil disimpan');
+    }
+
+    // view terima donasi
+    public function userDonasi()
+    {
+        return view('dashboard.setting-terimadonasi', [
+            'title' => 'Terima donasi',
+            'group' => 'settings'
+        ]);
+    }
+    // fungsi simpan update donasi
+    public function simpanUserDonasi(Request $request)
+    {
+        // validasi
+        // lakukan validasi jika metode donasi dipilih
+        if (isset($request->donasi)) {
+            // jika donasi di-enable
+            $rules = [
+                'metode_donasi' => 'required',
+                'rekening' => 'required',
+            ];
+            $validatedData=$request->validate($rules);
+            $data=[
+                'metode'=>$validatedData['metode_donasi'],
+                'rekening'=> $validatedData['rekening']
+            ];
+        } else{
+            // jika donasi di-disable
+            $data = null;
+        }
+
+        // simpan data
+        User::find(Auth::user()->id)->update(['donasi'=> $data]);
+
+        // kembalikan ke view
+        return redirect()->back()->with('success','Data berhasil diperbarui');
     }
 
     // Update Password User
@@ -331,25 +396,5 @@ class UserController extends Controller
         //Simpan perubahan - sementara, harus dipisah nantinya
         User::find(Auth::user()->id)->update(['email' => $validatedData['newEmail']]);
         return back()->with('success', 'Alamat email berhasil diperbarui');
-    }
-
-    public function dataSensitif(Request $request)
-    {
-        // Simpan
-        $data = [];
-        if (isset($request['email'])) {
-            $data['email'] = true;
-        } else {
-            $data['email'] = false;
-        }
-
-        if (isset($request['telp'])) {
-            $data['telp'] = true;
-        } else {
-            $data['telp'] = false;
-        }
-
-        User::find(Auth::user()->id)->update(['sembunyikan_data' => $data]);
-        return back()->with('success', 'Preferensi berhasil disimpan');
     }
 }

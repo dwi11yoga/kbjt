@@ -28,7 +28,7 @@
                         <div>
                             <h3 class="font-bold">{{ $user->nama }}
                                 @if (isset(auth()->user()->id) && auth()->user()->id == $user->id)
-                                    <a href="/pengaturan/edit-user" title="Ke pengaturan"
+                                    <a href="/pengaturan" title="Ke pengaturan"
                                         class="rounded-full w-9 h-9 -ml-1 inline-flex justify-center items-center hover:bg-neutral-200">
                                         <i data-feather='settings' class="inline-block w-5 stroke-neutral-700"></i>
                                     </a>

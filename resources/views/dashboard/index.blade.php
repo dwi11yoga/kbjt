@@ -104,7 +104,7 @@
                     <div>Artikel<br>
                         <h1 class="font-bold -mt-2">{{ $statistik['post'] }}</h1>
                     </div>
-                    <div class="text-sm">{{ $statistik['postPublish'] }} artikel dipublikasikan</div>
+                    <div class="text-sm">Total {{ $statistik['postPublish'] }} artikel dipublikasikan</div>
                 </div>
             @endif
         </div>

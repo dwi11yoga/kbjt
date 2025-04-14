@@ -44,7 +44,7 @@
         <div class="bg-white px-5 py-4 rounded-xl">
             <label for="fb" class="text-sm">Facebook</label>
             <input type="text" id="fb" name="fb" placeholder="Masukkan username" title="Klik untuk edit"
-                value="{{ old('fb', auth()->user()->media_sosial['fb']) }}"
+                value="{{ old('fb', auth()->user()->media_sosial['fb'] ?? '') }}"
                 class="w-full focus:outline-none focus:border-b-2 py-1 @error('fb') 
         border-red-600 text-red-600 @else focus:border-amber-400
         @enderror">
@@ -57,7 +57,7 @@
         <div class="bg-white px-5 py-4 rounded-xl">
             <label for="x" class="text-sm">Twitter</label>
             <input type="text" id="x" name="x" placeholder="Masukkan username" title="Klik untuk edit"
-                value="{{ old('x', auth()->user()->media_sosial['x']) }}"
+                value="{{ old('x', auth()->user()->media_sosial['x'] ?? '') }}"
                 class="w-full focus:outline-none focus:border-b-2 py-1 @error('x') 
         border-red-600 text-red-600 @else focus:border-amber-400
         @enderror">
@@ -70,7 +70,7 @@
         <div class="bg-white px-5 py-4 rounded-xl">
             <label for="ig" class="text-sm">Instagram</label>
             <input type="text" id="ig" name="ig" placeholder="Masukkan username" title="Klik untuk edit"
-                value="{{ old('ig', auth()->user()->media_sosial['ig']) }}"
+                value="{{ old('ig', auth()->user()->media_sosial['ig'] ?? '') }}"
                 class="w-full focus:outline-none focus:border-b-2 py-1 @error('ig') 
         border-red-600 text-red-600 @else focus:border-amber-400
         @enderror">
@@ -83,7 +83,7 @@
         <div class="bg-white px-5 py-4 rounded-xl">
             <label for="tiktok" class="text-sm">Tiktok</label>
             <input type="text" id="tiktok" name="tiktok" placeholder="Masukkan username" title="Klik untuk edit"
-                value="{{ old('tiktok', auth()->user()->media_sosial['tiktok']) }}"
+                value="{{ old('tiktok', auth()->user()->media_sosial['tiktok'] ?? '') }}"
                 class="w-full focus:outline-none focus:border-b-2 py-1 @error('tiktok') 
         border-red-600 text-red-600 @else focus:border-amber-400
         @enderror">
@@ -96,7 +96,7 @@
         <div class="bg-white px-5 py-4 rounded-xl">
             <label for="wa" class="text-sm">Whatsapp</label>
             <input type="text" id="wa" name="wa" placeholder="Masukkan username" title="Klik untuk edit"
-                value="{{ old('wa', auth()->user()->media_sosial['wa']) }}"
+                value="{{ old('wa', auth()->user()->media_sosial['wa'] ?? '') }}"
                 class="w-full focus:outline-none focus:border-b-2 py-1 @error('wa') 
         border-red-600 text-red-600 @else focus:border-amber-400
         @enderror">
@@ -109,7 +109,7 @@
         <div class="bg-white px-5 py-4 rounded-xl">
             <label for="telegram" class="text-sm">Telegram</label>
             <input type="text" id="telegram" name="telegram" placeholder="Masukkan username" title="Klik untuk edit"
-                value="{{ old('telegram', auth()->user()->media_sosial['telegram']) }}"
+                value="{{ old('telegram', auth()->user()->media_sosial['telegram'] ?? '') }}"
                 class="w-full focus:outline-none focus:border-b-2 py-1 @error('telegram') 
         border-red-600 text-red-600 @else focus:border-amber-400
         @enderror">
@@ -122,7 +122,7 @@
         <div class="bg-white px-5 py-4 rounded-xl">
             <label for="linkedin" class="text-sm">LinkedIn</label>
             <input type="text" id="linkedin" name="linkedin" placeholder="Masukkan username" title="Klik untuk edit"
-                value="{{ old('linkedin', auth()->user()->media_sosial['linkedin']) }}"
+                value="{{ old('linkedin', auth()->user()->media_sosial['linkedin'] ?? '') }}"
                 class="w-full focus:outline-none focus:border-b-2 py-1 @error('linkedin') 
         border-red-600 text-red-600 @else focus:border-amber-400
         @enderror">
@@ -135,7 +135,7 @@
         <div class="bg-white px-5 py-4 rounded-xl">
             <label for="github" class="text-sm">Github</label>
             <input type="text" id="github" name="github" placeholder="Masukkan username" title="Klik untuk edit"
-                value="{{ old('github', auth()->user()->media_sosial['github']) }}"
+                value="{{ old('github', auth()->user()->media_sosial['github'] ?? '') }}"
                 class="w-full focus:outline-none focus:border-b-2 py-1 @error('github') 
         border-red-600 text-red-600 @else focus:border-amber-400
         @enderror">

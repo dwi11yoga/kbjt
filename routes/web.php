@@ -211,6 +211,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengaturan/donasi', [UserController::class,'userDonasi']);
     Route::put('/pengaturan/donasi/simpan', [UserController::class, 'simpanUserDonasi']);
 
+    // ubah username
+    Route::get('/pengaturan/ubah-username', [UserController::class,'ubahUsername']);
+    Route::put('/pengaturan/ubah-username/simpan', [UserController::class,'simpanUbahUsername']);
+
+    // ubah alamat email
+    Route::get('/pengaturan/ubah-email', [UserController::class, 'ubahEmail']);
+    Route::put('/pengaturan/ubah-email/simpan', [UserController::class,'simpanUbahEmail']);
+
+
     // Tambah definisi
     Route::post('/kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create']);
     // Edit definisi

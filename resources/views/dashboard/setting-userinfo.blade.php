@@ -65,7 +65,7 @@
                         <label for="tgl_lahir" class="text-sm">Tanggal lahir</label>
                         <input type="date" id="tgl_lahir" name="tgl_lahir" placeholder="Masukkan tanggal lahir"
                             title="Klik untuk edit"
-                            value="{{ old('tgl_lahir', auth()->user()->tgl_lahir->format('Y-m-d')) }}"
+                            value="{{ old('tgl_lahir', (isset(auth()->user()->tanggal_lahir) ? auth()->user()->tgl_lahir->format('Y-m-d'): '')) }}"
                             oninput="buatSlug(this, 'slug')"
                             class="w-full cursor-pointer focus:outline-none focus:border-b-2 py-1 @error('tgl_lahir')
                     border-red-600 text-red-600 @else focus:border-amber-400

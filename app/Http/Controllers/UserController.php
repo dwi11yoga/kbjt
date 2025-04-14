@@ -339,21 +339,99 @@ class UserController extends Controller
                 'metode_donasi' => 'required',
                 'rekening' => 'required',
             ];
-            $validatedData=$request->validate($rules);
-            $data=[
-                'metode'=>$validatedData['metode_donasi'],
-                'rekening'=> $validatedData['rekening']
+            $validatedData = $request->validate($rules);
+            $data = [
+                'metode' => $validatedData['metode_donasi'],
+                'rekening' => $validatedData['rekening']
             ];
-        } else{
+        } else {
             // jika donasi di-disable
             $data = null;
         }
 
         // simpan data
-        User::find(Auth::user()->id)->update(['donasi'=> $data]);
+        User::find(Auth::user()->id)->update(['donasi' => $data]);
 
         // kembalikan ke view
-        return redirect()->back()->with('success','Data berhasil diperbarui');
+        return redirect()->back()->with('success', 'Data berhasil diperbarui');
+    }
+
+    // view ubah username
+    public function ubahUsername()
+    {
+        return view('dashboard.setting-ubahusername', [
+            'title' => 'Ubah username',
+            'group' => 'settings'
+        ]);
+    }
+    // fungsi simpan username
+    public function simpanUbahUsername(Request $request)
+    {
+        // validasi
+        $validatedData = $request->validate([
+            'username' => 'required|min:6|max:255|lowercase|unique:users,username,' . Auth::user()->id . ',id|regex:/^[A-Za-z0-9_.]+$/',
+            'password' => 'required|min:6|max:255',
+        ]);
+
+        // jika username yang dimasukkan sama (tidak berubah), kembalikan ke view
+        if ($validatedData['username'] == Auth::user()->username) {
+            return back()->with('success', 'Tidak ada perubahan yang dilakukan');
+        }
+
+        // SIMPAN PERUBAHAN USERNAME
+        // authentikasi: cek apakah password yang dimasukkan sudah sama dengan password user
+        if (!Hash::check($request->password, Auth::user()->password)) { //jika tidak sama...
+            return back()->with('failed', 'Gagal menyimpan perubahan')
+                ->withInput()
+                ->withErrors(['password' => 'The password are incorrect.']);
+        }
+
+        // jika password yang diinput sama, simpan di db
+        User::find(Auth::user()->id)->update(['username' => $validatedData['username']]);
+
+        // kirim notifikasi via email - belum
+
+        // kembalikan ke view
+        return back()->with('success', 'Berhasil menyimpan perubahan');
+    }
+
+    // view ubah email
+    public function ubahEmail(){
+        return view('dashboard.setting-ubahemail', [
+            'title'=> 'Ubah alamat email',
+            'group'=>'settings'
+        ]);
+    }
+
+    // fungsi update ubah email
+    public function simpanUbahEmail(Request $request){
+
+        // validasi
+        $validatedData = $request->validate([
+            'email' => 'required|email:dns|unique:users,email,' . Auth::user()->id . ',id',
+            'password' => 'required|min:6|max:255',
+        ]);
+
+        // jika username yang dimasukkan sama (tidak berubah), kembalikan ke view
+        if ($validatedData['email'] == Auth::user()->email) {
+            return back()->with('success', 'Tidak ada perubahan yang dilakukan');
+        }
+
+        // SIMPAN PERUBAHAN USERNAME
+        // authentikasi: cek apakah password yang dimasukkan sudah sama dengan password user
+        if (!Hash::check($request->password, Auth::user()->password)) { //jika tidak sama...
+            return back()->with('failed', 'Gagal menyimpan perubahan')
+                ->withInput()
+                ->withErrors(['password' => 'The password are incorrect.']);
+        }
+
+        // jika password yang diinput sama, simpan di db
+        User::find(Auth::user()->id)->update(['email' => $validatedData['email']]);
+
+        // kirim notifikasi via email - belum
+
+        // kembalikan ke view
+        return back()->with('success', 'Berhasil menyimpan perubahan');
     }
 
     // Update Password User

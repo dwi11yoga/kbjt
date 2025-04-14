@@ -48,14 +48,14 @@
             <div class="mb-3">Akun</div>
             <div class="space-y-2">
                 {{-- Ubah username --}}
-                <a href="#" onclick="openWindow('gantiEmail')"
+                <a href="/pengaturan/ubah-username"
                     class="flex items-center py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
                     <i data-feather='at-sign' class="inline-block w-5 mr-2"></i>
                     <div>Ubah username</div>
                 </a>
 
                 {{-- Ubah alamat email --}}
-                <a href="#" onclick="openWindow('gantiEmail')"
+                <a href="/pengaturan/ubah-email"
                     class="flex items-center py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
                     <i data-feather='mail' class="inline-block w-5 mr-2"></i>
                     <div>Ubah alamat email</div>

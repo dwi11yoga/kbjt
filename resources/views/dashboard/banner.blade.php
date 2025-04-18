@@ -67,13 +67,14 @@
                             <div
                                 class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
 
-                                <?php $d = (object) $banner[1]['user']; ?> {{-- convert array jadi object --}}
+                                <?php $d = $banner[1]['user']; ?> {{-- convert array jadi object --}}
                                 <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
                                     @include('partials.profile-pic-general')
                                 </div>
 
                                 <div class="text-sm">
-                                    {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                                    {{ auth()->user()->id == $banner[1]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                                </div>
                             </div>
                         @endif
 
@@ -117,13 +118,14 @@
                             <div
                                 class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
 
-                                <?php $d = (object) $banner[2]['user']; ?> {{-- convert array jadi object --}}
+                                <?php $d = $banner[2]['user']; ?> {{-- convert array jadi object --}}
                                 <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
                                     @include('partials.profile-pic-general')
                                 </div>
 
                                 <div class="text-sm">
-                                    {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                                    {{ auth()->user()->id == $banner[2]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                                </div>
                             </div>
                         @endif
 
@@ -209,13 +211,14 @@
                         <div
                             class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
 
-                            <?php $d = (object) $banner[3]['user']; ?> {{-- convert array jadi object --}}
+                            <?php $d = $banner[3]['user']; ?> {{-- convert array jadi object --}}
                             <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
                                 @include('partials.profile-pic-general')
                             </div>
 
                             <div class="text-sm">
-                                {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                                {{ auth()->user()->id == $banner[3]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                            </div>
                         </div>
                     @endif
 
@@ -272,13 +275,14 @@
                         <div
                             class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
 
-                            <?php $d = (object) $banner[4]['user']; ?> {{-- convert array jadi object --}}
+                            <?php $d = $banner[4]['user']; ?> {{-- convert array jadi object --}}
                             <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
                                 @include('partials.profile-pic-general')
                             </div>
 
                             <div class="text-sm">
-                                {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                                {{ auth()->user()->id == $banner[4]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                            </div>
                         </div>
                     @endif
 
@@ -355,13 +359,14 @@
                         <div
                             class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
 
-                            <?php $d = (object) $banner[5]['user']; ?> {{-- convert array jadi object --}}
+                            <?php $d = $banner[5]['user']; ?> {{-- convert array jadi object --}}
                             <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
                                 @include('partials.profile-pic-general')
                             </div>
 
                             <div class="text-sm">
-                                {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                                {{ auth()->user()->id == $banner[5]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                            </div>
                         </div>
                     @endif
 
@@ -438,13 +443,14 @@
                         <div
                             class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
 
-                            <?php $d = (object) $banner[6]['user']; ?> {{-- convert array jadi object --}}
+                            <?php $d = $banner[6]['user']; ?> {{-- convert array jadi object --}}
                             <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
                                 @include('partials.profile-pic-general')
                             </div>
 
                             <div class="text-sm">
-                                {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                                {{ auth()->user()->id == $banner[6]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                            </div>
                         </div>
                     @endif
 
@@ -495,13 +501,14 @@
                         <div
                             class="absolute top-3 right-3 rounded-lg py-1.5 px-2 flex items-center bg-amber-100 space-x-2 w-fit">
 
-                            <?php $d = (object) $banner[7]['user']; ?> {{-- convert array jadi object --}}
+                            <?php $d = $banner[7]['user']; ?> {{-- convert array jadi object --}}
                             <div class="rounded-full w-6 h-6 overflow-hidden object-cover">
                                 @include('partials.profile-pic-general')
                             </div>
 
                             <div class="text-sm">
-                                {{ auth()->user()->id == $d->id ? 'Terakhir diedit oleh kamu' : $d->username }}</div>
+                                {{ auth()->user()->id == $banner[7]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                            </div>
                         </div>
                     @endif
 
@@ -676,14 +683,19 @@
                         @if (isset($banner[$i]['user_id']))
                             <div class="rounded-xl py-2 px-3 bg-amber-100 flex items-center space-x-2 w-fit">
 
-                                <?php $d = (object) $banner[$i]['user']; ?> {{-- convert array jadi object --}}
+                                <?php $d = $banner[$i]['user']; ?> {{-- convert array jadi object --}}
                                 <div class="rounded-full w-8 h-8 overflow-hidden object-cover">
                                     @include('partials.profile-pic-general')
                                 </div>
 
-                                <div class="text-sm">
-                                    Terakhir diedit oleh <a
-                                        href="/u/{{ $d->username }}">{{ auth()->user()->id == $d->id ? 'kamu' : $d->username }}</a>
+                                <div class="text-sm"> 
+                                    Terakhir diedit oleh
+                                    @if (isset($d)) {{-- agar tidak error ketika data user tidak dihapus --}}
+                                        <a
+                                            href="/u/{{ $d['username'] }}">{{ auth()->user()->id == $banner[$i]['user_id'] ? 'kamu' : $d['nama'] }}</a> {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                                    @else
+                                        [Akun dihapus]
+                                    @endif
                                 </div>
                             </div>
                         @endif

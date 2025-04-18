@@ -155,4 +155,6 @@ class DonasiController extends Controller
         // kembali ke halaman donasi
         return redirect()->to('/metode-donasi')->with('success', 'Perubahan metode donasi berhasil disimpan');
     }
+
+    // fungsi delete metode - belom
 }

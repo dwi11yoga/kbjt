@@ -9,7 +9,7 @@
             {{-- Pengurus --}}
             <div
                 class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
-                <div>Jumlah Pengurus<br>
+                <div>Jumlah pengurus aktif<br>
                     <h1 class="font-bold -mt-2">{{ $overview['jmlPengurus'] }}</h1>
                 </div>
                 <div class="text-sm">{{ $overview['rasioUser'] }}/10 pengguna adalah pengurus</div>
@@ -47,7 +47,9 @@
                         <div class="rounded-full w-8 h-8 overflow-hidden">
                             @include('partials.profile-pic-general')
                         </div>
-                        <div class="line-clamp-2">{{ $d->nama }}</div>
+                        <div class="line-clamp-2">
+                            {{ $d->nama }} {{ isset($d->statusUser) && $d->statusUser == 'dihapus' ? '(Akun dihapus)' : '' }}
+                        </div>
                     </div>
                     <div class="md:col-span-2 col-span-7 text-neutral-700 md:flex hidden items-center line-clamp-2">
                         &#64;{{ $d->username }}

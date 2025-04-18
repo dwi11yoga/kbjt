@@ -51,6 +51,7 @@ class EditKosakataController extends Controller
             // Jika kosakata ditemukan
             return view('homepage.edit-kosakata', [
                 'title' => 'Edit kosakata',
+                'group'=>'',
                 'data' => $kosakata
             ]);
         } else {

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\HapusAkun;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -18,10 +20,14 @@ class BlogController extends Controller
         $author = $_GET['author'] ?? null;
 
         // Dapatkan data blog
-        $query = Blog::with('user:id,username,nama,profile_pic,jenis_kelamin');
+        // $query = Blog::with('user:id,username,nama,profile_pic,jenis_kelamin');
+        $query = Blog::with([
+            'user' => function ($query) {
+                $query->withTrashed(); //ambil data softdelete juga
+            }
+        ]);
 
-        // dd(isset($status));
-
+        // untuk filter status
         if (isset($status) && $status != '') {
             if ($status == 'dipublikasikan') {
                 $query->whereNotNull('status');
@@ -30,6 +36,7 @@ class BlogController extends Controller
             }
         }
 
+        // untuk filter author
         if (isset($author) && $author != '') {
             // $query->where('user_id', '=', $author);
             $query->whereHas('user', function ($q) use ($author) {
@@ -41,6 +48,13 @@ class BlogController extends Controller
             ->orderBy('updated_at', 'desc')
             ->paginate(40)
             ->appends(request()->query());
+
+        // cek apakah data user (author) ada/terhapus
+        foreach ($blog as $d) {
+            if ($d->user->trashed()) {
+                $d->user->statusUser = 'dihapus';
+            }
+        }
 
         return view('dashboard.artikel', [
             'title' => 'Artikel',
@@ -65,7 +79,7 @@ class BlogController extends Controller
         // cek apakah artikel mau disimpan atau dipublikasikan
         $apakahSimpan = $request->getRequestUri() == "/artikel/baru/simpan"; //true jika artikel disimpan
         $apakahPublish = $request->getRequestUri() == "/artikel/baru/publikasikan"; //true jika artikel dipublikasikan
-        
+
         // Validasi
         if ($apakahSimpan == true) {
             $rules = [
@@ -135,26 +149,26 @@ class BlogController extends Controller
         }
     }
 
-    // Simpan artikel lama sebagai draft/publikasikan
+    // Simpan artikel lama sebagai draft/publikasikan - digunakan untuk halaman edit artikel
     public function simpanEdit(Request $request, $id)
     {
         // dapatkan data artikel yang diedit
-        $post = Blog::select('id', 'slug', 'thumbnail')->where('id', '=', $id)->first();
+        $post = Blog::select('id', 'slug', 'thumbnail', 'user_id')->where('id', '=', $id)->first();
 
         // cek apakah artikel disimpan/dipublish
         $apakahSimpan = $request->getRequestUri() == "/artikel/edit/" . $id . "/simpan"; //true jika artikel disimpan
         $apakahPublish = $request->getRequestUri() == "/artikel/edit/" . $id . "/publikasikan"; //true jika artikel dipublikasikan
         // Validasi
         if ($apakahSimpan == true) {
-            $rules=[
+            $rules = [
                 'judul' => 'string|min:6',
                 'slug' => 'string|regex:/^[a-z0-9-]+$/|unique:blog,slug,' . $id . ',id',
             ];
         } elseif ($apakahPublish == true) {
-            $rules=[
+            $rules = [
                 'judul' => 'required|string|min:6',
                 'slug' => 'required|string|regex:/^[a-z0-9-]+$/|unique:blog,slug,' . $id . ',id',
-                'konten'=>'required|string|min:50'
+                'konten' => 'required|string|min:50'
             ];
         } else {
             return back()->with('failed', 'Gagal menyimpan perubahan pada artikel');
@@ -165,7 +179,7 @@ class BlogController extends Controller
             $rules['thumbnail'] = 'mimes:png,jpg,jpeg,webp|image|max:1024';
         }
 
-        $validatedData=$request->validate($rules);
+        $validatedData = $request->validate($rules);
 
         // simpan data
         $data = [
@@ -198,7 +212,7 @@ class BlogController extends Controller
             return redirect('/artikel/edit/' . $post->id)->with('success', 'Artikel berhasil disimpan sebagai draf');
         } elseif ($apakahPublish == true) {
             // cek achievement
-            $userId = Auth::user()->id;
+            $userId = $post->user_id;
 
             // jumlah artikel
             $value = Blog::where('user_id', $userId)->whereNotNull('status')->count();
@@ -240,7 +254,7 @@ class BlogController extends Controller
         ]);
     }
 
-    // Publikasikan / jadikan artikel draf
+    // Publikasikan / jadikan artikel draf - untuk menu di halaman utama artikel/blog (dashboard)
     public function draft($id)
     {
         $post = Blog::find($id);
@@ -262,6 +276,7 @@ class BlogController extends Controller
             $pesan = 'Artikel berhasil disimpan sebagai draf';
         }
 
+
         // Unpin jika post adalah pinned
         if (isset($post['status']) && $post['pinned'] == 1) {
             $data['pinned'] = 0;
@@ -271,8 +286,10 @@ class BlogController extends Controller
         Blog::where('id', '=', $id)->update($data);
 
         // cek achievement
+        $post->status = $data['status']; // update nilai status dari post, karena nilainya bisa saja berubah
         if (isset($post['status'])) {
             $userId = $post->user_id;
+
             // jumlah artikel
             $value = Blog::where('user_id', $userId)->whereNotNull('status')->count();
             $this->achievement($userId, 'artikel', $value);

@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefinisiController;
 use App\Http\Controllers\DonasiController;
 use App\Http\Controllers\EditKosakataController;
+use App\Http\Controllers\HapusAkunController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\HukumanController;
 use App\Http\Controllers\KosakataController;
@@ -198,10 +199,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengaturan/tautan', [UserController::class, 'tautan']);
     Route::put('/pengaturan/tautan/simpan', [UserController::class, 'simpanTautan']);
 
-    // Simpan edit password
-    Route::put('/pengaturan/ganti-password', [UserController::class, 'updatePassword']);
     // Simpan edit email
-    Route::put('/pengaturan/ganti-email', [UserController::class, 'updateEmail']);
+    // Route::put('/pengaturan/ganti-email', [UserController::class, 'updateEmail']);
     
     // sembunyikan data sensitif
     Route::get('/pengaturan/data-sensitif', [UserController::class, 'dataSensitif']);
@@ -219,6 +218,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengaturan/ubah-email', [UserController::class, 'ubahEmail']);
     Route::put('/pengaturan/ubah-email/simpan', [UserController::class,'simpanUbahEmail']);
 
+    // ubah password
+    Route::get('/pengaturan/ubah-password', [UserController::class,'ubahPassword']);
+    Route::put('/pengaturan/ubah-password/simpan', [UserController::class, 'updatePassword']);
+
+    // hapus akun
+    Route::get('/pengaturan/hapus-akun', [HapusAkunController::class,'index']);
+    Route::put('/pengaturan/hapus-akun/konfirmasi', [HapusAkunController::class,'hapusAkun']);
 
     // Tambah definisi
     Route::post('/kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create']);

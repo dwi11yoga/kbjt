@@ -22,8 +22,13 @@
             <li class="space-y-3" style="margin-left: 1.75rem;">
                 <div class="grid grid-cols-10 md:space-y-0 space-y-1">
                     <div class="md:col-span-9 col-span-10">
-                        <div class="text-base -mt-1">Disubmit oleh <a class="font-bold"
-                                href="/u/{{ $r->user->username }}">{{ $r->user->nama }}</a> pada
+                        <div class="text-base -mt-1">Disubmit oleh
+                            @if (isset($r->user))
+                                <a class="font-bold" href="/u/{{ $r->user->username }}">{{ $r->user->nama }}</a>
+                            @else
+                                <span class="font-semibold">[Akun dihapus]</span>
+                            @endif
+                            pada
                             {{ $r->created_at->translatedFormat('d F Y H:i') }} WIB
                             <div class="text-xs">{{ $r->catatan ?? 'Tidak ada catatan' }}</div>
                         </div>
@@ -39,6 +44,8 @@
                                     Setujui
                                 </button>
                             </form>
+                        @elseif (isset(auth()->user()->role) && auth()->user()->role == 'kepala' && empty($r->pengurus_id))
+                            <div class="flex items-center space-x-1"><i data-feather='clock' class="w-5"></i><span>Pending</span></div>
                         @elseif (isset(auth()->user()->role) && auth()->user()->role != 'kontributor' && isset($r->pengurus_id))
                             <?php $d = $r->pengurus; ?>
                             <a href="/u/{{ $d->username }}"
@@ -108,14 +115,24 @@
         <div class="absolute" style="left: -1rem">
             <div class="w-8 h-8 rounded-full overflow-hidden outline outline-8 outline-white">
                 <?php $d = $kosakata->user; ?>
-                @include('partials.profile-pic-general')
+                @if (isset($d))
+                    {{-- jika user ditemukan --}}
+                    @include('partials.profile-pic-general')
+                @else
+                    {{-- jika user dihapus/tidak ditemukan --}}
+                    @include('partials.profil-pic-general-array2')
+                @endif
             </div>
         </div>
 
         <li class="space-y-2" style="margin-left: 1.75rem;">
-            <div class="text-base">Disubmit oleh <a class="font-bold"
-                    href="/u/{{ $kosakata->user->username }}">{{ $kosakata->user->nama }}</a> pada
-                {{ $kosakata->created_at->translatedFormat('d F Y H:i') }} WIB
+            <div class="text-base">Disubmit oleh
+                @if (isset($kosakata->user))
+                    <a class="font-bold" href="/u/{{ $kosakata->user->username }}">{{ $kosakata->user->nama }}</a> pada
+                    {{ $kosakata->created_at->translatedFormat('d F Y H:i') }} WIB
+                @else
+                    [Akun dihapus]
+                @endif
                 <div class="text-xs capitalize">{{ $kosakata->catatan ?? 'Tidak ada catatan' }} </div>
             </div>
             {{-- deskripsi --}}

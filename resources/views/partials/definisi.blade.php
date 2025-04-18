@@ -66,7 +66,7 @@
                         </div>
                     </div>
                     <div>
-                        <div>{{ $d->user->nama ?? '[Akun terhapus]' }}</div>
+                        <div>{{ $d->user->nama ?? '[Akun dihapus]' }}</div>
                         <div class="small-text">{{ $d->updated_at->translatedformat('d F Y') }}</div>
                     </div>
                 @endif

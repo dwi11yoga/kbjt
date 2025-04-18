@@ -129,7 +129,7 @@ class DashboardController extends Controller
 
             // edit kosakata by user
             $userKosakata = EditKosakata::where('user_id', '=', Auth::user()->id)
-            ->with('kosakata:id,kosakata')
+                ->with('kosakata:id,kosakata')
                 ->orderBy('created_at', 'desc')
                 ->limit(5)
                 ->get();
@@ -144,17 +144,26 @@ class DashboardController extends Controller
             // laporan by user
             $userLaporan = Report::where('user_id', '=', Auth::user()->id)
                 ->with('definisi:id,user_id')
+                ->with('kosakata:id,user_id')
                 ->orderBy('created_at', 'desc')
                 ->limit(5)
                 ->get();
 
-                foreach ($userLaporan as $d) {
-                    $d->terlapor=User::find($d->definisi->user_id)->nama;
-                }
-
             foreach ($userLaporan as $d) {
+                if (isset($d->definisi)) {
+                    // jika yang dilaporkan = definisi
+                    $d->terlapor = User::find($d->definisi->user_id)->nama;
+                    $teks = 'definisi';
+                } else if (isset($d->kosakata)) {
+                    // jika yang dilaporkan = kosakata
+                    $d->terlapor = User::find($d->kosakata->user_id)->nama;
+                    $teks = 'kosakata';
+                } else {
+                    $d->terlapor = null;
+                    $teks = '-';
+                }
                 $kontribusi['kosakata-' . $d->id] = [
-                    'kontribusi' => 'Melaporkan definisi yang disubmit ' . $d->terlapor,
+                    'kontribusi' => 'Melaporkan ' . $teks . ' yang disubmit ' . $d->terlapor,
                     'poin' => $d->poin ?? 0,
                     'waktu' => $d->created_at
                 ];
@@ -210,8 +219,8 @@ class DashboardController extends Controller
         }
 
         // dapatkan data banner
-        $banner=$this->getBanner([7]);
-        $data['banner']=$banner;
+        $banner = $this->getBanner([7]);
+        $data['banner'] = $banner;
 
         return view('dashboard.index', $data);
     }
@@ -240,13 +249,15 @@ class DashboardController extends Controller
             ->onEachSide(2)
             ->appends(request()->query());
 
-        // laporan
-        $data['laporan'] = Report::select('id', 'user_id', 'definisi_id', 'alasan', 'status', 'updated_at')
+        // dapatkan data laporan
+        $data['laporan'] = Report::select('id', 'user_id', 'definisi_id','kosakata_id', 'alasan', 'status', 'updated_at')
             ->with('definisi:id,kosakata_id')
+            ->with('kosakata:id,user_id')
             ->where('user_id', '=', Auth::user()->id);
         $statistik['laporanPending'] = (clone $data['laporan'])->whereNull('status')->count(); //pakai "clone" agar query  didalam $data['laporan'] tidak berubah
         $statistik['laporanTotal'] = $data['laporan']->count();
 
+        // aplikasikan filter
         if (isset($_REQUEST['filter_laporan']) && $_REQUEST['filter_laporan'] == 'Pending') {
             $data['laporan'] = $data['laporan']->whereNull('status');
         } elseif (isset($_REQUEST['filter_laporan']) && $_REQUEST['filter_laporan'] == 'Ditangani') {
@@ -257,10 +268,25 @@ class DashboardController extends Controller
             ->paginate(10, ['*'], 'report-page')
             ->onEachSide(2)
             ->appends(request()->query());
+
         foreach ($data['laporan'] as $d) {
-            $d['kosakata'] = Kosakata::select('id', 'kosakata')
-                ->where('id', '=', $d->definisi->kosakata_id)
-                ->value('kosakata');
+            if (isset($d['definisi'])) {
+                // jika yang dilaporkan = definisi
+                $d['terlapor'] = User::find($d['definisi']['user_id'])->nama ?? '[Akun dihapus]';
+                // cari data kosakata
+                $d['kosakata'] = Kosakata::select('id', 'kosakata')
+                    ->where('id', '=', $d['definisi']['kosakata_id'])
+                    ->value('kosakata');
+            } else if (isset($d['kosakata'])) {
+                // jika yang dilaporkan = kosakata
+                $d['terlapor'] = User::find($d['kosakata']['user_id'])->nama ?? '[Akun dihapus]';
+                $d['kosakata'] = Kosakata::select('id', 'kosakata')
+                    ->where('id', '=', $d->kosakata_id)
+                    ->value('kosakata');
+            } else {
+                $d['terlapor'] = null;
+                $teks = '-';
+            }
         }
 
         return view('dashboard.kontribusi', [
@@ -385,12 +411,12 @@ class DashboardController extends Controller
         $overview['kontribusiBlnIni'] = $kosakata + $definisi + $editkosakata + $laporan + $blog;
 
         // kontributsi pengurus bulan lalu
-        
+
         // menentukan tahun (mencegah error saat di bulan januari)
-        if (Carbon::now()->month=='01') {
-            $tahun=Carbon::now()->subYear()->year;
-        } else{
-            $tahun=Carbon::now()->year;
+        if (Carbon::now()->month == '01') {
+            $tahun = Carbon::now()->subYear()->year;
+        } else {
+            $tahun = Carbon::now()->year;
         }
 
         $kosakata = Kosakata::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->whereYear('created_at', $tahun)->whereHas('user', function ($query) {
@@ -409,7 +435,8 @@ class DashboardController extends Controller
         // dd($kosakata);
 
         // data pengurus
-        $pengurus = User::where('role', '=', 'pengurus')
+        $pengurus = User::withTrashed()
+            ->where('role', '=', 'pengurus')
             ->orderBy('poin', 'desc')
             ->paginate(10, '*', 'pengurus')
             ->onEachSide(2)
@@ -431,6 +458,11 @@ class DashboardController extends Controller
             $laporan = Report::where('pengurus_id', '=', $d->id)->whereMonth('created_at', '=', Carbon::now()->month)->count();
             $blog = Blog::whereNotNull('status')->where('user_id', '=', $d->id)->whereMonth('status', '=', Carbon::now()->month)->count();
             $d['kontribusiBlnIni'] = $definisi + $kosakata + $editkosakata + $laporan + $blog;
+
+            // cek apakah data user terhapus
+            if ($d->trashed()) {
+                $d->statusUser = 'dihapus';
+            }
         }
 
         // data kosakata & definisi baru

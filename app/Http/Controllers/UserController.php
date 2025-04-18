@@ -81,9 +81,9 @@ class UserController extends Controller
     // Logout
     public function logout(Request $request): RedirectResponse
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        Auth::logout(); // meng-logout-kan user
+        $request->session()->invalidate(); //menghapus semua data session yang ada saat ini, mencegah session fixation attack.
+        $request->session()->regenerateToken(); //mengganti CSRF token, Cross-Site Request Forgery
         return redirect('/');
     }
 
@@ -117,6 +117,12 @@ class UserController extends Controller
     {
         // Data user
         $user = User::where('username', $username)->first();
+        
+        // jika data user tida ditemukan, maka alihkan
+        if (is_null($user)) {
+            return $this->error404();
+        }
+        
         $user['level'] = $this->levelCalculator($user['poin']);
         // url user
         $user['url'] = $this->getUrl() . '/u/' . $user['username'];
@@ -434,45 +440,35 @@ class UserController extends Controller
         return back()->with('success', 'Berhasil menyimpan perubahan');
     }
 
+    // view ubah password user
+    public function ubahPassword(){
+        return view('dashboard.setting-ubahpassword', [
+            'title' => 'Ubah Kata sandi',
+            'group'=>'settings'
+        ]);
+    }
     // Update Password User
     public function updatePassword(Request $request)
     {
         // dd($request);
         // Validasi
         $validatedData = $request->validate([
-            'oldPassword' => 'required|min:6',
-            'newPassword1' => 'required|min:6|same:newPassword1',
-            'newPassword2' => 'required|min:6|same:newPassword1'
+            'oldPassword' => 'required|min:6|max:255',
+            'newPassword1' => 'required|min:6|max:255|same:newPassword1',
+            'newPassword2' => 'required|min:6|max:255|same:newPassword1'
         ]);
 
         // Cek apakah password lama benar
         if (!Hash::check($validatedData['oldPassword'], Auth::user()->password)) {
-            return back()->with('failed', 'Gagal mengubah kata sandi')->withErrors(['oldPassword' => 'Old password are wrong, try again'])->withInput();
+            return back()->with('failed', 'Gagal mengubah kata sandi')->withErrors(['oldPassword' => 'Old password are incorrect'])->withInput();
         }
 
+        // simpan ke db
         User::find(Auth::user()->id)->update(['password' => $validatedData['newPassword2']]);
 
+        // kirim notifikasi lewat email - belum
+
+        // kembali ke view
         return back()->with('success', 'Kata sandi berhasil diubah');
-    }
-
-    // Update email user
-    public function updateEmail(Request $request)
-    {
-        // validasi data
-        $validatedData = $request->validate([
-            'oldEmail' => 'required|email',
-            'newEmail' => 'required|email|different:oldEmail|unique:users,email'
-        ]);
-
-        if ($validatedData['oldEmail'] != Auth::user()->email) {
-            return back()->withErrors(['oldEmail' => 'Old email are wrong, try again'])->withInput();
-        }
-
-        // Kirimkan konfirmasi lewat email
-        // Belom
-
-        //Simpan perubahan - sementara, harus dipisah nantinya
-        User::find(Auth::user()->id)->update(['email' => $validatedData['newEmail']]);
-        return back()->with('success', 'Alamat email berhasil diperbarui');
     }
 }

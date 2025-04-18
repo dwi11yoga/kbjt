@@ -7,6 +7,7 @@ use App\Models\Banner;
 use App\Models\Blog;
 use App\Models\Definisi;
 use App\Models\EditKosakata;
+use App\Models\HapusAkun;
 use App\Models\Kosakata;
 use App\Models\Level;
 use App\Models\Report;
@@ -77,34 +78,40 @@ abstract class Controller
     // cek apakah dapat achievement/tidak
     public function achievement(int $userId, string $rule, int $value)
     {
-        $didapat = User::where('id', '=', $userId)->value('achievement');
-        $data = Achievement::where('rule', '=', $rule)
-            ->whereNotIn('id', array_keys(is_array($didapat) ? $didapat : []))
-            ->orderBy('requirement', 'asc')
-            ->get();
+        // cek dulu apakah akun user sudah dihapus. jika dihapus, maka tidak perlu melakukan pengecekan achievement
+        $hapusAkun = HapusAkun::find($userId);
+        $apakahDihapus=User::withTrashed()->find($userId)->trashed(); // true=dihapus:false=tidak dihapus
 
-        // perulangan terhadap achievement yang belum didapatkan
-        $simpan = $didapat;
-        $poin = 0;
-        foreach ($data as $d) {
-            if ($value >= $d->requirement) {
-                $simpan[$d->id] = now();
-                $poin = $poin + $d->reward;
-            } else {
-                break;
+        if ($apakahDihapus == false) { // jika akun user tidak dihapus, maka eksekusi kode berikut
+            $didapat = User::where('id', '=', $userId)->value('achievement');
+            $data = Achievement::where('rule', '=', $rule)
+                ->whereNotIn('id', array_keys(is_array($didapat) ? $didapat : []))
+                ->orderBy('requirement', 'asc')
+                ->get();
+
+            // perulangan terhadap achievement yang belum didapatkan
+            $simpan = $didapat;
+            $poin = 0;
+            foreach ($data as $d) {
+                if ($value >= $d->requirement) {
+                    $simpan[$d->id] = now();
+                    $poin = $poin + $d->reward;
+                } else {
+                    break;
+                }
             }
-        }
 
-        if ($didapat != $simpan) {
-            // simpan data
-            User::find($userId)->update([
-                'achievement' => $simpan
-            ]);
+            if ($didapat != $simpan) {
+                // simpan data
+                User::find($userId)->update([
+                    'achievement' => $simpan
+                ]);
 
-            // tambah poin exp
-            User::find($userId)->increment('poin', $poin);
+                // tambah poin exp
+                User::find($userId)->increment('poin', $poin);
 
-            // buat notifikasi - belum
+                // buat notifikasi - belum
+            }
         }
 
         return true;

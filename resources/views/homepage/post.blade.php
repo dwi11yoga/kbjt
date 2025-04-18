@@ -14,12 +14,24 @@
     {{-- author --}}
     <?php $d = $post; ?>
     <div class="flex items-center justify-between space-x-2 !-mb-3">
-        <a href="{{ $url . '/u/' . $post->user->username }}" class="inline-flex items-center">
-            <div class="h-8 w-8 overflow-hidden rounded-full">
-                @include('partials.profil-pic-general-array2')
+        @if (isset($post->user))
+            {{-- jika user ditemukan --}}
+            <a href="{{ '/u/' . $post->user->username }}" class="inline-flex items-center">
+                <div class="h-8 w-8 overflow-hidden rounded-full">
+                    @include('partials.profil-pic-general-array2')
+                </div>
+                <div class="ml-2">{{ $post->user->nama }}</div>
+            </a>
+        @else
+            {{-- jika user dihapus/tidak ditemukan --}}
+            <div class="inline-flex items-center">
+                <div class="h-8 w-8 overflow-hidden rounded-full">
+                    @include('partials.profil-pic-general-array2')
+                </div>
+                <div class="ml-2">{{ $post->user->nama ?? '[Akun dihapus]' }}</div>
             </div>
-            <div class="ml-2">{{ $post->user->nama }}</div>
-        </a>
+        @endif
+
 
     </div>
 
@@ -43,12 +55,11 @@
 
     {{-- Thumbnail --}}
     @isset($post->thumbnail)
-        <img alt="" class="object-cover w-full rounded-xl mb-5"
-            src="{{ asset('storage/' . $post->thumbnail) }}">
+        <img alt="" class="object-cover w-full rounded-xl mb-5" src="{{ asset('storage/' . $post->thumbnail) }}">
     @endisset
 
     {{-- banner atas/banner 3 --}}
-    <?php $idBanner=3 ?>
+    <?php $idBanner = 3; ?>
     @include('partials.banner')
 
     {{-- Isi Blog --}}
@@ -127,6 +138,6 @@
     </div>
 
     {{-- banner bawah/banner 4 --}}
-    <?php $idBanner=4 ?>
+    <?php $idBanner = 4; ?>
     @include('partials.banner')
 @endsection

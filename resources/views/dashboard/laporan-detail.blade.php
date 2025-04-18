@@ -15,12 +15,12 @@
                 <div class="">
                     <div class="text-sm text-neutral-600">Pelapor</div>
                     <a href="/u/{{ $laporan->user->username }}" class="">{{ $laporan->user->nama }}
-                        (&#64;{{ $laporan->user->username }})</a>
+                        (&#64;{{ $laporan->user->username }}) {{ isset($laporan->user->statusUser) && $laporan->user->statusUser == 'dihapus' ? '(akun dihapus)':'' }}</a>
                 </div>
                 <div class="">
                     <div class="text-sm text-neutral-600">Terlapor</div>
                     <a href="/u/{{ $laporan->author->username }}" class="">{{ $laporan->author->nama }}
-                        (&#64;{{ $laporan->author->username }})</a>
+                        (&#64;{{ $laporan->author->username }}) {{ isset($laporan->author->statusUser) && $laporan->author->statusUser == 'dihapus' ? '(akun dihapus)':'' }}</a>
                 </div>
                 <div class="">
                     <div class="text-sm text-neutral-600">Alasan</div>
@@ -243,7 +243,9 @@
                 <div class="col-span-1 space-y-3">
                     <div class="">
                         <div class="text-sm text-neutral-600">Ditangani oleh</div>
-                        <div class="">{{ $laporan->pengurus->nama }}</div>
+                        <div class="">
+                            {{ $laporan->pengurus->nama }} (&#64;{{ $laporan->pengurus->username }}) {{ isset($laporan->pengurus->statusUser) && $laporan->pengurus->statusUser == 'dihapus' ? '(akun dihapus)':'' }}
+                        </div>
                     </div>
                     <div class="">
                         <div class="text-sm text-neutral-600">Waktu</div>

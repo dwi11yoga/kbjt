@@ -62,14 +62,14 @@
                 </a>
 
                 {{-- Ubah kata sandi --}}
-                <button onclick="openWindow('gantiPassword')"
+                <a href="/pengaturan/ubah-password"
                     class="flex items-center py-4 px-5 text-left w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
                     <i data-feather='key' class="inline-block w-5 mr-2"></i>
                     <div>Ubah kata sandi</div>
-                </button>
+                </a>
 
                 {{-- Hapus akun --}}
-                <a href="#"
+                <a href="/pengaturan/hapus-akun"
                     class="flex items-center py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
                     <i data-feather='user-x' class="inline-block w-5 mr-2"></i>
                     <div>Hapus akun</div>

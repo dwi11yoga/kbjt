@@ -132,66 +132,61 @@
 
     {{-- Laporan --}}
     <div class="p-5 bg-white rounded-2xl" id="laporan">
-        @if (auth()->user()->role == 'kontributor')
-            <div class="flex items-center justify-between">
-                <span>Laporan</span>
-                <form action="/kontribusi" method="GET" class="relative">
-                    <i data-feather='filter' class="w-5 absolute top-2 left-3"></i>
-                    <select name="filter_laporan" id="filter_laporan" onchange="muatDropdown(this)"
-                        class="appearance-none border border-neutral-200 rounded-xl py-2 pl-10 pr-3 bg-white cursor-pointer">
-                        <option value="">Filter</option>
-                        <option {{ request()->filter_laporan == 'Pending' ? 'selected' : '' }}>Pending</option>
-                        <option {{ request()->filter_laporan == 'Ditangani' ? 'selected' : '' }}>Ditangani</option>
-                    </select>
-                </form>
-            </div>
+        <div class="flex items-center justify-between">
+            <span>Laporan kamu</span>
+            <form action="/kontribusi" method="GET" class="relative">
+                <i data-feather='filter' class="w-5 absolute top-2 left-3"></i>
+                <select name="filter_laporan" id="filter_laporan" onchange="muatDropdown(this)"
+                    class="appearance-none border border-neutral-200 rounded-xl py-2 pl-10 pr-3 bg-white cursor-pointer">
+                    <option value="">Filter</option>
+                    <option {{ request()->filter_laporan == 'Pending' ? 'selected' : '' }}>Pending</option>
+                    <option {{ request()->filter_laporan == 'Ditangani' ? 'selected' : '' }}>Ditangani</option>
+                </select>
+            </form>
+        </div>
 
-            <div class="space-y-3">
-                @foreach ($data['laporan'] as $d)
-                    <a href="/kontribusi/laporan/{{ $d->id }}"
-                        class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
-                        <div class="line-clamp-1 md:col-span-3 col-span-6 flex items-center">Melaporkan definisi dari
-                            kosakata "{{ $d->kosakata }}".
-                        </div>
-                        <div
-                            class="md:text-base text-sm col-span-1 flex items-center md:justify-center justify-start space-x-1">
-                            <i data-feather='stop-circle' class="inline-block w-5 text-amber-600" title="Poin"></i>
-                            <span>0</span>
-                        </div>
-                        <div class="md:col-span-1 col-span-3">
-                            @if (isset($d->status))
-                                <div class="flex items-center text-sm rounded-full px-3 py-1 bg-green-300 w-fit space-x-1">
-                                    <i data-feather='check-circle' class="w-5 stroke-neutral-800"></i>
-                                    <span>Ditindaklanjuti</span>
-                                </div>
-                            @else
-                                <div class="flex items-center text-sm rounded-full px-3 py-1 bg-red-300 w-fit space-x-1">
-                                    <i data-feather='clock' class="w-5 stroke-neutral-800"></i>
-                                    <span>Pending</span>
-                                </div>
-                            @endif
-                        </div>
-                        <div class="md:col-span-1 col-span-2 flex items-center md:text-base text-sm">
-                            {{ $d->updated_at->translatedformat('d F Y') }}
-                        </div>
-                    </a>
-                @endforeach
-                @if ($data['laporan']->isEmpty())
-                    <div class="border border-neutral-200 p-3 mt-3 rounded-xl">Tidak ada data</div>
-                @endif
-            </div>
+        <div class="space-y-3">
+            @foreach ($data['laporan'] as $d)
+                <a href="/kontribusi/laporan/{{ $d->id }}"
+                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
+                    <div class="line-clamp-1 md:col-span-3 col-span-6 flex items-center">
+                        @if (isset($d->definisi_id))
+                        Melaporkan definisi dari kosakata "{{ $d->kosakata }}".
+                        @elseif (isset($d->kosakata_id))
+                        Melaporkan kosakata "{{ $d->kosakata }}".
+                        @endif
+                    </div>
+                    <div
+                        class="md:text-base text-sm col-span-1 flex items-center md:justify-center justify-start space-x-1">
+                        <i data-feather='stop-circle' class="inline-block w-5 text-amber-600" title="Poin"></i>
+                        <span>0</span>
+                    </div>
+                    <div class="md:col-span-1 col-span-3">
+                        @if (isset($d->status))
+                            <div class="flex items-center text-sm rounded-full px-3 py-1 bg-green-300 w-fit space-x-1">
+                                <i data-feather='check-circle' class="w-5 stroke-neutral-800"></i>
+                                <span>Ditindaklanjuti</span>
+                            </div>
+                        @else
+                            <div class="flex items-center text-sm rounded-full px-3 py-1 bg-red-300 w-fit space-x-1">
+                                <i data-feather='clock' class="w-5 stroke-neutral-800"></i>
+                                <span>Pending</span>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="md:col-span-1 col-span-2 flex items-center md:text-base text-sm">
+                        {{ $d->updated_at->translatedformat('d F Y') }}
+                    </div>
+                </a>
+            @endforeach
+            @if ($data['laporan']->isEmpty())
+                <div class="border border-neutral-200 p-3 mt-3 rounded-xl">Tidak ada data</div>
+            @endif
+        </div>
 
-            <div class="mt-3">
-                {{ $data['laporan']->links() }}
-            </div>
-        @else
-            <div class="mb-3">Laporan</div>
-            <div href="/kontribusi/laporan/{{ $d->id }}"
-                class="border border-neutral-200 p-3 mt-3 rounded-xl text-center"> Beralih ke halaman <a href="/laporan"
-                    class="underline underline-offset-2 decoration-amber-400 decoration-2">Laporan</a>.
-            </div>
-        @endif
-
+        <div class="mt-3">
+            {{ $data['laporan']->links() }}
+        </div>
 
     </div>
 @endsection

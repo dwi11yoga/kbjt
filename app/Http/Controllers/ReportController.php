@@ -21,7 +21,6 @@ class ReportController extends Controller
     {
         // Laporan (definisi)
         $laporan = Report::select('id', 'user_id', 'definisi_id', 'pengurus_id', 'status', 'alasan', 'created_at', 'updated_at')
-            ->with('pengurus:id,username,jenis_kelamin,profile_pic')
             ->with([
                 'definisi' => function ($query) {
                     $query->withTrashed(); //ambil data softdelete juga
@@ -53,22 +52,21 @@ class ReportController extends Controller
                 ->where('id', '=', $d->definisi_id)
                 ->first();
             $d->pengurus = User::withTrashed()
-                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin')
+                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin', 'deleted_at')
                 ->where('id', '=', $d->pengurus_id)
                 ->first();
+
+            // cek apakah data user (pengurus) ada/terhapus
+            if ($d->pengurus && $d->pengurus->trashed()) {
+                $d->pengurus->statusUser = 'dihapus';
+            }
+
             // dapatkan kosakata
             $d->kosakata = Kosakata::where('id', '=', $d->definisi->kosakata_id)->value('kosakata');
             $d->terlapor = User::where('id', '=', $d->definisi->user_id)->value('username');
         }
 
-        // statistik dulu
-        $statistik = new stdClass;
-        $statistik->laporanTotal = Report::whereNotNull('definisi_id')->count();
-        $statistik->laporanBlnIni = Report::whereNotNull('definisi_id')->whereMonth('created_at', '=', Carbon::now()->month)->count();
-        $statistik->pending = Report::whereNotNull('definisi_id')->whereNull('status')->count();
-        $statistik->selesai = Report::whereNotNull('definisi_id')->whereNotNull('status')->count();
-        $statistik->ditanganiUser = Report::whereNotNull('definisi_id')->where('pengurus_id', '=', Auth::user()->id)->count();
-        $statistik->ditanganiBlnIni = Report::whereNotNull('definisi_id')->where('pengurus_id', '=', Auth::user()->id)->whereMonth('status', '=', Carbon::now()->month)->count();
+        // dd($laporan);
 
         // Permintaan ganti detail kosakata
         $editKosakata = EditKosakata::whereIn('id', function ($query) {
@@ -106,6 +104,34 @@ class ReportController extends Controller
             ->onEachSide(2)
             ->appends(request()->query());
 
+        foreach ($kosakata as $d) {
+            // dibuat seperti ini agar tidak error ketika ada user/definisi yang dihapus
+            $d->user = User::withTrashed()
+                ->select('id', 'username', 'nama', 'role', 'jenis_kelamin', 'profile_pic')
+                ->where('id', '=', $d->user_id)
+                ->first();
+            $d->pengurus = User::withTrashed()
+                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin', 'deleted_at')
+                ->where('id', '=', $d->pengurus_id)
+                ->first();
+
+            // cek apakah data user (pengurus) ada/terhapus
+            if ($d->pengurus && $d->pengurus->trashed()) {
+                $d->pengurus->statusUser = 'dihapus';
+            }
+        }
+
+        // dd($kosakata);
+
+        // statistik dulu
+        $statistik = new stdClass;
+        $statistik->laporanTotal = Report::count();
+        $statistik->laporanBlnIni = Report::whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', '=', Carbon::now()->month)->count();
+        $statistik->pending = Report::whereNull('status')->count();
+        $statistik->selesai = Report::whereNotNull('status')->count();
+        $statistik->ditanganiUser = Report::where('pengurus_id', '=', Auth::user()->id)->count();
+        $statistik->ditanganiBlnIni = Report::where('pengurus_id', '=', Auth::user()->id)->whereYear('created_at', Carbon::now()->year)->whereMonth('status', '=', Carbon::now()->month)->count();
+
         return view('dashboard.laporan', [
             'title' => 'Laporan',
             'group' => 'laporan',
@@ -116,7 +142,7 @@ class ReportController extends Controller
         ]);
     }
 
-    //laporkan definisi
+    //fungsi laporkan definisi
     public function definisi(Request $request)
     {
         // cek apakah laporan sudah dilaporkan/belum
@@ -159,7 +185,7 @@ class ReportController extends Controller
         return back()->with('success', 'Definisi berhasil dilaporkan');
     }
 
-    // laporkan kosakata
+    // fungsi laporkan kosakata
     public function kosakata(Request $request, $slug)
     {
         // dapatkan id kosakata
@@ -197,11 +223,18 @@ class ReportController extends Controller
         $laporan = Report::where('id', '=', $id)
             ->with('hukuman')
             ->first();
+        // ambil data yang melaporkan
         $laporan->user = User::withTrashed()
-            ->select('id', 'username', 'nama', 'role', 'poin', 'created_at')
+            ->select('id', 'username', 'nama', 'role', 'poin', 'created_at', 'deleted_at')
             ->where('id', '=', $laporan->user_id)
             ->first();
 
+        // cek apakah data user terhapus/tidak
+        if ($laporan->user->trashed()) {
+            $laporan->user->statusUser = 'dihapus';
+        }
+
+        // ambil data definisi/kosakata dan author
         if (isset($laporan->definisi_id)) {
             // jika definisi yang dilaporkan
             $laporan->definisi = Definisi::withTrashed()
@@ -209,9 +242,14 @@ class ReportController extends Controller
                 ->where('id', '=', $laporan->definisi_id)
                 ->first();
             $laporan->author = User::withTrashed()
-                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin', 'poin', 'created_at')
+                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin', 'poin', 'created_at', 'deleted_at')
                 ->where('id', '=', $laporan->definisi->user_id)
                 ->first();
+            // cek apakah data pengurus terhapus/tidak
+            if ($laporan->author->trashed()) {
+                $laporan->author->statusUser = 'dihapus';
+            }
+
             $laporan->kosakata = Kosakata::select('id', 'kosakata', 'slug')->where('id', '=', $laporan->definisi->kosakata_id)->first();
         } elseif (isset($laporan->kosakata_id)) {
             // jika kosakata yang dilaporkan
@@ -219,13 +257,26 @@ class ReportController extends Controller
                 ->where('id', '=', $laporan->kosakata_id)
                 ->first();
             $laporan->author = User::withTrashed()
-                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin', 'poin', 'created_at')
+                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin', 'poin', 'created_at', 'deleted_at')
                 ->where('id', '=', $laporan->kosakata->user_id)
                 ->first();
+
+            // cek apakah data pengurus terhapus/tidak
+            if ($laporan->author->trashed()) {
+                $laporan->author->statusUser = 'dihapus';
+            }
         }
 
+        // ambil data pengurus
         if (isset($laporan->pengurus_id)) {
-            $laporan->pengurus = User::select('id', 'username', 'nama')->where('id', '=', $laporan->pengurus_id)->first();
+            $laporan->pengurus = User::withTrashed()
+                ->select('id', 'username', 'nama', 'deleted_at')->where('id', '=', $laporan->pengurus_id)
+                ->first();
+
+            // cek apakah data pengurus terhapus/tidak
+            if ($laporan->pengurus->trashed()) {
+                $laporan->pengurus->statusUser = 'dihapus';
+            }
         }
 
         $laporan->idZerofill = str_pad($laporan->id, 10, '0', STR_PAD_LEFT);
@@ -234,10 +285,8 @@ class ReportController extends Controller
         $group = str_contains($_SERVER['REQUEST_URI'], 'kontribusi') == true ? 'kontribusi' : 'laporan';
 
         // jangan tampilkan jika user tidak berhak
-        if ($group == 'kontribusi' && ($laporan->user_id != Auth::user()->id || $laporan->author->id)) {
-            return view('error.403', [
-                'title' => 'Akses ditolak'
-            ]);
+        if ($group == 'kontribusi' && $laporan->user_id != Auth::user()->id && $laporan->author->id !=  Auth::user()->id) {
+            return $this->error403();
         }
 
         // data yang akan dikirimkan
@@ -247,6 +296,7 @@ class ReportController extends Controller
             'laporan' => $laporan,
         ];
 
+        // preview devinisi dan kosakata
         if (isset($laporan->definisi_id)) {
             // preview definisi
             $definisi = new stdClass(); //inisiasi object definisi
@@ -327,12 +377,12 @@ class ReportController extends Controller
 
 
         // hitung berapa poin yang dikurangi jika hukuman yang diberikan adalah pengurangan poin
-        $persentasePoinDikurang=[2,5,8,10,15,20];
-        foreach($persentasePoinDikurang as $d){
-            $hasilPenguranganPoin[$d]= (int) round($laporan->author->poin - (($laporan->author->poin * $d)/100)); //bulatkan
+        $persentasePoinDikurang = [2, 5, 8, 10, 15, 20];
+        foreach ($persentasePoinDikurang as $d) {
+            $hasilPenguranganPoin[$d] = (int) round($laporan->author->poin - (($laporan->author->poin * $d) / 100)); //bulatkan
         }
-        $data['hasilPenguranganPoin']=$hasilPenguranganPoin;
-        
+        $data['hasilPenguranganPoin'] = $hasilPenguranganPoin;
+
         return view('dashboard.laporan-detail', $data);
     }
 

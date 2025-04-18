@@ -65,7 +65,7 @@
                             @endisset
                         </span>
                         <br><span class="text-gray-500 small-text">(Ditambahkan oleh
-                            {{ $d->user->nama }})</span>
+                            {{ $d->user->nama ?? '[Akun dihapus]' }})</span>
                     </a>
                 </li>
             @endforeach

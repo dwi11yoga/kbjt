@@ -47,14 +47,14 @@
                         class="absolute hidden bg-white right-14 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
                         <ul>
                             {{-- Lihat --}}
-                            <a href="/blog/post/{{ $d->slug }}">
+                            <a href="/dukung?metode-pembayaran={{ $d->metode }}">
                                 <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100">
                                     <div>Lihat</div>
                                     <i data-feather='eye' class="w-5"></i>
                                 </li>
                             </a>
 
-                            {{-- Hapus --}}
+                            {{-- Hapus BELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM --}}
                             <button type="submit" id="{{ $d->id }}"
                                 onclick="deleteMessage(this,'hapusArtikel', 'formHapus')"
                                 class="flex w-full justify-between py-2 px-3 rounded-lg text-red-500 hover:bg-neutral-100">

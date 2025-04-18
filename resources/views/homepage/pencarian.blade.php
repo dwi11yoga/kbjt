@@ -83,7 +83,7 @@
                                     @include('partials.profil-pic-general-array2')
                                     <?php $d = $sementara; ?>
                                 </div>
-                                <div class="line-clamp-1">Diinisialisasi oleh {{ $d->user->nama }}
+                                <div class="line-clamp-1">Diinisialisasi oleh {{ $d->user->nama ?? '[Akun dihapus]' }}
                                 </div>
                             </div>
 

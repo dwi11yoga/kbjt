@@ -71,7 +71,13 @@
                         <?php $d = $data->user; ?>
                         @include('partials.profile-pic-general')
                     </div>
-                    <div class="line-clamp-1">Diinisialisasi oleh <a href="/u/{{ $d->username }}">{{ $d->nama }}</a>
+                    <div class="line-clamp-1">Diinisialisasi oleh
+                        @if (isset($d))
+                            <a href='/u/{{ $d->username }}'>{{ $d->nama }}</a>
+                        @else
+                            [Akun dihapus]
+                        @endif
+
                     </div>
                 </div>
             </div>

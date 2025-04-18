@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->timestamp('status')->nullable();
             $table->boolean('pinned')->default(0);
             $table->integer('view')->default(0);
+            $table->boolean('achievement_terklaim')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

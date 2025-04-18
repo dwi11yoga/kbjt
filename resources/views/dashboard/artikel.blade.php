@@ -65,15 +65,15 @@
                     <a href="{{ $d->user_id != auth()->user()->id || auth()->user()->role == 'kepala' ? (isset($d->status) ? '/blog/post/' . $d->slug : '/blog/preview/' . $d->slug) : '/artikel/edit/' . $d->id }}"
                         class="col-span-11 grid md:grid-cols-11 grid-cols-5 md:space-x-10 space-y-2">
                         {{-- Judul --}}
-                        <div class="md:col-span-5 col-span-5 line-clamp-2 flex items-center md:font-normal font-semibold">
+                        <div class="md:col-span-5 col-span-5 line-clamp-2 flex items-center md:font-normal font-semibold" title="Judul artikel">
                             @if ($d->pinned == 1)
-                                <span>📌</span>
+                                <span title="Disematkan">📌</span>
                             @endif
                             {{ $d->judul }}
                         </div>
 
                         {{-- author --}}
-                        <div class="md:col-span-3 col-span-5 flex items-center space-x-1 text-neutral-700">
+                        <div class="md:col-span-3 col-span-5 flex items-center space-x-1 text-neutral-700" title="Ditulis oleh {{ $d->user->nama }} {{isset($d->user->statusUser) && $d->user->statusUser=='dihapus'?'(Akun dihapus)':''}}">
                             <div class="md:w-7 md:h-7 w-8 h-8 rounded-full overflow-hidden">
                                 @include('partials.profil-pic-general-array2')
                             </div>
@@ -90,7 +90,7 @@
                         </div>
 
                         {{-- tgl --}}
-                        <div class="col-span-2 flex md:justify-end items-center">
+                        <div class="col-span-2 flex md:justify-end items-center" title="Terakhir diedit">
                             {{ $d->updated_at->translatedformat('d M Y') }}
                         </div>
                     </a>

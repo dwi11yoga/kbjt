@@ -14,7 +14,21 @@ class BannerController extends Controller
     // View edit banner
     public function index()
     {
-        $banner = Banner::with('user:id,username,nama,jenis_kelamin,role,profile_pic')->get()->keyBy('id')->toArray(); //ubah ke data jadi array
+        $banner = Banner::with([
+            'user' => function ($query) {
+                $query->withTrashed(); //ambil data softdelete juga
+            }
+        ])
+            ->get()
+            ->keyBy('id');
+
+        // cek apakah data user (author) ada/terhapus
+        foreach ($banner as $d) {
+            if ($d->user->trashed()) {
+                $d->user->statusUser = 'dihapus';
+            }
+        }
+
         // dd($banner);
         // $banner=Banner::all();
         return view('dashboard.banner', [

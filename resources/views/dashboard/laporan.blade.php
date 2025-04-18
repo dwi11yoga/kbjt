@@ -80,9 +80,13 @@
                     </div>
                     <div class="md:flex hidden md:text-base text-sm col-span-2 items-center space-x-1">
                         @if (isset($d->status))
-                            <div class="flex items-center text-sm space-x-1">
+                            <div class="flex items-center text-sm space-x-1"
+                                title="Laporan ditangani oleh {{ $d->pengurus->nama }} {{ isset($d->pengurus->statusUser) && $d->pengurus->statusUser == 'dihapus' ? '(akun dihapus)' : '' }}">
                                 <div class="md:w-7 md:h-7 w-8 h-8 rounded-full overflow-hidden">
-                                    <?php $d->profile_pic = $d->pengurus->profile_pic; ?>
+                                    <?php
+                                    $d->profile_pic = $d->pengurus->profile_pic ?? null;
+                                    $d->statusUser = $d->pengurus->statusUser ?? null;
+                                    ?>
                                     @include('partials.profile-pic-general')
                                 </div>
                                 <div class="line-clamp-1">{{ $d->pengurus->username }}</div>
@@ -91,7 +95,8 @@
                     </div>
                     <div class="md:col-span-1 col-span-2 flex items-center">
                         @if (isset($d->status))
-                            <div class="flex items-center text-sm rounded-full px-3 py-1 bg-green-300 w-fit space-x-1">
+                            <div class="flex items-center text-sm rounded-full px-3 py-1 bg-green-300 w-fit space-x-1"
+                                title="Diselesaikan pada {{ $d->updated_at->translatedFormat('d F Y') }}">
                                 <i data-feather='check-circle' class="w-5 stroke-neutral-800"></i>
                                 <span>Selesai</span>
                             </div>
@@ -102,7 +107,8 @@
                             </div>
                         @endif
                     </div>
-                    <div class="md:col-span-1 col-span-5 flex items-center md:text-base text-sm">
+                    <div class="md:col-span-1 col-span-5 flex items-center md:text-base text-sm"
+                        title="Tanggal dilaporkannya laporan">
                         {{ $d->created_at->translatedformat('d M Y') }}
                     </div>
                 </a>
@@ -125,7 +131,8 @@
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid md:grid-cols-8 gap-2 hover:outline hover:outline-amber-400">
                     <div
                         class="line-clamp-1 @if (isset($d->pengurus_id)) md:col-span-6 @else md:col-span-7 @endif col-span-8 flex items-center">
-                        {{ $d->user->nama }} ingin mengganti detail kosakata "{{ $d->kosakata->kosakata }}".
+                        {{ $d->user->nama }} ingin mengganti detail kosakata
+                        "{{ $d->kosakata->kosakata }}".
                     </div>
                     @if (isset($d->pengurus_id))
                         <div class="col-span-1 flex items-center">
@@ -159,8 +166,7 @@
                     class="appearance-none border border-neutral-200 rounded-xl py-2 pl-10 pr-3 bg-white cursor-pointer">
                     <option value="">Filter</option>
                     <option {{ request()->filterKosakata == 'belum-ditangani' ? 'selected' : '' }} value="belum-ditangani">
-                        Belum
-                        ditangani
+                        Belum ditangani
                     </option>
                     <option {{ request()->filterKosakata == 'selesai-ditangani' ? 'selected' : '' }}
                         value="selesai-ditangani">
@@ -185,9 +191,14 @@
                     </div>
                     <div class="md:flex hidden md:text-base text-sm col-span-2 items-center space-x-2">
                         @if (isset($d->status))
-                            <div class="flex items-center text-sm space-x-1">
+                            <div class="flex items-center text-sm space-x-1"
+                                title="Laporan ditangani oleh {{ $d->pengurus->nama }} {{ isset($d->pengurus->statusUser) && $d->pengurus->statusUser == 'dihapus' ? '(akun dihapus)' : '' }}">
                                 <div class="md:w-7 md:h-7 w-8 h-8 rounded-full overflow-hidden">
-                                    @include('partials.profil-pic-general-array2')
+                                    <?php
+                                    $d->profile_pic = $d->pengurus->profile_pic ?? null;
+                                    $d->statusUser = $d->pengurus->statusUser ?? null;
+                                    ?>
+                                    @include('partials.profile-pic-general')
                                 </div>
                                 <div class="line-clamp-1">{{ $d->pengurus->username }}</div>
                             </div>
@@ -195,7 +206,8 @@
                     </div>
                     <div class="md:col-span-1 col-span-2 flex items-center">
                         @if (isset($d->status))
-                            <div class="flex items-center text-sm rounded-full px-3 py-1 bg-green-300 w-fit space-x-1">
+                            <div class="flex items-center text-sm rounded-full px-3 py-1 bg-green-300 w-fit space-x-1"
+                                title="Diselesaikan pada {{ $d->updated_at->translatedFormat('d F Y') }}">
                                 <i data-feather='check-circle' class="w-5 stroke-neutral-800"></i>
                                 <span>Selesai</span>
                             </div>
@@ -206,7 +218,8 @@
                             </div>
                         @endif
                     </div>
-                    <div class="md:col-span-1 col-span-5 flex items-center md:text-base text-sm">
+                    <div class="md:col-span-1 col-span-5 flex items-center md:text-base text-sm"
+                        title="Tanggal dilaporkannya laporan">
                         {{ $d->created_at->translatedformat('d M Y') }}
                     </div>
                 </a>

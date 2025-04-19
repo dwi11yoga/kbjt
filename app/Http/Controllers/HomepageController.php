@@ -345,6 +345,8 @@ class HomepageController extends Controller
         // dapatkan data banner
         $banner = $this->getBanner([1, 2, 5, 6]);
 
+        // dd($kosakata);
+
         return view('homepage.kosakata', [
             'group' => 'pencarian',
             'title' => 'Kosakata',

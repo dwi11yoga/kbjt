@@ -56,7 +56,7 @@
 
                             {{-- Hapus BELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM --}}
                             <button type="submit" id="{{ $d->id }}"
-                                onclick="deleteMessage(this,'hapusArtikel', 'formHapus')"
+                                onclick="deleteMessage(this,'hapusDonasi', 'formHapus')"
                                 class="flex w-full justify-between py-2 px-3 rounded-lg text-red-500 hover:bg-neutral-100">
                                 <div>Hapus</div>
                                 <i data-feather='trash-2' class="w-5"></i>
@@ -66,6 +66,44 @@
                     </div>
                 </div>
             @endforeach
+
+            <div id="hapusDonasi"
+                class="fixed inset-0 m-auto invisible z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6 space-y-4">
+
+                    <h5 class="font-semibold">Kamu yakin ingin menghapus artikel ini?</h5>
+
+                    <div class="space-y-2">
+                        <p>Artikel yang dihapus akan hilang secara permanen dan tidak dapat dipulihkan.
+                            Yakin ingin melanjutkan?</p>
+                    </div>
+
+                    <form id="formHapus" action="" method="POST">
+                        @method('delete')
+                        @csrf
+                        {{-- Button --}}
+                        <div class="flex space-x-2">
+                            <div onclick="closeWindow('hapusDonasi')"
+                                class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
+                                Batal</div>
+                            <button type="submit"
+                                class="w-full bg-red-500 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-red-600">Ya,
+                                Yakin</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <script>
+                // fungsi untuk menampilkan pesan hapus
+                function deleteMessage(artikel, component, formId) {
+                    openWindow(component);
+
+                    var artikel = artikel.id;
+                    var form = document.getElementById(formId);
+                    form.action = `/metode-donasi/${artikel}/hapus`;
+                }
+            </script>
 
             {{-- Pagination --}}
             <div class="">

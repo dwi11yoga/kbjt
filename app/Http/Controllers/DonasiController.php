@@ -12,7 +12,7 @@ class DonasiController extends Controller
     public function index()
     {
         $donasi = Donasi::orderBy('metode', 'asc')
-            ->paginate(10, '*', 'kosakata')
+            ->paginate(10, '*', 'halaman')
             ->onEachSide(2);
         $jumlah = Donasi::count(); //jumlah metode donasi
         return view('dashboard.donasi', [
@@ -156,5 +156,12 @@ class DonasiController extends Controller
         return redirect()->to('/metode-donasi')->with('success', 'Perubahan metode donasi berhasil disimpan');
     }
 
-    // fungsi delete metode - belom
+    // fungsi delete metode
+    public function delete($id){
+        // hapus metode donasi
+        Donasi::destroy($id);
+
+        // kembali ke view
+        return back()->with('success', 'Metode donasi berhasil dihapus');
+    }
 }

@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('barcode')->nullable();
             $table->text('cara_donasi')->nullable();
             $table->datetimes();
+            $table->softDeletes();
         });
     }
 

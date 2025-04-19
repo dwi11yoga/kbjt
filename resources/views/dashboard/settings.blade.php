@@ -13,7 +13,7 @@
                     <i data-feather='user' class="inline-block w-5 mr-2"></i>
                     <div>Ubah data diri</div>
                 </a>
-                
+
                 {{-- tautan dan media sosial --}}
                 <a href="/pengaturan/tautan"
                     class="py-4 px-5 w-full flex items-center border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
@@ -69,11 +69,13 @@
                 </a>
 
                 {{-- Hapus akun --}}
-                <a href="/pengaturan/hapus-akun"
-                    class="flex items-center py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
-                    <i data-feather='user-x' class="inline-block w-5 mr-2"></i>
-                    <div>Hapus akun</div>
-                </a>
+                @if (auth()->user()->role != 'kepala')
+                    <a href="/pengaturan/hapus-akun"
+                        class="flex items-center py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:bg-neutral-100">
+                        <i data-feather='user-x' class="inline-block w-5 mr-2"></i>
+                        <div>Hapus akun</div>
+                    </a>
+                @endif
 
                 {{-- Keluar --}}
                 <form action="/logout" method="POST">

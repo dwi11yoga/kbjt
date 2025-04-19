@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="flex space-x-2 items-center">
-                    <div class="overflow-hidden h-8 w-8 rounded-full z-20 border-white border-2">
+                    <div class="overflow-hidden h-8 w-8 rounded-full border-white border-2">
                         <?php $d = $data->user; ?>
                         @include('partials.profile-pic-general')
                     </div>

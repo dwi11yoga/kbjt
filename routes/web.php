@@ -143,6 +143,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/metode-donasi/{id}/edit', [DonasiController::class, 'edit']);
         // simpan edit donasi
         Route::put('/metode-donasi/{id}/edit', [DonasiController::class, 'store']);
+        // hapus donasi
+        Route::delete('/metode-donasi/{id}/hapus', [DonasiController::class,'delete']);
 
         // level - kepala
         Route::get('/level', [LevelController::class, 'index']);
@@ -223,8 +225,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/pengaturan/ubah-password/simpan', [UserController::class, 'updatePassword']);
 
     // hapus akun
-    Route::get('/pengaturan/hapus-akun', [HapusAkunController::class,'index']);
-    Route::put('/pengaturan/hapus-akun/konfirmasi', [HapusAkunController::class,'hapusAkun']);
+    Route::get('/pengaturan/hapus-akun', [HapusAkunController::class,'index'])->middleware('kontributorPengurus');
+    Route::put('/pengaturan/hapus-akun/konfirmasi', [HapusAkunController::class,'hapusAkun'])->middleware('kontributorPengurus');
 
     // Tambah definisi
     Route::post('/kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create']);

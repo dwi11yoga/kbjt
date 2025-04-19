@@ -242,12 +242,14 @@ class DashboardController extends Controller
         $data['definisi'] = Definisi::select('id', 'kosakata_id', 'user_id', 'poin', 'definisi', 'verifikasi', 'updated_at')
             ->with('kosakata:id,kosakata,slug')
             ->where('user_id', '=', Auth::user()->id);
-        $statistik['definisiTotal'] = $data['definisi']->count();
-        $statistik['definisiBln'] = $data['definisi']->whereMonth('updated_at', '=', Carbon::now()->month)->count();
+        $statistik['definisiTotal'] = (clone $data['definisi'])->count();
+        $statistik['definisiBln'] = (clone $data['definisi'])->whereMonth('updated_at', '=', Carbon::now()->month)->count();
         $data['definisi'] = $data['definisi']->orderBy('updated_at', 'desc')
             ->paginate(10, ['*'], 'definisi-page')
             ->onEachSide(2)
             ->appends(request()->query());
+
+            // dd($data['definisi']);
 
         // dapatkan data laporan
         $data['laporan'] = Report::select('id', 'user_id', 'definisi_id','kosakata_id', 'alasan', 'status', 'updated_at')

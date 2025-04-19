@@ -30,21 +30,18 @@
                     Bulan ini, kamu men-submit {{ $statistik['definisiBln'] }} definisi!
                 </div>
             </a>
-
-            @if (auth()->user()->role == 'kontributor')
-                {{-- Laporan --}}
-                <a href="#laporan"
-                    class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
-                    <div>Laporan pending<br>
-                        <div class="flex items-baseline">
-                            <h1 class="font-bold -mt-2">{{ $statistik['laporanPending'] }}</h1>
-                        </div>
+            {{-- Laporan --}}
+            <a href="#laporan"
+                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                <div>Laporan pending<br>
+                    <div class="flex items-baseline">
+                        <h1 class="font-bold -mt-2">{{ $statistik['laporanPending'] }}</h1>
                     </div>
-                    <div class="text-sm">
-                        Total {{ number_format($statistik['laporanTotal'], 0, ',', '.') }} laporan telah kamu submit.
-                    </div>
-                </a>
-            @endif
+                </div>
+                <div class="text-sm">
+                    Total {{ number_format($statistik['laporanTotal'], 0, ',', '.') }} laporan telah kamu submit.
+                </div>
+            </a>
 
         </div>
     </div>
@@ -151,9 +148,9 @@
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                     <div class="line-clamp-1 md:col-span-3 col-span-6 flex items-center">
                         @if (isset($d->definisi_id))
-                        Melaporkan definisi dari kosakata "{{ $d->kosakata }}".
+                            Melaporkan definisi dari kosakata "{{ $d->kosakata }}".
                         @elseif (isset($d->kosakata_id))
-                        Melaporkan kosakata "{{ $d->kosakata }}".
+                            Melaporkan kosakata "{{ $d->kosakata }}".
                         @endif
                     </div>
                     <div

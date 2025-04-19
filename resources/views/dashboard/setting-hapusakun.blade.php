@@ -31,14 +31,27 @@
         </div>
 
         {{-- konfirmasi --}}
-        <div class="bg-white px-5 py-4 rounded-xl">
-            <input type="checkbox" name="konfirmasi" id="konfirmasi" required {{ old('konfirmasi')=='on'?'checked':'' }}>
-            <label for="konfirmasi" class="text-sm">
-                Saya memahami bahwa akun saya akan dihapus secara permanen dan tidak dapat dikembalikan.
-            </label>
-            @error('konfirmasi')
-                <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
-            @enderror
+        <div class="bg-white px-5 py-4 rounded-xl space-y-1">
+            <div>
+                <input type="checkbox" class="cursor-pointer" name="konfirmasi1" id="konfirmasi1"
+                    {{ old('konfirmasi1') == 'on' ? 'checked' : '' }}>
+                <label for="konfirmasi1" class="text-sm cursor-pointer">
+                    Saya memahami bahwa akun saya akan dihapus secara permanen dan tidak dapat dikembalikan.
+                </label>
+                @error('konfirmasi1')
+                    <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                @enderror
+            </div>
+            <div>
+                <input type="checkbox" class="cursor-pointer" name="konfirmasi2" id="konfirmasi2"
+                    {{ old('konfirmasi2') == 'on' ? 'checked' : '' }}>
+                <label for="konfirmasi2" class="text-sm cursor-pointer">
+                    Saya memahami bahwa penghapusan akun tidak akan menghapus kontribusi saya.
+                </label>
+                @error('konfirmasi2')
+                    <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                @enderror
+            </div>
         </div>
 
         {{-- tombol konfirmasi --}}

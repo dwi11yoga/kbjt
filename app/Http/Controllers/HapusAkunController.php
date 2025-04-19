@@ -25,7 +25,8 @@ class HapusAkunController extends Controller
         $validatedData=$request->validate([
             'alasan'=>'required|min:20',
             'password'=>'required|min:6|max:255',
-            'konfirmasi'=>'required'
+            'konfirmasi1'=>'required',
+            'konfirmasi2'=>'required',
         ]);
 
         // cek apakah password yang dimasukkan sudah benar

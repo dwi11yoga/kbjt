@@ -15,12 +15,14 @@
                 <div class="">
                     <div class="text-sm text-neutral-600">Pelapor</div>
                     <a href="/u/{{ $laporan->user->username }}" class="">{{ $laporan->user->nama }}
-                        (&#64;{{ $laporan->user->username }}) {{ isset($laporan->user->statusUser) && $laporan->user->statusUser == 'dihapus' ? '(akun dihapus)':'' }}</a>
+                        (&#64;{{ $laporan->user->username }})
+                        {{ isset($laporan->user->statusUser) && $laporan->user->statusUser == 'dihapus' ? '(akun dihapus)' : '' }}</a>
                 </div>
                 <div class="">
                     <div class="text-sm text-neutral-600">Terlapor</div>
                     <a href="/u/{{ $laporan->author->username }}" class="">{{ $laporan->author->nama }}
-                        (&#64;{{ $laporan->author->username }}) {{ isset($laporan->author->statusUser) && $laporan->author->statusUser == 'dihapus' ? '(akun dihapus)':'' }}</a>
+                        (&#64;{{ $laporan->author->username }})
+                        {{ isset($laporan->author->statusUser) && $laporan->author->statusUser == 'dihapus' ? '(akun dihapus)' : '' }}</a>
                 </div>
                 <div class="">
                     <div class="text-sm text-neutral-600">Alasan</div>
@@ -128,8 +130,7 @@
 
 
 
-    @if (empty($laporan->status))
-        {{-- detail terlapor dan pelapor --}}
+    @if (empty($laporan->status)) {{-- detail terlapor dan pelapor --}}
         <div class="grid grid-cols-2 md:space-x-5 md:space-y-0 space-x-0 space-y-5">
             {{-- Tentang pelapor --}}
             <div class="md:col-span-1 col-span-2 p-5 bg-white rounded-2xl">
@@ -238,13 +239,14 @@
     {{-- Tindakan --}}
     <div class="p-5 bg-white rounded-2xl">
         <div class="mb-3">Tindakan</div>
-        @if (isset($laporan->status))
+        @if (isset($laporan->status)) {{-- Jika sudah ditindaklanjuti --}}
             <div class="grid md:grid-cols-2 grid-cols-1 md:space-x-4 space-x-0 md:space-y-0 space-y-4">
                 <div class="col-span-1 space-y-3">
                     <div class="">
                         <div class="text-sm text-neutral-600">Ditangani oleh</div>
                         <div class="">
-                            {{ $laporan->pengurus->nama }} (&#64;{{ $laporan->pengurus->username }}) {{ isset($laporan->pengurus->statusUser) && $laporan->pengurus->statusUser == 'dihapus' ? '(akun dihapus)':'' }}
+                            {{ $laporan->pengurus->nama }} (&#64;{{ $laporan->pengurus->username }})
+                            {{ isset($laporan->pengurus->statusUser) && $laporan->pengurus->statusUser == 'dihapus' ? '(akun dihapus)' : '' }}
                         </div>
                     </div>
                     <div class="">
@@ -294,10 +296,15 @@
                     </div>
                 </div>
             </div>
+        @elseif (auth()->user()->role == 'pengurus' && auth()->user()->id == $laporan->author->id)
+            <?php $notFound = 'Kamu tidak diizinkan menangani laporan ini'; ?>
+            @include('partials.not-found')
         @else
+            {{-- Jika sudah ditindaklanjuti --}}
             @if (auth()->user()->role == 'pengurus')
                 {{-- tindakan yang bisa diambil admin --}}
                 @if (isset($laporan->definisi_id))
+                    {{-- tindakan untuk definisi --}}
                     <form action="/laporan/{{ $laporan->id }}/tindaklanjut" method="POST">
                         @method('PUT')
                         @csrf
@@ -338,7 +345,8 @@
                                 {{-- Tindakan terhadap definisi --}}
                                 <div class="">
                                     <div class="mb-2">Tindakan terhadap definisi</div>
-                                    @error('tindakanDefinisi')``
+                                    @error('tindakanDefinisi')
+                                        ``
                                         <div class="text-sm text-red-600 -mt-2 mb-2">{{ $message }}</div>
                                     @enderror
                                     <div class="space-y-2">
@@ -402,67 +410,79 @@
                                         {{-- kurangi poin --}}
                                         {{-- 2% poin --}}
                                         <div class="">
-                                            <input type="radio" name="hukuman" id="kurangiPoin002" value="kurangiPoin002"
-                                                class="hidden peer" {{ old('hukuman') == 'kurangiPoin002' ? 'checked' : '' }}>
+                                            <input type="radio" name="hukuman" id="kurangiPoin002"
+                                                value="kurangiPoin002" class="hidden peer"
+                                                {{ old('hukuman') == 'kurangiPoin002' ? 'checked' : '' }}>
                                             <label for="kurangiPoin002"
                                                 class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
                                                 <i data-feather='chevron-right' class="md:w-5 w-12"></i>
-                                                <span>Kurangi poin sebesar 2% ({{ $laporan->author->poin }} → {{ $hasilPenguranganPoin[2] }} poin)</span>
+                                                <span>Kurangi poin sebesar 2% ({{ $laporan->author->poin }} →
+                                                    {{ $hasilPenguranganPoin[2] }} poin)</span>
                                             </label>
                                         </div>
 
                                         {{-- 5% poin --}}
                                         <div class="">
-                                            <input type="radio" name="hukuman" id="kurangiPoin005" value="kurangiPoin005"
-                                                class="hidden peer" {{ old('hukuman') == 'kurangiPoin005' ? 'checked' : '' }}>
+                                            <input type="radio" name="hukuman" id="kurangiPoin005"
+                                                value="kurangiPoin005" class="hidden peer"
+                                                {{ old('hukuman') == 'kurangiPoin005' ? 'checked' : '' }}>
                                             <label for="kurangiPoin005"
                                                 class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
                                                 <i data-feather='chevron-right' class="md:w-5 w-12"></i>
-                                                <span>Kurangi poin sebesar 5% ({{ $laporan->author->poin }} → {{ $hasilPenguranganPoin[5] }} poin)</span>
+                                                <span>Kurangi poin sebesar 5% ({{ $laporan->author->poin }} →
+                                                    {{ $hasilPenguranganPoin[5] }} poin)</span>
                                             </label>
                                         </div>
 
                                         {{-- 8% poin --}}
                                         <div class="">
-                                            <input type="radio" name="hukuman" id="kurangiPoin008" value="kurangiPoin008"
-                                                class="hidden peer" {{ old('hukuman') == 'kurangiPoin008' ? 'checked' : '' }}>
+                                            <input type="radio" name="hukuman" id="kurangiPoin008"
+                                                value="kurangiPoin008" class="hidden peer"
+                                                {{ old('hukuman') == 'kurangiPoin008' ? 'checked' : '' }}>
                                             <label for="kurangiPoin008"
                                                 class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
                                                 <i data-feather='chevron-right' class="md:w-5 w-12"></i>
-                                                <span>Kurangi poin sebesar 8% ({{ $laporan->author->poin }} → {{ $hasilPenguranganPoin[8] }} poin)</span>
+                                                <span>Kurangi poin sebesar 8% ({{ $laporan->author->poin }} →
+                                                    {{ $hasilPenguranganPoin[8] }} poin)</span>
                                             </label>
                                         </div>
 
                                         {{-- 10% poin --}}
                                         <div class="">
-                                            <input type="radio" name="hukuman" id="kurangiPoin010" value="kurangiPoin010"
-                                                class="hidden peer" {{ old('hukuman') == 'kurangiPoin010' ? 'checked' : '' }}>
+                                            <input type="radio" name="hukuman" id="kurangiPoin010"
+                                                value="kurangiPoin010" class="hidden peer"
+                                                {{ old('hukuman') == 'kurangiPoin010' ? 'checked' : '' }}>
                                             <label for="kurangiPoin010"
                                                 class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
                                                 <i data-feather='chevron-right' class="md:w-5 w-12"></i>
-                                                <span>Kurangi poin sebesar 10% ({{ $laporan->author->poin }} → {{ $hasilPenguranganPoin[10] }} poin)</span>
+                                                <span>Kurangi poin sebesar 10% ({{ $laporan->author->poin }} →
+                                                    {{ $hasilPenguranganPoin[10] }} poin)</span>
                                             </label>
                                         </div>
 
                                         {{-- 15% poin --}}
                                         <div class="">
-                                            <input type="radio" name="hukuman" id="kurangiPoin015" value="kurangiPoin015"
-                                                class="hidden peer" {{ old('hukuman') == 'kurangiPoin015' ? 'checked' : '' }}>
+                                            <input type="radio" name="hukuman" id="kurangiPoin015"
+                                                value="kurangiPoin015" class="hidden peer"
+                                                {{ old('hukuman') == 'kurangiPoin015' ? 'checked' : '' }}>
                                             <label for="kurangiPoin015"
                                                 class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
                                                 <i data-feather='chevron-right' class="md:w-5 w-12"></i>
-                                                <span>Kurangi poin sebesar 15% ({{ $laporan->author->poin }} → {{ $hasilPenguranganPoin[15] }} poin)</span>
+                                                <span>Kurangi poin sebesar 15% ({{ $laporan->author->poin }} →
+                                                    {{ $hasilPenguranganPoin[15] }} poin)</span>
                                             </label>
                                         </div>
 
                                         {{-- 20% poin --}}
                                         <div class="">
-                                            <input type="radio" name="hukuman" id="kurangiPoin020" value="kurangiPoin020"
-                                                class="hidden peer" {{ old('hukuman') == 'kurangiPoin020' ? 'checked' : '' }}>
+                                            <input type="radio" name="hukuman" id="kurangiPoin020"
+                                                value="kurangiPoin020" class="hidden peer"
+                                                {{ old('hukuman') == 'kurangiPoin020' ? 'checked' : '' }}>
                                             <label for="kurangiPoin020"
                                                 class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
                                                 <i data-feather='chevron-right' class="md:w-5 w-12"></i>
-                                                <span>Kurangi poin sebesar 20% ({{ $laporan->author->poin }} → {{ $hasilPenguranganPoin[20] }} poin)</span>
+                                                <span>Kurangi poin sebesar 20% ({{ $laporan->author->poin }} →
+                                                    {{ $hasilPenguranganPoin[20] }} poin)</span>
                                             </label>
                                         </div>
 
@@ -546,6 +566,7 @@
 
                     </form>
                 @elseif (isset($laporan->kosakata_id))
+                    {{-- tindakan untuk kosakata --}}
                     <form action="/laporan/{{ $laporan->id }}/tindaklanjut" method="POST">
                         @method('PUT')
                         @csrf
@@ -676,6 +697,12 @@
                         </div>
                     </form>
                 @endif
+            @else
+                {{-- jika belum ada tindakan yang diambil admin (untuk kontributor dan kapala) --}}
+                <?php $notFound = 'Belum ada tindakan yang diambil'; ?>
+                @include('partials.not-found')
+            @endif
+        @endif
     </div>
 
     {{-- js --}}
@@ -693,11 +720,4 @@
             }
         })
     </script>
-@else
-    {{-- jika belum ada tindakan yang diambil admin (untuk kontributor dan kapala) --}}
-    <?php $notFound = 'Belum ada tindakan yang diambil'; ?>
-    @include('partials.not-found')
-    @endif
-    @endif
-    </div>
 @endsection

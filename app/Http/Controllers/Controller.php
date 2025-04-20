@@ -10,6 +10,7 @@ use App\Models\EditKosakata;
 use App\Models\HapusAkun;
 use App\Models\Kosakata;
 use App\Models\Level;
+use App\Models\Notifikasi;
 use App\Models\Report;
 use App\Models\User;
 use Carbon\Carbon;
@@ -80,10 +81,10 @@ abstract class Controller
     {
         // cek dulu apakah akun user sudah dihapus. jika dihapus, maka tidak perlu melakukan pengecekan achievement
         $hapusAkun = HapusAkun::find($userId);
-        $apakahDihapus=User::withTrashed()->find($userId)->trashed(); // true=dihapus:false=tidak dihapus
+        $apakahDihapus = User::withTrashed()->find($userId)->trashed(); // true=dihapus:false=tidak dihapus
 
         if ($apakahDihapus == false) { // jika akun user tidak dihapus, maka eksekusi kode berikut
-            $didapat = User::where('id', '=', $userId)->value('achievement');
+            $didapat = User::where('id', '=', $userId)->value('achievement'); // dapatkan achievement yang didapatkkan
             $data = Achievement::where('rule', '=', $rule)
                 ->whereNotIn('id', array_keys(is_array($didapat) ? $didapat : []))
                 ->orderBy('requirement', 'asc')
@@ -157,5 +158,17 @@ abstract class Controller
 
         // kembalikan nilai $showbanner
         return $showBanner;
+    }
+
+    // fungsi mengirim notifikasi ke user
+    public function kirimNotifikasi(int $penerimaNotif, string $pesan, string $url)
+    {
+        Notifikasi::create([
+            'user_id' => $penerimaNotif,
+            'message' => $pesan,
+            'url' => $url,
+        ]);
+
+        return "sukses";
     }
 }

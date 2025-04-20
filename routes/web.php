@@ -99,8 +99,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/laporkan/definisi', [ReportController::class, 'definisi']);
     // laporkan (hapus) kosakata 
     route::post('/kosakata/{slug}/laporkan', [ReportController::class, 'kosakata']);
-    // detail laporan (kontributor)
-    Route::get('/kontribusi/laporan/{id}', [ReportController::class, 'detailLaporan']);
+    
+    // detail laporan
+    Route::get('/laporan/{id}', [ReportController::class, 'detailLaporan']);
 
     Route::middleware(['pengurusKepala'])->group(function () {
 
@@ -129,7 +130,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pengurus', [DashboardController::class, 'pengurus']);
         // laporan - pengurus
         Route::get('/laporan', [ReportController::class, 'index']);
-        Route::get('/laporan/{id}', [ReportController::class, 'detailLaporan']);
+        // Route::get('/laporan/{id}', [ReportController::class, 'detailLaporan']);
     });
 
     Route::middleware(['kepala'])->group(function () {

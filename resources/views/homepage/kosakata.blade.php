@@ -152,6 +152,16 @@
                         </div>
                     </div>
 
+                    {{-- alert --}}
+                    <?php
+                    $alert = [
+                        'warna' => 'green',
+                        'pesan' => 'Jika masih bisa diperbaiki, cukup klik (•••) dan pilih "Edit" — tak perlu buat permintaan hapus.',
+                        'textsize' => 'sm',
+                    ];
+                    ?>
+                    @include('partials.alert')
+
                     {{-- Button --}}
                     <div class="flex space-x-2">
                         <div onclick="closeWindow('hapausKosakata')"

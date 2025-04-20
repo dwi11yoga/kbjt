@@ -66,8 +66,6 @@ class ReportController extends Controller
             $d->terlapor = User::where('id', '=', $d->definisi->user_id)->value('username');
         }
 
-        // dd($laporan);
-
         // Permintaan ganti detail kosakata
         $editKosakata = EditKosakata::whereIn('id', function ($query) {
             $query->selectRaw('MAX(id)')
@@ -267,6 +265,11 @@ class ReportController extends Controller
             }
         }
 
+        // alihkan jika user tidak berhak
+        if (Auth::user()->role == 'kontributor' && $laporan->user_id != Auth::user()->id && $laporan->author->id != Auth::user()->id) {
+            return $this->error403();
+        }
+
         // ambil data pengurus
         if (isset($laporan->pengurus_id)) {
             $laporan->pengurus = User::withTrashed()
@@ -279,14 +282,16 @@ class ReportController extends Controller
             }
         }
 
+        // buat id zerofill
         $laporan->idZerofill = str_pad($laporan->id, 10, '0', STR_PAD_LEFT);
 
-        // menentukan grup halaman
-        $group = str_contains($_SERVER['REQUEST_URI'], 'kontribusi') == true ? 'kontribusi' : 'laporan';
-
-        // jangan tampilkan jika user tidak berhak
-        if ($group == 'kontribusi' && $laporan->user_id != Auth::user()->id && $laporan->author->id !=  Auth::user()->id) {
-            return $this->error403();
+        // pastikan group
+        if (Auth::user()->role != 'kontributor') {
+            $group = 'laporan';
+        } elseif ($laporan->user_id == Auth::user()->id) {
+            $group = 'kontribusi';
+        } else {
+            $group = '';
         }
 
         // data yang akan dikirimkan
@@ -390,11 +395,19 @@ class ReportController extends Controller
     public function tindaklanjut(Request $request, $id)
     {
         // dapatkan data laporan
-        $laporan = Report::where('id', '=', $id)->first();
+        $laporan = Report::where('id', '=', $id)
+            ->with('definisi:id,user_id')
+            ->with('kosakata:id,user_id')
+            ->first();
 
-        // Cek apakah laporan yang dikirim sudah ditangani/belum (kuatir di inspect)
+        // alihkan jika laporan yang dikirim sudah ditangani/belum (kuatir di inspect)
         if (isset($laporan->status)) {
             return back()->with('failed', 'Laporan sudah selesai ditangani oleh pengurus lain')->withInput();
+        }
+
+        // alihkan jika pihak terlapor yang menangani laporan (jika definisi/kosakata yang dilaporkan adalah milik admin, ini bisa terjadi)
+        if (Auth::user()->id == $laporan->definisi->user_id || Auth::user()->id == $laporan->kosakata->user_id) {
+            return $this->error403();
         }
 
         // Validasi
@@ -402,8 +415,7 @@ class ReportController extends Controller
             'pelanggaran' => 'required',
         ];
 
-        if (isset($laporan->definisi_id)) {
-            // tindaklanjut untuk definisi
+        if (isset($laporan->definisi_id)) { // validasi untuk definisi
 
             // validasi
             if ($request->pelanggaran == 'true') {
@@ -412,8 +424,7 @@ class ReportController extends Controller
                     'hukuman' => 'required',
                 ]);
             }
-        } elseif (isset($laporan->kosakata_id)) {
-            // tindaklanjut untuk kosakata
+        } elseif (isset($laporan->kosakata_id)) { // validasi untuk kosakata
 
             // validasi
             if ($request->pelanggaran == 'true') {
@@ -422,19 +433,19 @@ class ReportController extends Controller
                 ]);
             }
         }
+
         $validatedData = $request->validate($rules);
 
         // atur data hukuman
-        if ($request->hukuman == 'tidak-ada') {
+        if ($request->hukuman == 'tidak-ada') { // jika tidak diberi hukuman
             $hukuman = 'Tidak ada';
             $hukuman_berakhir = null;
 
-        } elseif ($request->hukuman == 'peringatan') {
+        } elseif ($request->hukuman == 'peringatan') { // jika hukumannya hanya peringatan
             $hukuman = 'Peringatan';
             $hukuman_berakhir = null;
 
-        } elseif (substr($request->hukuman, 0, 11) == 'kurangiPoin') {
-
+        } elseif (substr($request->hukuman, 0, 11) == 'kurangiPoin') { // jika hukumannya pengurangan poin
             // dapatkan data terlapor
             if (isset($laporan->definisi_id)) {
                 $userId = Definisi::find($laporan->definisi_id)->user_id;
@@ -455,32 +466,31 @@ class ReportController extends Controller
             $hukuman = 'Penguranagan poin sebesar ' . $persentase . '%, dari ' . $userPoin . ' menjadi ' . $hasil;
             $hukuman_berakhir = null;
 
-        } elseif ($request->hukuman == 'blokir') {
+        } elseif ($request->hukuman == 'blokir') { // jika hukumannya memblokir akun author
             $hukuman = 'Blokir akun pengguna';
             $hukuman_berakhir = null;
 
-        } elseif ($request->hukuman == '3hr') {
+        } elseif ($request->hukuman == '3hr') { // jika hukumannya suspend selama 3 hari
             $hukuman = 'Suspend selama 3 hari';
             $hukuman_berakhir = Carbon::now()->addDays(3);
-        } elseif ($request->hukuman == '7hr') {
+        } elseif ($request->hukuman == '7hr') { // jika hukumannya suspend selama 7 hari
             $hukuman = 'Suspend selama 7 hari';
             $hukuman_berakhir = Carbon::now()->addDays(7);
-        } elseif ($request->hukuman == '14hr') {
+        } elseif ($request->hukuman == '14hr') { // jika hukumannya suspend selama 14 hari
             $hukuman = 'Suspend selama 14 hari';
             $hukuman_berakhir = Carbon::now()->addDays(14);
-        } elseif ($request->hukuman == '30hr') {
+        } elseif ($request->hukuman == '30hr') { // jika hukumannya suspend selama 30 hari
             $hukuman = 'Suspend selama 30 hari';
             $hukuman_berakhir = Carbon::now()->addMonth();
-        } else {
+        } else { // selain itu
             $hukuman = null;
             $hukuman_berakhir = null;
         }
 
         // tindakan
-        if (isset($laporan->definisi_id)) {
-            // tindaklanjut untuk definisi
-            if ($validatedData['pelanggaran'] == 'true') {
-                // simpan data hukuman ke tabel "Hukuman" (Jika ada)
+        if (isset($laporan->definisi_id)) { // tindaklanjut untuk definisi
+
+            if ($validatedData['pelanggaran'] == 'true') { // simpan data hukuman ke tabel "Hukuman" (Jika ada)
                 $data = [
                     'laporan_id' => $id,
                     'tindakan' => $validatedData['tindakanDefinisi'],
@@ -507,8 +517,8 @@ class ReportController extends Controller
                 }
             }
 
-        } elseif (isset($laporan->kosakata_id)) {
-            // tindaklanjut untuk kosakata
+        } elseif (isset($laporan->kosakata_id)) { // tindaklanjut untuk hapus kosakata
+
             if ($validatedData['pelanggaran'] == 'true') {
                 // hapus kosakata
                 Kosakata::find($laporan->kosakata_id)->delete();
@@ -535,6 +545,23 @@ class ReportController extends Controller
             'pengurus_id' => Auth::user()->id,
             'catatan_pengurus' => $request->catatan
         ]);
+
+        // kirim notifikasi
+        $pelapor = User::select('id', 'nama')
+            ->where('id', $laporan->user_id)
+            ->first();
+        $terlapor = User::select('id', 'nama')
+            ->where('id', $laporan->definisi->user_id ?? $laporan->kosakata->user_id)
+            ->first();
+        $dilaporkan = isset($laporan->definisi_id) ? 'definisi' : 'kosakata';
+        $url = '/laporan/' . $id;
+
+        // untuk pelapor
+        $pesan = 'Laporan kamu atas '.$dilaporkan.' yang disubmit oleh '.$terlapor->nama.' telah selesai ditangani';
+        $this->kirimNotifikasi($pelapor->id, $pesan, $url);
+        // untuk terlapor
+        $pesan='Seseorang melaporkan '.$dilaporkan.' yang kamu submit';
+        $this->kirimNotifikasi($terlapor->id,$pesan, $url);
 
         // cek achievement
         // cek apakah pelapor mendapatkan achievement berdasarkan jumlah laporan yang didapat

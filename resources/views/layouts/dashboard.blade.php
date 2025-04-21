@@ -57,9 +57,9 @@
                         {{-- <p class="mr-4 text-right md:block hidden">
                             {{ auth()->user()->nama }}<br>
                         </p> --}}
-                        <a href="#"
+                        <a href="/notifikasi"
                             class="group mr-2 w-10 h-10 rounded-full flex justify-center items-center hover:bg-gray-100 active:bg-gray-300">
-                            <i data-feather='bell' class="group-active:fill-black"></i>
+                            <i data-feather='bell' class="group-active:fill-black {{ $group=='notifikasi'?'fill-black':'' }}"></i>
                         </a>
 
                         <a href="/u/{{ auth()->user()->username }}"

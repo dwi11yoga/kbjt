@@ -13,8 +13,9 @@ return new class extends Migration {
         //
         Schema::create("notifikasi", function (Blueprint $table) {
             $table->id();
-            $table->string("message");
             $table->foreignId("user_id");
+            $table->string("message");
+            $table->tinyInteger("dilihat")->default(0);
             $table->string("url");
             $table->datetimes();
         });

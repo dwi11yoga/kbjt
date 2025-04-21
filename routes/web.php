@@ -12,6 +12,7 @@ use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\HukumanController;
 use App\Http\Controllers\KosakataController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\PoinKontribusiController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SertifikatController;
@@ -103,6 +104,7 @@ Route::middleware(['auth'])->group(function () {
     // detail laporan
     Route::get('/laporan/{id}', [ReportController::class, 'detailLaporan']);
 
+    // hanya untuk role pengurus dan kepala
     Route::middleware(['pengurusKepala'])->group(function () {
 
         // artikel - pengurus & kepala
@@ -133,6 +135,7 @@ Route::middleware(['auth'])->group(function () {
         // Route::get('/laporan/{id}', [ReportController::class, 'detailLaporan']);
     });
 
+    // hanya untuk role kepala
     Route::middleware(['kepala'])->group(function () {
         // donasi - kepala
         Route::get('/metode-donasi', [DonasiController::class, 'index']);
@@ -166,6 +169,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/achievement/{id}/edit', [AchievementController::class, 'simpanEdit']);
     });
 
+    // hanya untuk role pengurus
     Route::middleware(['pengurus'])->group(function () {
         // buat artikel
         Route::get('/artikel/baru', [BlogController::class, 'tambah']);
@@ -188,7 +192,6 @@ Route::middleware(['auth'])->group(function () {
         // setujui edit definisi
         Route::put('/kosakata/{slug}/riwayat/{id}/setujui', [EditKosakataController::class, 'setujui']);
     });
-
 
     // Pengaturan
     Route::get('/pengaturan', [DashboardController::class, 'settings']);
@@ -239,4 +242,7 @@ Route::middleware(['auth'])->group(function () {
     // Edit kosakata
     Route::get('/kosakata/{slug}/edit', [EditKosakataController::class, 'edit']);
     Route::post('/kosakata/{slug}/edit', [EditKosakataController::class, 'simpanEdit']);
+
+    // notifikasi
+    Route::get('/notifikasi', [NotifikasiController::class, 'index']);
 });

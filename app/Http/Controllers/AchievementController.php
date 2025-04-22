@@ -19,9 +19,60 @@ class AchievementController extends Controller
     //view achievement (dashboard)
     public function index()
     {
-        // achievement yang didapatkan
-        $achieved = Auth::user()->achievement;
-        // data overview
+
+        // CEK ACHIEVEMENT 
+        
+        // id user yang akan dicek achievementnya
+        $user=Auth::user()->id;
+        // periksa semua rule achievement
+        $rule = [
+            'keanggotaan',
+            'definisi',
+            'kosakata',
+            'editKosakata',
+            'laporan',
+            'artikel',
+            'totalViewKosakata',
+            'totalViewBlog',
+            'viewKosakata',
+            'viewBlog'
+        ];
+
+        foreach ($rule as $d) { // lakukan perulangan untuk tiap rule
+            // hitung progress user
+            if ($d == 'keanggotaan') {
+                $nilai = round(Auth::user()->created_at->diffInDays(now()));
+            } elseif ($d == 'definisi') {
+                $nilai = Definisi::where('user_id', '=', $user)->count();
+            } elseif ($d == 'kosakata') {
+                $nilai = Kosakata::where('user_id', '=', $user)->count();
+            } elseif ($d == 'editKosakata') {
+                $nilai = EditKosakata::where('user_id', '=', $user)->whereNotNull('pengurus_id')->count();
+            } elseif ($d == 'laporan') {
+                $nilai = Report::where('user_id', '=', $user)->whereNotNull('pengurus_id')->count();
+            } elseif ($d == 'artikel') {
+                $nilai = Blog::where('user_id', '=', $user)->whereNotNull('status')->count();
+            } elseif ($d == 'totalViewKosakata') {
+                $nilai = Kosakata::where('user_id', '=', $user)->sum('view');
+            } elseif ($d == 'totalViewBlog') {
+                $nilai = Blog::where('user_id', '=', $user)->sum('view');
+            } elseif ($d == 'viewKosakata') {
+                $nilai = Kosakata::where('user_id', '=', $user)->orderBy('view', 'desc')->value('view');
+            } elseif ($d == 'viewBlog') {
+                $nilai = Blog::where('user_id', '=', $user)->orderBy('view', 'desc')->value('view');
+            } else {
+                $nilai = 0;
+            }
+
+            // periksa apakah user berhak mendapat achievement.
+            $this->achievement($user, $d, $nilai);
+        }
+
+        
+        // dapatkan data achievement yang didapatkan oleh user
+        $achieved = User::find(Auth::user()->id)->value('achievement'); // menggunakan query builder karena menggunakan facade Auth ada delay
+
+        // data overview / statistik
         if (Auth::user()->role == 'kontributor') {
             $totalAchievement = Achievement::where('role', '!=', 'pengurus')
                 ->orWhereNull('role')
@@ -29,28 +80,26 @@ class AchievementController extends Controller
         } else {
             $totalAchievement = Achievement::count();
         }
-
         $overview = [
-            // 'achievement' => 17, //sementara
             'achievement' => count(is_array($achieved) ? $achieved : []),
             'total' => $totalAchievement,
         ];
         $overview['persentase'] = $this->persentase($overview['achievement'], $overview['total']);
 
         // dapatkan data achievement
-        if (isset($achieved)) {
-            if (Auth::user()->role == 'kontributor') {
+        if (isset($achieved)) { // jika user sudah mendapat achievement, maka tampilkan lebih dulu
+            if (Auth::user()->role == 'kontributor') { // jika user==kontributor
                 $achievement = Achievement::where('role', '=', Auth::user()->role)
                     ->orWhereNull('role')
                     ->orderByRaw('FIELD(id,' . implode(',', array_keys($achieved)) . ') DESC'); // agar achievement yang sudah didapatkan akan ditampilkan lebih dulu
-            } else {
+            } else { //selain itu, tampilkan semua achievement
                 $achievement = Achievement::orderByRaw('FIELD(id,' . implode(',', array_keys($achieved)) . ') DESC'); // agar achievement yang sudah didapatkan akan ditampilkan lebih dulu
             }
-        } else {
-            if (Auth::user()->role == 'kontributor') {
+        } else { // jika user belum mendapatkan achievement...
+            if (Auth::user()->role == 'kontributor') { // jika user==kontributor
                 $achievement = Achievement::where('role', '!=', 'pengurus')
                     ->orWhereNull('role');
-            } else {
+            } else { //selain itu, tampilkan semua achievement
                 $achievement = Achievement::select('*');
             }
         }
@@ -59,10 +108,6 @@ class AchievementController extends Controller
             ->paginate(20)
             ->onEachSide(2)
             ->appends(request()->query());
-
-        // simpan achievement yang sudah didapat
-        $simpan = $achieved;
-        $poin = 0;
 
         foreach ($achievement as $d) {
             // cek apakah achievement sudah didapatkan (untuk ditampilkan)
@@ -73,65 +118,6 @@ class AchievementController extends Controller
                     $d->progress = '100%';
                 }
             }
-
-            // hitung progress, cek apakah ada achievement yang harusnya didapat oleh user
-            if (empty($d->achieved) || $d->achieved == 0) {
-                $nilai = 0;
-                if ($d->rule == 'keanggotaan') {
-                    $nilai = round(Auth::user()->created_at->diffInDays(now()));
-                } elseif ($d->rule == 'definisi') {
-                    $nilai = Definisi::where('user_id', '=', Auth::user()->id)->count();
-                } elseif ($d->rule == 'kosakata') {
-                    $nilai = Kosakata::where('user_id', '=', Auth::user()->id)->count();
-                } elseif ($d->rule == 'editKosakata') {
-                    $nilai = EditKosakata::where('user_id', '=', Auth::user()->id)->whereNotNull('pengurus_id')->count();
-                } elseif ($d->rule == 'laporan') {
-                    $nilai = Report::where('user_id', '=', Auth::user()->id)->whereNotNull('pengurus_id')->count();
-                } elseif ($d->rule == 'artikel') {
-                    $nilai = Blog::where('user_id', '=', Auth::user()->id)->whereNotNull('status')->count();
-                } elseif ($d->rule == 'totalViewKosakata') {
-                    $nilai = Kosakata::where('user_id', '=', Auth::user()->id)->sum('view');
-                } elseif ($d->rule == 'totalViewBlog') {
-                    $nilai = Blog::where('user_id', '=', Auth::user()->id)->sum('view');
-                } elseif ($d->rule == 'viewKosakata') {
-                    $nilai = Kosakata::where('user_id', '=', Auth::user()->id)->orderBy('view', 'desc')->value('view');
-                } elseif ($d->rule == 'viewBlog') {
-                    $nilai = Blog::where('user_id', '=', Auth::user()->id)->orderBy('view', 'desc')->value('view');
-                }
-
-                // jika nilai lebih besar daripada requirement
-                if ($nilai >= $d->requirement) {
-                    // simpan achievement baru
-                    $simpan[$d->id] = now();
-                    $poin = $poin + $d->reward;
-
-                    // tambahkan status pada achievement yang ditampilkan
-                    $d->achieved = 1;
-                    $d->date_achieved = now();
-                    $d->progress = '100%';
-
-                    // hitung lagi data overview
-                    $overview['achievement'] = $overview['achievement'] + 1;
-                    $overview['persentase'] = $this->persentase($overview['achievement'], $overview['total']);
-
-                    // atur agar nilai tidak melebihi nilai total(agar persentase tidak lebih dari 100%)
-                    $nilai = $d->requirement;
-                }
-
-                if ($d->requirement != 0) {
-                    $d->progress = $this->persentase($nilai, $d->requirement);
-                } else {
-                    $d->progress = '100%';
-                }
-            }
-        }
-
-        // simpan achivement baru (jika ada)
-        if ($simpan != $achieved) {
-            User::find(Auth::user()->id)->update([
-                'achievement' => $simpan
-            ]);
-            User::find(Auth::user()->id)->increment('poin', $poin);
         }
 
         return view('dashboard.achievement', [

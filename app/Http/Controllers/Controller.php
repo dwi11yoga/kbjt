@@ -80,7 +80,6 @@ abstract class Controller
     public function achievement(int $userId, string $rule, int $value)
     {
         // cek dulu apakah akun user sudah dihapus. jika dihapus, maka tidak perlu melakukan pengecekan achievement
-        $hapusAkun = HapusAkun::find($userId);
         $apakahDihapus = User::withTrashed()->find($userId)->trashed(); // true=dihapus:false=tidak dihapus
 
         if ($apakahDihapus == false) { // jika akun user tidak dihapus, maka eksekusi kode berikut
@@ -170,5 +169,19 @@ abstract class Controller
         ]);
 
         return "sukses";
+    }
+
+    // cek notifikasi
+    public function cekNotifikasi(int $userId)
+    {
+        // dapatkan data
+        $notif = Notifikasi::where('user_id', $userId)
+            ->whereNot('dilihat', 1)
+            ->first();
+
+        // jika $notif kosong, maka semua notifikasi sudah dibaca
+        $adaNotif = isset($notif) ? 1 : 0;
+
+        return $adaNotif;
     }
 }

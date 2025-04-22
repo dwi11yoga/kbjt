@@ -26,6 +26,7 @@
 </head>
 
 <body class="bg-neutral-50 relative">
+
     <div class="2xl:container 2xl:mx-auto">
         <div class="grid grid-cols-10">
 
@@ -49,7 +50,8 @@
 
                     {{-- Judul halaman --}}
                     <div class="md:col-span-5 col-span-4 flex items-center">
-                        <h5>{{ $title }}</h5>
+                        {{-- <h5>{{ $title }}</h5> --}}
+                        <h5>{!! $title !!}</h5>
                     </div>
 
                     {{-- Profil & notifikasi --}}
@@ -57,11 +59,18 @@
                         {{-- <p class="mr-4 text-right md:block hidden">
                             {{ auth()->user()->nama }}<br>
                         </p> --}}
-                        <a href="/notifikasi"
-                            class="group mr-2 w-10 h-10 rounded-full flex justify-center items-center hover:bg-gray-100 active:bg-gray-300">
-                            <i data-feather='bell' class="group-active:fill-black {{ $group=='notifikasi'?'fill-black':'' }}"></i>
+
+                        {{-- notifikasi --}}
+                        <a href="/notifikasi" title="{{ cekNotifikasi()==true?'Kamu punya notifikasi baru': 'Cek notifikasi' }}"
+                            class="group mr-2 w-10 h-10 rounded-full flex justify-center items-center hover:bg-gray-100 active:bg-gray-300 relative">
+                            <i data-feather='bell'
+                                class="group-active:fill-black {{ $group == 'notifikasi' ? 'fill-black' : '' }}"></i>
+                            @if (cekNotifikasi() == true)
+                                <div class="absolute right-2 top-2 w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                            @endif
                         </a>
 
+                        {{-- foto profil --}}
                         <a href="/u/{{ auth()->user()->username }}"
                             class="overflow-hidden w-10 h-10 rounded-full flex justify-center hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2">
                             @include('partials.profile-pic')

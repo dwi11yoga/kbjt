@@ -11,4 +11,6 @@ class Notifikasi extends Model
 
     // lindungi id agar tidak bisa 
     protected $guarded=['id'];
+
+    // relasi dengan tabel user= many to one
 }

@@ -17,6 +17,13 @@ class NotifikasiController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        // hitung jumlah notifikasi yang belum dibaca
+        $unread = (clone $notif)
+            ->filter(function ($item) {
+                return $item->dilihat == 0;
+            })
+            ->count();
+
         // sortir berdasarkan tanggal
         // dapatkan data tanggal
         $tanggal = (clone $notif)->pluck('created_at') // ambil hanya kolom created_at saja
@@ -32,18 +39,18 @@ class NotifikasiController extends Controller
         }
 
         // ubah status notifikasi yang belum dibaca menjadi dibaca
-        $belumDilihat=(clone $notif)->where('dilihat', 0)->pluck('id');
+        $belumDilihat = (clone $notif)->where('dilihat', 0)->pluck('id');
         // cek apakah ditemukan notif yang belum dilihat
         if ($belumDilihat->isNotEmpty()) {
             // update menjadi dilihat
-            Notifikasi::whereIn('id', $belumDilihat)->update(['dilihat'=>1]);
+            Notifikasi::whereIn('id', $belumDilihat)->update(['dilihat' => 1]);
         }
 
         // kembalikan view
         return view("dashboard.notifikasi", [
-            'title' => 'Notifikasi',
+            'title' => 'Notifikasi <span class="bg-red-500 rounded-full py-0.5 px-3 text-sm" title="Belum dibaca">'.$unread.'</span>',
             'group' => 'notifikasi',
-            'data' => $data
+            'data' => $data,
         ]);
     }
 }

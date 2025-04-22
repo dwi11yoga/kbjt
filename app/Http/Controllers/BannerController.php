@@ -24,7 +24,7 @@ class BannerController extends Controller
 
         // cek apakah data user (author) ada/terhapus
         foreach ($banner as $d) {
-            if ($d->user->trashed()) {
+            if (isset($d->user) && $d->user->trashed()) {
                 $d->user->statusUser = 'dihapus';
             }
         }

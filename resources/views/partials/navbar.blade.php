@@ -151,14 +151,14 @@
         </a>
 
         {{-- donasi --}}
-        <a href="/donasi">
+        <a href="/dukung">
             <div
                 class="flex group py-4 px-6 w-fit rounded-2xl {{ $group == 'donasi' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
                 <i data-feather='gift'
                     class="{{ $group == 'donasi' ? '' : 'text-neutral-700 group-hover:text-black' }}"></i>
                 <div
                     class="inline-block ml-3 {{ $group == 'donasi' ? '' : 'text-neutral-700 group-hover:text-black' }}">
-                    Donasi
+                    Dukung
                 </div>
             </div>
         </a>

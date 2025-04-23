@@ -58,6 +58,9 @@ Route::get('/akses-ditolak', function () {
     ]);
 });
 
+// view untuk user terbanned
+Route::get('/akses-gagal', [HomepageController::class, 'dibanned']);
+
 // TRIX
 // Upload gambar
 Route::post('/upload-image', [TrixController::class, 'store']);
@@ -100,7 +103,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/laporkan/definisi', [ReportController::class, 'definisi']);
     // laporkan (hapus) kosakata 
     route::post('/kosakata/{slug}/laporkan', [ReportController::class, 'kosakata']);
-    
+
     // detail laporan
     Route::get('/laporan/{id}', [ReportController::class, 'detailLaporan']);
 
@@ -148,7 +151,7 @@ Route::middleware(['auth'])->group(function () {
         // simpan edit donasi
         Route::put('/metode-donasi/{id}/edit', [DonasiController::class, 'store']);
         // hapus donasi
-        Route::delete('/metode-donasi/{id}/hapus', [DonasiController::class,'delete']);
+        Route::delete('/metode-donasi/{id}/hapus', [DonasiController::class, 'delete']);
 
         // level - kepala
         Route::get('/level', [LevelController::class, 'index']);
@@ -207,30 +210,30 @@ Route::middleware(['auth'])->group(function () {
 
     // Simpan edit email
     // Route::put('/pengaturan/ganti-email', [UserController::class, 'updateEmail']);
-    
+
     // sembunyikan data sensitif
     Route::get('/pengaturan/data-sensitif', [UserController::class, 'dataSensitif']);
     Route::put('/pengaturan/data-sensitif/simpan', [UserController::class, 'simpanDataSensitif']);
 
     // terima donasi
-    Route::get('/pengaturan/donasi', [UserController::class,'userDonasi']);
+    Route::get('/pengaturan/donasi', [UserController::class, 'userDonasi']);
     Route::put('/pengaturan/donasi/simpan', [UserController::class, 'simpanUserDonasi']);
 
     // ubah username
-    Route::get('/pengaturan/ubah-username', [UserController::class,'ubahUsername']);
-    Route::put('/pengaturan/ubah-username/simpan', [UserController::class,'simpanUbahUsername']);
+    Route::get('/pengaturan/ubah-username', [UserController::class, 'ubahUsername']);
+    Route::put('/pengaturan/ubah-username/simpan', [UserController::class, 'simpanUbahUsername']);
 
     // ubah alamat email
     Route::get('/pengaturan/ubah-email', [UserController::class, 'ubahEmail']);
-    Route::put('/pengaturan/ubah-email/simpan', [UserController::class,'simpanUbahEmail']);
+    Route::put('/pengaturan/ubah-email/simpan', [UserController::class, 'simpanUbahEmail']);
 
     // ubah password
-    Route::get('/pengaturan/ubah-password', [UserController::class,'ubahPassword']);
+    Route::get('/pengaturan/ubah-password', [UserController::class, 'ubahPassword']);
     Route::put('/pengaturan/ubah-password/simpan', [UserController::class, 'updatePassword']);
 
     // hapus akun
-    Route::get('/pengaturan/hapus-akun', [HapusAkunController::class,'index'])->middleware('kontributorPengurus');
-    Route::put('/pengaturan/hapus-akun/konfirmasi', [HapusAkunController::class,'hapusAkun'])->middleware('kontributorPengurus');
+    Route::get('/pengaturan/hapus-akun', [HapusAkunController::class, 'index'])->middleware('kontributorPengurus');
+    Route::put('/pengaturan/hapus-akun/konfirmasi', [HapusAkunController::class, 'hapusAkun'])->middleware('kontributorPengurus');
 
     // Tambah definisi
     Route::post('/kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create']);

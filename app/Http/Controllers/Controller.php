@@ -160,12 +160,13 @@ abstract class Controller
     }
 
     // fungsi mengirim notifikasi ke user
-    public function kirimNotifikasi(int $penerimaNotif, string $pesan, string $url)
+    public function kirimNotifikasi(int $penerimaNotif, string $kategori, string $pesan, string $url)
     {
         Notifikasi::create([
             'user_id' => $penerimaNotif,
+            'kategori' => $kategori ?? null,
             'message' => $pesan,
-            'url' => $url,
+            'url' => $url ?? null,
         ]);
 
         return "sukses";

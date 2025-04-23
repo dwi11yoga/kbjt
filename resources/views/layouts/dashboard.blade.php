@@ -51,7 +51,7 @@
                     {{-- Judul halaman --}}
                     <div class="md:col-span-5 col-span-4 flex items-center">
                         {{-- <h5>{{ $title }}</h5> --}}
-                        <h5>{!! $title !!}</h5>
+                        <h5>{{ $title }} @yield('afterTitle')</h5>
                     </div>
 
                     {{-- Profil & notifikasi --}}
@@ -61,7 +61,8 @@
                         </p> --}}
 
                         {{-- notifikasi --}}
-                        <a href="/notifikasi" title="{{ cekNotifikasi()==true?'Kamu punya notifikasi baru': 'Cek notifikasi' }}"
+                        <a href="/notifikasi"
+                            title="{{ cekNotifikasi() == true ? 'Kamu punya notifikasi baru' : 'Cek notifikasi' }}"
                             class="group mr-2 w-10 h-10 rounded-full flex justify-center items-center hover:bg-gray-100 active:bg-gray-300 relative">
                             <i data-feather='bell'
                                 class="group-active:fill-black {{ $group == 'notifikasi' ? 'fill-black' : '' }}"></i>

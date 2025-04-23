@@ -31,6 +31,7 @@ class NotifikasiController extends Controller
             ->unique(); // jangan simpan tanggal duplikat
 
         // Lakukan pengelompokan
+        $data = []; // perlu ini agar tidak error ketika $notif==null
         foreach ($tanggal as $d) {
             $key = $d == Carbon::now()->toDateString() ? 'Hari ini' : ($d == Carbon::yesterday()->toDateString() ? 'Kemarin' : Carbon::createFromFormat('Y-m-d', $d)->translatedFormat('d F Y'));
             $data[$key] = $notif->filter(function ($item) use ($d) { // lakukan filter
@@ -48,9 +49,10 @@ class NotifikasiController extends Controller
 
         // kembalikan view
         return view("dashboard.notifikasi", [
-            'title' => 'Notifikasi <span class="bg-red-500 rounded-full py-0.5 px-3 text-sm" title="Belum dibaca">'.$unread.'</span>',
+            'title' => 'Notifikasi',
             'group' => 'notifikasi',
             'data' => $data,
+            'unread'=>$unread
         ]);
     }
 }

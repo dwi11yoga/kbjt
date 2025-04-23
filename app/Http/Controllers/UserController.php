@@ -45,8 +45,17 @@ class UserController extends Controller
         // Cek apakah username/email yang digunakan
         $fieldType = filter_var($credentials['user'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
+        // cek apakah user dihapus (soft delete). jika iya, maka alihkan ke halaman diblokir
+        $cekDihapus = User::onlyTrashed()
+            ->where($fieldType, $credentials['user'])
+            ->first();
+        if (isset($cekDihapus) && Hash::check($credentials['password'], $cekDihapus->password)) { // jika user ditemukan dan password benar..
+            return redirect()->to('/akses-gagal');
+        }
+
         // Authentikasi
         if (Auth::attempt([$fieldType => $credentials['user'], 'password' => $credentials['password']], $remember)) {
+
             $request->session()->regenerate(); //untuk mencegah serangan session fixation
 
             // cek achievement
@@ -117,12 +126,12 @@ class UserController extends Controller
     {
         // Data user
         $user = User::where('username', $username)->first();
-        
+
         // jika data user tida ditemukan, maka alihkan
         if (is_null($user)) {
             return $this->error404();
         }
-        
+
         $user['level'] = $this->levelCalculator($user['poin']);
         // url user
         $user['url'] = $this->getUrl() . '/u/' . $user['username'];
@@ -402,15 +411,17 @@ class UserController extends Controller
     }
 
     // view ubah email
-    public function ubahEmail(){
+    public function ubahEmail()
+    {
         return view('dashboard.setting-ubahemail', [
-            'title'=> 'Ubah alamat email',
-            'group'=>'settings'
+            'title' => 'Ubah alamat email',
+            'group' => 'settings'
         ]);
     }
 
     // fungsi update ubah email
-    public function simpanUbahEmail(Request $request){
+    public function simpanUbahEmail(Request $request)
+    {
 
         // validasi
         $validatedData = $request->validate([
@@ -441,10 +452,11 @@ class UserController extends Controller
     }
 
     // view ubah password user
-    public function ubahPassword(){
+    public function ubahPassword()
+    {
         return view('dashboard.setting-ubahpassword', [
             'title' => 'Ubah Kata sandi',
-            'group'=>'settings'
+            'group' => 'settings'
         ]);
     }
     // Update Password User

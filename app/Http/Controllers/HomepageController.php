@@ -384,4 +384,12 @@ class HomepageController extends Controller
             'banner' => $banner
         ]);
     }
+
+    // view user terbanned
+    public function dibanned(){
+        return view('homepage.terbanned', [
+            'title'=> 'Akun kamu tidak dapat diakses',
+            'group'=> null,
+        ]);
+    }
 }

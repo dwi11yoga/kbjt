@@ -2,7 +2,8 @@
 
 @section('body')
     <h3 class="mb-3 font-bold">Beri dukungan</h3>
-    <p class="mb-7">Satu langkah kecil untukmu, satu lompatan besar bagi komunitas! Beri dukungan lewat donasi atau bagikan ke taman dan keluargamu!</p>
+    <p class="mb-7">Satu langkah kecil untukmu, satu lompatan besar bagi komunitas! Beri dukungan lewat donasi atau bagikan situs ini
+        ke taman dan saudaramu!</p>
 
     {{-- donais --}}
     @if (isset($metode))
@@ -88,7 +89,8 @@
         <div class="md:col-span-2 col-span-3">
 
             <div class="font-semibold">Bagikan ke teman</div>
-            <div class="text-sm">Bantu lestarikan Bahasa Jawa—ajak temanmu untuk mengunjungi dan berkontribusi di Kamus Besar Bahasa Jawa!
+            <div class="text-sm">Bantu lestarikan Bahasa Jawa—ajak temanmu untuk mengunjungi dan berkontribusi di Kamus
+                Besar Bahasa Jawa!
             </div>
 
             {{-- bagikan --}}

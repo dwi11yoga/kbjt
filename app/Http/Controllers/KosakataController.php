@@ -88,17 +88,12 @@ class KosakataController extends Controller
 
         // cek achievement
         $userId = Auth::user()->id;
-        // jumlah kosakata
-        $value = Kosakata::where('user_id', '=', $userId)->count() ?? 0; // jumlah kosakata
-        $this->achievement(Auth::user()->id, 'kosakata', $value);
-
-        // cek achievement view kosakata
-        $value = Kosakata::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
-        $this->achievement($userId, 'viewKosakata', $value);
-
-        // cek achievement total view kosakata
-        $value = Kosakata::where('user_id', '=', $userId)->sum('view') ?? 0;
-        $this->achievement($userId, 'totalViewKosakata', $value);
+        // rule yang akan dicek achievementnya
+        $rule = ['kosakata', 'totalViewKosakata', 'viewKosakata'];
+        //lakukan perulangan untuk cek achievement user
+        foreach ($rule as $d) {
+            $this->achievement($userId, $d);
+        }
 
         return redirect('/kosakata/' . $validatedData['slug'], )->with('success', 'Kosakata berhasil ditambahkan');
 

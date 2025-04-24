@@ -60,25 +60,20 @@ class UserController extends Controller
 
             // cek achievement
             $userId = Auth::user()->id;
-            // cek achievement lama bergabung
-            $value = round(Auth::user()->created_at->diffInDays(now())) ?? 0;
-            $this->achievement($userId, 'keanggotaan', $value);
 
-            // cek achievement view kosakata
-            $value = Kosakata::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
-            $this->achievement($userId, 'viewKosakata', $value);
+            // rule yang akan dicek achievementnya
+            $rule = ['keanggotaan','definisi','kosakata','editKosakata','laporan','totalViewKosakata','viewKosakata'];
+            if (Auth::user()->role == 'pengurus') { // tambahan rule khusus untuk pengurus
+                $rulePengurus = ['artikel', 'totalViewBlog', 'viewBlog'];
+                $rule = array_merge($rule, $rulePengurus);
+            }
+            
+            foreach ($rule as $d) { //lakukan perulangan untuk cek achievement user
+                $this->achievement($userId, $d);
+            }
 
-            // cek achievement total view kosakata
-            $value = Kosakata::where('user_id', '=', $userId)->sum('view') ?? 0;
-            $this->achievement($userId, 'totalViewKosakata', $value);
-
-            // cek achievement view blog
-            $value = Blog::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
-            $this->achievement($userId, 'viewKosakata', $value);
-
-            // cek achievement total view blog
-            $value = Blog::where('user_id', '=', $userId)->sum('view') ?? 0;
-            $this->achievement($userId, 'totalViewBlog', $value);
+            // cek sertifikat (untuk notifikasi)
+            $this->cekSertifikat($userId);
 
             return redirect()->intended('/dashboard');
         }

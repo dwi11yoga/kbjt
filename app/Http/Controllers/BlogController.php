@@ -132,18 +132,13 @@ class BlogController extends Controller
 
             // cek achievement
             $userId = Auth::user()->id;
+            // rule yang akan dicek achievementnya
+            $rule = ['artikel', 'totalViewBlog', 'viewBlog'];
 
-            // jumlah artikel
-            $value = Blog::where('user_id', $userId)->whereNotNull('status')->count();
-            $this->achievement($userId, 'artikel', $value);
-
-            // cek achievement view blog
-            $value = Blog::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
-            $this->achievement($userId, 'viewKosakata', $value);
-
-            // cek achievement total view blog
-            $value = Blog::where('user_id', '=', $userId)->sum('view') ?? 0;
-            $this->achievement($userId, 'totalViewBlog', $value);
+            //lakukan perulangan untuk cek achievement user
+            foreach ($rule as $d) {
+                $this->achievement($userId, $d);
+            }
 
             return redirect('/artikel')->with('success', 'Artikel berhasil dipublikasikan');
         }
@@ -211,20 +206,15 @@ class BlogController extends Controller
         if ($apakahSimpan == true) {
             return redirect('/artikel/edit/' . $post->id)->with('success', 'Artikel berhasil disimpan sebagai draf');
         } elseif ($apakahPublish == true) {
-            // cek achievement
+
+            // cek achievement 
             $userId = $post->user_id;
-
-            // jumlah artikel
-            $value = Blog::where('user_id', $userId)->whereNotNull('status')->count();
-            $this->achievement($userId, 'artikel', $value);
-
-            // cek achievement view blog
-            $value = Blog::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
-            $this->achievement($userId, 'viewKosakata', $value);
-
-            // cek achievement total view blog
-            $value = Blog::where('user_id', '=', $userId)->sum('view') ?? 0;
-            $this->achievement($userId, 'totalViewBlog', $value);
+            // rule yang akan dicek achievementnya
+            $rule = ['artikel', 'totalViewBlog', 'viewBlog'];
+            //lakukan perulangan untuk cek achievement user
+            foreach ($rule as $d) {
+                $this->achievement($userId, $d);
+            }
 
             return redirect('/artikel')->with('success', 'Artikel berhasil dipublikasikan');
         }
@@ -284,23 +274,18 @@ class BlogController extends Controller
 
         // Simpan
         Blog::where('id', '=', $id)->update($data);
-
+        
         // cek achievement
         $post->status = $data['status']; // update nilai status dari post, karena nilainya bisa saja berubah
         if (isset($post['status'])) {
             $userId = $post->user_id;
 
-            // jumlah artikel
-            $value = Blog::where('user_id', $userId)->whereNotNull('status')->count();
-            $this->achievement($userId, 'artikel', $value);
-
-            // cek achievement view blog
-            $value = Blog::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
-            $this->achievement($userId, 'viewKosakata', $value);
-
-            // cek achievement total view blog
-            $value = Blog::where('user_id', '=', $userId)->sum('view') ?? 0;
-            $this->achievement($userId, 'totalViewBlog', $value);
+            // rule yang akan dicek achievementnya
+            $rule = ['artikel', 'totalViewBlog', 'viewBlog'];
+            //lakukan perulangan untuk cek achievement user
+            foreach ($rule as $d) {
+                $this->achievement($userId, $d);
+            }
         }
 
         return back()->with('success', $pesan);
@@ -344,15 +329,17 @@ class BlogController extends Controller
         return back()->with('success', 'Artikel berhasil dihapus');
     }
 
-    function cekAchievement()
-    {
-        $userId = Auth::user()->id;
-        // cek achievement view blog
-        $value = Blog::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
-        $this->achievement($userId, 'viewKosakata', $value);
+    // function cekAchievement()
+    // {
+    //     $userId = Auth::user()->id;
 
-        // cek achievement total view blog
-        $value = Blog::where('user_id', '=', $userId)->sum('view') ?? 0;
-        $this->achievement($userId, 'totalViewBlog', $value);
-    }
+    //     ['artikel', 'totalViewBlog', 'viewBlog']
+    //     // cek achievement view blog
+    //     $value = Blog::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
+    //     $this->achievement($userId, 'viewKosakata', $value);
+
+    //     // cek achievement total view blog
+    //     $value = Blog::where('user_id', '=', $userId)->sum('view') ?? 0;
+    //     $this->achievement($userId, 'totalViewBlog', $value);
+    // }
 }

@@ -32,7 +32,7 @@
             <div class="space-y-3">
                 @foreach ($d as $i)
                     <a href="{{ $i->url ?? '#' }}" title="{{ $i->dilihat == 0 ? 'Belum dibaca' : '' }}"
-                        class="border border-neutral-200 {{ $i->dilihat == 1 ? 'bg-neutral-200 text-neutral-700' : '' }} p-3 mt-3 rounded-xl flex justify-between md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
+                        class="border border-neutral-200 {{ $i->dilihat == 1 ? 'bg-neutral-200 text-neutral-700' : '' }} p-3 mt-3 rounded-xl flex justify-between space-x-2.5 hover:outline hover:outline-amber-400">
                         <div class="flex space-x-2 items-center">
                             {{-- indikator --}}
                             <?php 
@@ -54,7 +54,7 @@
                             </div>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <div class="">{{ $i->created_at->format('H:m') }}</div>
+                            <div class="">{{ $i->created_at->format('H:i') }}</div>
                             @if ($i->dilihat == 0)
                                 <div class="bg-red-600 animate-pulse w-1.5 h-1.5 rounded-full"></div>
                             @endif

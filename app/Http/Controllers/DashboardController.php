@@ -222,6 +222,14 @@ class DashboardController extends Controller
         $banner = $this->getBanner([7]);
         $data['banner'] = $banner;
 
+        //cek sertifikat
+        $this->cekSertifikat(Auth::user()->id);
+
+        // cek apakah user memiliki notifikasi atau tidak, jika iya tampilkan toast
+        $cekNotif=$this->cekNotifikasi(Auth::user()->id);
+        if ($cekNotif==1) {
+            session()->flash('notifikasi', 'Kamu punya notifikasi baru');
+        }
         return view('dashboard.index', $data);
     }
 

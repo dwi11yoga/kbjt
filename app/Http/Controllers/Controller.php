@@ -12,6 +12,7 @@ use App\Models\Kosakata;
 use App\Models\Level;
 use App\Models\Notifikasi;
 use App\Models\Report;
+use App\Models\Sertifikat;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -76,32 +77,81 @@ abstract class Controller
         ], 404);
     }
 
-    // cek apakah dapat achievement/tidak
-    public function achievement(int $userId, string $rule, int $value)
+    // cek apakah user dapat achievement/tidak
+    public function achievement(int $userId, string $rule)
     {
         // cek dulu apakah akun user sudah dihapus. jika dihapus, maka tidak perlu melakukan pengecekan achievement
         $apakahDihapus = User::withTrashed()->find($userId)->trashed(); // true=dihapus:false=tidak dihapus
 
         if ($apakahDihapus == false) { // jika akun user tidak dihapus, maka eksekusi kode berikut
-            $didapat = User::where('id', '=', $userId)->value('achievement'); // dapatkan achievement yang didapatkkan
+            $user = User::where('id', '=', $userId)->first(); // dapatkan achievement dan role user yang didapatkkan
             $data = Achievement::where('rule', '=', $rule)
-                ->whereNotIn('id', array_keys(is_array($didapat) ? $didapat : []))
-                ->orderBy('requirement', 'asc')
-                ->get();
+                ->whereNotIn('id', array_keys($user?->achievement ?? [])); // ?-> null-safe: agar tidak error ketika variabel==null
 
-            // perulangan terhadap achievement yang belum didapatkan
-            $simpan = $didapat;
+            // cek apakah user adalah pengurus atau tidak, agar kontributor tidak bisa mendapatkan achievement pengurus
+            if ($user->role != 'pengurus') {
+                $data = $data->orderBy('requirement', 'asc')
+                    ->get();
+            } else {
+                $data = $data->whereNot('rule', 'pengurus')
+                    ->orderBy('requirement', 'asc')
+                    ->get();
+            }
+
+            // cek jumlah kontribusi user
+            if ($rule == 'keanggotaan') {
+                // cek lama suer bergabung
+                $value = round($user->created_at->diffInDays(now())) ?? 0;
+            } elseif ($rule == 'definisi') {
+                // cek jumlah definisi yang dibuat oleh user
+                $value = Definisi::where('user_id', '=', $userId)->count() ?? 0;
+            } elseif ($rule == 'kosakata') {
+                // cek jumlah kosakata yang dibuat oleh user
+                $value = Kosakata::where('user_id', '=', $userId)->count() ?? 0;
+            } elseif ($rule == 'editKosakata') {
+                // cek jumlah kosakata yang diedit oleh user (dan di acc oleh pengurus)
+                $value = EditKosakata::where('user_id', '=', $userId)->whereNotNull('status')->count() ?? 0;
+            } elseif ($rule == 'laporan') {
+                // cek jumlah laporan yang dibuat oleh user dan diacc oleh pengurus
+                $value = Report::where('user_id', '=', $userId)->whereNotNull('status')->count() ?? 0;
+            } elseif ($rule == 'artikel') {
+                // cek jumlah artikel yang dibuat oleh user dan dipublikasikan
+                $value = Blog::where('user_id', '=', $userId)->whereNotNull('status')->count() ?? 0;
+            } elseif ($rule == 'totalViewKosakata') {
+                // cek jumlah view dari semua kosakata yang dibuat oleh user
+                $value = Kosakata::where('user_id', '=', $userId)->sum('view') ?? 0;
+            } elseif ($rule == 'viewKosakata') {
+                // cek jumlah view dari 1 kosakata paling banyak dilihat yang dibuat oleh user
+                $value = Kosakata::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
+            } elseif ($rule == 'totalViewBlog') {
+                // cek jumlah view dari semua artikel yang dibuat oleh user
+                $value = Blog::where('user_id', '=', $userId)->sum('view') ?? 0;
+            } elseif ($rule == 'viewBlog') {
+                // cek jumlah view dari 1 artikel paling banyak dilihat yang dibuat oleh user
+                $value = Blog::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
+            } else {
+                $value = 0;
+            }
+
+            // perulangan terhadap achievement yang belum didapatkan. jika memenuhi achievement, maka simpan data baru
+            $simpan = $user->achievement;
             $poin = 0;
             foreach ($data as $d) {
-                if ($value >= $d->requirement) {
+                if ($value >= $d->requirement) { // jika value lebih besar dari requirement...
                     $simpan[$d->id] = now();
                     $poin = $poin + $d->reward;
-                } else {
+
+                    // simpan data di tabel notifikasi
+                    $pesan = 'Kamu berhasil mendapatkan achievement ' . $d->nama . ' 🎉';
+                    $url = $this->getUrl() . '/achievement';
+                    $this->kirimNotifikasi($userId, 'achievement', $pesan, $url);
+
+                } else { // jika $value tidak lebih besar dari requirement terkecil, maka hentikan function
                     break;
                 }
             }
 
-            if ($didapat != $simpan) {
+            if ($user->achievement != $simpan) {
                 // simpan data
                 User::find($userId)->update([
                     'achievement' => $simpan
@@ -109,8 +159,6 @@ abstract class Controller
 
                 // tambah poin exp
                 User::find($userId)->increment('poin', $poin);
-
-                // buat notifikasi - belum
             }
         }
 
@@ -172,7 +220,7 @@ abstract class Controller
         return "sukses";
     }
 
-    // cek notifikasi
+    // cek apakah user mendapat notifikasi
     public function cekNotifikasi(int $userId)
     {
         // dapatkan data
@@ -181,8 +229,65 @@ abstract class Controller
             ->first();
 
         // jika $notif kosong, maka semua notifikasi sudah dibaca
-        $adaNotif = isset($notif) ? 1 : 0;
+        $adaNotif = isset($notif) ? 1 : 0; // 1= ada notifikasi
 
         return $adaNotif;
+    }
+
+    // buat notifikasi jika user dapat mengklaim sertifikat
+    public function cekSertifikat(int $userId)
+    {
+        // dapatkan data sertifikat yang didapat user
+        $user = User::find($userId);
+
+        // dapatkan semua data sertifikat (kecuali yang sudah didapat)
+        if ($user->role == 'pengurus') {
+            $sertifikat = Sertifikat::whereNotIn('id', array_keys($user?->sertifikat ?? [])) // ?-> null-safe: agar tidak error ketika variabel==null
+                ->whereNull('role')
+                ->orWhere('role', 'pengurus');
+        } else {
+            $sertifikat = Sertifikat::whereNotIn('id', array_keys($user?->sertifikat ?? [])) // ?-> null-safe: agar tidak error ketika variabel==null
+                ->whereNull('role');
+        }
+        $sertifikat = $sertifikat->orderBy('rule', 'asc')->orderBy('requirement', 'asc')->get();
+
+        // cek apakah user sudah bisa meng-klaim sertifikat
+        foreach ($sertifikat as $d) {
+            // cek progress user dalam mendapatkan sertifikat
+            if ($d->rule == 'keanggotaan') { // hitung lama user terdaftar
+                $nilai = Auth::user()->created_at->diffInDays(now());
+            } elseif ($d->rule == 'kontribusi') { // hitung kontribusi user
+                $kosakata = Kosakata::where('user_id', Auth::user()->id)->count();
+                $editKosakata = EditKosakata::where('user_id', Auth::user()->id)->whereNotNull('status')->count();
+                $definisi = Definisi::where('user_id', Auth::user()->id)->count();
+                $laporan = Report::with('hukuman')->where('user_id', Auth::user()->id)->whereNotNull('status')->whereHas('hukuman')->count();
+                $nilai = $kosakata + $editKosakata + $definisi + $laporan;
+            } elseif ($d->rule == 'kontribusiPengurus') { // hitung kontribusi user pengurus
+                $editKosakata = EditKosakata::where('pengurus_id', Auth::user()->id)->whereNotNull('status')->count();
+                $definisi = Definisi::where('verifikasi_oleh', Auth::user()->id)->count();
+                $laporan = Report::where('pengurus_id', Auth::user()->id)->whereNotNull('status')->count();
+                // banner - belom
+                $banner = 0;
+                $blog = Blog::where('user_id', Auth::user()->id)->whereNotNull('status')->count();
+                $nilai = $editKosakata + $definisi + $laporan + $blog + $banner;
+            } else {
+                $nilai = 0;
+            }
+
+            // jika kontribusi lebih besar dari requirement && user belum mendapatkan notifikasi..
+            $pesan = 'Kamu berhak untuk meng-klaim sertifikat karena ' . strtolower($d->nama) . ' 🎉';
+            $url = $this->getUrl() . '/sertifikat';
+            $cekNotifikasi = Notifikasi::where('user_id', $userId)
+                ->where('message', $pesan)
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            if ($nilai >= $d->requirement && empty($cekNotifikasi) == true) {
+                // kirim notifikasi
+                $this->kirimNotifikasi($userId, 'sertifikat', $pesan, $url);
+            }
+        }
+
+        return 'selesai :)';
     }
 }

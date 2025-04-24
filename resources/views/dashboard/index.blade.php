@@ -5,7 +5,7 @@
     @if ($lengkap == false)
         <div class="md:flex md:justify-between bg-white border border-neutral-200 rounded-xl p-3 shadow-sm mb-4">
             <div>Segera lengkapi profil kamu.</div>
-            <a href="/pengaturan" class="text-blue-600 md:text-base text-sm">Pergi ke pengaturan<i
+            <a href="/pengaturan" class="text-amber-600 md:text-base text-sm">Pergi ke pengaturan<i
                     data-feather='arrow-up-right' class="inline-block md:w-5 w-4"></i></a>
         </div>
     @endif
@@ -115,8 +115,10 @@
         <div class="p-5 bg-white rounded-2xl">
             <div class="flex justify-between">
                 <div>Kontribusi Terbaru</div>
-                <a href="/kontribusi" class="text-blue-600"><span class="md:inline-block hidden">Lebih lengkap</span><i
-                        data-feather='arrow-right'class="w-5 inline-block"></i></a>
+                <a href="/kontribusi" class="text-amber-600">
+                    <span class="md:inline-block hidden">Lebih lengkap</span>
+                    <i data-feather='arrow-right'class="w-5 inline-block"></i>
+                </a>
             </div>
             @foreach ($kontribusi as $d)
                 <div class="md:flex md:justify-between border border-neutral-200 p-3 mt-3 rounded-xl">
@@ -130,7 +132,7 @@
         </div>
     @endif
 
-    @if (auth()->user()->role != 'kepala')
+    @if (auth()->user()->role != 'kepala' && isset(auth()->user()->achievement))
         {{-- achievement --}}
         <div class="bg-white rounded-2xl p-5">
             <div class="mb-3">Achievement</div>

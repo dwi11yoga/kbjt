@@ -44,7 +44,7 @@ class DefinisiController extends Controller
 
         // cek achievement
         $jumlahDefinisi = Definisi::where('user_id', '=', Auth::user()->id)->count();
-        $this->achievement(Auth::user()->id, 'definisi', $jumlahDefinisi);
+        $this->achievement(Auth::user()->id, 'definisi');
 
         return back()->with('success', 'Definisi berhasil ditambahkan');
     }

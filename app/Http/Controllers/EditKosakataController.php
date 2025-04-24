@@ -51,7 +51,7 @@ class EditKosakataController extends Controller
             // Jika kosakata ditemukan
             return view('homepage.edit-kosakata', [
                 'title' => 'Edit kosakata',
-                'group'=>'',
+                'group' => '',
                 'data' => $kosakata
             ]);
         } else {
@@ -106,15 +106,15 @@ class EditKosakataController extends Controller
             'catatan' => $request->catatan
         ]);
 
-        // cek ahcievement
+        // CEK ACHIEVEMENT 
+        // rule yang akan dicek achievementnya
         $userId = Auth::user()->id;
-        // cek achievement view kosakata
-        $value = Kosakata::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
-        $this->achievement($userId, 'viewKosakata', $value);
+        $rule = ['kosakata', 'totalViewKosakata', 'viewKosakata'];
 
-        // cek achievement total view kosakata
-        $value = Kosakata::where('user_id', '=', $userId)->sum('view') ?? 0;
-        $this->achievement($userId, 'totalViewKosakata', $value);
+        //lakukan perulangan untuk cek achievement user
+        foreach ($rule as $d) {
+            $this->achievement($userId, $d);
+        }
 
         return redirect('/kosakata/' . $slug)->with('success', 'Permintaan edit akan segera diproses');
     }
@@ -137,8 +137,7 @@ class EditKosakataController extends Controller
         ]);
 
         // cek achievement
-        $value = EditKosakata::where('user_id', '=', $editKosakata->user_id)->whereNotNull('status')->count(); // jumlah kosakata
-        $this->achievement($editKosakata->user_id, 'editKosakata', $value);
+        $this->achievement($editKosakata->user_id, 'editKosakata');
         // dd($a);
 
         return back()->with('success', 'Perubahan detail kosakata disetujui');

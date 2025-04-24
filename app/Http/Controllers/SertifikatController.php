@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Models\Definisi;
 use App\Models\EditKosakata;
 use App\Models\Kosakata;
+use App\Models\Notifikasi;
 use App\Models\Report;
 use App\Models\Sertifikat;
 use App\Models\User;
@@ -32,7 +33,6 @@ class SertifikatController extends Controller
             ->appends(request()->query());
 
         // cek apakah sudah didapat/belum & hitung progress
-
         if (Auth::user()->role != 'kepala') {
             $didapat = Auth::user()->sertifikat;
             foreach ($sertifikat as $d) {
@@ -68,6 +68,17 @@ class SertifikatController extends Controller
                     $d->progress = round($nilai);
                     if ($nilai > $d->requirement) {
                         $d->persentase = '100%';
+
+                        // buat notifikasi, namun pastikan dulu agar notifikasi tidak dobel
+                        $pesan = 'Kamu berhak untuk meng-klaim sertifikat karena ' . strtolower($d->nama) . ' 🎉';
+                        $url = $this->getUrl() . '/sertifikat';
+                        $cekNotifikasi = Notifikasi::where('user_id', Auth::user()->id)
+                            ->where('message', $pesan)
+                            ->orderBy('created_at', 'desc')
+                            ->first();
+                        if (empty($cekNotifikasi) == true) {
+                            $this->kirimNotifikasi(Auth::user()->id, 'sertifikat', $pesan, $url);
+                        }
                     } else {
                         $d->persentase = $this->persentase($nilai, $d->requirement);
                     }
@@ -107,8 +118,12 @@ class SertifikatController extends Controller
 
         // simpan sertifikat
         $sertifDimiliki[$id] = now();
-
         User::find(Auth::user()->id)->update(['sertifikat' => $sertifDimiliki]);
+
+        // kirimkan notifikasi
+        $pesan = 'Kamu berhasil meng-klaim sertifikat karena ' . strtolower($sertifikat->nama) . ' ✍';
+        $url = $this->getUrl() . '/sertifikat';
+        $this->kirimNotifikasi(Auth::user()->id, 'sertifikat', $pesan, $url);
 
         return back()->with('success', 'Sertifikat berhasil diklaim');
     }

@@ -565,8 +565,7 @@ class ReportController extends Controller
 
         // cek achievement
         // cek apakah pelapor mendapatkan achievement berdasarkan jumlah laporan yang didapat
-        $value = Report::where('user_id', $laporan->user_id)->whereNotNull('status')->count();
-        $this->achievement($laporan->user_id, 'laporan', $value);
+        $this->achievement($laporan->user_id, 'laporan');
 
         // kembali ke halaman detail laporan
         return back()->with('success', 'Tindakan berhasil disimpan');

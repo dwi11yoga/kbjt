@@ -29,7 +29,7 @@ class AchievementSeeder extends Seeder
             [
                 'role' => null,
                 'nama' => 'Panembah Kawruh',
-                'deskripsi' => 'Menjadi anggota KBJT selama 6 bulan.',
+                'deskripsi' => 'Menjadi anggota KBJT selama 3 bulan.',
                 'rule' => 'keanggotaan',
                 'requirement' => 90, //hari
                 'reward' => 100,
@@ -121,7 +121,7 @@ class AchievementSeeder extends Seeder
             [
                 'role' => null,
                 'nama' => 'Dhangan Pangawikan',
-                'deskripsi' => 'Submit 100 buah definisi abru',
+                'deskripsi' => 'Submit 100 buah definisi baru',
                 'rule' => 'definisi',
                 'requirement' => 100, //jumlah definisi
                 'reward' => 300,

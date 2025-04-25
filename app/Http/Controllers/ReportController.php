@@ -179,8 +179,14 @@ class ReportController extends Controller
             $data['catatan'] = $request->catatan;
         }
 
-        Report::create($data);
-        return back()->with('success', 'Definisi berhasil dilaporkan');
+        $laporan= Report::create($data);
+
+        // kembalikan ke view
+        if (Auth::user()->role == 'pengurus') {
+            return redirect('/laporan/'.$laporan->id)->with('success', 'Form laporan berhasil dibuat, silahkan ditindaklanjuti');
+        } else{
+            return back()->with('success', 'Definisi berhasil dilaporkan');
+        }
     }
 
     // fungsi laporkan kosakata
@@ -400,7 +406,7 @@ class ReportController extends Controller
             ->with('kosakata:id,user_id')
             ->first();
 
-        // alihkan jika laporan yang dikirim sudah ditangani/belum (kuatir di inspect)
+        // alihkan jika laporan yang dikirim sudah ditangani oleh pengurus lain (kuatir di inspect)
         if (isset($laporan->status)) {
             return back()->with('failed', 'Laporan sudah selesai ditangani oleh pengurus lain')->withInput();
         }
@@ -504,7 +510,9 @@ class ReportController extends Controller
                 $report = Report::where('id', '=', $id)->first();
                 if ($validatedData['tindakanDefinisi'] == 'edit') {
                     Definisi::find($report->definisi_id)->update([
-                        'hukuman_edit' => 1
+                        'hukuman_edit' => 1, // maka definisi tidak akan ditampilkan di web
+                        'verifikasi'=>null, // cabut status terverifikasi
+                        'verifikasi_oleh'=>null
                     ]);
                 } elseif ($validatedData['tindakanDefinisi'] == 'hapus') {
                     Definisi::find($report->definisi_id)->delete();
@@ -546,7 +554,7 @@ class ReportController extends Controller
             'catatan_pengurus' => $request->catatan
         ]);
 
-        // kirim notifikasi
+        // KIRIM NOTIFIKASI
         $pelapor = User::select('id', 'nama')
             ->where('id', $laporan->user_id)
             ->first();

@@ -82,11 +82,13 @@
                             class="absolute hidden bg-white right-0 bottom-10 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
                             <ul>
                                 @if ($d->user_id == auth()->user()->id)
+                                    {{-- edit definisi --}}
                                     <li onclick="openWindow('editDefinisi-{{ $d->id }}')"
                                         class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
                                         <div>Edit</div>
                                         <i data-feather='edit-3' class="w-5"></i>
                                     </li>
+                                    {{-- hapus definisi --}}
                                     <li onclick="openWindow('hapusDefinisi-{{ $d->id }}')"
                                         class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500 cursor-pointer">
                                         <div>Hapus</div>
@@ -94,11 +96,30 @@
                                     </li>
                                 @endif
                                 @if ($d->user_id != auth()->user()->id)
-                                    <li onclick="openWindow('laporkan-{{ $d->id }}')"
-                                        class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500 cursor-pointer">
-                                        <div>Laporkan</div>
-                                        <i data-feather='flag' class="w-5"></i>
-                                    </li>
+                                    @if (auth()->user()->role != 'pengurus')
+                                        {{-- laporkan definisi --}}
+                                        <li onclick="openWindow('laporkan-{{ $d->id }}')"
+                                            class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500 cursor-pointer">
+                                            <div>Laporkan</div>
+                                            <i data-feather='flag' class="w-5"></i>
+                                        </li>
+                                    @else
+                                        @if (empty($d->verifikasi))
+                                            {{-- verifikasi laporan --}}
+                                            <li onclick="openWindow('verifikasi-{{ $d->id }}')"
+                                                class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
+                                                <div>Verifikasi</div>
+                                                <i data-feather='check' class="w-5"></i>
+                                            </li>
+                                        @endif
+
+                                        {{-- tangani definisi salah --}}
+                                        <li onclick="openWindow('laporkan-{{ $d->id }}')"
+                                            class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500 cursor-pointer">
+                                            <div>Definisi salah</div>
+                                            <i data-feather='flag' class="w-5"></i>
+                                        </li>
+                                    @endif
                                 @endif
                             </ul>
                         </div>
@@ -112,13 +133,21 @@
 
 @if (empty($d->menu)) {{-- sembunyikan jika tidak ada $d->menu (untuk halaman laporan) --}}
     @if (isset(auth()->user()->id) && isset($d->user->username))
-        {{-- laporkan definisi --}}
+
+        {{-- popup laporkan definisi --}}
         <div id="laporkan-{{ $d->id }}"
             class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
             <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
 
-                <h5 class="font-semibold capitalize">Laporkan</h5>
-                <div class="mb-5">Mengapa kamu melaporkan definisi yang disubmit oleh {{ $d->user->nama }}?</div>
+                <h5 class="font-semibold capitalize">
+                    {{ auth()->user()->role != 'pengurus' ? 'Laporkan' : 'Form laporan' }}
+                </h5>
+                @if (auth()->user()->role != 'pengurus')
+                    <div class="mb-5">Mengapa kamu melaporkan definisi yang disubmit oleh {{ $d->user->nama }}?</div>
+                @else
+                    <div class="mb-5">Deskripsikan kesalahan yang kamu temukan dalam definisi yang disubmit oleh
+                        {{ $d->user->nama }}?</div>
+                @endif
 
                 <form action="/laporkan/definisi?id={{ $d->id }}" method="POST">
                     @csrf
@@ -130,19 +159,26 @@
                                 class="w-full rounded-xl p-3 border bg-white focus:outline-none focus:border-amber-300 cursor-pointer @error('alasan')
                                 border-red-400 @else border-neutral-400 @enderror">
                                 <option value="">Pilih</option>
-                                <option {{ old('alasan') == 'Spam' ? 'selected' : '' }}>Spam</option>
-                                <option {{ old('alasan') == 'Definisi tidak akurat' ? 'selected' : '' }}>Definisi tidak
-                                    akurat
+                                <option {{ old('alasan') == 'SPAM' ? 'selected' : '' }}>
+                                    SPAM
                                 </option>
-                                <option {{ old('alasan') == 'Mengandung unsur SARA' ? 'selected' : '' }}>Mengandung
-                                    unsur
-                                    SARA
+                                <option {{ old('alasan') == 'Definisi tidak akurat' ? 'selected' : '' }}>
+                                    Definisi tidak akurat
                                 </option>
-                                <option {{ old('alasan') == 'Scam/Penipuan' ? 'selected' : '' }}>Scam/Penipuan</option>
+                                <option {{ old('alasan') == 'Mengandung unsur SARA' ? 'selected' : '' }}>
+                                    Mengandung unsur SARA
+                                </option>
+                                <option {{ old('alasan') == 'Scam/Penipuan' ? 'selected' : '' }}>
+                                    Scam/Penipuan
+                                </option>
                                 <option {{ old('alasan') == 'Mempromosikan barang/jasa' ? 'selected' : '' }}>
-                                    Mempromosikan
-                                    barang/jasa</option>
-                                <option {{ old('alasan') == 'Melanggar hukum' ? 'selected' : '' }}>Melanggar hukum
+                                    Mempromosikan barang/jasa
+                                </option>
+                                <option {{ old('alasan') == 'Melanggar hukum' ? 'selected' : '' }}>
+                                    Melanggar hukum
+                                </option>
+                                <option {{ old('alasan') == 'Lain-lain' ? 'selected' : '' }}>
+                                    Lain-lain
                                 </option>
                             </select>
                             @error('alasan')
@@ -153,7 +189,8 @@
                             <label for="catatan">Catatan</label>
                             <textarea id="catatan" name="catatan"
                                 class="w-full resize-none text-neutral-800 focus:outline-none focus:border-amber-300 mb-3 max-h-52 border border-neutral-400 rounded-xl p-2"
-                                placeholder="Tambahkan catatan untuk memperkuat laporan (opsional)" oninput="textareaHeight(this)">{{ old('catatan') }}</textarea>
+                                placeholder="Tambahkan catatan {{ auth()->user()->role != 'pengurus' ? 'untuk memperkuat laporan (opsional)' : '' }}"
+                                oninput="textareaHeight(this)">{{ old('catatan') }}</textarea>
                         </div>
                     </div>
 
@@ -176,17 +213,17 @@
         {{-- Edit definisi --}}
         <div id="editDefinisi-{{ $d->id }}"
             class="fixed inset-0 m-auto z-50 flex invisible items-center justify-center bg-black bg-opacity-50">
-            <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
+            <div class="bg-white border border-neutral-200 rounded-2xl md:w-1/3 w-5/6">
 
-                <h5 class="font-semibold mb-5 capitalize">Edit definisi</h5>
+                <h5 class="font-semibold mb-5 pt-6 px-6 capitalize">Edit definisi</h5>
 
                 <form action="/kosakata/{{ $d->slug }}/{{ $d->id }}/update" method="POST">
                     @method('put')
                     @csrf
                     <div class="overflow-auto max-h-[27rem] space-y-2">
                         {{-- Definisi --}}
-                        <div>
-                            <label for="editDefinisi" class="block">Definisi</label>
+                        <label for="editDefinisi" class="block px-6">Definisi</label>
+                        <div style="padding: 0;">
 
                             <?php
                             $trixId = 'editDefinisi';
@@ -200,26 +237,36 @@
                             @error('editDefinisi')
                                 <div class="text-xs text-red-600 mt-1 mb-2">*{{ $message }}</div>
                             @enderror
+
                         </div>
 
                         {{-- Referensi --}}
-                        <div>
+                        <div class="px-6">
                             <label for="editReferensi" class="block">Referensi<span
                                     class="text-xs text-red-500">*</span></label>
                             <textarea id="editReferensi" name="editReferensi"
                                 class="w-full resize-none text-neutral-800 focus:outline-none focus:outline-amber-300 focus:outline-offset-0 mb-3 max-h-52 border border-neutral-400 rounded-xl p-2"
                                 placeholder="Sumber referensi (opsional)..." oninput="textareaHeight(this)">{{ old('editReferensi', isset($d->referensi) ? implode('; ', $d->referensi) : '') }}</textarea>
                         </div>
+
                     </div>
 
                     {{-- Button --}}
-                    <div class="text-xs text-red-500 mb-2">*Pisah contoh dan referensi dengan titik koma (;).</div>
-                    <div class="flex space-x-2">
-                        <div onclick="closeWindow('editDefinisi-{{ $d->id }}')"
-                            class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
-                            Batal</div>
-                        <button type="submit"
-                            class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
+                    <div class="p-6">
+                        @if (isset($d->verifikasi))
+                            {{-- alert jika definisi terverifikasi --}}
+                            <div class="">
+                                <?php $alert = ['warna' => 'red', 'pesan' => 'Status verifikasi akan dicabut jika definisi ini diedit.', 'textsize' => 'sm']; ?>
+                                @include('partials.alert')
+                            </div>
+                        @endif
+                        <div class="flex space-x-2">
+                            <div onclick="closeWindow('editDefinisi-{{ $d->id }}')"
+                                class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
+                                Batal</div>
+                            <button type="submit"
+                                class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -262,4 +309,34 @@
             </div>
         </div>
     @endif
+@endif
+
+{{-- Verifikasi definisi --}}
+@if (auth()->user() && auth()->user()->role == 'pengurus')
+    {{-- hapus definisi --}}
+    <div id="verifikasi-{{ $d->id }}"
+        class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6 space-y-4">
+
+            <h5 class="font-semibold">Verifikasi defisini yang di-submit oleh {{ $d->user->nama }}?</h5>
+
+            <div class="space-y-2">
+                <p>Pastikan kamu sudah yakin bahwa definisi yang dikirim oleh {{ $d->user->nama }} memang benar dan
+                    sudah sesuai.</p>
+            </div>
+
+            <form action="/definisi/verifikasi/{{ $d->slug }}/{{ $d->id }}" method="POST">
+                @method('PUT')
+                @csrf
+                {{-- Button --}}
+                <div class="flex space-x-2">
+                    <div onclick="closeWindow('verifikasi-{{ $d->id }}')"
+                        class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
+                        Batal</div>
+                    <button type="submit"
+                        class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-400">Lanjutkan</button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endif

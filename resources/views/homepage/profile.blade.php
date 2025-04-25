@@ -1,5 +1,12 @@
 @extends('layouts.homepage')
 
+@section('head')
+    {{-- import trix editor 2.0.8 --}}
+    <link rel="stylesheet" href="{{ asset('css/trix.css') }}">
+    <script src="{{ asset('js/trix.umd.min.js') }}"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
+
 @section('body')
     {{-- Header profil --}}
     <section class="md:px-28 px-5 pt-14 mx-auto bg-neutral-100">
@@ -109,6 +116,7 @@
 
                 {{-- detail user --}}
                 <div class="md:col-span-3 col-span-4 text-justify">
+
                     {{-- Definisi --}}
                     <div id="definisipane" class="">
                         @if (!$definisi->isEmpty())
@@ -210,7 +218,8 @@
                                 </div>
                                 <div>
                                     <div class="text-sm text-neutral-700">Tanggal lahir</div>
-                                    <div>{{ isset($user->tgl_lahir) ? $user->tgl_lahir->Translatedformat('d F Y') : '-' }}</div>
+                                    <div>{{ isset($user->tgl_lahir) ? $user->tgl_lahir->Translatedformat('d F Y') : '-' }}
+                                    </div>
                                 </div>
                                 <div>
                                     <div class="text-sm text-neutral-700">Jenis kelamin</div>

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Definisi;
+use App\Models\Kosakata;
 use App\Models\PoinKontribusi;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -71,7 +73,10 @@ class DefinisiController extends Controller
         // Simpan
         Definisi::find($userId)->update([
             'definisi' => $validatedData['editDefinisi'],
-            'referensi' => $arrayReferensi
+            'referensi' => $arrayReferensi,
+            'verifikasi'=> null,
+            'verifikasi_oleh'=>null,
+            'hukuman_edit' => null,
         ]);
 
         return back()->with('success', 'Definisi berhasil diedit');
@@ -89,5 +94,31 @@ class DefinisiController extends Controller
         Definisi::destroy($definisiId);
         return back()->with('success', 'Definisi berhasil dihapus');
 
+    }
+
+    // Verifikasi laporan
+    public function verifikasi($kosakata_slug, $id)
+    {
+        // jika user != pengurus, maka alihkan ke halaman 403
+        if (Auth::user()->role != 'pengurus') {
+            return $this->error403();
+        }
+
+        // simpan verifikasi
+        Definisi::find($id)->update([
+            'verifikasi' => Carbon::now(),
+            'verifikasi_oleh' => Auth::user()->id,
+        ]);
+
+        // buat notifikasi untuk author
+        $pesan='Definisi yang kamu submit untuk kosakata '.Kosakata::where('slug', $kosakata_slug)->first()->kosakata.' telah lolos verifikasi oleh admin 🤝';
+        $url='/kosakata/'.$kosakata_slug.'?definisi='.$id;
+        $this->kirimNotifikasi(Definisi::find($id)->user_id, 'definisi', $pesan, $url);
+
+        // tambah poin pengurus
+        $this->poinKontribusi(Auth::user()->id, 4);
+
+        // kembali ke view
+        return redirect($url)->with('success','Definisi berhasil diverifikasi');
     }
 }

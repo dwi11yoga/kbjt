@@ -46,13 +46,14 @@
                                 $warna='neutral';
                             }
                             ?>
-                            <div class="w-1 h-3 bg-{{ $warna }}-400 rounded-full shrink-0"></div>
+                            <div class="w-1 h-3 bg-{{ $warna }}-400 rounded-full shrink-0" title="{{ ucfirst($i->kategori) }}"></div>
                             
                             {{-- pesan --}}
                             <div>
                                 {{ $i->message }}
                             </div>
                         </div>
+
                         <div class="flex items-center space-x-2">
                             <div class="">{{ $i->created_at->format('H:i') }}</div>
                             @if ($i->dilihat == 0)

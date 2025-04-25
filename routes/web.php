@@ -18,6 +18,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SertifikatController;
 use App\Http\Controllers\TrixController;
 use App\Http\Controllers\UserController;
+use App\Models\Definisi;
 use App\Models\EditKosakata;
 use Illuminate\Support\Facades\Route;
 
@@ -192,8 +193,11 @@ Route::middleware(['auth'])->group(function () {
         // simpan hukuman yang diberikan
         // Route::post('/laporan/{id}/hukuman', [HukumanController::class, 'tindaklanjut']);
 
-        // setujui edit definisi
+        // setujui edit kosakata
         Route::put('/kosakata/{slug}/riwayat/{id}/setujui', [EditKosakataController::class, 'setujui']);
+
+        // verifikasi definisi
+        Route::put('/definisi/verifikasi/{kosakata_slug}/{id}', [DefinisiController::class, 'verifikasi']);
     });
 
     // Pengaturan

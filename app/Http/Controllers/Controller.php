@@ -11,6 +11,7 @@ use App\Models\HapusAkun;
 use App\Models\Kosakata;
 use App\Models\Level;
 use App\Models\Notifikasi;
+use App\Models\PoinKontribusi;
 use App\Models\Report;
 use App\Models\Sertifikat;
 use App\Models\User;
@@ -143,7 +144,7 @@ abstract class Controller
 
                     // simpan data di tabel notifikasi
                     $pesan = 'Kamu berhasil mendapatkan achievement ' . $d->nama . ' 🎉';
-                    $url = $this->getUrl() . '/achievement';
+                    $url = '/achievement';
                     $this->kirimNotifikasi($userId, 'achievement', $pesan, $url);
 
                 } else { // jika $value tidak lebih besar dari requirement terkecil, maka hentikan function
@@ -276,7 +277,7 @@ abstract class Controller
 
             // jika kontribusi lebih besar dari requirement && user belum mendapatkan notifikasi..
             $pesan = 'Kamu berhak untuk meng-klaim sertifikat karena ' . strtolower($d->nama) . ' 🎉';
-            $url = $this->getUrl() . '/sertifikat';
+            $url = '/sertifikat';
             $cekNotifikasi = Notifikasi::where('user_id', $userId)
                 ->where('message', $pesan)
                 ->orderBy('created_at', 'desc')
@@ -289,5 +290,17 @@ abstract class Controller
         }
 
         return 'selesai :)';
+    }
+
+    // tambahkan poin atas kontribusi
+    public function poinKontribusi(int $userId, int $idKontribusi)
+    {
+        // dapatkan poin reward untuk user
+        $poin = PoinKontribusi::find($idKontribusi)->poin;
+
+        // tambah poin user
+        User::find($userId)->increment('poin', $poin);
+
+        return 'berhasil :)';
     }
 }

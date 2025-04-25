@@ -37,7 +37,7 @@
                             </a>
                             <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-red-100 text-red-500 cursor-pointer"
                                 onclick="openWindow('hapausKosakata')">
-                                <div>Hapus</div>
+                                <div>Minta hapus</div>
                                 <i data-feather='trash' class="w-5"></i>
                             </li>
                         </ul>

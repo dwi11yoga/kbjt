@@ -25,7 +25,11 @@ class HomepageController extends Controller
             ->get();
 
         // Ambil definisi random
-        $definisi = Definisi::inRandomOrder()->take(5)->with('kosakata:id,kosakata,slug')->get();
+        $definisi = Definisi::whereNull('hukuman_edit')
+            ->inRandomOrder()
+            ->take(5)
+            ->with('kosakata:id,kosakata,slug')
+            ->get();
         foreach ($definisi as $d) {
             $d['slug'] = $d->kosakata->slug;
             $d['kosakata'] = $d->kosakata->kosakata;
@@ -184,7 +188,7 @@ class HomepageController extends Controller
         $banner = $this->getBanner([1, 2]);
 
         // dapatkan url web
-        $urlweb=$this->getUrl();
+        $urlweb = $this->getUrl();
 
         return view('homepage.donasi', [
             'group' => 'donasi',
@@ -192,7 +196,7 @@ class HomepageController extends Controller
             'donasi' => $donasi,
             'metode' => $metode,
             'banner' => $banner,
-            'urlweb'=> $urlweb,
+            'urlweb' => $urlweb,
         ]);
     }
 
@@ -386,10 +390,11 @@ class HomepageController extends Controller
     }
 
     // view user terbanned
-    public function dibanned(){
+    public function dibanned()
+    {
         return view('homepage.terbanned', [
-            'title'=> 'Akun kamu tidak dapat diakses',
-            'group'=> null,
+            'title' => 'Akun kamu tidak dapat diakses',
+            'group' => null,
         ]);
     }
 }

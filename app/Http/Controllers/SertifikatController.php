@@ -71,7 +71,7 @@ class SertifikatController extends Controller
 
                         // buat notifikasi, namun pastikan dulu agar notifikasi tidak dobel
                         $pesan = 'Kamu berhak untuk meng-klaim sertifikat karena ' . strtolower($d->nama) . ' 🎉';
-                        $url = $this->getUrl() . '/sertifikat';
+                        $url = '/sertifikat';
                         $cekNotifikasi = Notifikasi::where('user_id', Auth::user()->id)
                             ->where('message', $pesan)
                             ->orderBy('created_at', 'desc')
@@ -122,7 +122,7 @@ class SertifikatController extends Controller
 
         // kirimkan notifikasi
         $pesan = 'Kamu berhasil meng-klaim sertifikat karena ' . strtolower($sertifikat->nama) . ' ✍';
-        $url = $this->getUrl() . '/sertifikat';
+        $url = '/sertifikat';
         $this->kirimNotifikasi(Auth::user()->id, 'sertifikat', $pesan, $url);
 
         return back()->with('success', 'Sertifikat berhasil diklaim');

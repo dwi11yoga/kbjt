@@ -53,7 +53,8 @@
     {{-- footer --}}
     @include('.../partials/footer')
 
-    @yield('toast')
+    {{-- toast --}}
+    @include('partials.toast')
 
     {{-- Feathericon --}}
     <script>

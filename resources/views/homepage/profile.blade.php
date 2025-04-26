@@ -33,15 +33,52 @@
 
                         {{-- Nama & username --}}
                         <div>
-                            <h3 class="font-bold">{{ $user->nama }}
+                            <div class="flex items-center space-x-2">
+                                {{-- nama --}}
+                                <h3 class="font-bold">{{ $user->nama }}</h3>
+
+                                {{-- ikon pengaturan --}}
                                 @if (isset(auth()->user()->id) && auth()->user()->id == $user->id)
                                     <a href="/pengaturan" title="Ke pengaturan"
                                         class="rounded-full w-9 h-9 -ml-1 inline-flex justify-center items-center hover:bg-neutral-200">
                                         <i data-feather='settings' class="inline-block w-5 stroke-neutral-700"></i>
                                     </a>
                                 @endif
-                            </h3>
-                            <div>&#64;{{ $user->username }}
+
+                                {{-- menu --}}
+                                @if (isset(auth()->user()->role) && auth()->user()->role == 'kepala')
+                                    <div class="relative">
+                                        {{-- tombol menu --}}
+                                        <button id="dropdownBtn" onclick="dropdown(this, 'dropdown')"
+                                            class="p-2 rounded-full hover:bg-neutral-200">
+                                            <i data-feather='more-horizontal'></i>
+                                        </button>
+
+                                        <div id="dropdown"
+                                            class="absolute font-normal hidden bg-white right-0 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
+                                            <ul>
+                                                @if ($user->role == 'kontributor')
+                                                    <li onclick="openWindow('promosikanUser')"
+                                                        class="flex justify-between py-2 px-3 rounded-lg hover:bg-amber-100 cursor-pointer">
+                                                        <div>Promosikan</div>
+                                                        <i data-feather='arrow-up' class="w-5"></i>
+                                                    </li>
+                                                @elseif ($user->role == 'pengurus')
+                                                    <li onclick="openWindow('demosiUser')"
+                                                        class="flex justify-between py-2 px-3 rounded-lg text-red-500 hover:bg-red-100 cursor-pointer">
+                                                        <div>Demosi</div>
+                                                        <i data-feather='arrow-down' class="w-5"></i>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+
+
+                            <div>
+                                &#64;{{ $user->username }}
                                 @isset($user->kota)
                                     • {{ $user->kota }}
                                 @endisset
@@ -85,27 +122,37 @@
                     </div>
                 </div>
             </div>
+
             {{-- Tab --}}
             <div class="flex mt-7 space-x-7 border-b-2 border-neutral-200 md:overflow-hidden overflow-x-scroll">
                 <a id="definisitab" href="#definisi" onclick="tab(this)"
                     class="-mb-0.5 py-3 hover:border-amber-400 hover:text-black">
-                    Definisi</a>
+                    Definisi
+                </a>
                 <a id="kosakatatab" href="#kosakata" onclick="tab(this)"
                     class="-mb-0.5 py-3 hover:border-amber-400 hover:text-black">
-                    Kosakata</a>
+                    Kosakata
+                </a>
+                <a id="editkosakatatab" href="#editkosakata" onclick="tab(this)"
+                    class="-mb-0.5 py-3 hover:border-amber-400 hover:text-black whitespace-nowrap">
+                    Edit Kosakata
+                </a>
                 @if ($user->role == 'pengurus')
                     <a id="artikeltab" href="#artikel" onclick="tab(this)"
                         class="-mb-0.5 py-3 hover:border-amber-400 hover:text-black">
-                        Artikel</a>
+                        Artikel
+                    </a>
                 @endif
                 <a id="achivementtab" href="#achivement" onclick="tab(this)"
                     class="-mb-0.5 py-3 hover:border-amber-400 hover:text-black">
-                    Achievements</a>
+                    Achievements
+                </a>
                 <a id="tentangtab" href="#tentang" onclick="tab(this)"
                     class="-mb-0.5 py-3 hover:border-amber-400 hover:text-black">
                     Tentang
                 </a>
             </div>
+
         </div>
     </section>
 
@@ -178,6 +225,27 @@
                         @endif
                     </div>
 
+                    {{-- Edit Kosakata --}}
+                    <div id="editkosakatapane" class="space-y-3">
+                        @if (!$editKosakata->isEmpty())
+                            @foreach ($editKosakata as $d)
+                                <a href="/kosakata/{{ $d->kosakata->slug }}/riwayat" title="Lihat riwayat edit kosakata {{ strtolower($d->kosakata->kosakata) }}"
+                                    class="rounded-2xl border border-neutral-200 p-5 md:flex md:justify-between hover:outline hover:outline-amber-400">
+                                    <div class="font-semibold">Kosakata
+                                        {{ $d->kosakata->kosakata ?? '[Kosakata dihapus]' }}</div>
+                                    <div class="text-sm">— Disetujui oleh pengurus pada
+                                        {{ $d->updated_at->translatedFormat('d F Y') }}</div>
+                                </a>
+                            @endforeach
+                            <div>
+                                {{ $editKosakata->links() }}
+                            </div>
+                        @else
+                            <?php $notFound = 'Belum ada data edit kosakata yang ditambahkan oleh pengguna.'; ?>
+                            @include('partials.not-found')
+                        @endif
+                    </div>
+
                     @if ($user->role == 'pengurus')
                         {{-- Artikel --}}
                         <div id="artikelpane" class="space-y-3">
@@ -199,9 +267,18 @@
 
                     {{-- Achivement --}}
                     <div id="achivementpane" class="">
-                        <?php $notFound = 'Belum ada achievement yang diperoleh pengguna.'; ?>
-                        @include('partials.not-found')
+                        @if (empty($achievement))
+                            <?php $notFound = 'Belum ada achievement yang diperoleh pengguna.'; ?>
+                            @include('partials.not-found')
+                        @else
+                            <div class="space-y-2">
+                                @foreach ($achievement as $d)
+                                    @include('partials.achievement-item')
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
+
                     {{-- Tentang --}}
                     <div id="tentangpane" class="space-y-4">
                         {{-- Info akun --}}
@@ -264,7 +341,8 @@
                                     @if (!empty($user->media_sosial['fb']))
                                         <div>
                                             <div class="text-sm text-neutral-700">Facebook</div>
-                                            <a href="https://facebook.com/{{ $user->media_sosial['fb'] }}" target="_blank"
+                                            <a href="https://facebook.com/{{ $user->media_sosial['fb'] }}"
+                                                target="_blank"
                                                 class="inline-block bg-neutral-50 rounded-full py-0.5 px-2">
                                                 {{ $user->media_sosial['fb'] }} <i data-feather='arrow-up-right'
                                                     class="w-4 inline-block"></i>
@@ -332,6 +410,7 @@
                                                 {{ $user->media_sosial['linkedin'] }} <i data-feather='arrow-up-right'
                                                     class="w-4 inline-block"></i>
                                             </a>
+                                            hapusDefinisi
                                         </div>
                                     @endif
                                     @if (!empty($user->media_sosial['github']))
@@ -441,17 +520,81 @@
         </div>
     @endif
 
+    @if (isset(auth()->user()->role) && auth()->user()->role == 'kepala')
+        @if ($user->role == 'kontributor')
+            {{-- konfirmasi promosi --}}
+            <div id="promosikanUser"
+                class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
+                <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6 space-y-4">
+
+                    <h5 class="font-semibold">Promosikan sebagai pengurus</h5>
+
+                    <div class="space-y-2">
+                        <p>Kamu yakin ingin mempromosikan {{ $user->nama }} sebagai pengurus?</p>
+                    </div>
+
+                    <form action="/ubah-role/{{ $user->id }}" method="POST">
+                        @method('put')
+                        @csrf
+                        {{-- Button --}}
+                        <div class="flex space-x-2">
+                            <div onclick="closeWindow('promosikanUser')"
+                                class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
+                                Batal
+                            </div>
+                            <button type="submit"
+                                class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Ya,
+                                Yakin
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        @elseif ($user->role == 'pengurus')
+            <div id="demosiUser"
+                class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
+                <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6 space-y-4">
+
+                    <h5 class="font-semibold">Demosikan sebagai pengurus</h5>
+
+                    <div class="space-y-2">
+                        <p>Kamu yakin ingin mencaput status {{ $user->nama }} sebagai pengurus?</p>
+                    </div>
+
+                    <form action="/ubah-role/{{ $user->id }}" method="POST">
+                        @method('put')
+                        @csrf
+                        {{-- Button --}}
+                        <div class="flex space-x-2">
+                            <div onclick="closeWindow('demosiUser')"
+                                class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
+                                Batal
+                            </div>
+                            <button type="submit"
+                                class="w-full bg-red-500 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-red-600">
+                                Ya, Yakin
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        @endif
+    @endif
+
+
     <script>
         // Pindah-pindah tab
         var tabButtons = [
             document.getElementById('definisitab'),
             document.getElementById('kosakatatab'),
+            document.getElementById('editkosakatatab'),
             document.getElementById('achivementtab'),
             document.getElementById('tentangtab')
         ];
         var tabPanes = [
             document.getElementById('definisipane'),
             document.getElementById('kosakatapane'),
+            document.getElementById('editkosakatapane'),
             document.getElementById('achivementpane'),
             document.getElementById('tentangpane')
         ];

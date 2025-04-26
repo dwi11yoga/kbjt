@@ -171,6 +171,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('achievement/{id}/edit', [AchievementController::class, 'edit']);
         // simpan edit achievement
         Route::put('/achievement/{id}/edit', [AchievementController::class, 'simpanEdit']);
+
+        // ubah status user sebagai pengurus/kontributor
+        Route::put('/ubah-role/{id}', [UserController::class, 'ubahStatusPengurus']);
     });
 
     // hanya untuk role pengurus

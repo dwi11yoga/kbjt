@@ -35,6 +35,9 @@
     {{-- footer --}}
     @include('.../partials/footer')
 
+    {{-- toast --}}
+    @include('partials.toast')
+
     {{-- Feathericon --}}
     <script>
         feather.replace();

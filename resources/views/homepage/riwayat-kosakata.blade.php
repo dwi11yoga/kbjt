@@ -45,7 +45,8 @@
                                 </button>
                             </form>
                         @elseif (isset(auth()->user()->role) && auth()->user()->role == 'kepala' && empty($r->pengurus_id))
-                            <div class="flex items-center space-x-1"><i data-feather='clock' class="w-5"></i><span>Pending</span></div>
+                            <div class="flex items-center space-x-1"><i data-feather='clock'
+                                    class="w-5"></i><span>Pending</span></div>
                         @elseif (isset(auth()->user()->role) && auth()->user()->role != 'kontributor' && isset($r->pengurus_id))
                             <?php $d = $r->pengurus; ?>
                             <a href="/u/{{ $d->username }}"

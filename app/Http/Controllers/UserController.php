@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Achievement;
 use App\Models\Blog;
 use App\Models\Definisi;
+use App\Models\EditKosakata;
 use App\Models\Kosakata;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,12 +64,12 @@ class UserController extends Controller
             $userId = Auth::user()->id;
 
             // rule yang akan dicek achievementnya
-            $rule = ['keanggotaan','definisi','kosakata','editKosakata','laporan','totalViewKosakata','viewKosakata'];
+            $rule = ['keanggotaan', 'definisi', 'kosakata', 'editKosakata', 'laporan', 'totalViewKosakata', 'viewKosakata'];
             if (Auth::user()->role == 'pengurus') { // tambahan rule khusus untuk pengurus
                 $rulePengurus = ['artikel', 'totalViewBlog', 'viewBlog'];
                 $rule = array_merge($rule, $rulePengurus);
             }
-            
+
             foreach ($rule as $d) { //lakukan perulangan untuk cek achievement user
                 $this->achievement($userId, $d);
             }
@@ -160,11 +162,20 @@ class UserController extends Controller
             ->paginate(10, ['*'], 'kosakata-page')
             ->appends(request()->query());
 
+        // dapatkan data edit kosakata oleh user
+        $editKosakata = EditKosakata::where('user_id', $user->id)
+            ->whereNotNull('status')
+            ->with('kosakata')
+            ->orderBy('updated_at', 'desc')
+            ->paginate(10, ['*'], 'kosakata-page')
+            ->appends(request()->query());
+
         $kirim = [
             'title' => $user['nama'] . ' ' . '(' . $username . '',
             'user' => $user,
             'definisi' => $definisi,
             'kosakata' => $kosakata,
+            'editKosakata' => $editKosakata,
             'group' => 'Profil user',
         ];
 
@@ -173,11 +184,22 @@ class UserController extends Controller
             $posts = Blog::select('id', 'judul', 'slug', 'user_id', 'status', 'updated_at', 'thumbnail')
                 ->with('user:id,username,nama')
                 ->where('user_id', '=', $user['id'])
+                ->whereNotNull('status')
                 ->orderBy('updated_at', 'desc')
                 ->paginate(10, ['*'], 'artikel-page')
                 ->appends(request()->query());
             $kirim['posts'] = $posts;
         }
+
+        // dapatkan data achievement user
+        $achieved = $user->achievement;
+        $achievement = Achievement::whereIn('id', array_keys($achieved))->get();
+        // tambahkan kapan achievement tsb didapatkan
+        foreach ($achievement as $d) {
+            $d->progress = '100%';
+            $d->date_achieved = Carbon::parse($achieved[$d->id])->timezone('Asia/Jakarta');
+        }
+        $kirim['achievement'] = $achievement;
 
         // dapatkan data banner
         $banner = $this->getBanner([1, 2]);
@@ -477,5 +499,43 @@ class UserController extends Controller
 
         // kembali ke view
         return back()->with('success', 'Kata sandi berhasil diubah');
+    }
+
+    // promosikan/demosi sebagai pengurus
+    public function ubahStatusPengurus($userId)
+    {
+        // periksa kembali apakah role user == kepala
+        // Tidak perlu, sudah ada middleware
+
+        // ambil data user
+        $user = User::find($userId);
+
+        if ($user->role == 'pengurus') {
+            // jika user==pengurus, maka ubah menjadi kontributor
+            $ubahJadi = 'kontributor';
+            $pesan = 'Mohon maaf, status dan hak istimewa kamu sebagai pengurus telah dicabut oleh Kepala.';
+            $url = '#';
+            $toast = $user->nama . ' berhasil didemosikan sebagai pengurus';
+        } elseif ($user->role == 'kontributor') {
+            // jika user==kontributor, maka ubah menjadi pengurus
+            $ubahJadi = 'pengurus';
+            $pesan = 'Selamat! Kepala telah mempromosikan kamu menjadi pengurus 🥳. Lihat apa saja yang bisa kamu lakukan sebagai pengurus di sini.';
+            $url = '/blog/post/hak-istimewa-pengurus';
+            $toast = $user->nama . ' berhasil dipromosikan menjadi pengurus';
+        } else {
+            // selain itu, maka alihkan ke halaman 404. karena pasti user yang coba diubah usernya adalah kepala
+            return $this->error404();
+        }
+
+        // ubah data di database
+        User::find($userId)->update([
+            'role' => $ubahJadi,
+        ]);
+
+        // kirim notifikasi ke user
+        $this->kirimNotifikasi($userId, 'kepengurusan', $pesan, $url);
+
+        // kembalikan kepala ke view
+        return back()->with('success', $toast);
     }
 }

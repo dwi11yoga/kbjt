@@ -104,13 +104,23 @@
                                             <i data-feather='flag' class="w-5"></i>
                                         </li>
                                     @else
-                                        @if (empty($d->verifikasi))
-                                            {{-- verifikasi laporan --}}
-                                            <li onclick="openWindow('verifikasi-{{ $d->id }}')"
-                                                class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
-                                                <div>Verifikasi</div>
-                                                <i data-feather='check' class="w-5"></i>
-                                            </li>
+                                        @if ($d->user->role != 'pengurus')
+                                            {{-- hanya ditampilkan jika author = kontributor dan kepala --}}
+                                            @if (empty($d->verifikasi))
+                                                {{-- verifikasi laporan --}}
+                                                <li onclick="openWindow('verifikasi-{{ $d->id }}')"
+                                                    class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
+                                                    <div>Verifikasi</div>
+                                                    <i data-feather='check' class="w-5"></i>
+                                                </li>
+                                            @else
+                                                {{-- unverifikasi --}}
+                                                <li onclick="openWindow('unverifikasi-{{ $d->id }}')"
+                                                    class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
+                                                    <div>Un-verifikasi</div>
+                                                    <i data-feather='x' class="w-5"></i>
+                                                </li>
+                                            @endif
                                         @endif
 
                                         {{-- tangani definisi salah --}}
@@ -119,6 +129,7 @@
                                             <div>Definisi salah</div>
                                             <i data-feather='flag' class="w-5"></i>
                                         </li>
+
                                     @endif
                                 @endif
                             </ul>
@@ -312,31 +323,60 @@
 @endif
 
 {{-- Verifikasi definisi --}}
-@if (auth()->user() && auth()->user()->role == 'pengurus')
-    {{-- hapus definisi --}}
-    <div id="verifikasi-{{ $d->id }}"
-        class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6 space-y-4">
+@if (auth()->user() && auth()->user()->role == 'pengurus' && isset($d->id))
+    {{-- pada if ditambahkan isset($d->id) agar tidak error saat ditampilkan di halaman laporan(hal. laporan tidak membutukan ini) --}}
+    @if (empty($d->verifikasi))
+        <div id="verifikasi-{{ $d->id }}"
+            class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6 space-y-4">
 
-            <h5 class="font-semibold">Verifikasi defisini yang di-submit oleh {{ $d->user->nama }}?</h5>
+                <h5 class="font-semibold">Verifikasi defisini yang di-submit oleh {{ $d->user->nama }}?</h5>
 
-            <div class="space-y-2">
-                <p>Pastikan kamu sudah yakin bahwa definisi yang dikirim oleh {{ $d->user->nama }} memang benar dan
-                    sudah sesuai.</p>
-            </div>
-
-            <form action="/definisi/verifikasi/{{ $d->slug }}/{{ $d->id }}" method="POST">
-                @method('PUT')
-                @csrf
-                {{-- Button --}}
-                <div class="flex space-x-2">
-                    <div onclick="closeWindow('verifikasi-{{ $d->id }}')"
-                        class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
-                        Batal</div>
-                    <button type="submit"
-                        class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-400">Lanjutkan</button>
+                <div class="space-y-2">
+                    <p>Pastikan kamu sudah yakin bahwa definisi yang dikirim oleh {{ $d->user->nama }} memang benar dan
+                        sudah sesuai.</p>
                 </div>
-            </form>
+
+                <form action="/definisi/verifikasi/{{ $d->slug }}/{{ $d->id }}" method="POST">
+                    @method('PUT')
+                    @csrf
+                    {{-- Button --}}
+                    <div class="flex space-x-2">
+                        <div onclick="closeWindow('verifikasi-{{ $d->id }}')"
+                            class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
+                            Batal</div>
+                        <button type="submit"
+                            class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-400">Lanjutkan</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
+    @else
+        <div id="unverifikasi-{{ $d->id }}"
+            class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6 space-y-4">
+
+                <h5 class="font-semibold">Un-verifikasi defisini yang di-submit oleh {{ $d->user->nama }}?</h5>
+
+                <div class="space-y-2">
+                    <p>Definisi ini sebelumnya diverifikasi oleh
+                        {{ $d->verifikasi_oleh == auth()->user()->id ? 'kamu' : $d->pengurus->nama }}. Pembatalan
+                        verifikasi akan membuat definisi ini kembali berstatus belum terverifikasi. Lanjutkan?</p>
+                </div>
+
+                <form action="/definisi/verifikasi/{{ $d->slug }}/{{ $d->id }}" method="POST">
+                    @method('PUT')
+                    @csrf
+                    {{-- Button --}}
+                    <div class="flex space-x-2">
+                        <div onclick="closeWindow('unverifikasi-{{ $d->id }}')"
+                            class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
+                            Batal</div>
+                        <button type="submit"
+                            class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-400">Lanjutkan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endif
 @endif

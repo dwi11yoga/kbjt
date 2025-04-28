@@ -24,8 +24,15 @@ class Definisi extends Model
         return $this->belongsTo(User::class);
     }
 
+    // relasi dengan kosakata
     public function kosakata(): BelongsTo
     {
         return $this->belongsTo(Kosakata::class);
+    }
+
+    // relasi dengan pengurus
+    public function pengurus():BelongsTo
+    {
+        return $this->belongsTo(User::class,'verifikasi_oleh', 'id');
     }
 }

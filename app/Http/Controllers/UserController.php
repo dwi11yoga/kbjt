@@ -191,15 +191,17 @@ class UserController extends Controller
             $kirim['posts'] = $posts;
         }
 
-        // dapatkan data achievement user
-        $achieved = $user->achievement;
-        $achievement = Achievement::whereIn('id', array_keys($achieved))->get();
-        // tambahkan kapan achievement tsb didapatkan
-        foreach ($achievement as $d) {
-            $d->progress = '100%';
-            $d->date_achieved = Carbon::parse($achieved[$d->id])->timezone('Asia/Jakarta');
+        // dapatkan data achievement user (jika ada)
+        if (isset($user->achievement)) {
+            $achieved = $user->achievement;
+            $achievement = Achievement::whereIn('id', array_keys($achieved))->get();
+            // tambahkan kapan achievement tsb didapatkan
+            foreach ($achievement as $d) {
+                $d->progress = '100%';
+                $d->date_achieved = Carbon::parse($achieved[$d->id])->timezone('Asia/Jakarta');
+            }
+            $kirim['achievement'] = $achievement;
         }
-        $kirim['achievement'] = $achievement;
 
         // dapatkan data banner
         $banner = $this->getBanner([1, 2]);

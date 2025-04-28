@@ -74,8 +74,8 @@ class DefinisiController extends Controller
         Definisi::find($userId)->update([
             'definisi' => $validatedData['editDefinisi'],
             'referensi' => $arrayReferensi,
-            'verifikasi'=> null,
-            'verifikasi_oleh'=>null,
+            'verifikasi' => null,
+            'verifikasi_oleh' => null,
             'hukuman_edit' => null,
         ]);
 
@@ -96,7 +96,7 @@ class DefinisiController extends Controller
 
     }
 
-    // Verifikasi laporan
+    // Verifikasi dan unverifikasi laporan
     public function verifikasi($kosakata_slug, $id)
     {
         // jika user != pengurus, maka alihkan ke halaman 403
@@ -104,21 +104,38 @@ class DefinisiController extends Controller
             return $this->error403();
         }
 
-        // simpan verifikasi
+        // dapatkan data definisi
+        $definisi = Definisi::find($id);
+
+        if (empty($definisi->verifikasi)) {
+            // jika belum diverifikasi, maka verifikasi
+            $verifikasi = Carbon::now();
+            $verifikasi_oleh = Auth::user()->id;
+
+            $pesan = 'Definisi yang kamu submit untuk kosakata ' . Kosakata::where('slug', $kosakata_slug)->first()->kosakata . ' telah lolos verifikasi oleh pengurus 🤝';
+            $toast='Definisi berhasil diverifikasi';
+        } else {
+            // jika sudah diverifikasi, maka unverifikasi
+            $verifikasi = null;
+            $verifikasi_oleh = null;
+
+            $pesan = 'Status verifikasi untuk definisi yang kamu submit untuk kosakata ' . Kosakata::where('slug', $kosakata_slug)->first()->kosakata . ' telah dicabut oleh pengurus 🙏';
+            $toast='Definisi berhasil di un-verifikasi';
+        }
+        // simpan verifikasi/unverifikasi
         Definisi::find($id)->update([
-            'verifikasi' => Carbon::now(),
-            'verifikasi_oleh' => Auth::user()->id,
+            'verifikasi' => $verifikasi,
+            'verifikasi_oleh' => $verifikasi_oleh,
         ]);
 
         // buat notifikasi untuk author
-        $pesan='Definisi yang kamu submit untuk kosakata '.Kosakata::where('slug', $kosakata_slug)->first()->kosakata.' telah lolos verifikasi oleh admin 🤝';
-        $url='/kosakata/'.$kosakata_slug.'?definisi='.$id;
+        $url = '/kosakata/' . $kosakata_slug . '?definisi=' . $id;
         $this->kirimNotifikasi(Definisi::find($id)->user_id, 'definisi', $pesan, $url);
 
         // tambah poin pengurus
-        $this->poinKontribusi(Auth::user()->id, 4);
+        // $this->poinKontribusi(Auth::user()->id, 4);
 
         // kembali ke view
-        return redirect($url)->with('success','Definisi berhasil diverifikasi');
+        return redirect($url)->with('success', $toast);
     }
 }

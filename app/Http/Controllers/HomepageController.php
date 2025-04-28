@@ -311,6 +311,7 @@ class HomepageController extends Controller
             //     ->get();
             $definisi = Definisi::where('kosakata_id', '=', $kosakata->id)
                 ->with('user:id,username,nama,profile_pic,jenis_kelamin,role')
+                ->with('pengurus:id,username,nama')
                 ->whereNull('hukuman_edit')
                 ->orWhere('hukuman_edit', '!=', 1);
             if (isset(request()->definisi)) {

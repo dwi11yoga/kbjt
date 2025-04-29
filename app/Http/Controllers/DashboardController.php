@@ -23,10 +23,15 @@ class DashboardController extends Controller
     {
 
         // Hitung Level
-        $levelSets = DB::table('levels')->select(['lvl', 'min_poin'])->orderBy('lvl', 'desc')->get();
+        $levelSets = DB::table('levels')
+            ->select(['lvl', 'min_poin'])
+            ->orderBy('lvl', 'desc') // diurutkan dari level paling tinggi
+            ->get();
+
+        // dapatkan level user
         function Lvl($levelSets)
         {
-            $userPoin = Auth::user()->poin;
+            $userPoin = Auth::user()->poin; // poin user
             foreach ($levelSets as $levelSet) {
                 if ($userPoin >= $levelSet->min_poin) {
                     return $levelSet;
@@ -35,7 +40,10 @@ class DashboardController extends Controller
         }
         $hitungLvl = Lvl($levelSets);
 
-        $syaratNaikLvl = $levelSets->firstWhere('lvl', $hitungLvl->lvl + 1)?->min_poin; // ? untuk agar ketika null tidak error
+        $syaratNaikLvl = $levelSets
+            ->firstWhere('lvl', $hitungLvl->lvl + 1)
+                ?->min_poin; // menggunakan null-safe ? untuk agar ketika null tidak error
+
         if ($syaratNaikLvl == null) {
             $userProgress = [
                 'lvl' => $hitungLvl->lvl,
@@ -46,16 +54,18 @@ class DashboardController extends Controller
             $userProgress = [
                 'lvl' => $hitungLvl->lvl,
                 'progress' => intval(((Auth::user()->poin - $hitungLvl->min_poin) / ($syaratNaikLvl - $hitungLvl->min_poin)) * 100),
-                'poinKurang' => $syaratNaikLvl - Auth::user()->poin
+                'poinKurang' => $syaratNaikLvl - Auth::user()->poin // selisih poin untuk naik level
             ];
         }
 
-        // Cek data lengkap/tidak untuk pemberitahuan
-        $user = User::select('tgl_lahir', 'kota', 'jenis_kelamin', 'profile_pic', 'bio', 'telp')
-            ->where('id', Auth::user()->id)
-            ->first();
-        $lengkap = empty($user['jenis_kelamin']) || empty($user['tgl_lahir']) ? false : true;
+        // Cek data lengkap/tidak (untuk pemberitahuan)
+        // $user = User::select('tgl_lahir', 'kota', 'jenis_kelamin', 'profile_pic', 'bio', 'telp')
+        //     ->where('id', Auth::user()->id)
+        //     ->first();
+        $user = Auth::user();
+        $lengkap = empty($user->jenis_kelamin) || empty($user->tgl_lahir) ? false : true;
 
+        // atur data yang akan dikirim ke view
         $data = [
             'group' => 'dashboard',
             'title' => 'Dashboard',
@@ -65,149 +75,276 @@ class DashboardController extends Controller
 
         // Tampilkan statistik untuk pengurus dan kepala
         if (Auth::user()->role == 'pengurus' || Auth::user()->role == 'kepala') {
+
             $statistik['anggota'] = number_format(User::count('id'), 0, ',', '.');
 
-            $statistik['anggotaBlnIni'] = User::whereMonth('created_at', Carbon::now()->month)
+            // statistik bulan ini
+            $statistik['anggotaBlnIni'] = User::whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month)
                 ->whereYear('created_at', Carbon::now()->year)
                 ->count('id');
             $statistik['anggotaBlnIni'] = number_format($statistik['anggotaBlnIni'], 0, ',', '.');
 
+            // statistik kosakata
             $statistik['kosakata'] = number_format(Kosakata::count('id'), 0, ',', '.');
-
-            $statistik['kosakataBlnIni'] = Kosakata::whereMonth('created_at', Carbon::now()->month)
+            $statistik['kosakataBlnIni'] = Kosakata::whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month)
                 ->whereYear('created_at', Carbon::now()->year)
                 ->count('id');
             $statistik['kosakataBlnIni'] = number_format($statistik['kosakataBlnIni'], 0, ',', '.');
 
+            // statistik definisi
             $statistik['definisi'] = number_format(Definisi::count('id'), 0, ',', '.');
-            $statistik['definisiBlnIni'] = Definisi::whereMonth('created_at', Carbon::now()->month)
+            $statistik['definisiBlnIni'] = Definisi::whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month)
                 ->whereYear('created_at', Carbon::now()->year)
                 ->count('id');
             $statistik['definisiBlnIni'] = number_format($statistik['definisiBlnIni'], 0, ',', '.');
 
+            // statistik aritkel
             $statistik['post'] = Blog::count('id');
             $statistik['postPublish'] = Blog::whereNotNull('status')->count('id');
+
+            // statistik laporan
+            $statistik['laporanBlmDitangani'] = Report::whereNull('pengurus_id')->count();
+            $statistik['laporanBlnIni'] = Report::whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month)->count();
 
 
             $statistik['defTerverify'] = Definisi::where('verifikasi', '=', "1")->count('id');
             $data['statistik'] = $statistik;
         }
 
-        // Tampilkan kontribusi dan achievement untuk pengurus kontributor
-        if (Auth::user()->role == 'pengurus' || Auth::user()->role == 'kontributor') {
-            // Kontribusi terbaru
-            $kontribusi = [];
-
-            // definisi by user
-            $userDefinisi = Definisi::select('id', 'user_id', 'kosakata_id', 'poin', 'updated_at')
-                ->where('user_id', '=', Auth::user()->id)
-                ->with('kosakata:id,kosakata')
-                ->orderBy('updated_at', 'desc')
-                ->limit(5)
+        // dapatkan data kontribusi user dalam 7 hari terakhir - kalau kepala tidak perlu dijalankan
+        if ($user->role != 'kepala') {
+            // dapatkan data selama 7 hari terakhir
+            // definisi
+            $def7hari = Definisi::where('user_id', $user->id)
+                ->where('created_at', '>=', Carbon::now()->subDays(7))
+                ->whereNot('created_at', '>=', Carbon::now())
+                ->orderBy('created_at', 'desc')
                 ->get();
-            foreach ($userDefinisi as $d) {
-                $kontribusi['definisi-' . $d->id] = [
-                    'kontribusi' => 'Menambahkan definisi untuk kosakata ' . $d->kosakata->kosakata,
-                    'poin' => $d->poin ?? 0,
-                    'waktu' => $d->updated_at
-                ];
+            // kosakata
+            $kosakata7hari = Kosakata::where('user_id', $user->id)
+                ->where('created_at', '>=', Carbon::now()->subDays(7))
+                ->whereNot('created_at', '>=', Carbon::now())
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            // edit kosakata
+            $edit7hari = EditKosakata::where('user_id', $user->id)
+                ->where('created_at', '>=', Carbon::now()->subDays(7))
+                ->whereNot('created_at', '>=', Carbon::now())
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            // laporan
+            $laporan7hari = Report::where('user_id', $user->id)
+                ->where('created_at', '>=', Carbon::now()->subDays(7))
+                ->whereNot('created_at', '>=', Carbon::now())
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            // khusus pengurus
+            if ($user->role == 'pengurus') {
+                // artikel
+                $blog7hari = Blog::where('user_id', $user->id)
+                    ->whereNotNull('status')
+                    ->where('status', '>=', Carbon::now()->subDays(7))
+                    ->whereNot('status', '>=', Carbon::now())
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+                // memverifikasi definisi
+                $verif7hari = Definisi::where('verifikasi_oleh', $user->id)
+                    ->where('verifikasi', '>=', Carbon::now()->subDays(7))
+                    ->whereNot('verifikasi', '>=', Carbon::now())
+                    ->orderBy('verifikasi', 'desc')
+                    ->get();
+
+                // menindaklanjuti laporan
+                $tindakLanjut7hari = Report::where('pengurus_id', $user->id)
+                    ->where('status', '>=', Carbon::now()->subDays(7))
+                    ->whereNot('status', '>=', Carbon::now())
+                    ->orderBy('status', 'desc')
+                    ->get();
+
+                // verifikasi edit kosakata
+                $verifEdit7hari = EditKosakata::where('pengurus_id', $user->id)
+                    ->where('status', '>=', Carbon::now()->subDays(7))
+                    ->whereNot('status', '>=', Carbon::now())
+                    ->orderBy('status', 'desc')
+                    ->get();
             }
 
-            // kosakata by user
-            $userKosakata = Kosakata::select('id', 'user_id', 'kosakata', 'poin', 'created_at')
-                ->where('user_id', '=', Auth::user()->id)
-                ->orderBy('created_at', 'desc')
-                ->limit(5)
-                ->get();
-            foreach ($userKosakata as $d) {
-                $kontribusi['kosakata-' . $d->id] = [
-                    'kontribusi' => 'Menambahkan kosakata ' . $d->kosakata,
-                    'poin' => $d->poin ?? 0,
-                    'waktu' => $d->created_at
-                ];
+            // digunakan untuk mengetahui nilai kontribusi tertinggi - untuk menghitung persentase. gunakan nilai 1 agar tidak error ketika user belum berkontribusi/ tidak ada kontribusi selama 7 hari terakhir
+            $kontribusiTertinggi = 0;
+
+            // jumlahkan ke tiap-tiap hari
+            for ($i = 0; $i < 7; $i++) {
+                // judul array
+                $judul = $i == 0 ? 'Hari ini' : ($i == 1 ? 'Kemarin' : Carbon::now()->subDays($i)->translatedFormat('l'));
+
+                // jumlahkan tiap kontribusi di hari tsb
+                // definisi
+                $def = $def7hari->filter(function ($item) use ($i) {
+                    return $item->created_at->toDateString() == Carbon::now()->subDays($i)->toDateString();
+                    // toDateString=ubah format hari menjadi string (yyyy-mm-dd)
+                })->count();
+                // kosakata
+                $kos = $kosakata7hari->filter(function ($item) use ($i) {
+                    return $item->created_at->toDateString() == Carbon::now()->subDays($i)->toDateString();
+                    // toDateString=ubah format hari menjadi string (yyyy-mm-dd)
+                })->count();
+                // edit kosakata
+                $edit = $edit7hari->filter(function ($item) use ($i) {
+                    return $item->created_at->toDateString() == Carbon::now()->subDays($i)->toDateString();
+                    // toDateString=ubah format hari menjadi string (yyyy-mm-dd)
+                })->count();
+                // laporan
+                $lap = $laporan7hari->filter(function ($item) use ($i) {
+                    return $item->created_at->toDateString() == Carbon::now()->subDays($i)->toDateString();
+                    // toDateString=ubah format hari menjadi string (yyyy-mm-dd)
+                })->count();
+                if ($user->role == 'pengurus') {
+                    // artikel
+                    $blog = $blog7hari->filter(function ($item) use ($i) {
+                        return $item->status->toDateString() == Carbon::now()->subDays($i)->toDateString();
+                        // toDateString=ubah format hari menjadi string (yyyy-mm-dd)
+                    })->count();
+                    // memverifikasi definisi
+                    $verifdef = $verif7hari->filter(function ($item) use ($i) {
+                        return $item->verifikasi->toDateString() == Carbon::now()->subDays($i)->toDateString();
+                        // toDateString=ubah format hari menjadi string (yyyy-mm-dd)
+                    })->count();
+
+                    // menindaklanjuti laporan
+                    $tindaklanjutlap = $tindakLanjut7hari->filter(function ($item) use ($i) {
+                        return $item->status->toDateString() == Carbon::now()->subDays($i)->toDateString();
+                        // toDateString=ubah format hari menjadi string (yyyy-mm-dd)
+                    })->count();
+                    // verifikasi edit kosakata
+                    $verifedit = $verifEdit7hari->filter(function ($item) use ($i) {
+                        return $item->status->toDateString() == Carbon::now()->subDays($i)->toDateString();
+                        // toDateString=ubah format hari menjadi string (yyyy-mm-dd)
+                    })->count();
+                }
+
+                // simpan tanggal
+                $tujuhhari[$judul]['tanggal'] = Carbon::now()->subDays($i)->translatedFormat('d F Y');
+
+                // jumlahkan semua kontribusi dalam bentuk tiap-tiap hari
+                $tujuhhari[$judul]['kontribusi'] = $def + $kos + $edit + $lap;
+                if ($user->role == 'pengurus') {
+                    $tujuhhari[$judul]['kontribusi'] = $tujuhhari[$judul]['kontribusi'] + $blog + $verifdef + $tindaklanjutlap + $verifedit;
+                }
+
+                // // digunakan untuk mengetahui nilai kontribusi tertingg - untuk menghitung persentase.
+                if ($tujuhhari[$judul]['kontribusi'] > $kontribusiTertinggi) {
+                    $kontribusiTertinggi = $tujuhhari[$judul]['kontribusi'];
+                }
             }
 
-            // edit kosakata by user
-            $userKosakata = EditKosakata::where('user_id', '=', Auth::user()->id)
-                ->with('kosakata:id,kosakata')
-                ->orderBy('created_at', 'desc')
-                ->limit(5)
-                ->get();
-            foreach ($userKosakata as $d) {
-                $kontribusi['editKosakata-' . $d->id] = [
-                    'kontribusi' => 'Mengedit kosakata ' . $d->kosakata->kosakata,
-                    'poin' => $d->poin ?? 0,
-                    'waktu' => $d->created_at
-                ];
+            // hitung persentase kontribusi dari tiap hari
+            for ($i = 0; $i < 7; $i++) {
+                $judul = $i == 0 ? 'Hari ini' : ($i == 1 ? 'Kemarin' : Carbon::now()->subDays($i)->translatedFormat('l'));
+                $tujuhhari[$judul]['persentase'] = round(($tujuhhari[$judul]['kontribusi'] / ($kontribusiTertinggi == 0 ? 1 : $kontribusiTertinggi)) * 100);
             }
+            $data['tujuhhari'] = $tujuhhari;
 
-            // laporan by user
-            $userLaporan = Report::where('user_id', '=', Auth::user()->id)
-                ->with('definisi:id,user_id')
-                ->with('kosakata:id,user_id')
-                ->orderBy('created_at', 'desc')
-                ->limit(5)
-                ->get();
+            // CEK KAPAN TERAKHIR USER BERKONTRIBUSI
+            // jika tidak berkontribusi lebih dari 7 hari...
+            if ($kontribusiTertinggi < 1) {
 
-            foreach ($userLaporan as $d) {
-                if (isset($d->definisi)) {
-                    // jika yang dilaporkan = definisi
-                    $d->terlapor = User::find($d->definisi->user_id)->nama;
-                    $teks = 'definisi';
-                } else if (isset($d->kosakata)) {
-                    // jika yang dilaporkan = kosakata
-                    $d->terlapor = User::find($d->kosakata->user_id)->nama;
-                    $teks = 'kosakata';
+                // dapatkan data kapan terakhir user berkontribusi
+                // definisi
+                $terakhirKontribusi['def'] = Definisi::where('user_id', $user->id)
+                    ->orderBy('created_at', 'desc')
+                    ->first()
+                    ->created_at ?? null;
+                // kosakata
+                $terakhirKontribusi['kosakata'] = Kosakata::where('user_id', $user->id)
+                    ->orderBy('created_at', 'desc')
+                    ->first()
+                    ->created_at ?? null;
+
+                // edit kosakata
+                $terakhirKontribusi['edit'] = EditKosakata::where('user_id', $user->id)
+                    ->orderBy('created_at', 'desc')
+                    ->first()
+                    ->created_at ?? null;
+
+                // laporan
+                $terakhirKontribusi['laporan'] = Report::where('user_id', $user->id)
+                    ->orderBy('created_at', 'desc')
+                    ->first()
+                    ->created_at ?? null;
+
+                // khusus pengurus
+                if ($user->role == 'pengurus') {
+                    // artikel
+                    $terakhirKontribusi['blog'] = Blog::where('user_id', $user->id)
+                        ->orderBy('created_at', 'desc')
+                        ->first()
+                        ->created_at ?? null;
+
+                    // memverifikasi definisi
+                    $terakhirKontribusi['verif'] = Definisi::where('verifikasi_oleh', $user->id)
+                        ->orderBy('verifikasi', 'desc')
+                        ->first()
+                        ->verifikasi ?? null;
+
+                    // menindaklanjuti laporan
+                    $terakhirKontribusi['tindakLanjut'] = Report::where('pengurus_id', $user->id)
+                        ->orderBy('status', 'desc')
+                        ->first()
+                        ->status ?? null;
+
+                    // verifikasi edit kosakata
+                    $terakhirKontribusi['verifEdit'] = EditKosakata::where('pengurus_id', $user->id)
+                        ->orderBy('status', 'desc')
+                        ->first()
+                        ->status ?? null;
+                }
+
+                // dapatkan data paling awal
+                $terakhir = Carbon::createFromFormat('Y-m-s', '0000-01-01'); // set data paling awal agar data dalam kontribusi terakhir pasti lebih besar dari data ini
+                foreach ($terakhirKontribusi as $d) {
+                    if ($d > $terakhir) {
+                        $terakhir = $d;
+                    }
+                }
+                // cek apakah user sudah berkontribusi/belum. kalau tanggal masih '0000-01-01', maka user belum berkontribusi
+                if ($terakhir == Carbon::createFromFormat('Y-m-s', '0000-01-01')) {
+                    $data['belumBerkontribusi'] = true;
                 } else {
-                    $d->terlapor = null;
-                    $teks = '-';
+                    // hitung jarak kontribusi terakhir dengan hari, kemudian bulatkan (round) dan ubah selalu positif(abs)
+                    $data['terakhirBerkontribusi'] = abs(round(Carbon::now()->diffInDays($terakhir)));
                 }
-                $kontribusi['kosakata-' . $d->id] = [
-                    'kontribusi' => 'Melaporkan ' . $teks . ' yang disubmit ' . $d->terlapor,
-                    'poin' => $d->poin ?? 0,
-                    'waktu' => $d->created_at
-                ];
+            } else {
+                // tampilakan definisi random (untuk semacam trivia)
+                $definisiRandom = Definisi::where(function ($query) {
+                    $query->whereNotNull('verifikasi_oleh')
+                        ->whereNull('hukuman_edit');
+                })
+                    ->orWhereHas('user', function ($query) {
+                        $query->where('role', 'pengurus');
+                    })
+                    ->with('kosakata')->with('user')
+                    ->with('pengurus')
+                    ->inRandomOrder()
+                    ->first();
+
+                // jika tidak ada definisi random yang terverifikasi, maka tampilkan yang tidak terverifikasi
+                if (empty($definisiRandom)) {
+                    $definisiRandom = Definisi::with('kosakata')
+                        ->with('user')
+                        ->with('pengurus')
+                        ->inRandomOrder()
+                        ->first();
+                }
+                $data['definisiRandom'] = $definisiRandom;
             }
+        }
 
-            if (Auth::user()->role == 'pengurus') {
-                // artikel by pengurus
-                $kontribusiArtikel = Blog::where('user_id', '=', Auth::user()->id)
-                    ->whereNotNull('status')
-                    ->orderBy('status', 'desc')
-                    ->limit(5)
-                    ->get();
-                foreach ($kontribusiArtikel as $d) {
-                    $kontribusi['artikel-' . $d->id] = [
-                        'kontribusi' => 'Mempublikasikan artikel &#34;' . $d->judul . '&#34;',
-                        'poin' => $d->poin ?? 0, //kudu diganti
-                        'waktu' => $d->status
-                    ];
-                }
-
-                // tindak lanjut laporan by pengurus
-                $kontribusiArtikel = Report::where('pengurus_id', '=', Auth::user()->id)
-                    ->whereNotNull('status')
-                    ->with('user:id,username')
-                    ->orderBy('status', 'desc')
-                    ->limit(5)
-                    ->get();
-                foreach ($kontribusiArtikel as $d) {
-                    $kontribusi['artikel-' . $d->id] = [
-                        'kontribusi' => 'Menindaklanjuti laporan' . $d->user->username,
-                        'poin' => 0, //kudu diganti
-                        'waktu' => $d->status
-                    ];
-                }
-            }
-
-            // urutkan berdasarkan waktu
-            usort($kontribusi, function ($a, $b) {
-                return strtotime($b['waktu']) <=> strtotime($a['waktu']);
-            });
-
-            $data['kontribusi'] = array_slice($kontribusi, 0, 5);
-
-
+        // Tampilkan achievement untuk pengurus & kontributor
+        if (Auth::user()->role == 'pengurus' || Auth::user()->role == 'kontributor') {
             // Achievement
             $achieved = Auth::user()->achievement ?? [];
             $achievement = Achievement::whereIn('id', array_keys($achieved))->limit(4)->get();
@@ -224,12 +361,6 @@ class DashboardController extends Controller
 
         //cek sertifikat
         $this->cekSertifikat(Auth::user()->id);
-
-        // cek apakah user memiliki notifikasi atau tidak, jika iya tampilkan toast
-        $cekNotif=$this->cekNotifikasi(Auth::user()->id);
-        if ($cekNotif==1) {
-            session()->flash('notifikasi', 'Kamu punya notifikasi baru');
-        }
         return view('dashboard.index', $data);
     }
 
@@ -257,10 +388,10 @@ class DashboardController extends Controller
             ->onEachSide(2)
             ->appends(request()->query());
 
-            // dd($data['definisi']);
+        // dd($data['definisi']);
 
         // dapatkan data laporan
-        $data['laporan'] = Report::select('id', 'user_id', 'definisi_id','kosakata_id', 'alasan', 'status', 'updated_at')
+        $data['laporan'] = Report::select('id', 'user_id', 'definisi_id', 'kosakata_id', 'alasan', 'status', 'updated_at')
             ->with('definisi:id,kosakata_id')
             ->with('kosakata:id,user_id')
             ->where('user_id', '=', Auth::user()->id);

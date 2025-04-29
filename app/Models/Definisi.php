@@ -14,8 +14,8 @@ class Definisi extends Model
     protected $table = 'definisi';
     protected $guarded = ['id'];
     protected $casts = [
-        'verifikasi_detail' => 'array',
-        'referensi' => 'array'
+        'verifikasi' => 'datetime',
+        'referensi' => 'array',
     ];
 
     // relasi dengan user

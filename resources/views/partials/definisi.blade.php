@@ -16,7 +16,7 @@
                 <div class="text-sm rounded-full py-1 px-3 bg-purple-300 h-fit">
                     ⭐ Disubmit oleh pengurus
                 </div>
-            @elseif (isset($d->verifikasi))
+            @elseif (isset($d->verifikasi_oleh))
                 <div class="text-sm rounded-full py-1 px-3 bg-amber-300 h-fit">
                     📌 Terverifikasi
                 </div>
@@ -106,7 +106,7 @@
                                     @else
                                         @if ($d->user->role != 'pengurus')
                                             {{-- hanya ditampilkan jika author = kontributor dan kepala --}}
-                                            @if (empty($d->verifikasi))
+                                            @if (empty($d->verifikasi_oleh))
                                                 {{-- verifikasi laporan --}}
                                                 <li onclick="openWindow('verifikasi-{{ $d->id }}')"
                                                     class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
@@ -264,7 +264,7 @@
 
                     {{-- Button --}}
                     <div class="p-6">
-                        @if (isset($d->verifikasi))
+                        @if (isset($d->verifikasi_oleh))
                             {{-- alert jika definisi terverifikasi --}}
                             <div class="">
                                 <?php $alert = ['warna' => 'red', 'pesan' => 'Status verifikasi akan dicabut jika definisi ini diedit.', 'textsize' => 'sm']; ?>
@@ -323,9 +323,9 @@
 @endif
 
 {{-- Verifikasi definisi --}}
-@if (auth()->user() && auth()->user()->role == 'pengurus' && isset($d->id))
+@if (auth()->user() && auth()->user()->role == 'pengurus' && $d->user->role!='pengurus' && isset($d->id))
     {{-- pada if ditambahkan isset($d->id) agar tidak error saat ditampilkan di halaman laporan(hal. laporan tidak membutukan ini) --}}
-    @if (empty($d->verifikasi))
+    @if (empty($d->verifikasi_oleh))
         <div id="verifikasi-{{ $d->id }}"
             class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
             <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6 space-y-4">

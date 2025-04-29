@@ -17,12 +17,14 @@ class DefinisiFactory extends Factory
     public function definition(): array
     {
         $date = fake()->dateTimeBetween('-1 year', 'now');
+        $verifikasi = random_int(0, 1) === 1 ? now() : NULL;
         return [
             'kosakata_id' => random_int(1, 50),
             'user_id' => random_int(1, 100),
             'poin' => 10,
             'definisi' => fake()->text(300),
-            'verifikasi' => random_int(0, 1) === 1 ? now() : NULL,
+            'verifikasi' => $verifikasi,
+            'verifikasi_oleh' => $verifikasi == null ? null : random_int(1, 100),
             'created_at' => $date,
             'updated_at' => $date
         ];

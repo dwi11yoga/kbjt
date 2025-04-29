@@ -25,10 +25,18 @@ class HomepageController extends Controller
             ->get();
 
         // Ambil definisi random
-        $definisi = Definisi::whereNull('hukuman_edit')
+        $definisi = Definisi::where(function ($query) {
+            $query->whereNotNull('verifikasi_oleh')
+                ->whereNull('hukuman_edit');
+        })
+            ->orWhereHas('user', function ($query) {
+                $query->where('role', 'pengurus');
+            })
             ->inRandomOrder()
             ->take(5)
             ->with('kosakata:id,kosakata,slug')
+            ->with('user')
+            ->with('pengurus')
             ->get();
         foreach ($definisi as $d) {
             $d['slug'] = $d->kosakata->slug;
@@ -313,7 +321,8 @@ class HomepageController extends Controller
                 ->with('user:id,username,nama,profile_pic,jenis_kelamin,role')
                 ->with('pengurus:id,username,nama')
                 ->whereNull('hukuman_edit')
-                ->orWhere('hukuman_edit', '!=', 1);
+                ->orWhere('hukuman_edit', '!=', 1)
+                ->orderBy('verifikasi', 'desc');
             if (isset(request()->definisi)) {
                 $definisi = $definisi->orderByRaw('id=? DESC', [request()->definisi]);
             }

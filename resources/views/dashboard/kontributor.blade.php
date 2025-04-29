@@ -72,7 +72,7 @@
     </div>
 
     {{-- Daftar kosakata terbaru --}}
-    <div class="p-5 bg-white rounded-2xl" id="laporan">
+    <div class="p-5 bg-white rounded-2xl" id="kosakata">
         <div class="flex items-center justify-between py-2">
             Kosakata terbaru
         </div>
@@ -107,7 +107,7 @@
     </div>
 
     {{-- Daftar definisi terbaru --}}
-    <div class="p-5 bg-white rounded-2xl" id="laporan">
+    <div class="p-5 bg-white rounded-2xl" id="definisi">
         <div class="flex items-center justify-between py-2">
             Definisi terbaru
         </div>

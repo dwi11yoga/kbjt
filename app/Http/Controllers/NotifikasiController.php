@@ -12,6 +12,12 @@ class NotifikasiController extends Controller
     //view notifikasi
     public function index()
     {
+        // HAPUS NOTIFIKASI YANG SUDAH DIBACA DAN SUDAH LEBIH DARI 30 HARI
+        Notifikasi::where('user_id', Auth::user()->id)
+            ->where('dilihat', 1)
+            ->where('updated_at', '<', Carbon::now()->subDays(30))
+            ->delete();
+
         // Ambil data dari database
         $notif = Notifikasi::where('user_id', Auth::user()->id)
             ->orderBy('created_at', 'desc')
@@ -52,7 +58,7 @@ class NotifikasiController extends Controller
             'title' => 'Notifikasi',
             'group' => 'notifikasi',
             'data' => $data,
-            'unread'=>$unread
+            'unread' => $unread
         ]);
     }
 }

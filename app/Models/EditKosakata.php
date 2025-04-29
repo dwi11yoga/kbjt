@@ -13,7 +13,8 @@ class EditKosakata extends Model
 
     protected $casts = [
         'serupa' => 'array',
-        'etimologi' => 'array'
+        'etimologi' => 'array',
+        'status'=>'datetime',
     ];
 
     /**

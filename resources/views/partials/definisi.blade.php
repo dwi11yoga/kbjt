@@ -20,6 +20,10 @@
                 <div class="text-sm rounded-full py-1 px-3 bg-amber-300 h-fit">
                     📌 Terverifikasi
                 </div>
+            @elseif (isset($d->hukuman_edit) && $d->hukuman_edit == 1)
+                <div class="text-sm rounded-full py-1 px-3 bg-neutral-300 h-fit">
+                    <i data-feather='eye-off' class="w-4 inline"></i> Disembunyikan
+                </div>
             @endif
         </div>
 
@@ -129,7 +133,6 @@
                                             <div>Definisi salah</div>
                                             <i data-feather='flag' class="w-5"></i>
                                         </li>
-
                                     @endif
                                 @endif
                             </ul>
@@ -323,7 +326,7 @@
 @endif
 
 {{-- Verifikasi definisi --}}
-@if (auth()->user() && auth()->user()->role == 'pengurus' && $d->user->role!='pengurus' && isset($d->id))
+@if (auth()->user() && auth()->user()->role == 'pengurus' && $d->user->role != 'pengurus' && isset($d->id))
     {{-- pada if ditambahkan isset($d->id) agar tidak error saat ditampilkan di halaman laporan(hal. laporan tidak membutukan ini) --}}
     @if (empty($d->verifikasi_oleh))
         <div id="verifikasi-{{ $d->id }}"

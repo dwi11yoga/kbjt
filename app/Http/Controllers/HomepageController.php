@@ -321,12 +321,12 @@ class HomepageController extends Controller
                 ->with('user:id,username,nama,profile_pic,jenis_kelamin,role')
                 ->with('pengurus:id,username,nama')
                 ->whereNull('hukuman_edit')
-                ->orWhere('hukuman_edit', '!=', 1)
-                ->orderBy('verifikasi', 'desc');
+                ->orWhere('hukuman_edit', '!=', 1);
             if (isset(request()->definisi)) {
                 $definisi = $definisi->orderByRaw('id=? DESC', [request()->definisi]);
             }
-            $definisi = $definisi->orderBy('updated_at', 'desc')
+            $definisi = $definisi->orderBy('verifikasi', 'desc')
+                ->orderBy('updated_at', 'desc')
                 ->paginate(10);
 
             foreach ($definisi as $d) {

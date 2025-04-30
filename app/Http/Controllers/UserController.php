@@ -143,9 +143,20 @@ class UserController extends Controller
 
 
         // dapatkan definisi buatan user
-        $definisi = User::find($user['id'])
-            ->definisi()
-            ->with('kosakata:id,kosakata,slug')
+        // $definisi = User::find($user['id'])
+        //     ->definisi()
+        //     ->with('kosakata:id,kosakata,slug')
+        //     ->orderBy('updated_at', 'desc')
+        //     ->paginate(10, ['*'], 'definisi-page')
+        //     ->appends(request()->query());
+        $definisi = Definisi::where('user_id', $user->id);
+        // jika user bukan user yang sedang login, maka sembunyikan definisi yang disembunyikan karena hukuman
+        if (Auth::user()->id != $user->id) {
+            $definisi=$definisi->where('hukuman_edit', '!=', 1);
+        }
+
+        $definisi = $definisi->with('kosakata')
+            ->with('pengurus')
             ->orderBy('updated_at', 'desc')
             ->paginate(10, ['*'], 'definisi-page')
             ->appends(request()->query());

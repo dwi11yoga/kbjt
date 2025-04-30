@@ -179,12 +179,12 @@ class ReportController extends Controller
             $data['catatan'] = $request->catatan;
         }
 
-        $laporan= Report::create($data);
+        $laporan = Report::create($data);
 
         // kembalikan ke view
         if (Auth::user()->role == 'pengurus') {
-            return redirect('/laporan/'.$laporan->id)->with('success', 'Form laporan berhasil dibuat, silahkan ditindaklanjuti');
-        } else{
+            return redirect('/laporan/' . $laporan->id)->with('success', 'Form laporan berhasil dibuat, silahkan ditindaklanjuti');
+        } else {
             return back()->with('success', 'Definisi berhasil dilaporkan');
         }
     }
@@ -227,6 +227,13 @@ class ReportController extends Controller
         $laporan = Report::where('id', '=', $id)
             ->with('hukuman')
             ->first();
+
+            // alihkan jika data laporan tidak ditemukan
+            if (empty($laporan)) {
+                return $this->error404();
+            }
+
+
         // ambil data yang melaporkan
         $laporan->user = User::withTrashed()
             ->select('id', 'username', 'nama', 'role', 'poin', 'created_at', 'deleted_at')
@@ -291,7 +298,7 @@ class ReportController extends Controller
         // buat id zerofill
         $laporan->idZerofill = str_pad($laporan->id, 10, '0', STR_PAD_LEFT);
 
-        // pastikan group
+        // set group
         if (Auth::user()->role != 'kontributor') {
             $group = 'laporan';
         } elseif ($laporan->user_id == Auth::user()->id) {
@@ -302,7 +309,7 @@ class ReportController extends Controller
 
         // data yang akan dikirimkan
         $data = [
-            'title' => 'Laporan',
+            'title' => 'Detail Laporan',
             'group' => $group,
             'laporan' => $laporan,
         ];
@@ -333,15 +340,15 @@ class ReportController extends Controller
         // statistik pelapor dan terlapor
         if (empty($laporan->status)) { //jalankan jika laporan belum ditindaklanjuti
             // pelapor
-            $pelapor['1'] = Report::where('user_id', $laporan->user_id)->count(); //Definisi & Kosakata dilaporkan pelapor
-            $pelapor['2'] = Report::where('user_id', $laporan->user_id)->whereHas('hukuman')->count(); //Definisi & Kosakata terbukti bersalah yang dilaporkan pelapor
-            $pelapor['3'] = Report::where('user_id', $laporan->user_id)->whereMonth('created_at', Carbon::now()->month)->count(); //Definisi & Kosakata dilaporkan bulan ini
-            $pelapor['4'] = $this->levelCalculator($laporan->user->poin);
-            $pelapor['5'] = $laporan->user->created_at->translatedFormat('d F Y');
+            $pelapor['lvl'] = $this->levelCalculator($laporan->user->poin);
+            $pelapor['totalLaporan'] = Report::where('user_id', $laporan->user_id)->count(); //Definisi & Kosakata dilaporkan pelapor
+            $pelapor['laporanBersalahDilaporkan'] = Report::where('user_id', $laporan->user_id)->whereHas('hukuman')->count(); //Definisi & Kosakata terbukti bersalah yang dilaporkan pelapor
+            $pelapor['jmlLaporanBlnIni'] = Report::where('user_id', $laporan->user_id)->whereMonth('created_at', Carbon::now()->month)->count(); //Definisi & Kosakata dilaporkan bulan ini
+            $pelapor['bergabung'] = $laporan->user->created_at->translatedFormat('d F Y');
             $data['detailPelapor'] = $pelapor;
 
             // terlapor
-            $terlapor['1'] = Report::whereHas('definisi', function ($query) use ($laporan) {
+            $terlapor['totalLaporan'] = Report::whereHas('definisi', function ($query) use ($laporan) {
                 $query->where('user_id', $laporan->author->id);
             })->orWhereHas('kosakata', function ($query) use ($laporan) {
                 $query->where('user_id', $laporan->author->id);
@@ -353,9 +360,9 @@ class ReportController extends Controller
             $kodeKosakata = Report::whereHas('hukuman')->WhereHas('kosakata', function ($query) use ($laporan) {
                 $query->where('user_id', $laporan->author->id);
             });
-            $terlapor['2'] = (clone $kodeDefinisi)->count() + (clone $kodeKosakata)->count(); //Jumlah dinyatakan bersalah
+            $terlapor['laporanBersalahDilaporkan'] = (clone $kodeDefinisi)->count() + (clone $kodeKosakata)->count(); //Jumlah dinyatakan bersalah
 
-            $terlapor['3'] = (clone $kodeDefinisi)->whereHas('hukuman', function ($query) use ($laporan) {
+            $terlapor['jmlLaporanBlnIni'] = (clone $kodeDefinisi)->whereHas('hukuman', function ($query) use ($laporan) {
                 $query->whereNot('hukuman', 'peringatan');
             })->count() +
                 (clone $kodeKosakata)->whereHas('hukuman', function ($query) use ($laporan) {
@@ -363,17 +370,25 @@ class ReportController extends Controller
                 })
                     ->count(); //Jumlah hukuman yang pernah diterima
 
-            $terlapor['4'] = $this->levelCalculator($laporan->author->poin);
-            $terlapor['5'] = $laporan->author->created_at->translatedFormat('d F Y');
+            $terlapor['lvl'] = $this->levelCalculator($laporan->author->poin);
+            $terlapor['bergabung'] = $laporan->author->created_at->translatedFormat('d F Y');
 
             $data['detailTerlapor'] = $terlapor;
 
             // riwayat hukuman terlapor
-            $riwayatHukuman = Report::with('definisi')
-                ->with('kosakata')
+            $riwayatHukuman = Report::with([
+                'definisi' => function ($query) {
+                    $query->withTrashed();
+                }
+            ])
+                ->with([
+                    'kosakata' => function ($query) {
+                        $query->withTrashed();
+                    }
+                ])
                 ->with('hukuman')
                 ->with('user:username,nama,id')
-                ->whereNotNull('status')
+                ->whereNotNull('pengurus_id')
                 ->where(function ($query) use ($laporan) {
                     $query->whereHas('definisi', function ($subQuery) use ($laporan) {
                         $subQuery->where('user_id', $laporan->author->id);
@@ -381,8 +396,17 @@ class ReportController extends Controller
                         $subQuery->where('user_id', $laporan->author->id);
                     });
                 })
-                ->orderby('updated_at', 'desc')
-                ->paginate(10);
+                ->orderby('status', 'desc')
+                ->limit(5)
+                ->get();
+                
+                // jika data riwayat hukuman adalah dari definisi, maka cari kosakatanya
+                foreach ($riwayatHukuman as $d) {
+                    if(!empty($d->definisi)){
+                        $d->definisi->kosakata=Kosakata::find($d->definisi->kosakata_id)->kosakata;
+                    }
+                }
+                // dd($riwayatHukuman);
             $data['riwayatHukuman'] = $riwayatHukuman;
         }
 
@@ -397,7 +421,7 @@ class ReportController extends Controller
         return view('dashboard.laporan-detail', $data);
     }
 
-    // Tindaklanjuti laporan
+    // Tindaklanjuti laporan definisi dan kosakata
     public function tindaklanjut(Request $request, $id)
     {
         // dapatkan data laporan
@@ -412,14 +436,12 @@ class ReportController extends Controller
         }
 
         // alihkan jika pihak terlapor yang menangani laporan (jika definisi/kosakata yang dilaporkan adalah milik admin, ini bisa terjadi)
-        if (Auth::user()->id == $laporan->definisi->user_id || Auth::user()->id == $laporan->kosakata->user_id) {
+        if (!empty($laporan->definisi) && Auth::user()->id == $laporan->definisi->user_id || (!empty($laporan->kosakata) && Auth::user()->id == $laporan->kosakata->user_id)) {
             return $this->error403();
         }
 
         // Validasi
-        $rules = [
-            'pelanggaran' => 'required',
-        ];
+        $rules = ['pelanggaran' => 'required'];
 
         if (isset($laporan->definisi_id)) { // validasi untuk definisi
 
@@ -507,15 +529,14 @@ class ReportController extends Controller
 
 
                 // tindakan untuk definisi (jika ada)
-                $report = Report::where('id', '=', $id)->first();
                 if ($validatedData['tindakanDefinisi'] == 'edit') {
-                    Definisi::find($report->definisi_id)->update([
+                    Definisi::find($laporan->definisi_id)->update([
                         'hukuman_edit' => 1, // maka definisi tidak akan ditampilkan di web
-                        'verifikasi'=>null, // cabut status terverifikasi
-                        'verifikasi_oleh'=>null
+                        'verifikasi' => null, // cabut status terverifikasi
+                        'verifikasi_oleh' => null
                     ]);
                 } elseif ($validatedData['tindakanDefinisi'] == 'hapus') {
-                    Definisi::find($report->definisi_id)->delete();
+                    Definisi::find($laporan->definisi_id)->delete();
                 }
 
                 // Jika user diblokir, maka hapus user
@@ -565,11 +586,11 @@ class ReportController extends Controller
         $url = '/laporan/' . $id;
 
         // untuk pelapor
-        $pesan = 'Laporan kamu atas '.$dilaporkan.' yang disubmit oleh '.$terlapor->nama.' telah selesai ditangani';
-        $this->kirimNotifikasi($pelapor->id, $pesan, $url);
+        $pesan = 'Laporan kamu atas ' . $dilaporkan . ' yang disubmit oleh ' . $terlapor->nama . ' telah selesai ditangani';
+        $this->kirimNotifikasi($pelapor->id, 'laporan', $pesan, $url);
         // untuk terlapor
-        $pesan='Seseorang melaporkan '.$dilaporkan.' yang kamu submit';
-        $this->kirimNotifikasi($terlapor->id,$pesan, $url);
+        $pesan = 'Seseorang melaporkan ' . $dilaporkan . ' yang kamu submit';
+        $this->kirimNotifikasi($terlapor->id, 'laporan', $pesan, $url);
 
         // cek achievement
         // cek apakah pelapor mendapatkan achievement berdasarkan jumlah laporan yang didapat

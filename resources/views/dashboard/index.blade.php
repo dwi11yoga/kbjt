@@ -105,7 +105,7 @@
                     <div>
                         <div>Notifikasi</div>
                         <div class="font-semibold -mt-1">
-                            {{ cekNotifikasi() == true ? 'Kamu punya notifikasi baru!' : 'Tidak ada notifikasi baru.' }}
+                            {{ cekNotifikasi() == true ? 'Kamu punya notifikasi baru!' : 'Belum ada notifikasi baru.' }}
                         </div>
                     </div>
                     <div class="bg-amber-400 rounded-2xl py-3 px-3 relative">

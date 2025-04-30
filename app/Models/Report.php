@@ -27,7 +27,17 @@ class Report extends Model
      */
     public function definisi(): BelongsTo
     {
-        return $this->belongsTo(Definisi::class);
+        return $this->belongsTo(Definisi::class)->withTrashed(); // dihasih withTrashed agar bisa memanggil data yang sudah dihapus
+    }
+
+    /**
+     * Get the kosakata that owns the Report
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function kosakata(): BelongsTo
+    {
+        return $this->belongsTo(Kosakata::class)->withTrashed(); // dihasih withTrashed agar bisa memanggil data yang sudah dihapus;
     }
 
     // Relasi dengan user
@@ -38,7 +48,7 @@ class Report extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed(); // dihasih withTrashed agar bisa memanggil data yang sudah dihapus;
     }
 
     // relasi dengan user (untuk pengurus)
@@ -60,15 +70,5 @@ class Report extends Model
     public function hukuman(): HasOne
     {
         return $this->hasOne(Hukuman::class, 'laporan_id');
-    }
-
-    /**
-     * Get the kosakata that owns the Report
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function kosakata(): BelongsTo
-    {
-        return $this->belongsTo(Kosakata::class);
     }
 }

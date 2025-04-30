@@ -1,307 +1,333 @@
 @extends('layouts.dashboard')
-
 @section('body')
-    {{-- Detail laporan --}}
-    <div class="p-5 bg-white rounded-2xl">
-        <div class="mb-3">Detail Laporan</div>
-        <div class="grid md:grid-cols-2 grid-cols-1 md:space-x-4 space-x-0 md:space-y-0 space-y-8">
+    {{-- data laporan --}}
+    <div class="grid grid-cols-3 md:gap-2 gap-3">
 
-            {{-- detail --}}
-            <div class="space-y-3">
-                <div class="">
-                    <div class="text-sm text-neutral-600">ID Laporan</div>
-                    <div class="">#{{ $laporan->idZerofill }}</div>
-                </div>
-                <div class="">
-                    <div class="text-sm text-neutral-600">Pelapor</div>
-                    <a href="/u/{{ $laporan->user->username }}" class="">{{ $laporan->user->nama }}
-                        (&#64;{{ $laporan->user->username }})
-                        {{ isset($laporan->user->statusUser) && $laporan->user->statusUser == 'dihapus' ? '(akun dihapus)' : '' }}</a>
-                </div>
-                <div class="">
-                    <div class="text-sm text-neutral-600">Terlapor</div>
-                    <a href="/u/{{ $laporan->author->username }}" class="">{{ $laporan->author->nama }}
-                        (&#64;{{ $laporan->author->username }})
-                        {{ isset($laporan->author->statusUser) && $laporan->author->statusUser == 'dihapus' ? '(akun dihapus)' : '' }}</a>
-                </div>
-                <div class="">
-                    <div class="text-sm text-neutral-600">Alasan</div>
-                    <div class="">{{ $laporan->alasan }}</div>
-                </div>
-                <div class="">
-                    <div class="text-sm text-neutral-600">Waktu</div>
-                    <div class="">{{ $laporan->created_at->translatedformat('d F Y H:i') }} WIB</div>
-                </div>
-                <div class="">
-                    <div class="text-sm text-neutral-600">Status</div>
-                    <div class="">
-                        @if (isset($laporan->status))
-                            Ditangani
-                        @else
-                            Pending
-                        @endif
+        {{-- detail --}}
+        <div
+            class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+            <div class="mb-2 flex items-center justify-between">
+                <div class="">Detail laporan</div>
+                @if (!empty($laporan->pengurus_id))
+                    <div class="py-1 px-2 flex items-center space-x-1 rounded-full bg-green-100 text-green-600 text-sm">
+                        <i data-feather='check-circle' class="w-4"></i>
+                        <div class="">Selesai</div>
                     </div>
-                </div>
-                <div class="">
-                    <div class="text-sm text-neutral-600">Catatan</div>
-                    <div class="">
-                        @isset($laporan->catatan)
-                            {{ $laporan->catatan }}
-                        @else
-                            Tidak ada
-                        @endisset
-                    </div>
-                </div>
-            </div>
-
-            {{-- preview --}}
-            <div class="">
-
-                @if (isset($laporan->definisi_id))
-                    {{-- preview definisi dilaporkan --}}
-                    <div class="sticky top-5">
-                        <?php $d = $definisi; ?>
-                        {{-- import tampilan definisi --}}
-                        @include('partials.definisi')
-
-                        {{-- kunjungi definisi --}}
-                        <div class="flex justify-center">
-                            <a href="/kosakata/{{ $laporan->kosakata->slug }}?definisi={{ $laporan->definisi_id }}"
-                                class="rounded-full flex items-center space-x-1 py-2 px-4 border border-neutral-200 w-fit hover:bg-amber-400">
-                                @if ($d->updated == 1)
-                                    <span>Lihat definisi asli</span>
-                                @else
-                                    <span>Definisi asli sudah diubah, cek</span>
-                                @endif
-                                <i data-feather='arrow-right' class="w-5"></i>
-                            </a>
-                        </div>
-                    </div>
-                @elseif (isset($laporan->kosakata_id))
-                    {{-- preview kosakata --}}
-                    <div class="rounded-2xl border border-neutral-200 p-5">
-
-                        <div class="flex flex-wrap justify-between">
-                            <h4 class="capitalize md:order-1 order-2">{{ $kosakata->kosakata }} <span
-                                    class="text-sm jawa">{{ $kosakata->aksara }}</span>
-                            </h4>
-                            <div class="text-sm rounded-full py-1 px-3 bg-blue-300 h-fit md:order-2 order-1">
-                                👀 Preview
-                            </div>
-                        </div>
-                        @if ($kosakata->notasi_fonetik)
-                            <div>/{{ $kosakata->notasi_fonetik }}/</div>
-                        @endif
-                        <div>
-                            @if (isset($kosakata->etimologi) && $kosakata->etimologi != [''] && $kosakata->etimologi[0] == 'Asli')
-                                Kosakata asli Bahasa Jawa.
-                            @elseif (isset($kosakata->etimologi) && $kosakata->etimologi != [''])
-                                Kata serapan dari bahasa {{ $kosakata->etimologi[0] }} "{{ $kosakata->etimologi[1] }}"
-                            @endif
-                        </div>
-
-                        <div>
-                            @if (isset($kosakata->arti_indo))
-                                🇮🇩 Perut
-                            @endif
-
-                            @if (isset($kosakata->serupa) && $kosakata->serupa != [''])
-                                🏴󠁩󠁤󠁪󠁷󠁿 {!! implode(',&nbsp;', array_map(fn($d) => "<span class=\"capitalize\">{$d}</span>", $kosakata->serupa)) !!}
-                            @endif
-                        </div>
-
-                        <div class="md:flex block md:space-x-2 space-x-0 md:space-y-0 space-y-2 items-center mt-1">
-                            <div class="flex space-x-2">
-                                @isset($kosakata->ragam)
-                                    <div class="py-1 px-2 bg-blue-100 rounded-lg">{{ $kosakata->ragam }}</div>
-                                @endisset
-                                @isset($kosakata->jenis)
-                                    <div class="py-1 px-2 bg-red-100 rounded-lg">{{ $kosakata->jenis }}</div>
-                                @endisset
-                            </div>
-                        </div>
-
+                @else
+                    <div class="py-1 px-2 flex items-center space-x-1 rounded-full bg-red-100 text-red-600 text-sm">
+                        <i data-feather='clock' class="w-4"></i>
+                        <div class="">Pending</div>
                     </div>
                 @endif
-
+            </div>
+            <div class="space-y-2">
+                <div>
+                    <div class="text-sm">ID</div>
+                    <div class="">{{ $laporan->idZerofill }}</div>
+                </div>
+                <div>
+                    <div class="text-sm">Waktu</div>
+                    <div class="">{{ $laporan->created_at->translatedFormat('d F Y H:i') }}</div>
+                </div>
+                <div>
+                    <div class="text-sm">Alasan</div>
+                    <div class="">{{ $laporan->alasan }}</div>
+                </div>
+                <div>
+                    <div class="text-sm">Catatan pelapor</div>
+                    <div class="">{{ $laporan->catatan }}</div>
+                </div>
             </div>
         </div>
+
+        {{-- hasil tindak lanjut --}}
+        @if (!empty($laporan->pengurus_id))
+            <div
+                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                <div class="mb-2 flex items-center justify-between">
+                    <div class="">Tindak lanjut</div>
+                    <div class="flex items-center space-x-1 text-sm">
+                        <i data-feather='calendar' class="w-4"></i>
+                        <div class="" title="Waktu laporan ditindak lanjuti">
+                            {{ $laporan->status->translatedFormat('d F Y') }}</div>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <div>
+                        <div class="text-sm">Keputusan</div>
+                        <div class="">
+                            {{ !empty($laporan->hukuman) ? 'Pelanggaran ditemukan' : 'Pelanggaran tidak ditemukan' }}</div>
+                    </div>
+                    <div>
+                        <?php $objekLaporan = !empty($laporan->definisi) ? 'definisi' : 'kosakata'; ?>
+                        <div class="text-sm">Tindakan terhadap {{ $objekLaporan }}
+                        </div>
+                        <div class="">
+                            @if (!empty($laporan->hukuman))
+                                @if ($laporan->hukuman->tindakan == 'edit')
+                                    <span class="capitalize">{{ $objekLaporan }}</span> disembunyikan sampai diperbaiki oleh
+                                    terlapor
+                                @else
+                                    <span class="capitalize">{{ $objekLaporan }}</span> dihapus secara permanen
+                                @endif
+                            @else
+                                Tidak ada
+                            @endif
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-sm">Hukuman untuk terlapor</div>
+                        <div class="">
+                            @if (!empty($laporan->hukuman))
+                                {{ $laporan->hukuman->hukuman }}
+                            @else
+                                Tidak ada
+                            @endif
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-sm">Catatan pengurus</div>
+                        <div class="">{{ $laporan->catatan_pengurus }}</div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        {{-- pelapor & terlapor --}}
+        <div
+            class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+            <div class="mb-2">Pengguna terkait</div>
+            <div class="space-y-2">
+                <div class="space-y-1">
+                    <div class="text-sm">Pengguna yang melaporkan
+                        {{ !empty($laporan->user->statusUser) ? '(akun dihapus)' : '' }}</div>
+                    @if ($laporan->author->id == auth()->user()->id)
+                        <div class="flex space-x-2 items-center">
+                            <div class="rounded-full overflow-hidden object-cover w-8">
+                                <?php $d = null; ?>
+                                @include('partials.profile-pic-general')
+                            </div>
+                            <div class="">[Pengguna dirahasiakan]</div>
+                        </div>
+                    @else
+                        <a href="/u/{{ $laporan->user->username }}"
+                            class="flex space-x-2 items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
+                            <div class="rounded-full overflow-hidden object-cover w-8">
+                                <?php $d = $laporan->user; ?>
+                                @include('partials.profile-pic-general')
+                            </div>
+                            <div class="">{{ $laporan->user->nama }}<i data-feather='arrow-up-right'
+                                    class="w-5 inline"></i></div>
+                        </a>
+                    @endif
+                </div>
+
+                <div class="space-y-1">
+                    <div class="text-sm">Pengguna yang dilaporkan
+                        {{ !empty($laporan->author->statusUser) ? '(akun dihapus)' : '' }}</div>
+                    <a href="/u/{{ $laporan->author->username }}"
+                        class="flex space-x-2 items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
+                        <div class="rounded-full overflow-hidden object-cover w-8">
+                            <?php $d = $laporan->author; ?>
+                            @include('partials.profile-pic-general')
+                        </div>
+                        <div class="">{{ $laporan->author->nama }}<i data-feather='arrow-up-right'
+                                class="w-5 inline"></i></div>
+                    </a>
+                </div>
+
+                @if (!empty($laporan->pengurus))
+                    <div class="space-y-1">
+                        <div class="text-sm">Pengurus yang menindaklanjuti
+                            {{ !empty($laporan->pengurus->statusUser) ? '(akun dihapus)' : '' }}</div>
+                        @if ($laporan->author->id == auth()->user()->id)
+                            <div class="flex space-x-2 items-center">
+                                <div class="rounded-full overflow-hidden object-cover w-8">
+                                    <?php $d = null; ?>
+                                    @include('partials.profile-pic-general')
+                                </div>
+                                <div class="">[Pengguna dirahasiakan]</div>
+                            </div>
+                        @else
+                            <a href="/u/{{ $laporan->pengurus->username }}"
+                                class="flex space-x-2 items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
+                                <div class="rounded-full overflow-hidden object-cover w-8">
+                                    <?php $d = $laporan->pengurus; ?>
+                                    @include('partials.profile-pic-general')
+                                </div>
+                                <div class="">{{ $laporan->pengurus->nama }}<i data-feather='arrow-up-right'
+                                        class="w-5 inline"></i></div>
+                            </a>
+                        @endif
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        {{-- definisi/kosakata dilaporkan --}}
+        <div
+            class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+            <div class="mb-2 flex items-center justify-between">
+                <div>Salinan definisi dilaporkan</div>
+                @if (!empty($laporan->definisi))
+                    @if ($laporan->hukuman->tindakan == 'edit')
+                        <a href="/u/{{ $laporan->author->username }}#definisi"
+                            title="Perbaiki definisi ini agar dapat kembali ditampilkan secara publik"
+                            class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
+                            Perbaiki <i data-feather='arrow-up-right' class="w-4"></i>
+                        </a>
+                    @elseif ($laporan->hukuman->tindakan == 'hapus')
+                        <div class="text-sm capitalize">{{ $laporan->kosakata->kosakata }}</div>
+                    @else
+                        <a href="/kosakata/{{ $laporan->kosakata->slug }}?definisi={{ $laporan->definisi->id }}"
+                            title="Lihat definisi asli"
+                            class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400 capitalize">
+                            {{ $laporan->kosakata->kosakata }} <i data-feather='arrow-up-right' class="w-4"></i>
+                        </a>
+                    @endif
+                @endif
+            </div>
+            <div class="space-y-1">
+                <div>"{!! $laporan->definisi->definisi !!}"</div>
+                <div class="text-sm">— {{ $laporan->author->nama }} pada
+                    {{ $laporan->waktu_definisi->translatedFormat('d F Y H:i') }}.</div>
+            </div>
+        </div>
+
+        {{-- ucapan terima kasih kepada user yang melaporkan --}}
+        @if (isset($laporan->pengurus_id) && $laporan->user->id == auth()->user()->id)
+            <div
+                class="md:col-span-2 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                <div class="mb-2 flex items-center justify-between">
+                    <div>Ucapan terima kasih (sesuk)</div>
+            </div>
+        @endif
+
+        {{-- banner bantuan untuk usesr yang definisinya disembunyikan --}}
+        @if (isset($laporan->pengurus_id) && $laporan->author->id == auth()->user()->id && $laporan->hukuman->tindakan == 'edit')
+            <div
+                class="md:col-span-2 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                <div class="mb-2 flex items-center justify-between">
+                    <div>Bantuuan untuk mengembalikan definisi yang disembunyikan (sesuk)</div>
+                </div>
+            </div>
+        @endif
+
+        @if (empty($laporan->pengurus_id))
+            {{-- tentang pelapor --}}
+            <div
+                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                <div class="mb-2">Tentang pelapor</div>
+                <div class="flex items-center">
+                    <div class="text-neutral-600 text-sm">Level</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="text-sm">{{ $detailPelapor['lvl'] }}</div>
+                </div>
+                <div class="flex items-center">
+                    <div class="text-neutral-600 text-sm">Definisi & Kosakata dilaporkan*</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="text-sm">{{ $detailPelapor['totalLaporan'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600 text-sm">Definisi & Kosakata terbukti bersalah*</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="text-sm">{{ $detailPelapor['laporanBersalahDilaporkan'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600 text-sm">Definisi & Kosakata dilaporkan bulan ini*</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="text-sm">{{ $detailPelapor['jmlLaporanBlnIni'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600 text-sm">Bergabung sejak</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="text-sm">{{ $detailPelapor['bergabung'] }}</div>
+                </div>
+                <div class="text-xs text-neutral-600 mt-2">*Dilaporkan oleh pelapor</div>
+            </div>
+
+            {{-- Tentang terlapor --}}
+            <div
+                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                <div class="mb-2">Tentang terlapor</div>
+                <div class="flex items-center">
+                    <div class="text-neutral-600 text-sm">Level</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="text-sm">{{ $detailTerlapor['lvl'] }}</div>
+                </div>
+                <div class="flex items-center">
+                    <div class="text-neutral-600 text-sm">Definisi & kosakata dilaporkan*</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="text-sm">{{ $detailTerlapor['totalLaporan'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600 text-sm">Definisi & kosakata terbukti bersalah*</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="text-sm">{{ $detailTerlapor['laporanBersalahDilaporkan'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600 text-sm">Definisi & kosakata dilaporkan bulan ini*</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="text-sm">{{ $detailTerlapor['jmlLaporanBlnIni'] }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="text-neutral-600 text-sm">Bergabung sejak</div>
+                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
+                    <div class="text-sm">{{ $detailTerlapor['bergabung'] }}</div>
+                </div>
+                <div class="text-xs text-neutral-600 mt-2">*Disubmit oleh terlapor</div>
+            </div>
+
+            {{-- riwayat hukuman --}}
+            <div
+                class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
+                <div class="mb-2">Riwayat hukuman terlapor</div>
+                @if (!$riwayatHukuman->isEmpty())
+                    @foreach ($riwayatHukuman as $d)
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between">
+                                <div class="text-sm">
+                                    @if (!empty($d->definisi))
+                                        Definisi <span class="capitalize">{{ $d->definisi->kosakata }}</span>
+                                        ({{ $d->created_at->translatedFormat('d F Y') }})
+                                    @else
+                                        Kosakata {{ $d->kosakata->kosakata }}
+                                    @endif
+                                </div>
+                                <a href="/laporan/{{ $d->id }}" title="Lihat detail laporan"
+                                    class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
+                                    Detail <i data-feather='arrow-up-right' class="w-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    <div class="flex items-center justify-center h-full -mt-2">
+                        Belum ada data
+                    </div>
+                @endif
+            </div>
+        @endif
+
     </div>
 
 
-
-    @if (empty($laporan->status)) {{-- detail terlapor dan pelapor --}}
-        <div class="grid grid-cols-2 md:space-x-5 md:space-y-0 space-x-0 space-y-5">
-            {{-- Tentang pelapor --}}
-            <div class="md:col-span-1 col-span-2 p-5 bg-white rounded-2xl">
-                <div class="mb-3">Tentang pelapor</div>
-
-                <div class="flex items-center">
-                    <div class="text-neutral-600">Definisi & Kosakata dilaporkan</div>
-                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
-                    <div class="">{{ $detailPelapor['1'] }}</div>
-                </div>
-
-                <div class="flex items-center">
-                    <div class="text-neutral-600">Definisi & Kosakata terbukti bersalah</div>
-                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
-                    <div class="">{{ $detailPelapor['2'] }}</div>
-                </div>
-
-                <div class="flex items-center">
-                    <div class="text-neutral-600">Definisi & Kosakata dilaporkan bulan ini</div>
-                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
-                    <div class="">{{ $detailPelapor['3'] }}</div>
-                </div>
-
-                <div class="flex items-center">
-                    <div class="text-neutral-600">Level</div>
-                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
-                    <div class="">{{ $detailPelapor['4'] }}</div>
-                </div>
-
-                <div class="flex items-center">
-                    <div class="text-neutral-600">Bergabung sejak</div>
-                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
-                    <div class="">{{ $detailPelapor['5'] }}</div>
-                </div>
-            </div>
-
-            {{-- tentang terlapor --}}
-            <div class="md:col-span-1 col-span-2 p-5 bg-white rounded-2xl">
-                <div class="mb-3">Tentang terlapor</div>
-
-                <div class="flex items-center">
-                    <div class="text-neutral-600">Jumlah dilaporkan pengguna lain</div>
-                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
-                    <div class="">{{ $detailTerlapor['1'] }}</div>
-                </div>
-
-                <div class="flex items-center">
-                    <div class="text-neutral-600">Jumlah dinyatakan bersalah</div>
-                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
-                    <div class="">{{ $detailTerlapor['2'] }}</div>
-                </div>
-
-                <div class="flex items-center">
-                    <div class="text-neutral-600">Jumlah hukuman yang pernah diterima</div>
-                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
-                    <div class="">{{ $detailTerlapor['3'] }}</div>
-                </div>
-
-                <div class="flex items-center">
-                    <div class="text-neutral-600">Level</div>
-                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
-                    <div class="">{{ $detailTerlapor['4'] }}</div>
-                </div>
-
-                <div class="flex items-center">
-                    <div class="text-neutral-600">Bergabung sejak</div>
-                    <hr class="flex-grow  border-t border-neutral-200 mx-2">
-                    <div class="">{{ $detailTerlapor['5'] }}</div>
-                </div>
-
-            </div>
-        </div>
-
-        {{-- Riwayat Hukuman terlapor --}}
+    {{-- tindak lanjut --}}
+    @if (empty($laporan->pengurus_id) && auth()->user()->role == 'pengurus')
         <div class="p-5 bg-white rounded-2xl">
-            <div class="mb-3">Riwayat hukuman terlapor</div>
-            @if (!$riwayatHukuman->isEmpty())
-                @foreach ($riwayatHukuman as $d)
-                    <a href="/laporan/{{ $d->id }}"
-                        class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-8 gap-2 hover:outline hover:outline-amber-400">
-                        <div class="line-clamp-1 md:col-span-4 col-span-8 flex items-center">
-                            {{ isset($d->definisi_id) ? 'Definisi' : 'Kosakata' }} dilaporkan oleh {{ $d->user->nama }}.
-                        </div>
-                        <div class="md:col-span-1 col-span-2 flex items-center md:order-1 order-2">
-                            <div class="flex items-center text-sm rounded-full px-3 py-1 bg-green-100 w-fit space-x-1">
-                                <i data-feather='tag' class="w-4 stroke-neutral-800"></i>
-                                <span>{{ $d->alasan }}</span>
-                            </div>
-                        </div>
-                        <div class="md:col-span-2 col-span-8 flex items-center md:text-base text-sm md:order-2 order-1">
-                            {{ isset($d->hukuman) ? $d->hukuman->hukuman : 'Pelanggaran tidak ditemukan' }}
-                        </div>
-                        <div class="md:col-span-1 col-span-4 flex items-center md:text-base text-sm order-3">
-                            {{ $d->updated_at->translatedFormat('d F Y') }}
-                        </div>
-                    </a>
-                @endforeach
+            <div class="mb-3">Tindakan</div>
+
+            @if (auth()->user()->id == $laporan->author->id)
+                {{-- jika user yang membuka tidak berhak untuk menagani laporan --}}
+                <?php $notFound = 'Kamu tidak diizinkan menangani laporan ini'; ?>
+                @include('partials.not-found')
             @else
-                <div class="border border-neutral-200 p-3 mt-3 rounded-xl hover:outline hover:outline-amber-400">
-                    Belum ada data
-                </div>
-            @endif
-        </div>
-    @endif
-
-    {{-- Tindakan --}}
-    <div class="p-5 bg-white rounded-2xl">
-        <div class="mb-3">Tindakan</div>
-        @if (isset($laporan->status)) {{-- Jika sudah ditindaklanjuti --}}
-            <div class="grid md:grid-cols-2 grid-cols-1 md:space-x-4 space-x-0 md:space-y-0 space-y-4">
-                <div class="col-span-1 space-y-3">
-                    <div class="">
-                        <div class="text-sm text-neutral-600">Ditangani oleh</div>
-                        <div class="">
-                            {{ $laporan->pengurus->nama }} (&#64;{{ $laporan->pengurus->username }})
-                            {{ isset($laporan->pengurus->statusUser) && $laporan->pengurus->statusUser == 'dihapus' ? '(akun dihapus)' : '' }}
-                        </div>
-                    </div>
-                    <div class="">
-                        <div class="text-sm text-neutral-600">Waktu</div>
-                        <div class="">{{ $laporan->status->translatedformat('d F Y H:i') }} WIB</div>
-                    </div>
-                    <div class="">
-                        <div class="text-sm text-neutral-600">Keputusan</div>
-                        <div class="">
-                            {{ isset($laporan->hukuman) ? 'Pelanggaran ditemukan' : 'Pelanggaran tidak ditemukan' }}
-                        </div>
-                    </div>
-                    @if (isset($laporan->hukuman))
-                        <div class="">
-                            <div class="text-sm text-neutral-600">Hukuman</div>
-                            <ul class="list-disc list-inside">
-                                <li>{{ $laporan->hukuman->hukuman != 'Tidak ada' ? $laporan->hukuman->hukuman : 'Hukuman tidak diberikan kepada terlapor' }}
-                                </li>
-                                @if ($laporan->hukuman->tindakan == 'edit')
-                                    <li>Definisi perlu diedit oleh terlapor</li>
-                                @elseif ($laporan->hukuman->tindakan == 'hapus')
-                                    @if (isset($laporan->definisi_id))
-                                        <li>Definisi dihapus</li>
-                                    @elseif (isset($laporan->kosakata_id))
-                                        <li>Kosakata dihapus</li>
-                                    @endif
-                                @endif
-                            </ul>
-                        </div>
-                    @endif
-                    <div class="">
-                        <div class="text-sm text-neutral-600">Catatan dari pengurus</div>
-                        <div class="">
-                            {{ isset($laporan->catatan_pengurus) ? $laporan->catatan_pengurus : 'Tidak ada' }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-span-1">
-                    <div class="sticky top-5">
-                        <div class="flex justify-center">
-                            <img src="https://img.freepik.com/free-vector/high-five-concept-illustration_114360-26757.jpg"
-                                class="w-3/5" alt="High five concept illustration">
-                        </div>
-                        <div class="font-semibold text-center">Terima kasih atas laporannya!</div>
-                        <div class="text-center">Situs ini jadi lebih aman berkat kamu.</div>
-                    </div>
-                </div>
-            </div>
-        @elseif (auth()->user()->role == 'pengurus' && auth()->user()->id == $laporan->author->id)
-            <?php $notFound = 'Kamu tidak diizinkan menangani laporan ini'; ?>
-            @include('partials.not-found')
-        @else
-            {{-- Jika sudah ditindaklanjuti --}}
-            @if (auth()->user()->role == 'pengurus')
                 {{-- tindakan yang bisa diambil admin --}}
                 @if (isset($laporan->definisi_id))
                     {{-- tindakan untuk definisi --}}
@@ -697,27 +723,7 @@
                         </div>
                     </form>
                 @endif
-            @else
-                {{-- jika belum ada tindakan yang diambil admin (untuk kontributor dan kapala) --}}
-                <?php $notFound = 'Belum ada tindakan yang diambil'; ?>
-                @include('partials.not-found')
             @endif
-        @endif
-    </div>
-
-    {{-- js --}}
-    <script>
-        // tampilkan/sembunyikan hukuman saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', function() {
-            var pelanggaranTrue = document.getElementById('true');
-            var pelanggaranFalse = document.getElementById('false');
-            var hukuman = document.getElementById('hukuman');
-
-            if (pelanggaranTrue.checked == true) {
-                hukuman.classList.remove('hidden');
-            } else {
-                hukuman.classList.add('hidden');
-            }
-        })
-    </script>
+        </div>
+    @endif
 @endsection

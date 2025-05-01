@@ -27,11 +27,12 @@ class HomepageController extends Controller
         // Ambil definisi random
         $definisi = Definisi::where(function ($query) {
             $query->whereNotNull('verifikasi_oleh')
-                ->whereNull('hukuman_edit');
+                ->orWhereHas('user', function ($q) {
+                    $q->where('role', 'pengurus');
+                });
         })
-            ->orWhereHas('user', function ($query) {
-                $query->where('role', 'pengurus');
-            })
+            ->whereNull('hukuman_edit')
+            ->whereHas('kosakata')
             ->inRandomOrder()
             ->take(5)
             ->with('kosakata:id,kosakata,slug')
@@ -283,6 +284,11 @@ class HomepageController extends Controller
             ->with('user:id,username,nama,jenis_kelamin,profile_pic')
             ->first();
 
+        // jika kosakata tidak ditemukan, maka alihkan
+        if (empty($kosakata)) {
+            return $this->error404();
+        }
+
         // tampilkan data edit (jika ada)
         $cekEdit = EditKosakata::where('kosakata_id', '=', $kosakata->id)
             ->whereNotNull('pengurus_id')
@@ -338,7 +344,7 @@ class HomepageController extends Controller
             }
         }
 
-        // Cek apakah user sudah submit definisi/belum
+        // Cek apakah user sudah submit definisi/belum  (agar tidak bisa menambah definisi lagi jika sudah submit)
         function cariDefinisiUser($definisi, $userId)
         {
             foreach ($definisi as $d) {
@@ -377,6 +383,11 @@ class HomepageController extends Controller
     public function riwayatKosakata($slug)
     {
         $kosakata = Kosakata::where('slug', '=', $slug)->first();
+
+        // alihkan jika kosakata dihapus/tidak ditemukan
+        if (empty($kosakata)) {
+            return $this->error404();
+        }
 
         $riwayat = EditKosakata::where('kosakata_id', '=', $kosakata->id);
         if (empty(Auth::user()->role) || Auth::user()->role == 'kontributor') {

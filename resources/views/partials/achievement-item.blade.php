@@ -12,11 +12,22 @@
             <div class="">
                 <div class="capitalize font-medium">{{ $d->nama }}</div>
                 <div class="text-sm line-clamp-2">{{ $d->deskripsi }}</div>
-                <div class="text-sm">{{ $d->progress }}
+                <div class="text-sm flex items-center space-x-1">
+                    <div class="flex space-x-0.5 items-center">
+                        <i data-feather='heart' class="w-4 fill-amber-400"></i>
+                        <div>{{ $d->reward }} •</div>
+                    </div>
+                    <div>{{ $d->progress }}</div>
                     @isset($d->date_achieved)
-                        — Diperoleh pada {{ $d->date_achieved->translatedFormat('d F Y H:i') }} WIB.
+                        <div class="text-sm md:block hidden"></span>— Diperoleh pada {{ $d->date_achieved->translatedFormat('d F Y H:i') }}
+                            WIB.</div>
                     @endisset
                 </div>
+                {{-- mobile --}}
+                @isset($d->date_achieved)
+                    <div class="text-sm md:hidden"></span>— Diperoleh pada {{ $d->date_achieved->translatedFormat('d F Y H:i') }} WIB.
+                    </div>
+                @endisset
             </div>
             {{-- progress --}}
             <div class="relative">

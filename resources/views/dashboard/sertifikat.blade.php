@@ -19,7 +19,6 @@
 
         <div class="space-y-2">
             @foreach ($sertifikat as $d)
-                {{-- tampilan untuk pengurus dan kontributor --}}
                 <div class="grid grid-cols-10 md:space-x-2 md:space-y-0 space-y-1">
                     <a href="{{ auth()->user()->role == 'kepala' ? '/sertifikat/edit/' . $d->id : ($d->didapat == 1 ? '/s/' . auth()->user()->username . '/' . $d->id : '#') }}"
                         class="{{ auth()->user()->role != 'kepala' && $d->progress >= $d->requirement ? 'md:col-span-9' : 'md:col-span-10' }}  col-span-10 px-5 py-6 bg-white rounded-2xl grid md:grid-cols-12 grid-cols-10 space-x-4 hover:outline hover:outline-amber-400">
@@ -43,21 +42,55 @@
                                     {{-- jika user=kepala --}}
                                     <div>
                                         <div class="capitalize font-medium">{{ $d->nama }}</div>
-                                        <div class="text-sm mt-1">
-                                            Dapat diperoleh oleh {{ isset($d->role) ? $d->role : 'semua pengguna' }} dengan
+                                        {{-- tampilan mobile --}}
+                                        <div class="text-sm md:hidden">
+                                            Dapat diperoleh oleh {{ isset($d->role) ? $d->role : 'semua pengguna' }}
+                                            dengan
                                             {{ $d->rule == 'kontribusi' || $d->rule == 'kontribusiPengurus' ? 'total kontribusi' : $d->rule }}
                                             ≥
                                             {{ $d->rule == 'keanggotaan' ? $d->requirement / 360 . ' tahun' : $d->requirement }}.
                                         </div>
+                                        <div class="flex items-center space-x-1 text-sm">
+                                            <i data-feather='heart' class="w-4 fill-amber-400 inline"></i>
+                                            <div>{{ $d->reward }}</div>
+
+                                            {{-- tampilan desktop --}}
+                                            <div class="md:block hidden">
+                                                • Dapat diperoleh oleh {{ isset($d->role) ? $d->role : 'semua pengguna' }}
+                                                dengan
+                                                {{ $d->rule == 'kontribusi' || $d->rule == 'kontribusiPengurus' ? 'total kontribusi' : $d->rule }}
+                                                ≥
+                                                {{ $d->rule == 'keanggotaan' ? $d->requirement / 360 . ' tahun' : $d->requirement }}.
+                                            </div>
+                                        </div>
+
                                     </div>
                                 @else
                                     {{-- jika user = pengurus/kontributor --}}
                                     <div>
                                         <div class="capitalize font-medium">{{ $d->nama }}</div>
-                                        <div class="text-sm">
-                                            {{ $d->persentase }}
+                                        <div class="text-sm flex items-center space-x-1">
+                                            <div class="flex space-x-0.5 items-center">
+                                                <i data-feather='heart' class="w-4 fill-amber-400"></i>
+                                                <div>{{ $d->reward }} •</div>
+                                            </div>
+                                            <div>
+                                                {{ $d->persentase }}
+                                            </div>
+                                            <div class="md:block hidden">
+                                                @isset($d->tglDiperoleh)
+                                                    <span class=""><br></span>— Diperoleh pada
+                                                    {{ $d->tglDiperoleh->translatedFormat('d F Y H:i') }} WIB.
+                                                @else
+                                                    — {{ $d->progress }}/{{ $d->requirement }}
+                                                    {{ $d->rule == 'keanggotaan' ? ' hari' : ' kontribusi' }}
+                                                @endisset
+                                            </div>
+                                        </div>
+                                        <div class="md:hidden text-sm">
                                             @isset($d->tglDiperoleh)
-                                                — Diperoleh pada {{ $d->tglDiperoleh->translatedFormat('d F Y H:i') }} WIB.
+                                                <span class=""><br></span>— Diperoleh pada
+                                                {{ $d->tglDiperoleh->translatedFormat('d F Y H:i') }} WIB.
                                             @else
                                                 — {{ $d->progress }}/{{ $d->requirement }}
                                                 {{ $d->rule == 'keanggotaan' ? ' hari' : ' kontribusi' }}

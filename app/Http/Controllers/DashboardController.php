@@ -321,19 +321,22 @@ class DashboardController extends Controller
                 // tampilakan definisi random (untuk semacam trivia)
                 $definisiRandom = Definisi::where(function ($query) {
                     $query->whereNotNull('verifikasi_oleh')
-                        ->whereNull('hukuman_edit');
+                        ->orWhereHas('user', function ($q) {
+                            $q->where('role', 'pengurus');
+                        });
                 })
-                    ->orWhereHas('user', function ($query) {
-                        $query->where('role', 'pengurus');
-                    })
-                    ->with('kosakata')->with('user')
+                    ->whereNull('hukuman_edit')
+                    ->whereHas('kosakata')
+                    ->with('kosakata')
+                    ->with('user')
                     ->with('pengurus')
                     ->inRandomOrder()
                     ->first();
 
                 // jika tidak ada definisi random yang terverifikasi, maka tampilkan yang tidak terverifikasi
                 if (empty($definisiRandom)) {
-                    $definisiRandom = Definisi::with('kosakata')
+                    $definisiRandom = Definisi::whereHas('kosakata')
+                        ->with('kosakata')
                         ->with('user')
                         ->with('pengurus')
                         ->inRandomOrder()
@@ -392,8 +395,12 @@ class DashboardController extends Controller
 
         // dapatkan data laporan
         $data['laporan'] = Report::select('id', 'user_id', 'definisi_id', 'kosakata_id', 'alasan', 'status', 'updated_at')
-            ->with('definisi:id,kosakata_id')
-            ->with('kosakata:id,user_id')
+            ->with('definisi', function ($query) {
+                $query->withTrashed();
+            })
+            ->with('kosakata', function ($query) {
+                $query->withTrashed();
+            })
             ->where('user_id', '=', Auth::user()->id);
         $statistik['laporanPending'] = (clone $data['laporan'])->whereNull('status')->count(); //pakai "clone" agar query  didalam $data['laporan'] tidak berubah
         $statistik['laporanTotal'] = $data['laporan']->count();
@@ -415,15 +422,12 @@ class DashboardController extends Controller
                 // jika yang dilaporkan = definisi
                 $d['terlapor'] = User::find($d['definisi']['user_id'])->nama ?? '[Akun dihapus]';
                 // cari data kosakata
-                $d['kosakata'] = Kosakata::select('id', 'kosakata')
+                $d['kosakata'] = Kosakata::withTrashed()
                     ->where('id', '=', $d['definisi']['kosakata_id'])
                     ->value('kosakata');
             } else if (isset($d['kosakata'])) {
                 // jika yang dilaporkan = kosakata
                 $d['terlapor'] = User::find($d['kosakata']['user_id'])->nama ?? '[Akun dihapus]';
-                $d['kosakata'] = Kosakata::select('id', 'kosakata')
-                    ->where('id', '=', $d->kosakata_id)
-                    ->value('kosakata');
             } else {
                 $d['terlapor'] = null;
                 $teks = '-';
@@ -510,7 +514,7 @@ class DashboardController extends Controller
         $definisi = Definisi::whereHas('user', function ($query) {
             $query->where('role', 'kontributor');
         })
-            ->with('kosakata:id,kosakata,slug')
+            ->with('kosakata', function($query){$query->withTrashed();})
             ->orderBy('created_at', 'desc')
             ->paginate(10, '*', 'definisi')
             ->onEachSide(2)
@@ -576,12 +580,12 @@ class DashboardController extends Controller
         // dd($kosakata);
 
         // data pengurus
-        $pengurus = User::withTrashed()
-            ->where('role', '=', 'pengurus')
+        $pengurus = User::where('role', '=', 'pengurus')
             ->orderBy('poin', 'desc')
             ->paginate(10, '*', 'pengurus')
             ->onEachSide(2)
             ->appends(request()->query());
+
         foreach ($pengurus as $d) {
             // level
             $d['level'] = $this->levelCalculator($d->poin);
@@ -617,14 +621,16 @@ class DashboardController extends Controller
         $definisi = Definisi::whereHas('user', function ($query) {
             $query->where('role', 'pengurus');
         })
-            ->with('kosakata:id,kosakata,slug')
+            ->with('kosakata', function ($query) {
+                $query->withTrashed(); })
             ->orderBy('created_at', 'desc')
             ->paginate(10, '*', 'definisi')
             ->onEachSide(2)
             ->appends(request()->query());
 
         $editKosakata = EditKosakata::whereNotNull('pengurus_id')
-            ->with('kosakata:id,kosakata,slug')
+            ->with('kosakata', function ($query) {
+                $query->withTrashed(); })
             ->with('user:id,username,nama,jenis_kelamin,profile_pic')
             ->with('pengurus:id,username,nama,jenis_kelamin,profile_pic')
             ->orderBy('created_at', 'desc')

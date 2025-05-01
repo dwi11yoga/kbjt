@@ -55,10 +55,11 @@
                     </div>
 
                     {{-- Profil & notifikasi --}}
+                    @if ($group=='dashboard')
+                        {{-- <div class="md:col-span-3 col-span-3 flex justify-end items-center">Selamat datang!</div> --}}
+                    @else
+
                     <div class="md:col-span-3 col-span-3 flex justify-end items-center">
-                        {{-- <p class="mr-4 text-right md:block hidden">
-                            {{ auth()->user()->nama }}<br>
-                        </p> --}}
 
                         {{-- notifikasi --}}
                         <a href="/notifikasi"
@@ -77,6 +78,7 @@
                             @include('partials.profile-pic')
                         </a>
                     </div>
+                    @endif
 
                     {{-- <div class="md:col-span-1 col-span-2 col-start-6 flex md:justify-start justify-end mr-2">
                         <a href="#"

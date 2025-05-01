@@ -48,7 +48,8 @@
                             @include('partials.profile-pic-general')
                         </div>
                         <div class="line-clamp-2">
-                            {{ $d->nama }} {{ isset($d->statusUser) && $d->statusUser == 'dihapus' ? '(Akun dihapus)' : '' }}
+                            {{ $d->nama }}
+                            {{ isset($d->statusUser) && $d->statusUser == 'dihapus' ? '(Akun dihapus)' : '' }}
                         </div>
                     </div>
                     <div class="md:col-span-2 col-span-7 text-neutral-700 md:flex hidden items-center line-clamp-2">
@@ -86,11 +87,16 @@
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-10 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                     <div
                         class="md:col-span-5 col-span-10 flex items-center line-clamp-2 md:font-normal font-semibold capitalize">
-                        Kosakata "{{ $d->kosakata }}"
+                        Kosakata {{ $d->kosakata }}
                     </div>
                     <div class="flex gap-2 md:col-span-3 col-span-10 items-center">
                         <div class="rounded-full w-8 h-8 overflow-hidden">
+                            <?php
+                            $sementara = $d;
+                            $d = $d->user; 
+                            ?>
                             @include('partials.profile-pic-general')
+                            <?php $d=$sementara; ?>
                         </div>
                         <div class="line-clamp-2">{{ $d->user->nama }}</div>
                     </div>
@@ -117,16 +123,22 @@
 
         <div class="space-y-3">
             @foreach ($definisi as $d)
-                <a href="/kosakata/{{ $d->kosakata->slug }}?definisi={{ $d->id }}"
+                <a href="{{ !empty($d->kosakata) ? '/kosakata/' . $d->kosakata->slug . '?definisi=' . $d->id : '#' }}"
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-10 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                     <div class="md:col-span-5 col-span-10 flex items-center line-clamp-2 md:font-normal font-semibold">
                         <div>
-                            Definisi untuk kosakata <span class="capitalize">"{{ $d->kosakata->kosakata }}"</span>
+                            Definisi untuk kosakata <span
+                                class="capitalize">{{ $d->kosakata->kosakata ?? '[Kosakata dihapus]' }}</span>
                         </div>
                     </div>
                     <div class="flex gap-2 md:col-span-3 col-span-10 items-center">
                         <div class="rounded-full w-8 h-8 overflow-hidden">
+                            <?php
+                            $sementara = $d;
+                            $d = $d->user; 
+                            ?>
                             @include('partials.profile-pic-general')
+                            <?php $d=$sementara ?>
                         </div>
                         <div class="line-clamp-2">{{ $d->user->nama }}</div>
                     </div>
@@ -145,7 +157,7 @@
         </div>
     </div>
 
-    {{-- Daftar definisi terbaru --}}
+    {{-- detail kosakata diperbarui --}}
     <div class="p-5 bg-white rounded-2xl" id="laporan">
         <div class="flex items-center justify-between py-2">
             Detail kosakata diperbarui
@@ -153,12 +165,12 @@
 
         <div class="space-y-3">
             @foreach ($editKosakata as $d)
-                <a href="/kosakata/{{ $d->kosakata->slug }}/riwayat"
+                <a href="{{ !empty($d->kosakata) ? '/kosakata/' . $d->kosakata->slug . '/riwayat' : '#' }}"
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-10 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                     <div class="md:col-span-5 col-span-10 flex items-center line-clamp-2 md:font-normal font-semibold">
                         <div>
                             Menyetujui {{ $d->user->username }} untuk mengganti detail kosakata <span
-                                class="capitalize">"{{ $d->kosakata->kosakata }}"</span>
+                                class="capitalize">{{ $d->kosakata->kosakata ?? '[Kosakata dihapus]' }}</span>
                         </div>
                     </div>
                     <div class="flex gap-2 md:col-span-3 col-span-10 items-center">

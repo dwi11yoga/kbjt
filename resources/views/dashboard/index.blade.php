@@ -276,9 +276,14 @@
                         <div class="capitalize font-semibold">{{ $definisiRandom->kosakata->kosakata }} <span
                                 title="Definisi terverifikasi">✅</span></div>
                         <div class="line-clamp-5">{!! $definisiRandom->definisi !!}</div>
-                        <div class="text-sm">Disubmit oleh <a href="/u/{{ $definisiRandom->user->username }}"
+                        <div class="text-sm">Disubmit oleh 
+                            @if (!empty($definisiRandom->user))
+                            <a href="/u/{{ $definisiRandom->user->username }}"
                                 title="Lihat profil {{ $definisiRandom->user->nama }}"
                                 class="font-semibold hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-4">{{ $definisiRandom->user->nama }}</a>
+                            @else
+                                <span class="font-semibold">[Akun dihapus]</span>
+                            @endif
                         </div>
                     </div>
                 @endif

@@ -60,12 +60,17 @@
                         <div class="md:col-span-11 col-span-7 flex items-center">
                             <div class="w-full">
                                 <div class="capitalize font-medium">{{ $d->nama }}</div>
-                                <div class="text-sm line-clamp-2">{{ $d->deskripsi }}</div>
-                                {{-- <div class="text-sm">{{ $d->progress }}
-                                        @isset($d->date_achieved)
-                                            — Diperoleh pada {{ $d->date_achieved->translatedFormat('d F Y H:i') }} WIB.
-                                        @endisset
-                                    </div> --}}
+
+                                {{-- deskripsi mobile --}}
+                                <div class="text-sm line-clamp-2 md:hidden">{{ $d->deskripsi }}</div>
+
+                                <div class="text-sm flex items-center space-x-1">
+                                    <i data-feather='heart' class="w-4 fill-amber-400 inline"></i>
+                                    <div>{{ $d->reward }}</div>
+                                    {{-- deskripsi desktop --}}
+                                    <div class="text-sm line-clamp-2 md:block hidden">• {{ $d->deskripsi }}</div>
+                                </div>
+
                             </div>
                         </div>
                     </a>

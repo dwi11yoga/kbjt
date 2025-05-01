@@ -1,5 +1,45 @@
 @extends('layouts.dashboard')
 @section('body')
+
+    {{-- permewritahuan jika definisi, terlapor, dan kosakata dihapus --}}
+    <div>
+        @if (empty($laporan->pengurus_id) && $laporan->author->id != auth()->user()->id)
+            @if ($laporan->kosakata->trashed())
+                {{-- jika kosakata terhapus --}}
+                @if (!empty($laporan->definisi_id))
+                    {{-- untuk definisi --}}
+                    <?php $alert = [
+                        'warna' => 'red',
+                        'pesan' => 'Kosakata dari definisi yang dilaporkan sudah dihapus, sehingga tindak lanjut tidak akan memengaruhi definisi tersebut',
+                        'textsize' => 'base',
+                    ];
+                    ?>
+                    @include('partials.alert')
+                @elseif (!empty($laporan->kosakata_id))
+                    {{-- untuk kosakata --}}
+                    <?php $alert = [
+                        'warna' => 'red',
+                        'pesan' => 'Kosakata yang dilaporkan sudah dihapus, sehingga tindak lanjut tidak akan memengaruhi kosakata tersebut',
+                        'textsize' => 'base',
+                    ];
+                    ?>
+                    @include('partials.alert')
+                @endif
+            @endif
+            @if ($laporan->author->trashed())
+                {{-- jika user sudah dihapus --}}
+                {{-- untuk definisi --}}
+                <?php $alert = [
+                    'warna' => 'red',
+                    'pesan' => 'Akun pengguna yang dilaporkan sudah dihapus, sehingga hukuman terhadap pengguna tidak akan berpengaruh',
+                    'textsize' => 'base',
+                ];
+                ?>
+                @include('partials.alert')
+            @endif
+        @endif
+    </div>
+
     {{-- data laporan --}}
     <div class="grid grid-cols-3 md:gap-2 gap-3">
 
@@ -164,19 +204,20 @@
             </div>
         </div>
 
-        {{-- definisi/kosakata dilaporkan --}}
+        {{-- salinan definisi/kosakata dilaporkan --}}
         <div
             class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
-            <div class="mb-2 flex items-center justify-between">
-                <div>Salinan definisi dilaporkan</div>
-                @if (!empty($laporan->definisi))
-                    @if ($laporan->hukuman->tindakan == 'edit')
+            {{-- definisi --}}
+            @if (!empty($laporan->definisi_id))
+                <div class="mb-2 flex items-center justify-between">
+                    <div>Salinan definisi dilaporkan</div>
+                    @if (!empty($laporan->hukuman) && auth()->user()->id == $laporan->author->id && $laporan->hukuman->tindakan == 'edit')
                         <a href="/u/{{ $laporan->author->username }}#definisi"
                             title="Perbaiki definisi ini agar dapat kembali ditampilkan secara publik"
                             class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
                             Perbaiki <i data-feather='arrow-up-right' class="w-4"></i>
                         </a>
-                    @elseif ($laporan->hukuman->tindakan == 'hapus')
+                    @elseif (!empty($laporan->hukuman) && $laporan->hukuman->tindakan == 'hapus')
                         <div class="text-sm capitalize">{{ $laporan->kosakata->kosakata }}</div>
                     @else
                         <a href="/kosakata/{{ $laporan->kosakata->slug }}?definisi={{ $laporan->definisi->id }}"
@@ -185,30 +226,139 @@
                             {{ $laporan->kosakata->kosakata }} <i data-feather='arrow-up-right' class="w-4"></i>
                         </a>
                     @endif
-                @endif
-            </div>
-            <div class="space-y-1">
-                <div>"{!! $laporan->definisi->definisi !!}"</div>
-                <div class="text-sm">— {{ $laporan->author->nama }} pada
-                    {{ $laporan->waktu_definisi->translatedFormat('d F Y H:i') }}.</div>
-            </div>
+                </div>
+                <div class="space-y-1">
+                    <div>"{!! $laporan->definisi->definisi !!}"</div>
+                    <div class="text-sm">— {{ $laporan->author->nama }} pada
+                        {{ $laporan->waktu_definisi->translatedFormat('d F Y H:i') }}.</div>
+                </div>
+            @elseif (!empty($laporan->kosakata_id))
+                {{-- kosakata --}}
+                <div class="mb-2 flex items-center justify-between">
+                    <div>Salinan kosakata dilaporkan</div>
+                    @if (!empty($laporan->hukuman) && $laporan->hukuman == 'hapus')
+                    @else
+                        <a href="/kosakata/{{ $laporan->kosakata->slug }}" title="Lihat definisi asli"
+                            class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400 capitalize">
+                            Lihat <i data-feather='arrow-up-right' class="w-4"></i>
+                        </a>
+                    @endif
+                </div>
+                <div class="space-y-1">
+                    <div class="">"<span class="capitalize">{{ $laporan->kosakata->kosakata }}</span>" —
+                        diinisialisasi oleh {{ $laporan->author->nama }} pada
+                        {{ $laporan->kosakata->created_at->translatedFormat('d F Y H:i') }}.</div>
+                    @if (empty($laporan->hukuman) && empty($laporan->pengurus_id))
+                        <div class="bg-red-50 text-red-700 text-sm rounded-md py-1 px-2">Jika yang keliru hanya detail
+                            kosakatanya, bukan kosakatanya itu sendiri, maka tidak perlu menghapus kosakata ini.</div>
+                    @endif
+                </div>
+            @else
+                <div>Definisi atau kosakata tidak dapat ditampilkan</div>
+            @endif
         </div>
 
-        {{-- ucapan terima kasih kepada user yang melaporkan --}}
-        @if (isset($laporan->pengurus_id) && $laporan->user->id == auth()->user()->id)
+        {{-- banner ucapan terima kasih kepada pengurus/kontributor --}}
+        @if (isset($laporan->pengurus_id) &&
+                ($laporan->pengurus_id == auth()->user()->id || $laporan->user->id == auth()->user()->id))
             <div
-                class="md:col-span-2 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
-                <div class="mb-2 flex items-center justify-between">
-                    <div>Ucapan terima kasih (sesuk)</div>
+                class="md:col-span-2 col-span-3 border bg-amber-50 border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1 text-amber-700">
+                <div class="mb-2 line-clamp-1">Terima kasih, {{ auth()->user()->nama }}!</div>
+                <div class="grid grid-cols-5 items-center">
+                    <div class="col-span-3 md:font-semibold md:text-lg">
+                        Berkat dirimu, komunitas dapat terjaga dari definisi atau kosakata bahasa jawa yang keliru.
+                    </div>
+                    <div class="col-span-2">
+                        <img src="{{ asset('img/Apologize-by-storyset.png') }}"
+                            alt="Family protection concept illustration by storyset (freepik)">
+                    </div>
+                </div>
             </div>
         @endif
 
-        {{-- banner bantuan untuk usesr yang definisinya disembunyikan --}}
-        @if (isset($laporan->pengurus_id) && $laporan->author->id == auth()->user()->id && $laporan->hukuman->tindakan == 'edit')
+        {{-- banner bantuan untuk user yang definisinya disembunyikan --}}
+        @if (isset($laporan->pengurus_id) &&
+                $laporan->author->id == auth()->user()->id &&
+                !empty($laporan->hukuman) &&
+                $laporan->hukuman->tindakan == 'edit')
             <div
-                class="md:col-span-2 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
-                <div class="mb-2 flex items-center justify-between">
-                    <div>Bantuuan untuk mengembalikan definisi yang disembunyikan (sesuk)</div>
+                class="md:col-span-2 col-span-3 border bg-amber-50 border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1 text-amber-700">
+                <div class="grid grid-cols-5 md:items-start items-center">
+                    <div class="md:col-span-3 col-span-5 space-y-2">
+                        <div>
+                            <div class="mb-2 line-clamp-1">Bantuan</div>
+                            Pelajari bagaimana cara agar definisi ini dapat kembali ditampilkan secara publik
+                            <a href="#"
+                                class="hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
+                                disini<i data-feather='arrow-up-right' class="w-5 inline"></i>.
+                            </a>
+                        </div>
+
+                        {{-- rekomendasikan artikel agar bisa jadi lebih baik --}}
+                        <div class="">
+                            <div class="text-sm">Baca juga</div>
+                            <ul class="text-sm">
+                                <li class="flex items-center justify-between">
+                                    <a href="#"
+                                        class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
+                                        Cara berkontribusi dengan baik <i data-feather='arrow-up-right'
+                                            class="w-4"></i>
+                                    </a>
+                                </li>
+                                <li class="flex items-center justify-between">
+                                    <a href="#"
+                                        class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
+                                        Contoh definisi & kosakata yang baik <i data-feather='arrow-up-right'
+                                            class="w-4"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 col-span-5 flex justify-center">
+                        <img src="{{ asset('img/hand-holding-pen-by-storyset.png') }}" class="md:max-h-none max-h-52"
+                            alt="Family protection concept illustration by storyset (freepik)">
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        {{-- banner jika definisi/kosakata dihapus --}}
+        @if (isset($laporan->pengurus_id) &&
+                $laporan->author->id == auth()->user()->id &&
+                !empty($laporan->hukuman) &&
+                $laporan->hukuman->tindakan == 'hapus')
+            <div
+                class="md:col-span-2 col-span-3 border bg-red-50 border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1 text-red-700">
+                <div class="grid grid-cols-5 md:items-start items-center">
+                    <div class="md:col-span-3 col-span-5 space-y-2">
+                        <div>
+                            <div class="mb-2 line-clamp-1">Sedikit catatan buat kamu</div>
+                            Yuk, pastikan definisi atau kosakata yang kamu kirim sesuai dengan kebijakan komunitas. Baca
+                            artikel berikut sebagai panduan untuk kontribusi kamu selanjutnya!
+                        </div>
+
+                        {{-- rekomendasikan artikel agar bisa jadi lebih baik --}}
+                        <ul class="text-sm">
+                            <li class="flex items-center justify-between">
+                                <a href="#"
+                                    class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
+                                    Cara berkontribusi dengan baik <i data-feather='arrow-up-right' class="w-4"></i>
+                                </a>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <a href="#"
+                                    class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
+                                    Contoh definisi & kosakata yang baik <i data-feather='arrow-up-right'
+                                        class="w-4"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="md:col-span-2 col-span-5 flex justify-center">
+                        <img src="{{ asset('img/hand-holding-pen-by-storyset.png') }}" class="md:max-h-none max-h-52"
+                            alt="Family protection concept illustration by storyset (freepik)">
+                    </div>
                 </div>
             </div>
         @endif
@@ -636,6 +786,8 @@
                                     @error('hukuman')
                                         <div class="text-sm text-red-600 -mt-2 mb-2">{{ $message }}</div>
                                     @enderror
+
+                                    {{-- Beri peringatan --}}
                                     <div class="">
                                         <input type="radio" name="hukuman" id="peringatan" value="peringatan"
                                             class="hidden peer" {{ old('hukuman') == 'peringatan' ? 'checked' : '' }}>
@@ -646,6 +798,84 @@
                                         </label>
                                     </div>
 
+                                    {{-- kurangi poin --}}
+                                    {{-- 2% poin --}}
+                                    <div class="">
+                                        <input type="radio" name="hukuman" id="kurangiPoin002" value="kurangiPoin002"
+                                            class="hidden peer" {{ old('hukuman') == 'kurangiPoin002' ? 'checked' : '' }}>
+                                        <label for="kurangiPoin002"
+                                            class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                            <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                            <span>Kurangi poin sebesar 2% ({{ $laporan->author->poin }} →
+                                                {{ $hasilPenguranganPoin[2] }} poin)</span>
+                                        </label>
+                                    </div>
+
+                                    {{-- 5% poin --}}
+                                    <div class="">
+                                        <input type="radio" name="hukuman" id="kurangiPoin005" value="kurangiPoin005"
+                                            class="hidden peer" {{ old('hukuman') == 'kurangiPoin005' ? 'checked' : '' }}>
+                                        <label for="kurangiPoin005"
+                                            class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                            <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                            <span>Kurangi poin sebesar 5% ({{ $laporan->author->poin }} →
+                                                {{ $hasilPenguranganPoin[5] }} poin)</span>
+                                        </label>
+                                    </div>
+
+                                    {{-- 8% poin --}}
+                                    <div class="">
+                                        <input type="radio" name="hukuman" id="kurangiPoin008" value="kurangiPoin008"
+                                            class="hidden peer" {{ old('hukuman') == 'kurangiPoin008' ? 'checked' : '' }}>
+                                        <label for="kurangiPoin008"
+                                            class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                            <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                            <span>Kurangi poin sebesar 8% ({{ $laporan->author->poin }} →
+                                                {{ $hasilPenguranganPoin[8] }} poin)</span>
+                                        </label>
+                                    </div>
+
+                                    {{-- 10% poin --}}
+                                    <div class="">
+                                        <input type="radio" name="hukuman" id="kurangiPoin010" value="kurangiPoin010"
+                                            class="hidden peer"
+                                            {{ old('hukuman') == 'kurangiPoin010' ? 'checked' : '' }}>
+                                        <label for="kurangiPoin010"
+                                            class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                            <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                            <span>Kurangi poin sebesar 10% ({{ $laporan->author->poin }} →
+                                                {{ $hasilPenguranganPoin[10] }} poin)</span>
+                                        </label>
+                                    </div>
+
+                                    {{-- 15% poin --}}
+                                    <div class="">
+                                        <input type="radio" name="hukuman" id="kurangiPoin015" value="kurangiPoin015"
+                                            class="hidden peer"
+                                            {{ old('hukuman') == 'kurangiPoin015' ? 'checked' : '' }}>
+                                        <label for="kurangiPoin015"
+                                            class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                            <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                            <span>Kurangi poin sebesar 15% ({{ $laporan->author->poin }} →
+                                                {{ $hasilPenguranganPoin[15] }} poin)</span>
+                                        </label>
+                                    </div>
+
+                                    {{-- 20% poin --}}
+                                    <div class="">
+                                        <input type="radio" name="hukuman" id="kurangiPoin020" value="kurangiPoin020"
+                                            class="hidden peer"
+                                            {{ old('hukuman') == 'kurangiPoin020' ? 'checked' : '' }}>
+                                        <label for="kurangiPoin020"
+                                            class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
+                                            <i data-feather='chevron-right' class="md:w-5 w-12"></i>
+                                            <span>Kurangi poin sebesar 20% ({{ $laporan->author->poin }} →
+                                                {{ $hasilPenguranganPoin[20] }} poin)</span>
+                                        </label>
+                                    </div>
+
+                                    {{-- Banned sementara --}}
+                                    {{-- ban 3 hari --}}
                                     <div class="">
                                         <input type="radio" name="hukuman" id="3hr" value="3hr"
                                             class="hidden peer" {{ old('hukuman') == '3hr' ? 'checked' : '' }}>
@@ -656,6 +886,8 @@
                                         </label>
                                     </div>
 
+
+                                    {{-- ban 7 hari --}}
                                     <div class="">
                                         <input type="radio" name="hukuman" id="7hr" value="7hr"
                                             class="hidden peer" {{ old('hukuman') == '7hr' ? 'checked' : '' }}>
@@ -666,6 +898,7 @@
                                         </label>
                                     </div>
 
+                                    {{-- ban 14 hari --}}
                                     <div class="">
                                         <input type="radio" name="hukuman" id="14hr" value="14hr"
                                             class="hidden peer" {{ old('hukuman') == '14hr' ? 'checked' : '' }}>
@@ -676,6 +909,7 @@
                                         </label>
                                     </div>
 
+                                    {{-- ban 30 hari --}}
                                     <div class="">
                                         <input type="radio" name="hukuman" id="30hr" value="30hr"
                                             class="hidden peer" {{ old('hukuman') == '30hr' ? 'checked' : '' }}>
@@ -686,6 +920,7 @@
                                         </label>
                                     </div>
 
+                                    {{-- ban akun secara permanen --}}
                                     <div class="">
                                         <input type="radio" name="hukuman" id="blokir" value="blokir"
                                             class="hidden peer" {{ old('hukuman') == 'blokir' ? 'checked' : '' }}>
@@ -715,7 +950,7 @@
                                     <div>Simpan tindakan?</div>
                                     <div class="text-sm">Tindakan yang disimpan tidak dapat diubah.</div>
                                 </div>
-                                <button type="submit" class="text-blue-700 flex items-center">
+                                <button type="submit" class="text-amber-600 flex items-center">
                                     <i data-feather='check' class="w-5"></i>
                                     <span class="ml-1">Simpan</span>
                                 </button>

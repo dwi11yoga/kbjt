@@ -58,7 +58,7 @@
                     </div>
                     <div class="md:text-base text-sm col-span-1 flex justify-center">
                         <div class="md:text-base text-sm col-span-1 flex items-center justify-center space-x-1">
-                            <i data-feather='stop-circle' class="inline-block w-5 text-amber-600" title="Poin"></i>
+                            <i data-feather='heart' class="inline-block w-5 fill-amber-400" title="Poin"></i>
                             <span>{{ $d->poin }}</span>
                         </div>
                     </div>
@@ -86,14 +86,14 @@
         <div>Definisi</div>
         <div class="space-y-3">
             @foreach ($data['definisi'] as $d)
-                <a href="/kosakata/{{ $d->kosakata->slug }}?definisi={{ $d->id }}"
+                <a href="{{ !empty($d->kosakata)? '/kosakata/'.$d->kosakata->slug.'?definisi='.$d->id:'#' }}"
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                     <div class="line-clamp-1 md:col-span-3 col-span-6 flex items-center">Mensubmit definisi untuk kosakata
-                        "{{ $d->kosakata->kosakata }}".
+                        {{ $d->kosakata->kosakata ?? '[Kosakata dihapus]' }}.
                     </div>
                     <div
                         class="md:text-base text-sm col-span-1 flex items-center md:justify-center justify-start space-x-1">
-                        <i data-feather='stop-circle' class="inline-block w-5 text-amber-600" title="Poin"></i>
+                        <i data-feather='heart' class="inline-block w-5 fill-amber-400" title="Poin"></i>
                         <span>{{ $d->poin }}</span>
                     </div>
                     <div class="md:col-span-1 col-span-3 flex items-center">
@@ -144,18 +144,18 @@
 
         <div class="space-y-3">
             @foreach ($data['laporan'] as $d)
-                <a href="/kontribusi/laporan/{{ $d->id }}"
+                <a href="/laporan/{{ $d->id }}"
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                     <div class="line-clamp-1 md:col-span-3 col-span-6 flex items-center">
                         @if (isset($d->definisi_id))
-                            Melaporkan definisi dari kosakata "{{ $d->kosakata }}".
+                            Melaporkan definisi dari kosakata {{ $d->kosakata }}.
                         @elseif (isset($d->kosakata_id))
-                            Melaporkan kosakata "{{ $d->kosakata }}".
+                            Melaporkan kosakata {{ $d->kosakata->kosakata }}.
                         @endif
                     </div>
                     <div
                         class="md:text-base text-sm col-span-1 flex items-center md:justify-center justify-start space-x-1">
-                        <i data-feather='stop-circle' class="inline-block w-5 text-amber-600" title="Poin"></i>
+                        <i data-feather='heart' class="inline-block w-5 fill-amber-400" title="Poin"></i>
                         <span>0</span>
                     </div>
                     <div class="md:col-span-1 col-span-3">

@@ -152,10 +152,11 @@ class UserController extends Controller
         $definisi = Definisi::where('user_id', $user->id);
         // jika user bukan user yang sedang login, maka sembunyikan definisi yang disembunyikan karena hukuman
         if (Auth::user()->id != $user->id) {
-            $definisi=$definisi->where('hukuman_edit', '!=', 1);
+            $definisi = $definisi->where('hukuman_edit', '!=', 1);
         }
 
-        $definisi = $definisi->with('kosakata')
+        $definisi = $definisi->whereHas('kosakata')
+            ->with('kosakata')
             ->with('pengurus')
             ->orderBy('updated_at', 'desc')
             ->paginate(10, ['*'], 'definisi-page')
@@ -176,6 +177,7 @@ class UserController extends Controller
         // dapatkan data edit kosakata oleh user
         $editKosakata = EditKosakata::where('user_id', $user->id)
             ->whereNotNull('status')
+            ->whereHas('kosakata')
             ->with('kosakata')
             ->orderBy('updated_at', 'desc')
             ->paginate(10, ['*'], 'kosakata-page')

@@ -76,7 +76,7 @@
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid md:grid-cols-8 gap-2 hover:outline hover:outline-amber-400">
                     <div class="line-clamp-1 md:col-span-4 col-span-8 flex items-center">
                         {{ $d->user->username }} melaporkan definisi {{ $d->terlapor }} dalam kosakata
-                        "{{ $d->kosakata }}".
+                        {{ $d->kosakata ?? '[kosakata dihapus]' }}.
                     </div>
                     <div class="md:flex hidden md:text-base text-sm col-span-2 items-center space-x-1">
                         @if (isset($d->status))

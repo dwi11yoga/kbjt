@@ -363,7 +363,7 @@
 
                 <div class="space-y-2">
                     <p>Definisi ini sebelumnya diverifikasi oleh
-                        {{ $d->verifikasi_oleh == auth()->user()->id ? 'kamu' : $d->pengurus->nama }}. Pembatalan
+                        {{ $d->verifikasi_oleh == auth()->user()->id ? 'kamu' : $d->pengurus->nama ?? '[Akun dihapus]' }}. Pembatalan
                         verifikasi akan membuat definisi ini kembali berstatus belum terverifikasi. Lanjutkan?</p>
                 </div>
 

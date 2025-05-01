@@ -70,10 +70,12 @@ class ReportController extends Controller
         $editKosakata = EditKosakata::whereIn('id', function ($query) {
             $query->selectRaw('MAX(id)')
                 ->from('editkosakata')
-                ->groupBy('kosakata_id');
+                ->groupBy('kosakata_id'); // kelompokkan agar permintaan edit kosakata tidak duplikat
         })
             // ->whereNull('pengurus_id')
-            ->with('kosakata:id,kosakata,slug')
+            ->with('kosakata', function ($query) {
+                $query->withTrashed(); // ambi data softdelete juga
+            })
             ->orderBy('updated_at', 'desc')
             ->paginate(10, '*', 'edit-kosakata')
             ->onEachSide(2)
@@ -144,12 +146,12 @@ class ReportController extends Controller
     public function definisi(Request $request)
     {
         // cek apakah laporan sudah dilaporkan/belum
-        $cek = Report::where('definisi_id', '=', $request->id)
-            ->where('alasan', '=', $request->alasan)
-            ->whereNull('status')
+        $cek = Report::where('definisi_id', $request->id)
+            ->whereNull('pengurus_id')
             ->first();
+
         if (isset($cek)) {
-            return back()->with('failed', 'Laporan sudah dibuat')->withInput();
+            return back()->with('failed', 'Definisi sudah dilaporkan oleh pengguna lain')->withInput();
         }
 
         // validasi
@@ -200,7 +202,7 @@ class ReportController extends Controller
             ->whereNull('status')
             ->first();
         if (isset($cek)) {
-            return back()->with('failed', 'Permintaan menghapus kosakata sudah dibuat')->withInput();
+            return back()->with('failed', 'Kosakata sudah dilaporkan oleh pengguna lain')->withInput();
         }
 
         // validasi
@@ -209,15 +211,19 @@ class ReportController extends Controller
         ]);
 
         // simpan
-        Report::create([
+        $laporan = Report::create([
             'user_id' => Auth::user()->id,
             'kosakata_id' => $kosakata,
             'alasan' => $validatedData['alasan'],
             'catatan' => $request->catatan,
         ]);
 
-        // kembali ke halaman
-        return back()->with('success', 'Permintaan menghapus kosakata berhasil disubmit');
+        // kembalikan ke view
+        if (Auth::user()->role == 'pengurus') {
+            return redirect('/laporan/' . $laporan->id)->with('success', 'Form laporan berhasil dibuat, silahkan ditindaklanjuti');
+        } else {
+            return back()->with('success', 'Permintaan menghapus kosakata berhasil disubmit');
+        }
     }
 
     // Detail Laporan
@@ -228,10 +234,10 @@ class ReportController extends Controller
             ->with('hukuman')
             ->first();
 
-            // alihkan jika data laporan tidak ditemukan
-            if (empty($laporan)) {
-                return $this->error404();
-            }
+        // alihkan jika data laporan tidak ditemukan
+        if (empty($laporan)) {
+            return $this->error404();
+        }
 
 
         // ambil data yang melaporkan
@@ -253,7 +259,6 @@ class ReportController extends Controller
                 ->where('id', '=', $laporan->definisi_id)
                 ->first();
             $laporan->author = User::withTrashed()
-                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin', 'poin', 'created_at', 'deleted_at')
                 ->where('id', '=', $laporan->definisi->user_id)
                 ->first();
             // cek apakah data pengurus terhapus/tidak
@@ -261,14 +266,15 @@ class ReportController extends Controller
                 $laporan->author->statusUser = 'dihapus';
             }
 
-            $laporan->kosakata = Kosakata::select('id', 'kosakata', 'slug')->where('id', '=', $laporan->definisi->kosakata_id)->first();
+            $laporan->kosakata = Kosakata::withTrashed()
+                ->where('id', '=', $laporan->definisi->kosakata_id)
+                ->first();
         } elseif (isset($laporan->kosakata_id)) {
             // jika kosakata yang dilaporkan
             $laporan->kosakata = Kosakata::withTrashed()
                 ->where('id', '=', $laporan->kosakata_id)
                 ->first();
             $laporan->author = User::withTrashed()
-                ->select('id', 'nama', 'username', 'role', 'profile_pic', 'jenis_kelamin', 'poin', 'created_at', 'deleted_at')
                 ->where('id', '=', $laporan->kosakata->user_id)
                 ->first();
 
@@ -313,29 +319,6 @@ class ReportController extends Controller
             'group' => $group,
             'laporan' => $laporan,
         ];
-
-        // preview devinisi dan kosakata
-        if (isset($laporan->definisi_id)) {
-            // preview definisi
-            $definisi = new stdClass(); //inisiasi object definisi
-            $definisi->menu = 12;
-            $definisi->slug = $laporan->kosakata->slug;
-            $definisi->kosakata = $laporan->kosakata->kosakata;
-            $definisi->definisi = $laporan->def_dilaporkan;
-            $definisi->referensi = $laporan->ref_dilaporkan;
-            $definisi->updated_at = $laporan->waktu_definisi;
-            $definisi->user = $laporan->author;
-            $definisi->copies = 1;
-            // cek apakah definisi yang asli sudah diupdate
-            $definisi->updated = $laporan->def_dilaporkan == $laporan->definisi->definisi ? 1 : 0;
-            $data['definisi'] = $definisi;
-        } elseif (isset($laporan->kosakata_id)) {
-            // preview kosakata
-            $kosakata = Kosakata::withTrashed()
-                ->where('id', '=', $laporan->kosakata_id)
-                ->first();
-            $data['kosakata'] = $kosakata;
-        }
 
         // statistik pelapor dan terlapor
         if (empty($laporan->status)) { //jalankan jika laporan belum ditindaklanjuti
@@ -399,14 +382,14 @@ class ReportController extends Controller
                 ->orderby('status', 'desc')
                 ->limit(5)
                 ->get();
-                
-                // jika data riwayat hukuman adalah dari definisi, maka cari kosakatanya
-                foreach ($riwayatHukuman as $d) {
-                    if(!empty($d->definisi)){
-                        $d->definisi->kosakata=Kosakata::find($d->definisi->kosakata_id)->kosakata;
-                    }
+
+            // jika data riwayat hukuman adalah dari definisi, maka cari kosakatanya
+            foreach ($riwayatHukuman as $d) {
+                if (!empty($d->definisi)) {
+                    $d->definisi->kosakata = Kosakata::find($d->definisi->kosakata_id)->kosakata;
                 }
-                // dd($riwayatHukuman);
+            }
+            // dd($riwayatHukuman);
             $data['riwayatHukuman'] = $riwayatHukuman;
         }
 
@@ -586,8 +569,12 @@ class ReportController extends Controller
         $url = '/laporan/' . $id;
 
         // untuk pelapor
-        $pesan = 'Laporan kamu atas ' . $dilaporkan . ' yang disubmit oleh ' . $terlapor->nama . ' telah selesai ditangani';
-        $this->kirimNotifikasi($pelapor->id, 'laporan', $pesan, $url);
+
+        // jika pelapor == yang menindaklanjuti laporan, maka tidak perlu dikirimi notifikasi
+        if (Auth::user()->id != $pelapor->id) {
+            $pesan = 'Laporan kamu atas ' . $dilaporkan . ' yang disubmit oleh ' . $terlapor->nama . ' telah selesai ditangani';
+            $this->kirimNotifikasi($pelapor->id, 'laporan', $pesan, $url);
+        }
         // untuk terlapor
         $pesan = 'Seseorang melaporkan ' . $dilaporkan . ' yang kamu submit';
         $this->kirimNotifikasi($terlapor->id, 'laporan', $pesan, $url);

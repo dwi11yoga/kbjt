@@ -83,12 +83,12 @@
                     class="flex py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm justify-between cursor-pointer items-center hover:bg-neutral-100">
                     <div>Level <span id="lvl-{{ $d->id }}">{{ $d->lvl }}</span></div>
                     <div class="flex items-center space-x-2 text-neutral-700">
-                        <div class="border rounded-lg py-1 px-2 flex items-center"><i data-feather='users'
+                        <div class="border rounded-lg py-1 px-2 flex items-center" title="Jumlah pengguna berlevel {{ $d->lvl }}"><i data-feather='users'
                                 class="w-4 inline-block mr-1"></i>{{ $d->user_total }}</div>
-                        <div class="border rounded-lg py-1 px-2 flex items-center"><i data-feather='percent'
+                        <div class="border rounded-lg py-1 px-2 flex items-center" title="Persentase pengguna berlevel {{ $d->lvl }}"><i data-feather='percent'
                                 class="w-4 inline-block mr-1"></i>{{ $d->persentase }}</div>
                         <div class="flex items-center border py-1 px-2 rounded-lg">
-                            <i data-feather='stop-circle' class="stroke-amber-400 w-5 inline-block mr-1"></i>
+                            <i data-feather='heart' class="fill-amber-400 w-4 inline-block mr-1"></i>
                             <div>Min.
                                 <span id="min_poin-{{ $d->id }}">{{ $d->min_poin }}</span> Poin
                             </div>
@@ -116,7 +116,7 @@
                             @endisset
                         </div>
                         <div class="flex items-center py-1 px-2 rounded-lg">
-                            <i data-feather='stop-circle' class="stroke-amber-400 w-5 inline-block mr-1"></i>
+                            <i data-feather='heart' class="fill-amber-400 w-4 inline-block mr-1"></i>
                             <div class="min-w-14"><span id="editPoin-{{ $d->id }}">{{ $d->poin }}</span> Poin
                             </div>
                         </div>
@@ -145,7 +145,7 @@
                             @endisset
                         </div>
                         <div class="flex items-center py-1 px-2 rounded-lg">
-                            <i data-feather='stop-circle' class="stroke-amber-400 w-5 inline-block mr-1"></i>
+                            <i data-feather='heart' class="fill-amber-400 w-4 inline-block mr-1"></i>
                             <div class="min-w-14"><span id="editPoin-{{ $d->id }}">{{ $d->poin }}</span> Poin
                             </div>
                         </div>

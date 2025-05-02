@@ -28,7 +28,7 @@
             </label>
         </div>
 
-        <div id="inputDonasi">
+        <div id="inputDonasi" class="space-y-3">
             {{-- metode donasi --}}
             <div class="bg-white px-5 py-4 rounded-xl">
                 <label for="metode_donasi" class="text-sm">Metode donasi</label>

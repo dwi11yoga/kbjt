@@ -10,5 +10,5 @@ class PoinKontribusi extends Model
     protected $table = 'poin_kontribusi';
 
     // 
-    protected $guarded = ['id', 'kontribusi'];
+    protected $guarded = ['id', 'kontribusi', 'role', 'deskripsi'];
 }

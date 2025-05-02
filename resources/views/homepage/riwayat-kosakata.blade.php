@@ -70,7 +70,7 @@
                         @if ($n == 1 && isset($r->status))
                             <div class="text-sm rounded-full py-1 px-3 bg-blue-300 h-fit"
                                 title="Detail deskripsi yang digunakan">
-                                ⭐ <span class="md:inline hidden">Deskripsi digunakan</span>
+                                ⭐ <span class="md:inline hidden">Digunakan sekarang</span>
                             </div>
                         @endif
                     </div>
@@ -144,7 +144,7 @@
                             class="text-sm jawa">{{ $kosakata->aksara }}</span>
                     </h4>
                     <div class="text-sm md:block hidden rounded-full py-1 px-3 bg-blue-300 h-fit">
-                        ☝️ Pertama disubmit
+                        ☝️ Versi awal
                     </div>
                 </div>
                 @if ($kosakata->notasi_fonetik)

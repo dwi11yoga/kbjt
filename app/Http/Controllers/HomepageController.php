@@ -215,7 +215,9 @@ class HomepageController extends Controller
         $keyword = $request->keyword;
         $filter = $request->filter;
 
-        if ($filter == 'kosakata' || empty($filter)) {
+        if (empty($keyword)) {
+            $data = null;
+        } elseif ($filter == 'kosakata' || empty($filter)) {
             // Cari kosakata
             $data = Kosakata::select('id', 'kosakata', 'user_id', 'slug', 'aksara', 'ragam', 'jenis', 'arti_indo')
                 ->with('user:id,username,nama,jenis_kelamin,profile_pic')
@@ -262,7 +264,7 @@ class HomepageController extends Controller
         } else {
             $data = [];
         }
-        $jumlah = count($data);
+        $jumlah = !empty($data) ? count($data) : 0;
 
         // dapatkan data banner
         $banner = $this->getBanner([1, 2]);

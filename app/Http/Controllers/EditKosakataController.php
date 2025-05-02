@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\EditKosakata;
 use App\Models\Kosakata;
+use App\Models\Report;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,7 +63,7 @@ class EditKosakataController extends Controller
         }
     }
 
-    // Simpan edit kosakata
+    // Fungsi Simpan edit kosakata
     public function simpanEdit(Request $request, $slug)
     {
         $id = Kosakata::select('id')->where('slug', $slug)->first();
@@ -92,8 +95,8 @@ class EditKosakataController extends Controller
         // Membuat array serupa
         $arraySerupa = array_map('trim', explode(';', $request->serupa));
 
-        // simpan
-        EditKosakata::create([
+        // data yang akan disimpan
+        $simpan = [
             'user_id' => Auth::user()->id,
             'kosakata_id' => $id->id,
             'ragam' => $validatedData['ragam'],
@@ -104,7 +107,20 @@ class EditKosakataController extends Controller
             'etimologi' => $etimologi,
             'serupa' => $arraySerupa,
             'catatan' => $request->catatan
-        ]);
+        ];
+
+        // tambahkan data yang akan disimpan jika user==pengurus
+        if (Auth::user()->role == 'pengurus') {
+            $simpan['pengurus_id'] = Auth::user()->id;
+            $simpan['status'] = Carbon::now();
+            // tambah poin
+            $poin = $this->poinKontribusi(Auth::user()->id, 'Edit kosakata');
+            $simpan['poin_user'] = $poin;
+            $simpan['poin_pengurus'] = 0; // jika pengurus yang mensubmit, maka tidak mendapatkan poin dari menyetujui edit kosakata
+        }
+
+        // simpan
+        EditKosakata::create($simpan);
 
         // CEK ACHIEVEMENT 
         // rule yang akan dicek achievementnya
@@ -116,30 +132,48 @@ class EditKosakataController extends Controller
             $this->achievement($userId, $d);
         }
 
-        return redirect('/kosakata/' . $slug)->with('success', 'Permintaan edit akan segera diproses');
+        if (Auth::user()->role == 'pengurus') {
+            $pesan = 'Deskripsi berhasil diperbarui (+' . $poin . ' Poin)';
+        } else {
+            $pesan = 'Terima kasih, permintaan edit akan segera diproses';
+        }
+
+        return redirect('/kosakata/' . $slug)->with('success', $pesan);
     }
 
     //setujui perubahan detail kosakata
     public function setujui($slug, $id)
     {
-        // dd($id);
-        $editKosakata = EditKosakata::where('id', '=', $id)->first();
+        // dapatkan data edit kosakata
+        $editKosakata = EditKosakata::find($id);
 
         // jika sudah diacc oleh pengurus lain
         if (isset($editKosakata->status)) {
             return back()->with('failed', 'Perubahan detail kosakata telah disetujui oleh pengurus lain');
         }
 
+        // dapatkan poin untuk kontributor
+        $poin_user = $this->poinKontribusi($editKosakata->user_id, 'Edit kosakata');
+        // dapatkan poin untuk pengurus
+        $poin_pengurus = $this->poinKontribusi(Auth::user()->id, 'Setujui form edit kosakata dari kontributor');
+
         // simpan perubahan
         EditKosakata::find($id)->update([
+            'poin_user' => $poin_user,
+            'pengurus_id' => Auth::user()->id,
+            'poin_pengurus' => $poin_pengurus,
             'status' => now(),
-            'pengurus_id' => Auth::user()->id
         ]);
+
+        // kirim notifikasi ke kontributor
+        $kosakata = Kosakata::find($editKosakata->kosakata_id);
+        $pesan = 'Deskripsi kosakata ' . strtolower($kosakata->kosakata) . ' yang kamu submit disetujui oleh pengurus (+' . $poin_user . ' Poin)';
+        $url = '/kosakata/' . $kosakata->slug . '/riwayat';
+        $this->kirimNotifikasi($editKosakata->user_id, 'kosakata', $pesan, $url);
 
         // cek achievement
         $this->achievement($editKosakata->user_id, 'editKosakata');
-        // dd($a);
 
-        return back()->with('success', 'Perubahan detail kosakata disetujui');
+        return back()->with('success', 'Perubahan detail kosakata berhasil disetujui (+' . $poin_pengurus . ' Poin)');
     }
 }

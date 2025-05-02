@@ -100,7 +100,7 @@
         </div>
     </div>
 
-    {{-- Aktivitas --}}
+    {{-- Poin kontribusi --}}
     <div id="aktivitasContent" class="hidden space-y-5">
         <div class="bg-white rounded-2xl p-5 space-y-2">
             <div>Kontributor</div>
@@ -285,7 +285,7 @@
                     {{-- deskripsi --}}
                     <label for="editDeskripsi" class="block">Deskripsi</label>
                     <textarea id="editDeskripsi" name="editDeskripsi" placeholder="Tambahkan deskripsi..."
-                        oninput="textareaHeight(this)"
+                        oninput="textareaHeight(this)" readonly
                         class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 @error('editDeskripsi')
                 border-b border-red-600
             @enderror">{{ old('editDeskripsi') }}</textarea>

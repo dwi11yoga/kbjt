@@ -382,7 +382,7 @@ class DashboardController extends Controller
 
         // definisi
         $data['definisi'] = Definisi::select('id', 'kosakata_id', 'user_id', 'poin', 'definisi', 'verifikasi', 'updated_at')
-            ->with('kosakata:id,kosakata,slug')
+            ->with('kosakata', function($query){$query->withTrashed();})
             ->where('user_id', '=', Auth::user()->id);
         $statistik['definisiTotal'] = (clone $data['definisi'])->count();
         $statistik['definisiBln'] = (clone $data['definisi'])->whereMonth('updated_at', '=', Carbon::now()->month)->count();

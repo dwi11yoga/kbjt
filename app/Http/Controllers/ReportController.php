@@ -20,12 +20,11 @@ class ReportController extends Controller
     public function index()
     {
         // Laporan (definisi)
-        $laporan = Report::select('id', 'user_id', 'definisi_id', 'pengurus_id', 'status', 'alasan', 'created_at', 'updated_at')
-            ->with([
-                'definisi' => function ($query) {
-                    $query->withTrashed(); //ambil data softdelete juga
-                }
-            ])
+        $laporan = Report::with([
+            'definisi' => function ($query) {
+                $query->withTrashed(); //ambil data softdelete juga
+            }
+        ])
             ->whereNotNull('definisi_id');
 
         // filter
@@ -551,11 +550,22 @@ class ReportController extends Controller
             }
         }
 
+        // tambahkan poin untuk pelapor dan pengurus
+        // pelapor
+        if ($validatedData['pelanggaran'] == 'true') {
+            $kontribusi_pelapor = isset($laporan->definisi_id) ? 'Laporkan definisi' : 'Buat permintaan hapus kosakata';
+            $poin_pelapor = $this->poinKontribusi($laporan->user_id, $kontribusi_pelapor);
+        }
+        // pengurus
+        $poin_pengurus = $this->poinKontribusi(Auth::user()->id, 'Tindaklanjuti laporan');
+
         // ubah status laporan
         Report::find($id)->update([
             'status' => Carbon::now(),
             'pengurus_id' => Auth::user()->id,
-            'catatan_pengurus' => $request->catatan
+            'catatan_pengurus' => $request->catatan,
+            'poin_pelapor' => $validatedData['pelanggaran'] == 'true' ? $poin_pelapor : 0,
+            'poin_pengurus' => $poin_pengurus
         ]);
 
         // KIRIM NOTIFIKASI
@@ -584,6 +594,6 @@ class ReportController extends Controller
         $this->achievement($laporan->user_id, 'laporan');
 
         // kembali ke halaman detail laporan
-        return back()->with('success', 'Tindakan berhasil disimpan');
+        return back()->with('success', 'Tindakan berhasil disimpan (+' . $poin_pengurus . ' Poin)');
     }
 }

@@ -80,7 +80,7 @@
 </nav> --}}
 
 {{-- daftar menu mobile --}}
-<div id="menu" class="fixed w-full h-full grid grid-row-6 bg-white px-5 z-20 invisible">
+<div id="menu" class="fixed w-full h-full grid grid-row-6 bg-white px-5 z-50 invisible">
 
     {{-- tutup menu --}}
     <div class="flex justify-between items-center row-span-1">
@@ -111,6 +111,20 @@
                 </div>
             </div>
         </a>
+
+        @if ($title != 'Selamat datang di Kamus Bahasa Jawa Terbuka!')
+        <a href="/cari">
+            <div
+                class="flex group py-4 px-6 w-fit rounded-2xl {{ $group == 'pencarian' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
+                <i data-feather='search'
+                    class="{{ $group == 'pencarian' ? '' : 'text-neutral-700 group-hover:text-black' }}"></i>
+                <div
+                    class="inline-block ml-3 {{ $group == 'pencarian' ? '' : 'text-neutral-700 group-hover:text-black' }}">
+                    Pencarian
+                </div>
+            </div>
+        </a>
+        @endif
 
         {{-- Daftar kosakata --}}
         <a href="/daftar-kosakata">

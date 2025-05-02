@@ -21,16 +21,16 @@ class KosakataController extends Controller
     public function tambahKosakata()
     {
         // dapatkan data banner
-        $banner=$this->getBanner([1,2]);
+        $banner = $this->getBanner([1, 2]);
 
         return view('homepage.buat-kosakata', [
             'title' => 'Tambah kosakata',
-            'group'=>null,
-            'banner'=>$banner
+            'group' => null,
+            'banner' => $banner
         ]);
     }
 
-    // Simpan kosakata
+    // fungsi Simpan kosakata
     public function store(Request $request)
     {
         // Buat slug
@@ -64,12 +64,7 @@ class KosakataController extends Controller
         $arraySerupa = array_map('trim', explode(';', $request->serupa));
 
         // tambah poin
-        $tambahPoin = PoinKontribusi::where('kontribusi', '=', 'Menambah kosakata')
-            ->where('role', '=', Auth::user()->role)
-            ->value('poin');
-        if (!empty($tambahPoin)) {
-            User::where('id', '=', Auth::user()->id)->increment('poin', $tambahPoin);
-        }
+        $poin = $this->poinKontribusi(Auth::user()->id, "Tambah kosakata");
 
         // simpan
         Kosakata::create([
@@ -83,7 +78,7 @@ class KosakataController extends Controller
             'arti_indo' => $request->arti_indo,
             'etimologi' => $etimologi,
             'serupa' => $arraySerupa,
-            'poin' => $tambahPoin ?? 0
+            'poin' => $poin
         ]);
 
         // cek achievement
@@ -95,7 +90,8 @@ class KosakataController extends Controller
             $this->achievement($userId, $d);
         }
 
-        return redirect('/kosakata/' . $validatedData['slug'], )->with('success', 'Kosakata berhasil ditambahkan');
+        return redirect('/kosakata/' . $validatedData['slug'], )
+            ->with('success', 'Kosakata berhasil ditambahkan (+' . $poin . ' Poin)');
 
     }
 }

@@ -13,9 +13,11 @@ return new class extends Migration {
         //
         Schema::create('editkosakata', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
             $table->foreignId('kosakata_id');
+            $table->foreignId('user_id');
+            $table->integer('poin_user')->nullable()->default(0);
             $table->foreignId('pengurus_id')->nullable();
+            $table->integer('poin_pengurus')->nullable()->default(0);
             $table->enum('ragam', ['Krama', 'Ngoko'])->nullable();
             $table->string('aksara')->nullable();
             $table->string('jenis', 50)->nullable();

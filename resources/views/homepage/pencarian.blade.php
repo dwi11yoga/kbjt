@@ -1,9 +1,20 @@
 @extends('layouts.homepage-with-banner')
 
 @section('body')
-    {{-- Hasil --}}
     <div>
         <h3 class="font-semibold">Pencarian</h3>
+        {{-- kolom pencarian (untuk tampilan mobile) --}}
+            <form action="/cari" method="GET" class="my-3 md:hidden">
+                <div class="relative">
+                    <input value="{{ request('keyword') }}" required
+                        class="bg-neutral-100 w-full px-5 py-2.5 pr-12 rounded-full hover:bg-white hover:outline hover:outline-2 hover:outline-amber-400 focus:outline focus:outline-amber-400 focus:outline-2 focus-within:bg-white"
+                        name="keyword" id="keyword" type="text" placeholder="Cari...">
+                    <button type="submit" class="absolute right-4 top-2.5 text-neutral-500 hover:text-amber-400"
+                        title="Cari"><i data-feather='search'></i></button>
+                </div>
+            </form>
+
+        {{-- filter --}}
         <form action="" method="GET">
             @foreach (request()->except('filter') as $d => $value)
                 <input type="hidden" name="{{ $d }}" value="{{ $value }}">
@@ -18,18 +29,25 @@
                 </select>
             </div>
         </form>
+
     </div>
 
     <div>
+        {{-- Jumlah data ditemukan --}}
         @if ($jumlah > 0)
             <div>{{ $jumlah }} data berhasil ditemukan.</div>
-        @else
-            {{-- <div class="font-semibold mb-3">Kosakata</div> --}}
         @endif
     </div>
 
     <div class="space-y-3">
-        @if ($jumlah <= 0)
+        @if (request()->keyword == null)
+            <div
+                class="p-12 rounded-2xl flex justify-center items-center text-center flex-col shadow-sm border border-neutral-200 w-full">
+                <img src="https://img.freepik.com/free-vector/children-looking-concept-illustration_114360-21682.jpg"
+                    alt="Lost concept illustration (Freepik/storyset)" class="w-56 mb-5">
+                <div>Silakan ketik kata kunci untuk memulai pencarian</div>
+            </div>
+        @elseif ($jumlah <= 0)
             {{-- Jika tidak ada data --}}
             <?php
             if (request()->filter == 'kosakata' || empty(request()->filter)) {
@@ -142,7 +160,9 @@
         @endif
 
         {{-- paginate --}}
-        @if (request()->filter == 'kosakata' || request()->filter == 'artikel' || request()->filter == 'pengguna')
+        @if (
+            !empty($data) &&
+                (request()->filter == 'kosakata' || request()->filter == 'artikel' || request()->filter == 'pengguna'))
             <div>
                 {{ $data->links() }}
             </div>

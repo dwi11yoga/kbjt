@@ -182,9 +182,8 @@ abstract class Controller
             $definisi = Definisi::where('verifikasi_oleh', $userId)->count();
             $laporan = Report::where('pengurus_id', $userId)->whereNotNull('status')->count();
             // banner - belom
-            $banner = 0;
             $blog = Blog::where('user_id', $userId)->whereNotNull('status')->count();
-            $nilai = $editKosakata + $definisi + $laporan + $blog + $banner;
+            $nilai = $editKosakata + $definisi + $laporan + $blog;
         } else {
             $nilai = 0;
         }
@@ -293,14 +292,20 @@ abstract class Controller
     }
 
     // tambahkan poin atas kontribusi
-    public function poinKontribusi(int $userId, int $idKontribusi)
+    public function poinKontribusi(int $userId, string $kontribusi)
     {
+
+        // dapatkan role user
+        $role = User::find($userId)->role;
         // dapatkan poin reward untuk user
-        $poin = PoinKontribusi::find($idKontribusi)->poin;
+        $poin = PoinKontribusi::where('role', $role)
+            ->where('kontribusi', $kontribusi)
+            ->first()
+            ->poin ?? 0; // jika null, maka nilai poin adalah 0
 
         // tambah poin user
         User::find($userId)->increment('poin', $poin);
 
-        return 'berhasil :)';
+        return $poin;
     }
 }

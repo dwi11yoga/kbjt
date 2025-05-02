@@ -26,7 +26,7 @@
             <div class="grid grid-cols-2 space-x-3">
                 <div class="relative">
                     <label for="ragam">Ragam</label>
-                    <select name="ragam" id="ragam" onchange="ubahSerupa(this)"
+                    <select name="ragam" id="ragam"
                         class="px-4 appearance-none bg-white py-3 w-full mt-1.5 border border-gray-400 rounded-xl block mb-3">
                         <option value="">Pilih</option>
                         <option {{ old('ragam') == 'Krama' ? 'selected' : '' }}>Krama</option>
@@ -78,15 +78,17 @@
                 </div>
             </div>
             {{-- Deskripsi jenis --}}
-            <div id="jenis_deskripsi" class="text-xs -mt-2 mb-2 italic"></div>
+            <div id="jenis_deskripsi" class="text-sm -mt-2 mb-2"></div>
 
-            <label for="serupa" id="labelSerupa">Arti dalam bahasa ngoko</label>
+            <label for="serupa" id="labelSerupa">Kosakata terkait*</label>
             <input type="text" name="serupa" id="serupa" value="{{ old('serupa') }}"
-                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-xl block mb-3">
+                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-xl block">
+                <div class="text-sm mb-3">*Kosakata dalam ngoko/krama, kosakata serupa, dan sebagainya</div>
 
-            <label for="arti_indo">Arti dalam Bahasa Indonesia</label>
+            <label for="arti_indo">Arti dalam Bahasa Indonesia*</label>
             <input type="text" name="arti_indo" id="arti_indo" value="{{ old('arti_indo') }}"
-                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-xl block mb-3">
+                class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-xl block">
+            <div class="text-sm mb-3">*Digunakan untunk mempermudah pengguna dalam mencari kosakata</div>
 
             <label for="etimologi">Etimologi</label>
             <div class="relative w-full">
@@ -160,8 +162,6 @@
 
                 // tampilkan deskripsi
                 deskripsiJenis(document.getElementById('jenis'));
-                // Ubah teks bagian serupa/arti
-                ubahSerupa(document.getElementById('ragam'));
 
                 // Atur agar bahasa dan kata asli disembunyikan ketika etimologi bernilai null
                 showEtimologiInput(document.getElementById('etimologi'));

@@ -156,8 +156,16 @@
                                 <?php $d = $laporan->user; ?>
                                 @include('partials.profile-pic-general')
                             </div>
-                            <div class="">{{ $laporan->user->nama }}<i data-feather='arrow-up-right'
-                                    class="w-5 inline"></i></div>
+                            <div class="">
+                                {{ $laporan->user->nama }}
+                                <i data-feather='arrow-up-right' class="w-5 inline"></i>
+                                @if (!is_null($laporan->poin_pelapor))
+                                    <span
+                                        class="no-underline bg-amber-300 rounded-md py-1 px-2 text-sm whitespace-nowrap">{{ $laporan->poin_pelapor }}
+                                        Poin
+                                    </span>
+                                @endif
+                            </div>
                         </a>
                     @endif
                 </div>
@@ -195,8 +203,16 @@
                                     <?php $d = $laporan->pengurus; ?>
                                     @include('partials.profile-pic-general')
                                 </div>
-                                <div class="">{{ $laporan->pengurus->nama }}<i data-feather='arrow-up-right'
-                                        class="w-5 inline"></i></div>
+                                <div class="">
+                                    {{ $laporan->pengurus->nama }}
+                                    <i data-feather='arrow-up-right' class="w-5 inline"></i>
+                                    @if (!is_null($laporan->poin_pengurus) && auth()->user()->role != 'kontributor')
+                                        <span
+                                            class="no-underline bg-amber-300 rounded-md py-1 px-2 text-sm whitespace-nowrap">
+                                            {{ $laporan->poin_pengurus }} Poin
+                                        </span>
+                                    @endif
+                                </div>
                             </a>
                         @endif
                     </div>

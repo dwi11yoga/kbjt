@@ -24,6 +24,8 @@ return new class extends Migration {
             $table->text('def_dilaporkan')->nullable();
             $table->json('ref_dilaporkan')->nullable();
             $table->dateTime('waktu_definisi')->nullable();
+            $table->integer('poin_pelapor')->nullable(); // poin untuk pelapor jika di-acc
+            $table->integer('poin_pengurus')->nullable(); // poin untuk pengurus jika menindaklanjuti
             $table->timestamps();
         });
     }

@@ -14,7 +14,9 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('kosakata_id');
             $table->foreignId('user_id');
-            $table->integer('poin')->default(0);
+            $table->integer('poin_kontributor')->default(0); // saat definisi disubmit
+            $table->integer('poin_verifikasi')->default(value: 0); // khusus untuk poin setelah definisi diverifikasi
+            $table->integer('poin_pengurus')->default(value: 0); // untuk kontributor karena telah memverifikasi
             $table->text('definisi');
             $table->json('referensi')->nullable();
             $table->dateTime('verifikasi')->nullable();

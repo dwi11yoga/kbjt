@@ -133,7 +133,7 @@ class UserController extends Controller
         // url user
         $user['url'] = $this->getUrl() . '/u/' . $user['username'];
 
-        // Hitung jumlah data medsos
+        // Hitung jumlah data medsos - untuk membatasi jumlah medsos yang ditampilkan
         $user['jmlMedsos'] = 0;
         if (isset($user['media_sosial'])) {
             $user['jmlMedsos'] = count(array_filter($user['media_sosial'], function ($value) {
@@ -151,8 +151,12 @@ class UserController extends Controller
         //     ->appends(request()->query());
         $definisi = Definisi::where('user_id', $user->id);
         // jika user bukan user yang sedang login, maka sembunyikan definisi yang disembunyikan karena hukuman
-        if (Auth::user()->id != $user->id) {
-            $definisi = $definisi->where('hukuman_edit', '!=', 1);
+        // tampilkan jika definisi==null || hukuman edit bukan 1
+        if (isset(Auth::user()->id) && Auth::user()->id != $user->id) {
+            $definisi = $definisi->where(function ($query) {
+                $query->whereNull('hukuman_edit')
+                    ->orWhere('hukuman_edit', '!=', 1);
+            });
         }
 
         $definisi = $definisi->whereHas('kosakata')

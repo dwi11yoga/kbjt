@@ -37,7 +37,9 @@
                             </a>
                             <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-red-100 text-red-500 cursor-pointer"
                                 onclick="openWindow('hapausKosakata')">
-                                <div>Minta hapus</div>
+                                <div>
+                                    {{ isset(auth()->user()->role) && auth()->user()->role == 'pengurus' ? 'Hapus' : 'Minta hapus' }}
+                                </div>
                                 <i data-feather='trash' class="w-5"></i>
                             </li>
                         </ul>
@@ -120,7 +122,9 @@
             class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
             <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
 
-                <h5 class="font-semibold capitalize">Minta pengurus menghapus kosakata</h5>
+                <h5 class="font-semibold capitalize">
+                    {{ isset(auth()->user()->role) && auth()->user()->role == 'pengurus' ? 'Form hapus kosakata' : 'Minta pengurus menghapus kosakata' }}
+                </h5>
                 <div class="mb-5">Apa alasan kamu ingin menghapus kosakata ini?</div>
 
                 <form action="/kosakata/{{ $data->slug }}/laporkan" method="POST">
@@ -182,9 +186,9 @@
                         @csrf
                         <div class="md:col-start-2 md:col-span-3 col-span-6">
                             <div
-                                class="bg-white rounded-2xl p-6 mb-4 border border-neutral-200 hover:outline hover:outline-2 hover:outline-amber-400 space-y-3">
+                                class="bg-white rounded-2xl mb-4 border border-neutral-200 hover:outline hover:outline-2 hover:outline-amber-400 space-y-3">
                                 {{-- Kosakata --}}
-                                <div>
+                                <div class="px-6 pt-6">
                                     <h5 class="font-semibold mb-4 capitalize">{{ $data->kosakata }}</h5>
                                     <input type="number" name="kosakata_id" value="{{ $data->id }}" readonly hidden>
                                 </div>
@@ -207,15 +211,15 @@
                                 </div>
 
                                 {{-- Referensi --}}
-                                <div>
+                                <div class="px-6">
                                     <label for="referensi">Referensi</label>
                                     <textarea id="referensi" name="referensi" class="w-full appearance-none resize-none focus:outline-none mb-3 max-h-52"
                                         placeholder="Pisahkan referensi dengan tanda titik koma (;)" oninput="textareaHeight(this)">{{ old('referensi') }}</textarea>
                                 </div>
 
                                 {{-- Author --}}
-                                <p class="mb-2">Disubmit oleh</p>
-                                <div class="flex justify-between items-end">
+                                <p class="mb-2 px-6">Disubmit oleh</p>
+                                <div class="flex justify-between items-end px-6 pb-6">
                                     <div class="flex items-center">
                                         <div>
                                             <div class="h-12 w-12 rounded-full overflow-hidden mr-3">

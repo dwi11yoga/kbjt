@@ -61,11 +61,12 @@
             <?php $artikelUser = 0; ?>
             @foreach ($posts as $d)
                 <div
-                    class="relative grid grid-cols-12 items-center py-4 px-5 bg-white rounded-xl group hover:outline hover:outline-amber-200">
+                    class="relative grid grid-cols-12 items-center py-4 px-5 bg-white rounded-xl group hover:outline hover:outline-amber-200 {{ request()->id == $d->id ? 'outline outline-amber-400' : '' }}">
                     <a href="{{ $d->user_id != auth()->user()->id || auth()->user()->role == 'kepala' ? (isset($d->status) ? '/blog/post/' . $d->slug : '/blog/preview/' . $d->slug) : '/artikel/edit/' . $d->id }}"
                         class="col-span-11 grid md:grid-cols-11 grid-cols-5 md:space-x-10 space-y-2">
                         {{-- Judul --}}
-                        <div class="md:col-span-5 col-span-5 line-clamp-2 flex items-center md:font-normal font-semibold" title="Judul artikel">
+                        <div class="md:col-span-5 col-span-5 line-clamp-2 flex items-center md:font-normal font-semibold"
+                            title="Judul artikel">
                             @if ($d->pinned == 1)
                                 <span title="Disematkan">📌</span>
                             @endif
@@ -73,7 +74,8 @@
                         </div>
 
                         {{-- author --}}
-                        <div class="md:col-span-3 col-span-5 flex items-center space-x-1 text-neutral-700" title="Ditulis oleh {{ $d->user->nama }} {{isset($d->user->statusUser) && $d->user->statusUser=='dihapus'?'(Akun dihapus)':''}}">
+                        <div class="md:col-span-3 col-span-5 flex items-center space-x-1 text-neutral-700"
+                            title="Ditulis oleh {{ $d->user->nama }} {{ isset($d->user->statusUser) && $d->user->statusUser == 'dihapus' ? '(Akun dihapus)' : '' }}">
                             <div class="md:w-7 md:h-7 w-8 h-8 rounded-full overflow-hidden">
                                 @include('partials.profil-pic-general-array2')
                             </div>
@@ -123,13 +125,15 @@
                                     @csrf
                                     @if (isset($d->status))
                                         {{-- jadikan draft --}}
-                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
+                                        <button type="submit"
+                                            class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                             <div>Jadikan draf</div>
                                             <i data-feather='archive' class="w-5"></i>
                                         </button>
                                     @else
                                         {{-- publikasikan --}}
-                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
+                                        <button type="submit"
+                                            class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                             <div>Publikasikan</div>
                                             <i data-feather='send' class="w-5"></i>
                                         </button>
@@ -155,7 +159,8 @@
                                     @csrf
                                     @if ($d->pinned == 0)
                                         {{-- Pin artikel --}}
-                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
+                                        <button type="submit"
+                                            class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                             <div>Sematkan</div>
                                             <div>
                                                 <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none"
@@ -167,7 +172,8 @@
                                         </button>
                                     @elseif ($d->pinned == 1)
                                         {{-- Unpin artikel --}}
-                                        <button type="submit" class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
+                                        <button type="submit"
+                                            class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                             <div>Lepas semat</div>
                                             <div>
                                                 <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none"

@@ -28,27 +28,32 @@ class DefinisiController extends Controller
         }
 
         // tambah poin
-        $tambahPoin = PoinKontribusi::where('kontribusi', '=', 'Menambah definisi')
-            ->where('role', '=', Auth::user()->role)
-            ->value('poin');
-        if (!empty($tambahPoin)) {
-            User::where('id', '=', Auth::user()->id)->increment('poin', $tambahPoin);
-        }
+
+        $poin = $this->poinKontribusi(Auth::user()->id, 'Tambah definisi');
+
+        // $tambahPoin = PoinKontribusi::where('kontribusi', '=', 'Menambah definisi')
+        //     ->where('role', '=', Auth::user()->role)
+        //     ->value('poin');
+        // if (!empty($tambahPoin)) {
+        //     User::where('id', '=', Auth::user()->id)->increment('poin', $tambahPoin);
+        // }
 
         // simpan
-        Definisi::create([
+        $simpan = Definisi::create([
             'kosakata_id' => $validatedData['kosakata_id'],
             'user_id' => Auth::user()->id,
             'definisi' => $validatedData['definisi'],
             'referensi' => $arrayReferensi,
-            'poin' => $tambahPoin ?? 0
+            'poin_kontributor' => $poin
         ]);
 
         // cek achievement
-        $jumlahDefinisi = Definisi::where('user_id', '=', Auth::user()->id)->count();
         $this->achievement(Auth::user()->id, 'definisi');
 
-        return back()->with('success', 'Definisi berhasil ditambahkan');
+        // kembalikan view
+        // dapatkan slug kosakata
+        $slug = Kosakata::find($validatedData['kosakata_id'])->slug;
+        return redirect()->to('/kosakata/' . $slug . '?definisi=' . $simpan->id)->with('success', 'Definisi berhasil ditambahkan (+' . $poin . ' Poin)');
     }
 
     // Simpan edit definisi
@@ -105,35 +110,63 @@ class DefinisiController extends Controller
         }
 
         // dapatkan data definisi
-        $definisi = Definisi::find($id);
+        $definisi = Definisi::with('user')
+            ->with('kosakata')
+            ->find($id);
 
-        if (empty($definisi->verifikasi)) {
-            // jika belum diverifikasi, maka verifikasi
+        if (empty($definisi->verifikasi)) { // jika belum diverifikasi, maka verifikasi
             $verifikasi = Carbon::now();
             $verifikasi_oleh = Auth::user()->id;
 
-            $pesan = 'Definisi yang kamu submit untuk kosakata ' . Kosakata::where('slug', $kosakata_slug)->first()->kosakata . ' telah lolos verifikasi oleh pengurus 🤝';
-            $toast='Definisi berhasil diverifikasi';
-        } else {
-            // jika sudah diverifikasi, maka unverifikasi
+            // tambah poin
+            // kotnributor
+            $poin_verifikasi = $this->poinKontribusi($definisi->user_id, 'Definisi terverifikasi');
+            // pengurus
+            $poin_pengurus = $this->poinKontribusi(Auth::user()->id, 'Verifikasi definisi');
+
+            // atur pesan yang akan dikirimkan
+            $notif = 'Definisi yang kamu submit untuk kosakata ' . $definisi->kosakata->kosakata . ' telah lolos verifikasi oleh pengurus (+' . $poin_verifikasi . ' poin)';
+            $toast = 'Definisi berhasil diverifikasi (+' . $poin_pengurus . ' Poin)';
+        } else { // jika sudah diverifikasi, maka unverifikasi
             $verifikasi = null;
             $verifikasi_oleh = null;
 
-            $pesan = 'Status verifikasi untuk definisi yang kamu submit untuk kosakata ' . Kosakata::where('slug', $kosakata_slug)->first()->kosakata . ' telah dicabut oleh pengurus 🙏';
-            $toast='Definisi berhasil di un-verifikasi';
+            // Atur poin menjadi 0
+            $poin_verifikasi = 0;
+            $poin_pengurus = 0;
+
+
+            // atur pesan yang akan dikirimkan
+            $notif = 'Status verifikasi untuk definisi yang kamu submit untuk kosakata ' . $definisi->kosakata->kosakata . ' telah dicabut oleh pengurus (-' . $definisi->poin_verifikasi . ' poin)';
+            if (Auth::user()->id == $definisi->verifikasi_oleh) { // tambahkan poin yang dikurang jika user yang meng-unverifikasi adalah yang memverifikasi
+                $toast = 'Definisi berhasil di un-verifikasi (-' . $definisi->poin_pengurus . ' poin)';
+            } else {
+                $toast = 'Definisi berhasil di un-verifikasi';
+            }
+
+            // kurangi poin yang dimiliki oleh kontributor dan pengurus
+            // kontributor
+            User::find($definisi->user_id)->decrement('poin', $definisi->poin_verifikasi);
+            // pengurus
+            User::find($definisi->verifikasi_oleh)->decrement('poin', $definisi->poin_pengurus);
         }
+
         // simpan verifikasi/unverifikasi
         Definisi::find($id)->update([
             'verifikasi' => $verifikasi,
             'verifikasi_oleh' => $verifikasi_oleh,
+            'poin_verifikasi' => $poin_verifikasi,
+            'poin_pengurus' => $poin_pengurus
         ]);
 
         // buat notifikasi untuk author
         $url = '/kosakata/' . $kosakata_slug . '?definisi=' . $id;
-        $this->kirimNotifikasi(Definisi::find($id)->user_id, 'definisi', $pesan, $url);
+        $this->kirimNotifikasi($definisi->user_id, 'definisi', $notif, $url);
 
-        // tambah poin pengurus
-        // $this->poinKontribusi(Auth::user()->id, 4);
+        if (!empty($definisi->verifikasi_oleh && Auth::user()->id != $definisi->verifikasi_oleh)) { // kirim notif untuk peng-verifikasi jika definisinya di-unverifikasi
+            $notif = 'Definisi yang kamu verifikasi milik ' . $definisi->user->nama . ' pada kosakata ' . $definisi->kosakata->kosakata . ' telah di-unverifikasi oleh ' . Auth::user()->nama . ' (-' . $definisi->poin_verifikasi . ' poin)';
+            $this->kirimNotifikasi($definisi->verifikasi_oleh, 'definisi', $notif, $url);
+        }
 
         // kembali ke view
         return redirect($url)->with('success', $toast);

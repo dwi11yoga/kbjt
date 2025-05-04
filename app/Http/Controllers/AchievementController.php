@@ -34,7 +34,7 @@ class AchievementController extends Controller
 
 
         // dapatkan data achievement yang didapatkan oleh user
-        $achieved = User::find(Auth::user()->id)->value('achievement'); // menggunakan query builder karena menggunakan facade Auth ada delay
+        $achieved = User::find(Auth::user()->id)->achievement; // menggunakan query builder karena menggunakan facade Auth ada delay
 
         // data overview / statistik
         if (Auth::user()->role == 'kontributor') {
@@ -69,7 +69,7 @@ class AchievementController extends Controller
         }
 
         $achievement = $achievement->orderBy('rule', 'asc')
-        ->orderBy('requirement', 'asc')
+            ->orderBy('requirement', 'asc')
             ->paginate(20)
             ->onEachSide(2)
             ->appends(request()->query());
@@ -83,42 +83,41 @@ class AchievementController extends Controller
             } else {
 
                 // cek jumlah kontribusi user
-            if ($d->rule == 'keanggotaan') {
-                // cek lama suer bergabung
-                $value = round(Auth::user()->created_at->diffInDays(now())) ?? 0;
-            } elseif ($d->rule == 'definisi') {
-                // cek jumlah definisi yang dibuat oleh user
-                $value = Definisi::where('user_id', '=', Auth::user()->id)->count() ?? 0;
-            } elseif ($d->rule == 'kosakata') {
-                // cek jumlah kosakata yang dibuat oleh user
-                $value = Kosakata::where('user_id', '=', Auth::user()->id)->count() ?? 0;
-            } elseif ($d->rule == 'editKosakata') {
-                // cek jumlah kosakata yang diedit oleh user (dan di acc oleh pengurus)
-                $value = EditKosakata::where('user_id', '=', Auth::user()->id)->whereNotNull('status')->count() ?? 0;
-            } elseif ($d->rule == 'laporan') {
-                // cek jumlah laporan yang dibuat oleh user dan diacc oleh pengurus
-                $value = Report::where('user_id', '=', Auth::user()->id)->whereNotNull('status')->count() ?? 0;
-            } elseif ($d->rule == 'artikel') {
-                // cek jumlah artikel yang dibuat oleh user dan dipublikasikan
-                $value = Blog::where('user_id', '=', Auth::user()->id)->whereNotNull('status')->count() ?? 0;
-            } elseif ($d->rule == 'totalViewKosakata') {
-                // cek jumlah view dari semua kosakata yang dibuat oleh user
-                $value = Kosakata::where('user_id', '=', Auth::user()->id)->sum('view') ?? 0;
-            } elseif ($d->rule == 'viewKosakata') {
-                // cek jumlah view dari 1 kosakata paling banyak dilihat yang dibuat oleh user
-                $value = Kosakata::where('user_id', '=', Auth::user()->id)->orderBy('view', 'desc')->value('view') ?? 0;
-            } elseif ($d->rule == 'totalViewBlog') {
-                // cek jumlah view dari semua artikel yang dibuat oleh user
-                $value = Blog::where('user_id', '=', Auth::user()->id)->sum('view') ?? 0;
-            } elseif ($d->rule == 'viewBlog') {
-                // cek jumlah view dari 1 artikel paling banyak dilihat yang dibuat oleh user
-                $value = Blog::where('user_id', '=', Auth::user()->id)->orderBy('view', 'desc')->value('view') ?? 0;
-            } else {
-                $value = 0;
-            }
+                if ($d->rule == 'keanggotaan') {
+                    // cek lama suer bergabung
+                    $value = round(Auth::user()->created_at->diffInDays(now())) ?? 0;
+                } elseif ($d->rule == 'definisi') {
+                    // cek jumlah definisi yang dibuat oleh user
+                    $value = Definisi::where('user_id', '=', Auth::user()->id)->count() ?? 0;
+                } elseif ($d->rule == 'kosakata') {
+                    // cek jumlah kosakata yang dibuat oleh user
+                    $value = Kosakata::where('user_id', '=', Auth::user()->id)->count() ?? 0;
+                } elseif ($d->rule == 'editKosakata') {
+                    // cek jumlah kosakata yang diedit oleh user (dan di acc oleh pengurus)
+                    $value = EditKosakata::where('user_id', '=', Auth::user()->id)->whereNotNull('status')->count() ?? 0;
+                } elseif ($d->rule == 'laporan') {
+                    // cek jumlah laporan yang dibuat oleh user dan diacc oleh pengurus
+                    $value = Report::where('user_id', '=', Auth::user()->id)->whereNotNull('status')->count() ?? 0;
+                } elseif ($d->rule == 'artikel') {
+                    // cek jumlah artikel yang dibuat oleh user dan dipublikasikan
+                    $value = Blog::where('user_id', '=', Auth::user()->id)->whereNotNull('status')->count() ?? 0;
+                } elseif ($d->rule == 'totalViewKosakata') {
+                    // cek jumlah view dari semua kosakata yang dibuat oleh user
+                    $value = Kosakata::where('user_id', '=', Auth::user()->id)->sum('view') ?? 0;
+                } elseif ($d->rule == 'viewKosakata') {
+                    // cek jumlah view dari 1 kosakata paling banyak dilihat yang dibuat oleh user
+                    $value = Kosakata::where('user_id', '=', Auth::user()->id)->orderBy('view', 'desc')->value('view') ?? 0;
+                } elseif ($d->rule == 'totalViewBlog') {
+                    // cek jumlah view dari semua artikel yang dibuat oleh user
+                    $value = Blog::where('user_id', '=', Auth::user()->id)->sum('view') ?? 0;
+                } elseif ($d->rule == 'viewBlog') {
+                    // cek jumlah view dari 1 artikel paling banyak dilihat yang dibuat oleh user
+                    $value = Blog::where('user_id', '=', Auth::user()->id)->orderBy('view', 'desc')->value('view') ?? 0;
+                } else {
+                    $value = 0;
+                }
 
-            // hitung progress
-            $d->progress = round(($value/$d->requirement)*100) .'%';
+                $d->progress = round(($value / $d->requirement) * 100) . '%';
             }
         }
 

@@ -3,7 +3,7 @@
 
     <div class="md:col-span-1 col-span-3 flex items-center justify-center rounded-md overflow-hidden">
         <img src="{{ asset(isset($d->emblem) ? 'storage/' . $d->emblem : 'storage/achievement/no-icon') }}"
-            class="w-full @if ($d->achieved != 1 && auth()->user()->role != 'kepala') grayscale @endif" alt="Icon">
+            class="w-full @if ($d->achieved != 1 && isset(auth()->user()->role) && auth()->user()->role != 'kepala') grayscale @endif" alt="Icon">
     </div>
 
     {{-- detail --}}

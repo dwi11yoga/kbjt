@@ -16,8 +16,9 @@ class BlogController extends Controller
     public function index(Request $request)
     {
         // Definisikan filter yang dikirim
-        $status = $_GET['status'] ?? null;
-        $author = $_GET['author'] ?? null;
+        $status = $request->status ?? null;
+        $author = $request->author ?? null;
+        $id_artikel = $request->id ?? null;
 
         // Dapatkan data blog
         // $query = Blog::with('user:id,username,nama,profile_pic,jenis_kelamin');
@@ -42,6 +43,11 @@ class BlogController extends Controller
             $query->whereHas('user', function ($q) use ($author) {
                 $q->where('username', '=', $author);
             });
+        }
+
+        // tampilkan terlebih dahulu artikel yang ada pada id
+        if (!empty($id_artikel)) {
+            $query->orderByRaw('id=? DESC', [$id_artikel]);
         }
 
         $blog = $query->orderBy('pinned', 'desc')
@@ -121,6 +127,11 @@ class BlogController extends Controller
             $data['thumbnail'] = $validatedData['thumbnail'];
         }
 
+        // tambah poin pengurus yang mempublikasikan artikel
+        if ($apakahPublish == true) {
+            $data['poin'] = $this->poinKontribusi($data['user_id'], 'Publikasikan artikel');
+        }
+
         // Simpan
         Blog::create($data);
 
@@ -140,15 +151,22 @@ class BlogController extends Controller
                 $this->achievement($userId, $d);
             }
 
-            return redirect('/artikel')->with('success', 'Artikel berhasil dipublikasikan');
+            return redirect('/artikel')->with('success', 'Artikel berhasil dipublikasikan (+' . $data['poin'] . ' poin)');
         }
     }
 
     // Simpan artikel lama sebagai draft/publikasikan - digunakan untuk halaman edit artikel
+    // hanya bisa digunakan oleh author yang membuat artikel
     public function simpanEdit(Request $request, $id)
     {
         // dapatkan data artikel yang diedit
-        $post = Blog::select('id', 'slug', 'thumbnail', 'user_id')->where('id', '=', $id)->first();
+        $post = Blog::find($id);
+
+        // alihkan jika user bukan yang membuat artikel
+        if ($post->user_id!=Auth::user()->id) {
+            return back()->with('failed', 'Akses tidak diizinkan');
+
+        }
 
         // cek apakah artikel disimpan/dipublish
         $apakahSimpan = $request->getRequestUri() == "/artikel/edit/" . $id . "/simpan"; //true jika artikel disimpan
@@ -178,7 +196,7 @@ class BlogController extends Controller
 
         // simpan data
         $data = [
-            'user_id' => Auth::user()->id,
+            // 'user_id' => Auth::user()->id,
             'judul' => $validatedData['judul'],
             'slug' => $validatedData['slug'],
             'subjudul' => $request->subjudul,
@@ -199,12 +217,22 @@ class BlogController extends Controller
             $data['thumbnail'] = $validatedData['thumbnail'];
         }
 
+        // tambah poin pengurus yang mempublikasikan artikel (jika dipublikasikan dan sebelumnya belum dipublikasikan)
+        if ($apakahPublish == true && empty($post->status)) {
+            $data['poin'] = $this->poinKontribusi($post->user_id, 'Publikasikan artikel');
+            $poin_toast = $data['poin'] > 0 ? '(+' . $data['poin'] . ' poin)' : '';
+        } elseif ($apakahSimpan == true && !empty($post->status)) { // kurangi poin pengurus yang meng-unpublish artikel (jika artikel disimpan dan sebelumnya sudah dipublikasikan)
+            User::find($post->user_id)->decrement('poin', $post->poin); // kurangi poin user dengan poin yang sebelumnya didapatkan
+            $data['poin'] = 0;
+            $poin_toast = $post->poin > 0 ? '(-' . $post->poin . ' poin)' : '';
+        }
+
         // Simpan
         Blog::find($id)->update($data);
 
         // redirect ke halaman edit
         if ($apakahSimpan == true) {
-            return redirect('/artikel/edit/' . $post->id)->with('success', 'Artikel berhasil disimpan sebagai draf');
+            return redirect('/artikel/edit/' . $post->id)->with('success', 'Artikel berhasil disimpan sebagai draf' . $poin_toast);
         } elseif ($apakahPublish == true) {
 
             // cek achievement 
@@ -216,7 +244,7 @@ class BlogController extends Controller
                 $this->achievement($userId, $d);
             }
 
-            return redirect('/artikel')->with('success', 'Artikel berhasil dipublikasikan');
+            return redirect('/artikel')->with('success', 'Artikel berhasil dipublikasikan' . $poin_toast);
         }
     }
 
@@ -244,10 +272,17 @@ class BlogController extends Controller
         ]);
     }
 
-    // Publikasikan / jadikan artikel draf - untuk menu di halaman utama artikel/blog (dashboard)
+    // Publikasikan / jadikan artikel draf - untuk menu di halaman list artikel/blog (dashboard)
+    // hanya mengubah status artikel
     public function draft($id)
     {
+        // dapatkan data artikel
         $post = Blog::find($id);
+
+        // alihkan jika user bukan kepala dan bukan yang membuat artikel
+        if ($post->user_id!=Auth::user()->id) {
+            return $this->error403();
+        }
 
         // Jika post tidak ditemukan atau author bukanlah user
         if (empty($post) || (Auth::user()->role != 'kepala' && $post['user_id'] != Auth::user()->id)) {
@@ -260,21 +295,31 @@ class BlogController extends Controller
             // Ubah status jadi dipublikasikan
             $data['status'] = now();
             $pesan = 'Artikel berhasil dipublikasikan';
-        } elseif (isset($post['status'])) {
+        } else {
             // Ubah status jadi draf
             $data['status'] = null;
             $pesan = 'Artikel berhasil disimpan sebagai draf';
         }
 
 
-        // Unpin jika post adalah pinned
+        // Unpin jika post adalah pinned (publikasikan menjadi draft)
         if (isset($post['status']) && $post['pinned'] == 1) {
             $data['pinned'] = 0;
         }
 
+        // tambah poin pengurus yang mempublikasikan artikel (jika dipublikasikan dan sebelumnya belum dipublikasikan)
+        if (empty($post->status)) { // jika belum dipublikasikan - tambah poin user
+            $data['poin'] = $this->poinKontribusi($post->user_id, 'Publikasikan artikel');
+            $poin_toast = $data['poin'] > 0 ? '(+' . $data['poin'] . ' poin)' : '';
+        } else { // kurangi poin pengurus yang meng-unpublish artikel (jika artikel disimpan dan sebelumnya sudah dipublikasikan)
+            User::find($post->user_id)->decrement('poin', $post->poin); // kurangi poin user dengan poin yang sebelumnya didapatkan
+            $data['poin'] = 0;
+            $poin_toast = $post->poin > 0 ? '(-' . $post->poin . ' poin)' : '';
+        }
+
         // Simpan
         Blog::where('id', '=', $id)->update($data);
-        
+
         // cek achievement
         $post->status = $data['status']; // update nilai status dari post, karena nilainya bisa saja berubah
         if (isset($post['status'])) {
@@ -286,6 +331,15 @@ class BlogController extends Controller
             foreach ($rule as $d) {
                 $this->achievement($userId, $d);
             }
+        }
+
+        // kirim notifikasi ke penulis jika bukan penulis yang mengubah status artikel (kepala yang mengubah)
+        if ($post->user_id != Auth::user()->id) {
+            $notif = 'Artikel yang kamu tulis telah di' . (empty($post->status) ? 'publikasikan' : 'jadikan sebagai draft') . ' oleh kepala ' . $poin_toast;
+            $url = '/artikel?id=' . $post->id;
+            $this->kirimNotifikasi($post->user_id, 'blog', $notif, $url);
+        } else { // tambahkan poin + atau - jika yang mengubah status adalah penulis sendiri
+            $pesan = $pesan . ' ' . $poin_toast;
         }
 
         return back()->with('success', $pesan);

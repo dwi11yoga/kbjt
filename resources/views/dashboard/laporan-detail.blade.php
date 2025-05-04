@@ -75,7 +75,7 @@
                 </div>
                 <div>
                     <div class="text-sm">Catatan pelapor</div>
-                    <div class="">{{ $laporan->catatan }}</div>
+                    <div class="">{{ $laporan->catatan ?? 'Tidak ada' }}</div>
                 </div>
             </div>
         </div>

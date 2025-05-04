@@ -381,8 +381,11 @@ class DashboardController extends Controller
         // tambah edit kosakata
 
         // definisi
-        $data['definisi'] = Definisi::select('id', 'kosakata_id', 'user_id', 'poin', 'definisi', 'verifikasi', 'updated_at')
-            ->with('kosakata', function($query){$query->withTrashed();})
+        $data['definisi'] = Definisi::with([
+            'kosakata' => function ($query) {
+                $query->withTrashed();
+            }
+        ])
             ->where('user_id', '=', Auth::user()->id);
         $statistik['definisiTotal'] = (clone $data['definisi'])->count();
         $statistik['definisiBln'] = (clone $data['definisi'])->whereMonth('updated_at', '=', Carbon::now()->month)->count();
@@ -514,7 +517,9 @@ class DashboardController extends Controller
         $definisi = Definisi::whereHas('user', function ($query) {
             $query->where('role', 'kontributor');
         })
-            ->with('kosakata', function($query){$query->withTrashed();})
+            ->with('kosakata', function ($query) {
+                $query->withTrashed();
+            })
             ->orderBy('created_at', 'desc')
             ->paginate(10, '*', 'definisi')
             ->onEachSide(2)
@@ -622,7 +627,8 @@ class DashboardController extends Controller
             $query->where('role', 'pengurus');
         })
             ->with('kosakata', function ($query) {
-                $query->withTrashed(); })
+                $query->withTrashed();
+            })
             ->orderBy('created_at', 'desc')
             ->paginate(10, '*', 'definisi')
             ->onEachSide(2)
@@ -630,7 +636,8 @@ class DashboardController extends Controller
 
         $editKosakata = EditKosakata::whereNotNull('pengurus_id')
             ->with('kosakata', function ($query) {
-                $query->withTrashed(); })
+                $query->withTrashed();
+            })
             ->with('user:id,username,nama,jenis_kelamin,profile_pic')
             ->with('pengurus:id,username,nama,jenis_kelamin,profile_pic')
             ->orderBy('created_at', 'desc')

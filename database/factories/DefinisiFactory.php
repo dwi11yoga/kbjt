@@ -21,7 +21,9 @@ class DefinisiFactory extends Factory
         return [
             'kosakata_id' => random_int(1, 50),
             'user_id' => random_int(1, 100),
-            'poin' => 10,
+            'poin_kontributor' => 20,
+            'poin_verifikasi' => $verifikasi == null ? 0 : 30,
+            'poin_pengurus' => $verifikasi == null ? 0 : 30,
             'definisi' => fake()->text(300),
             'verifikasi' => $verifikasi,
             'verifikasi_oleh' => $verifikasi == null ? null : random_int(1, 100),

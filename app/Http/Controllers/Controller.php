@@ -143,7 +143,7 @@ abstract class Controller
                     $poin = $poin + $d->reward;
 
                     // simpan data di tabel notifikasi
-                    $pesan = 'Kamu berhasil mendapatkan achievement ' . $d->nama . ' 🎉';
+                    $pesan = 'Kamu berhasil mendapatkan achievement ' . $d->nama . '! (+' . $d->reward . ' poin)';
                     $url = '/achievement';
                     $this->kirimNotifikasi($userId, 'achievement', $pesan, $url);
 
@@ -303,8 +303,10 @@ abstract class Controller
             ->first()
             ->poin ?? 0; // jika null, maka nilai poin adalah 0
 
-        // tambah poin user
-        User::find($userId)->increment('poin', $poin);
+        // tambah poin user jika lebih dari 0
+        if ($poin > 0) {
+            User::find($userId)->increment('poin', $poin);
+        }
 
         return $poin;
     }

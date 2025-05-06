@@ -53,7 +53,7 @@
             @foreach ($data['kosakata'] as $d)
                 <a href="/kosakata/{{ $d->slug }}"
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
-                    <div class="line-clamp-1 md:col-span-3 col-span-6 flex items-center">Mensubmit kosakata
+                    <div class="line-clamp-1 md:col-span-4 col-span-6 flex items-center">Mensubmit kosakata
                         "{{ $d->kosakata }}".
                     </div>
                     <div class="md:text-base text-sm col-span-1 flex justify-center">
@@ -62,14 +62,8 @@
                             <span>{{ $d->poin }}</span>
                         </div>
                     </div>
-                    <div class="md:col-span-1 col-span-3 flex items-center">
-                        <div class="flex items-center text-sm rounded-full px-3 py-1 bg-purple-300 w-fit space-x-1">
-                            <i data-feather='edit-3' class="w-5 fill-neutral-800 stroke-neutral-800"></i>
-                            <span>Belum diedit</span>
-                        </div>
-                    </div>
                     <div class="md:col-span-1 col-span-2 md:text-base text-sm flex items-center">
-                        {{ $d->updated_at->translatedformat('d F Y') }}</div>
+                        {{ $d->updated_at->translatedformat('d M Y') }}</div>
                 </a>
             @endforeach
             @if ($data['kosakata']->isEmpty())
@@ -81,6 +75,52 @@
         </div>
     </div>
 
+    {{-- Edit Kosakata --}}
+    <div class="p-5 bg-white rounded-2xl" id="edit-kosakata">
+        <div>Edit Kosakata</div>
+        <div class="space-y-3">
+            @foreach ($data['editKosakata'] as $d)
+                <a href="/kosakata/{{ $d->kosakata->slug }}/riwayat"
+                    class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
+                    <div class="line-clamp-1 md:col-span-3 col-span-6 flex items-center">
+                        Mengedit detail kosakata {{ $d->kosakata->kosakata ?? '[Kosakata dihapus]' }}.
+                    </div>
+                    <div class="md:col-span-1 col-span-3 flex items-center">
+                        @if (isset($d->status))
+                            <div title="Diverifikasi oleh pengurus"
+                                class="flex items-center text-sm rounded-full px-3 py-1 bg-amber-300 w-fit space-x-1">
+                                <i data-feather='check' class="w-5 stroke-neutral-800"></i>
+                                <span>Diterima</span>
+                            </div>
+                        @else
+                            <div title="Belum diverifikasi oleh pengurus"
+                                class="flex items-center text-sm rounded-full px-3 py-1 bg-red-300 w-fit space-x-1">
+                                <i data-feather='clock' class="w-5 stroke-neutral-800"></i>
+                                <span class="">Pending</span>
+                            </div>
+                        @endif
+                    </div>
+                    <div
+                        class="md:text-base text-sm col-span-1 flex items-center md:justify-center justify-start space-x-1">
+                        <i data-feather='heart' class="inline-block w-5 fill-amber-400" title="Poin"></i>
+                        <span>{{ $d->poin_kontributor + $d->poin_verifikasi }}</span>
+                    </div>
+                    <div class="md:col-span-1 col-span-2 md:text-base text-sm flex items-center">
+                        {{ $d->updated_at->translatedformat('d M Y') }}
+                    </div>
+                </a>
+            @endforeach
+            @if ($data['definisi']->isEmpty())
+                <div class="border border-neutral-200 p-3 mt-3 rounded-xl">Tidak ada data</div>
+            @endif
+        </div>
+
+        <div class="mt-3">
+            {{ $data['definisi']->links() }}
+        </div>
+
+    </div>
+
     {{-- Definisi --}}
     <div class="p-5 bg-white rounded-2xl" id="definisi">
         <div>Definisi</div>
@@ -90,11 +130,6 @@
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                     <div class="line-clamp-1 md:col-span-3 col-span-6 flex items-center">Mensubmit definisi untuk kosakata
                         {{ $d->kosakata->kosakata ?? '[Kosakata dihapus]' }}.
-                    </div>
-                    <div
-                        class="md:text-base text-sm col-span-1 flex items-center md:justify-center justify-start space-x-1">
-                        <i data-feather='heart' class="inline-block w-5 fill-amber-400" title="Poin"></i>
-                        <span>{{ $d->poin_kontributor + $d->poin_verifikasi }}</span>
                     </div>
                     <div class="md:col-span-1 col-span-3 flex items-center">
                         @if (isset($d->verifikasi))
@@ -111,8 +146,13 @@
                             </div>
                         @endif
                     </div>
+                    <div
+                        class="md:text-base text-sm col-span-1 flex items-center md:justify-center justify-start space-x-1">
+                        <i data-feather='heart' class="inline-block w-5 fill-amber-400" title="Poin"></i>
+                        <span>{{ $d->poin_kontributor + $d->poin_verifikasi }}</span>
+                    </div>
                     <div class="md:col-span-1 col-span-2 md:text-base text-sm flex items-center">
-                        {{ $d->updated_at->translatedformat('d F Y') }}
+                        {{ $d->updated_at->translatedformat('d M Y') }}
                     </div>
                 </a>
             @endforeach
@@ -127,6 +167,39 @@
 
     </div>
 
+    {{-- Verifikasi Definisi (hanya untuk pengurus) --}}
+    @if (auth()->user()->role == 'pengurus')
+        <div class="p-5 bg-white rounded-2xl" id="verifikasi-definisi">
+            <div>Verifikasi Definisi</div>
+            <div class="space-y-3">
+                @foreach ($data['verifDefinisi'] as $d)
+                    <a href="{{ !empty($d->kosakata) ? '/kosakata/' . $d->kosakata->slug . '?definisi=' . $d->id : '#' }}"
+                        class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
+                        <div class="line-clamp-1 md:col-span-4 col-span-6 flex items-center">
+                            Memverifikasi definisi {{ $d->kosakata->kosakata ?? '[Kosakata dihapus]' }} milik
+                            {{ $d->user->nama ?? '[Pengguna dihapus]' }}.
+                        </div>
+                        <div
+                            class="md:text-base text-sm col-span-1 flex items-center md:justify-center justify-start space-x-1">
+                            <i data-feather='heart' class="inline-block w-5 fill-amber-400" title="Poin"></i>
+                            <span>{{ $d->poin_verifikasi }}</span>
+                        </div>
+                        <div class="md:col-span-1 col-span-2 md:text-base text-sm flex items-center">
+                            {{ $d->verifikasi->translatedformat('d M Y') }}
+                        </div>
+                    </a>
+                @endforeach
+                @if ($data['definisi']->isEmpty())
+                    <div class="border border-neutral-200 p-3 mt-3 rounded-xl">Tidak ada data</div>
+                @endif
+            </div>
+
+            <div class="mt-3">
+                {{ $data['definisi']->links() }}
+            </div>
+
+        </div>
+    @endif
     {{-- Laporan --}}
     <div class="p-5 bg-white rounded-2xl" id="laporan">
         <div class="flex items-center justify-between">
@@ -153,11 +226,6 @@
                             Melaporkan kosakata {{ $d->kosakata->kosakata }}.
                         @endif
                     </div>
-                    <div
-                        class="md:text-base text-sm col-span-1 flex items-center md:justify-center justify-start space-x-1">
-                        <i data-feather='heart' class="inline-block w-5 fill-amber-400" title="Poin"></i>
-                        <span>0</span>
-                    </div>
                     <div class="md:col-span-1 col-span-3">
                         @if (isset($d->status))
                             <div class="flex items-center text-sm rounded-full px-3 py-1 bg-green-300 w-fit space-x-1">
@@ -171,8 +239,13 @@
                             </div>
                         @endif
                     </div>
+                    <div
+                        class="md:text-base text-sm col-span-1 flex items-center md:justify-center justify-start space-x-1">
+                        <i data-feather='heart' class="inline-block w-5 fill-amber-400" title="Poin"></i>
+                        <span>{{ $d->poin_pelapor }}</span>
+                    </div>
                     <div class="md:col-span-1 col-span-2 flex items-center md:text-base text-sm">
-                        {{ $d->updated_at->translatedformat('d F Y') }}
+                        {{ $d->updated_at->translatedformat('d M Y') }}
                     </div>
                 </a>
             @endforeach

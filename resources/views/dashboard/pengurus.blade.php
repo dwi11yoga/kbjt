@@ -75,10 +75,10 @@
         </div>
     </div>
 
-    {{-- Daftar kosakata terbaru --}}
+    {{-- Daftar kosakata terbaru dari pengurus --}}
     <div class="p-5 bg-white rounded-2xl" id="laporan">
         <div class="flex items-center justify-between py-2">
-            Kosakata terbaru
+            Kosakata terbaru dari pengurus
         </div>
 
         <div class="space-y-3">
@@ -115,10 +115,10 @@
         </div>
     </div>
 
-    {{-- Daftar definisi terbaru --}}
+    {{-- Daftar definisi terbaru dari pengurus --}}
     <div class="p-5 bg-white rounded-2xl" id="laporan">
         <div class="flex items-center justify-between py-2">
-            Definisi terbaru
+            Definisi terbaru dari pengurus
         </div>
 
         <div class="space-y-3">
@@ -160,7 +160,7 @@
     {{-- detail kosakata diperbarui --}}
     <div class="p-5 bg-white rounded-2xl" id="laporan">
         <div class="flex items-center justify-between py-2">
-            Detail kosakata diperbarui
+            Detail kosakata diperbarui oleh pengurus
         </div>
 
         <div class="space-y-3">
@@ -201,7 +201,7 @@
 
     {{-- Blog --}}
     <div class="p-5 bg-white rounded-2xl" id="blog">
-        <div class="py-2">Artikel terbaru</div>
+        <div class="py-2">Artikel terbaru dari pengurus</div>
 
         <div class="space-y-3">
             <div class="border border-neutral-200 p-3 mt-3 rounded-xl text-center"> Beralih ke halaman <a href="/artikel"

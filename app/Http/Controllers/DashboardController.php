@@ -373,12 +373,21 @@ class DashboardController extends Controller
         // Kosakata
         $data['kosakata'] = Kosakata::where('user_id', '=', Auth::user()->id);
         $statistik['kosakataTotal'] = (clone $data['kosakata'])->count(); //kosakata total
-        $statistik['kosakataBln'] = (clone $data['kosakata'])->whereMonth('created_at', '=', Carbon::now()->month)->count();
+        $statistik['kosakataBln'] = (clone $data['kosakata'])->whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', '=', Carbon::now()->month)->count();
         $data['kosakata'] = $data['kosakata']->orderBy('updated_at', 'desc')
             ->paginate(10, ['*'], 'kosakata-page')
             ->onEachSide(2)
             ->appends(request()->query());
+
         // tambah edit kosakata
+        $data['editKosakata'] = EditKosakata::with('kosakata')
+            ->where('user_id', '=', Auth::user()->id);
+        $statistik['editKosakataDisetujui'] = (clone $data['editKosakata'])->whereNotNull('status')->count();
+        $statistik['editKosakataTotal'] = (clone $data['editKosakata'])->count(); //editKosakata total
+        $data['editKosakata'] = $data['editKosakata']->orderBy('updated_at', 'desc')
+            ->paginate(10, ['*'], 'editKosakata-page')
+            ->onEachSide(2)
+            ->appends(request()->query());
 
         // definisi
         $data['definisi'] = Definisi::with([
@@ -386,21 +395,43 @@ class DashboardController extends Controller
                 $query->withTrashed();
             }
         ])
+            ->with([
+                'user' => function ($query) {
+                    $query->withTrashed();
+                }
+            ])
             ->where('user_id', '=', Auth::user()->id);
         $statistik['definisiTotal'] = (clone $data['definisi'])->count();
-        $statistik['definisiBln'] = (clone $data['definisi'])->whereMonth('updated_at', '=', Carbon::now()->month)->count();
+        $statistik['definisiBln'] = (clone $data['definisi'])->whereYear('updated_at', Carbon::now()->year)->whereMonth('updated_at', '=', Carbon::now()->month)->count();
         $data['definisi'] = $data['definisi']->orderBy('updated_at', 'desc')
             ->paginate(10, ['*'], 'definisi-page')
             ->onEachSide(2)
             ->appends(request()->query());
 
-        // dd($data['definisi']);
+        // verifikasi definisi
+        if (Auth::user()->role == 'pengurus') {
+            $data['verifDefinisi'] = Definisi::with([
+                'kosakata' => function ($query) {
+                    $query->withTrashed();
+                }
+            ])
+                ->where('verifikasi_oleh', Auth::user()->id)
+                ->whereNotNull('verifikasi');
+            $statistik['verifDefinisiTotal'] = (clone $data['verifDefinisi'])->count();
+            $statistik['verifDefinisiBln'] = (clone $data['verifDefinisi'])->whereYear('verifikasi', Carbon::now()->year)->whereMonth('verifikasi', '=', Carbon::now()->month)->count();
+            $data['verifDefinisi'] = $data['verifDefinisi']->orderBy('updated_at', 'desc')
+                ->paginate(10, ['*'], 'definisi-page')
+                ->onEachSide(2)
+                ->appends(request()->query());
+        }
 
         // dapatkan data laporan
-        $data['laporan'] = Report::select('id', 'user_id', 'definisi_id', 'kosakata_id', 'alasan', 'status', 'updated_at')
-            ->with('definisi', function ($query) {
-                $query->withTrashed();
-            })
+        $data['laporan'] = Report::with([
+            'definisi' =>
+                function ($query) {
+                    $query->withTrashed();
+                }
+        ])
             ->with('kosakata', function ($query) {
                 $query->withTrashed();
             })

@@ -154,18 +154,8 @@
             <a href="/level">
                 <div
                     class="flex group py-3 px-4 rounded-xl {{ $group == 'level' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="feather feather-stop-circle">
-                        <circle cx="12" cy="12" r="10"
-                            class="{{ $group == 'level' ? 'fill-neutral-800 stroke-neutral-800' : 'text-neutral-700 group-hover:text-black' }}">
-                        </circle>
-                        <rect x="9" y="9" width="6" height="6"
-                            class="{{ $group == 'level' ? 'stroke-amber-100' : 'text-neutral-700 group-hover:text-black' }}">
-                        </rect>
-                    </svg>
-                    {{-- <i data-feather='stop-circle'
-                        class="{{ $group == 'level' ? 'fill-neutral-800 stroke-none' : 'text-neutral-700 group-hover:text-black' }}"></i> --}}
+                    <i data-feather='heart'
+                        class="{{ $group == 'level' ? 'fill-neutral-800 stroke-none' : 'text-neutral-700 group-hover:text-black' }}"></i>
                     <div
                         class="inline-block ml-3 {{ $group == 'level' ? '' : 'text-neutral-700 group-hover:text-black' }}">
                         Level & Poin
@@ -181,9 +171,9 @@
             <div
                 class="flex group py-3 px-4 rounded-xl {{ $group == 'sertifikat' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
                 {{-- <i data-feather='file-text' class="{{ $group == 'sertifikat' ? '' : 'text-neutral-700 group-hover:text-black' }}"></i> --}}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" class="feather feather-file-text">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-file-text">
                     <path
                         class="{{ $group == 'sertifikat' ? 'fill-neutral-800 stroke-none' : 'text-neutral-700 group-hover:text-black' }}"
                         d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -434,18 +424,8 @@
             <a href="/level">
                 <div
                     class="flex group py-4 px-6 w-fit rounded-2xl {{ $group == 'level' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="feather feather-stop-circle">
-                        <circle cx="12" cy="12" r="10"
-                            class="{{ $group == 'level' ? 'fill-neutral-800 stroke-neutral-800' : 'text-neutral-700 group-hover:text-black' }}">
-                        </circle>
-                        <rect x="9" y="9" width="6" height="6"
-                            class="{{ $group == 'level' ? 'stroke-amber-100' : 'text-neutral-700 group-hover:text-black' }}">
-                        </rect>
-                    </svg>
-                    {{-- <i data-feather='stop-circle'
-                            class="{{ $group == 'level' ? 'fill-neutral-800 stroke-none' : 'text-neutral-700 group-hover:text-black' }}"></i> --}}
+                    <i data-feather='heart'
+                        class="{{ $group == 'level' ? 'fill-neutral-800 stroke-none' : 'text-neutral-700 group-hover:text-black' }}"></i>
                     <div
                         class="inline-block ml-3 {{ $group == 'level' ? '' : 'text-neutral-700 group-hover:text-black' }}">
                         Level & Poin

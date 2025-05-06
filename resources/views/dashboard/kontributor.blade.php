@@ -42,22 +42,25 @@
             @foreach ($kontributor as $d)
                 <a href="/u/{{ $d->username }}"
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-10 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
-                    <div class="flex gap-2 md:col-span-3 col-span-10 items-center">
+                    <div class="flex gap-2 md:col-span-3 col-span-9 items-center">
                         <div class="rounded-full w-8 h-8 overflow-hidden">
                             @include('partials.profile-pic-general')
                         </div>
-                        <div class="line-clamp-2">{{ $d->nama }}</div>
+                        <div class="line-clamp-1">{{ $d->nama }}</div>
                     </div>
                     <div class="md:col-span-2 col-span-7 text-neutral-700 md:flex hidden items-center line-clamp-2">
                         &#64;{{ $d->username }}
                     </div>
-                    <div class="md:col-span-1 col-span-3 flex items-center">
-                        <div class="rounded-full py-1 px-3 bg-amber-200 w-fit text-sm">Level {{ $d->level }}</div>
+                    <div class="md:col-span-1 col-span-1 flex items-center">
+                        <div class="rounded-full py-1 px-3 bg-amber-200 w-fit text-sm">
+                            <span class="md:block hidden">Level {{ $d->level }}</span>
+                            <span class="md:hidden block">{{ $d->level }}</span>
+                        </div>
                     </div>
-                    <div class="md:col-span-2 col-span-7 flex items-center justify-center">{{ $d->kontribusiBlnIni }}
+                    <div class="md:col-span-2 col-span-10 flex items-center md:justify-center">{{ $d->kontribusiBlnIni }}
                         kontribusi bulan
                         ini</div>
-                    <div class="md:col-span-2 col-span-5 flex items-center justify-end">{{ $d->kontribusiTotal }}
+                    <div class="md:col-span-2 col-span-10 flex items-center md:justify-end">{{ $d->kontribusiTotal }}
                         kontribusi total</div>
                 </a>
             @endforeach
@@ -71,10 +74,10 @@
         </div>
     </div>
 
-    {{-- Daftar kosakata terbaru --}}
+    {{-- Daftar kosakata terbaru dari kontributor --}}
     <div class="p-5 bg-white rounded-2xl" id="kosakata">
         <div class="flex items-center justify-between py-2">
-            Kosakata terbaru
+            Kosakata terbaru dari kontributor
         </div>
 
         <div class="space-y-3">
@@ -111,10 +114,10 @@
         </div>
     </div>
 
-    {{-- Daftar definisi terbaru --}}
+    {{-- Daftar definisi terbaru dari kontributor --}}
     <div class="p-5 bg-white rounded-2xl" id="definisi">
         <div class="flex items-center justify-between py-2">
-            Definisi terbaru
+            Definisi terbaru dari kontributor
         </div>
 
         <div class="space-y-3">

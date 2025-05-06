@@ -126,8 +126,9 @@
                         </div>
                     </div>
                     <div>
-                        <div class="text-sm">Catatan pengurus</div>
-                        <div class="">{{ $laporan->catatan_pengurus }}</div>
+                        <div class="text-sm">Catatan {{ $laporan->author->role == 'pengurus' ? 'kepala' : 'pengurus' }}
+                        </div>
+                        <div class="">{{ $laporan->catatan_pengurus ?? 'Tidak ada' }}</div>
                     </div>
                 </div>
             </div>
@@ -186,9 +187,12 @@
 
                 @if (!empty($laporan->pengurus))
                     <div class="space-y-1">
-                        <div class="text-sm">Pengurus yang menindaklanjuti
+                        <div class="text-sm">{{ $laporan->author->role == 'pengurus' ? 'Kepala' : 'Pengurus' }} yang
+                            menindaklanjuti
                             {{ !empty($laporan->pengurus->statusUser) ? '(akun dihapus)' : '' }}</div>
-                        @if ($laporan->author->id == auth()->user()->id)
+                        @if (
+                            $laporan->author->id == auth()->user()->id ||
+                                ($laporan->user->id == auth()->user()->id && auth()->user()->role == 'kontributor'))
                             <div class="flex space-x-2 items-center">
                                 <div class="rounded-full overflow-hidden object-cover w-8">
                                     <?php $d = null; ?>
@@ -252,9 +256,9 @@
                 {{-- kosakata --}}
                 <div class="mb-2 flex items-center justify-between">
                     <div>Salinan kosakata dilaporkan</div>
-                    @if (!empty($laporan->hukuman) && $laporan->hukuman == 'hapus')
+                    @if (!empty($laporan->hukuman) && $laporan->hukuman->tindakan == 'hapus')
                     @else
-                        <a href="/kosakata/{{ $laporan->kosakata->slug }}" title="Lihat definisi asli"
+                        <a href="/kosakata/{{ $laporan->kosakata->slug }}" title="Lihat kosakata asli"
                             class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400 capitalize">
                             Lihat <i data-feather='arrow-up-right' class="w-4"></i>
                         </a>
@@ -485,12 +489,14 @@
 
 
     {{-- tindak lanjut --}}
-    @if (empty($laporan->pengurus_id) && auth()->user()->role == 'pengurus')
+    @if (empty($laporan->pengurus_id))
         <div class="p-5 bg-white rounded-2xl">
             <div class="mb-3">Tindakan</div>
 
-            @if (auth()->user()->id == $laporan->author->id)
-                {{-- jika user yang membuka tidak berhak untuk menagani laporan --}}
+            @if (
+                (auth()->user()->role == 'pengurus' && $laporan->author->role != 'kontributor') ||
+                    (auth()->user()->role == 'kepala' && $laporan->author->role != 'pengurus'))
+                {{-- pengurus hanya boleh menangani laporan dgn author kontributor & pengurus hanya boleh menangani laporan dgn author kontributor --}}
                 <?php $notFound = 'Kamu tidak diizinkan menangani laporan ini'; ?>
                 @include('partials.not-found')
             @else
@@ -842,7 +848,8 @@
                                     {{-- 8% poin --}}
                                     <div class="">
                                         <input type="radio" name="hukuman" id="kurangiPoin008" value="kurangiPoin008"
-                                            class="hidden peer" {{ old('hukuman') == 'kurangiPoin008' ? 'checked' : '' }}>
+                                            class="hidden peer"
+                                            {{ old('hukuman') == 'kurangiPoin008' ? 'checked' : '' }}>
                                         <label for="kurangiPoin008"
                                             class="w-full flex items-center rounded-xl border border-neutral-200 py-5 px-6 cursor-pointer space-x-2 peer-checked:outline peer-checked:outline-2 peer-checked:outline-amber-400 peer-checked:bg-amber-100 peer-checked:text-amber-700 hover:outline hover:outline-2 hover:outline-amber-400">
                                             <i data-feather='chevron-right' class="md:w-5 w-12"></i>

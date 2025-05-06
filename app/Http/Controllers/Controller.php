@@ -83,8 +83,9 @@ abstract class Controller
     {
         // cek dulu apakah akun user sudah dihapus. jika dihapus, maka tidak perlu melakukan pengecekan achievement
         $apakahDihapus = User::withTrashed()->find($userId)->trashed(); // true=dihapus:false=tidak dihapus
+        $user=User::withTrashed()->find($userId);
 
-        if ($apakahDihapus == false) { // jika akun user tidak dihapus, maka eksekusi kode berikut
+        if ($user->trashed() == false && $user->role!='kepala') { // jika akun user tidak dihapus dan bukan kepala, maka eksekusi kode berikut
             $user = User::where('id', '=', $userId)->first(); // dapatkan achievement dan role user yang didapatkkan
             $data = Achievement::where('rule', '=', $rule)
                 ->whereNotIn('id', array_keys($user?->achievement ?? [])); // ?-> null-safe: agar tidak error ketika variabel==null

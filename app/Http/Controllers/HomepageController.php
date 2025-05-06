@@ -170,12 +170,21 @@ class HomepageController extends Controller
         // dapatkan data banner
         $banner = $this->getBanner([1, 2, 3, 4]);
 
+        // dapatkan data artikel lainnya (6)
+        $artikelLain = Blog::with('user')
+            ->whereNotNull('status')
+            ->where('id', '!=', $post->id)
+            ->inRandomOrder()
+            ->limit(6)
+            ->get();
+
         return view('homepage.post', [
             'group' => 'blog',
             'title' => $post->judul,
             'post' => $post,
             'url' => $url,
-            'banner' => $banner
+            'banner' => $banner,
+            'artikelLain' => $artikelLain
         ]);
     }
 
@@ -287,24 +296,26 @@ class HomepageController extends Controller
             ->first();
 
         // jika kosakata tidak ditemukan, maka alihkan
-        if (empty($kosakata)) {
-            return $this->error404();
-        }
+        // if (empty($kosakata)) {
+        //     return $this->error404();
+        // }
 
         // tampilkan data edit (jika ada)
-        $cekEdit = EditKosakata::where('kosakata_id', '=', $kosakata->id)
-            ->whereNotNull('pengurus_id')
-            ->with('user:id,username,nama,jenis_kelamin,profile_pic')
-            ->orderBy('updated_at', 'desc')
-            ->first();
-        if (isset($cekEdit)) {
-            $kosakata->aksara = $cekEdit->aksara;
-            $kosakata->ragam = $cekEdit->ragam;
-            $kosakata->jenis = $cekEdit->jenis;
-            $kosakata->notasi_fonetik = $cekEdit->notasi_fonetik;
-            $kosakata->arti_indo = $cekEdit->arti_indo;
-            $kosakata->etimologi = $cekEdit->etimologi;
-            $kosakata->serupa = $cekEdit->serupa;
+        if (!empty($kosakata)) {
+            $cekEdit = EditKosakata::where('kosakata_id', '=', $kosakata->id)
+                ->whereNotNull('pengurus_id')
+                ->with('user:id,username,nama,jenis_kelamin,profile_pic')
+                ->orderBy('updated_at', 'desc')
+                ->first();
+            if (isset($cekEdit)) {
+                $kosakata->aksara = $cekEdit->aksara;
+                $kosakata->ragam = $cekEdit->ragam;
+                $kosakata->jenis = $cekEdit->jenis;
+                $kosakata->notasi_fonetik = $cekEdit->notasi_fonetik;
+                $kosakata->arti_indo = $cekEdit->arti_indo;
+                $kosakata->etimologi = $cekEdit->etimologi;
+                $kosakata->serupa = $cekEdit->serupa;
+            }
         }
 
         // Hitung jumlah kolom null
@@ -367,13 +378,15 @@ class HomepageController extends Controller
         // dapatkan data banner
         $banner = $this->getBanner([1, 2, 5, 6]);
 
-        // dd($kosakata);
+        // dapatkan url kosakata
+        $url = $this->getUrl();
 
         return view('homepage.kosakata', [
             'group' => 'pencarian',
             'title' => 'Kosakata',
             'kosakata' => $slug,
             'data' => $kosakata,
+            'url' => $url,
             'dataNull' => $nullCount,
             'definisi' => $definisi,
             'cekDefinisiUser' => $cekDefinisiUser,

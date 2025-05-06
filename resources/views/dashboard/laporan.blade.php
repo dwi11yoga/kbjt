@@ -50,23 +50,43 @@
     <div class="p-5 bg-white rounded-2xl">
         <div class="flex justify-between items-center">
             <div>Definisi Dilaporkan</div>
-            <form action="/laporan" method="GET" class="relative">
-                <i data-feather='filter' class="w-5 absolute top-2 left-3"></i>
-                <select name="filter" id="filter" onchange="muatDropdown(this)"
-                    class="appearance-none border border-neutral-200 rounded-xl py-2 pl-10 pr-3 bg-white cursor-pointer">
-                    <option value="">Filter</option>
-                    <option {{ request()->filter == 'belum-ditangani' ? 'selected' : '' }} value="belum-ditangani">Belum
-                        ditangani
-                    </option>
-                    <option {{ request()->filter == 'selesai-ditangani' ? 'selected' : '' }} value="selesai-ditangani">
-                        Selesai ditangani
-                    </option>
-                    @if (auth()->user()->role == 'pengurus')
-                        <option {{ request()->filter == 'kamu-tangani' ? 'selected' : '' }} value="kamu-tangani">
-                            Kamu tangani
+            <form action="/laporan" method="GET" class="flex gap-1" title="Filter terlapor">
+                {{-- filter user (hanya untuk kepala) --}}
+                @if (auth()->user()->role == 'kepala')
+                    <div class="relative">
+                        <i data-feather='users' class="w-5 absolute top-2 left-3"></i>
+                        <select name="definisi_user" id="definisi_user" onchange="muatDropdown(this)"
+                            class="appearance-none border md:text-base text-sm border-neutral-200 rounded-xl py-2 pl-10 pr-3 bg-white cursor-pointer">
+                            <option value="">Semua</option>
+                            <option {{ request()->definisi_user == 'kontributor' ? 'selected' : '' }} value="kontributor">
+                                Kontributor
+                            </option>
+                            <option {{ request()->definisi_user == 'pengurus' ? 'selected' : '' }} value="pengurus">
+                                Pengurus
+                            </option>
+                        </select>
+                    </div>
+                @endif
+
+                {{-- filter status --}}
+                <div class="relative">
+                    <i data-feather='filter' class="w-5 absolute top-2 left-3"></i>
+                    <select name="filter" id="filter" onchange="muatDropdown(this)"
+                        class="appearance-none border md:text-base text-sm border-neutral-200 rounded-xl py-2 pl-10 pr-3 bg-white cursor-pointer">
+                        <option value="">Filter</option>
+                        <option {{ request()->filter == 'belum-ditangani' ? 'selected' : '' }} value="belum-ditangani">Belum
+                            ditangani
                         </option>
-                    @endif
-                </select>
+                        <option {{ request()->filter == 'selesai-ditangani' ? 'selected' : '' }} value="selesai-ditangani">
+                            Selesai ditangani
+                        </option>
+                        @if (auth()->user()->role == 'pengurus')
+                            <option {{ request()->filter == 'kamu-tangani' ? 'selected' : '' }} value="kamu-tangani">
+                                Kamu tangani
+                            </option>
+                        @endif
+                    </select>
+                </div>
             </form>
         </div>
 
@@ -160,24 +180,43 @@
     <div class="p-5 bg-white rounded-2xl">
         <div class="flex justify-between items-center">
             <div>Permintaan menghapus kosakata</div>
-            <form action="/laporan" method="GET" class="relative">
-                <i data-feather='filter' class="w-5 absolute top-2 left-3"></i>
-                <select name="filterKosakata" id="filterKosakata" onchange="muatDropdown(this)"
-                    class="appearance-none border border-neutral-200 rounded-xl py-2 pl-10 pr-3 bg-white cursor-pointer">
-                    <option value="">Filter</option>
-                    <option {{ request()->filterKosakata == 'belum-ditangani' ? 'selected' : '' }} value="belum-ditangani">
-                        Belum ditangani
-                    </option>
-                    <option {{ request()->filterKosakata == 'selesai-ditangani' ? 'selected' : '' }}
-                        value="selesai-ditangani">
-                        Selesai ditangani
-                    </option>
-                    @if (auth()->user()->role == 'pengurus')
-                        <option {{ request()->filterKosakata == 'kamu-tangani' ? 'selected' : '' }} value="kamu-tangani">
-                            Kamu tangani
+            <form action="/laporan" method="GET" class="flex gap-1">
+                {{-- filter user (hanya untuk kepala) --}}
+                @if (auth()->user()->role == 'kepala')
+                    <div class="relative">
+                        <i data-feather='users' class="w-5 absolute top-2 left-3"></i>
+                        <select name="kosakata_user" id="kosakata_user" onchange="muatDropdown(this)"
+                            class="appearance-none border md:text-base text-sm border-neutral-200 rounded-xl py-2 pl-10 pr-3 bg-white cursor-pointer">
+                            <option value="">Semua</option>
+                            <option {{ request()->kosakata_user == 'kontributor' ? 'selected' : '' }} value="kontributor">
+                                Kontributor
+                            </option>
+                            <option {{ request()->kosakata_user == 'pengurus' ? 'selected' : '' }} value="pengurus">
+                                Pengurus
+                            </option>
+                        </select>
+                    </div>
+                @endif
+                {{-- filter status kosakata yang ingin dihapus --}}
+                <div class="relative">
+                    <i data-feather='filter' class="w-5 absolute top-2 left-3"></i>
+                    <select name="filterKosakata" id="filterKosakata" onchange="muatDropdown(this)"
+                        class="appearance-none border md:text-base text-sm border-neutral-200 rounded-xl py-2 pl-10 pr-3 bg-white cursor-pointer">
+                        <option value="">Filter</option>
+                        <option {{ request()->filterKosakata == 'belum-ditangani' ? 'selected' : '' }} value="belum-ditangani">
+                            Belum ditangani
                         </option>
-                    @endif
-                </select>
+                        <option {{ request()->filterKosakata == 'selesai-ditangani' ? 'selected' : '' }}
+                            value="selesai-ditangani">
+                            Selesai ditangani
+                        </option>
+                        @if (auth()->user()->role == 'pengurus')
+                            <option {{ request()->filterKosakata == 'kamu-tangani' ? 'selected' : '' }} value="kamu-tangani">
+                                Kamu tangani
+                            </option>
+                        @endif
+                    </select>
+                </div>
             </form>
         </div>
 

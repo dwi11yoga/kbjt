@@ -20,21 +20,29 @@ class ReportController extends Controller
     public function index()
     {
         // Laporan (definisi)
-        $laporan = Report::with([
-            'definisi' => function ($query) {
-                $query->withTrashed(); //ambil data softdelete juga
-            }
-        ])
-            ->whereNotNull('definisi_id');
+        $laporan = Report::whereNotNull('definisi_id');
 
-        // filter
-        if (isset(request()->filter) && request()->filter == 'belum-ditangani') {
+        // filter definisi
+        $filter = request()->filter;
+        if (!empty($filter) && $filter == 'belum-ditangani') {
             $laporan = $laporan->whereNull('status');
-        } elseif (isset(request()->filter) && request()->filter == 'selesai-ditangani') {
+        } elseif (!empty($filter) && $filter == 'selesai-ditangani') {
             $laporan = $laporan->whereNotNull('status');
-        } elseif (isset(request()->filter) && request()->filter == 'kamu-tangani') {
+        } elseif (!empty($filter) && $filter == 'kamu-tangani') {
             $laporan = $laporan->where('pengurus_id', '=', Auth::user()->id);
         }
+
+        // filter user definisi
+        $filterUser = request()->definisi_user;
+        if (!empty($filterUser) && Auth::user()->role == 'kepala') {
+            $laporan = $laporan->whereHas(
+                'definisi.user',
+                function ($query) use ($filterUser) {
+                    $query->where('role', '=', $filterUser);
+                }
+            );
+        }
+
         $laporan = $laporan->orderBy('updated_at', 'desc')
             ->paginate(10, '*', 'definisi')
             ->onEachSide(2)
@@ -91,12 +99,24 @@ class ReportController extends Controller
             ->whereNotNull('kosakata_id');
 
         // filter
-        if (isset(request()->filterKosakata) && request()->filterKosakata == 'belum-ditangani') {
+        $filter = request()->filterKosakata;
+        if (isset($filter) && $filter == 'belum-ditangani') {
             $kosakata = $kosakata->whereNull('status');
-        } elseif (isset(request()->filterKosakata) && request()->filterKosakata == 'selesai-ditangani') {
+        } elseif (isset($filter) && $filter == 'selesai-ditangani') {
             $kosakata = $kosakata->whereNotNull('status');
-        } elseif (isset(request()->filterKosakata) && request()->filterKosakata == 'kamu-tangani') {
+        } elseif (isset($filter) && $filter == 'kamu-tangani') {
             $kosakata = $kosakata->where('pengurus_id', '=', Auth::user()->id);
+        }
+
+        // filter user definisi
+        $filterUser = request()->kosakata_user;
+        if (!empty($filterUser) && Auth::user()->role == 'kepala') {
+            $kosakata = $kosakata->whereHas(
+                'kosakata.user',
+                function ($query) use ($filterUser) {
+                    $query->where('role', '=', $filterUser);
+                }
+            );
         }
         $kosakata = $kosakata->orderBy('updated_at', 'desc')
             ->paginate(10, '*', 'hapus-kosakata')
@@ -119,8 +139,6 @@ class ReportController extends Controller
                 $d->pengurus->statusUser = 'dihapus';
             }
         }
-
-        // dd($kosakata);
 
         // statistik dulu
         $statistik = new stdClass;
@@ -412,13 +430,25 @@ class ReportController extends Controller
             ->with('kosakata:id,user_id')
             ->first();
 
+        if (!empty($laporan->definisi_id)) {
+            $laporan->author = User::find($laporan->definisi->user_id);
+        } elseif ($laporan->kosakata_id) {
+            $laporan->author = User::find($laporan->kosakata->user_id);
+        } else {
+            $laporan->author = null;
+        }
+
         // alihkan jika laporan yang dikirim sudah ditangani oleh pengurus lain (kuatir di inspect)
         if (isset($laporan->status)) {
             return back()->with('failed', 'Laporan sudah selesai ditangani oleh pengurus lain')->withInput();
         }
 
-        // alihkan jika pihak terlapor yang menangani laporan (jika definisi/kosakata yang dilaporkan adalah milik admin, ini bisa terjadi)
-        if (!empty($laporan->definisi) && Auth::user()->id == $laporan->definisi->user_id || (!empty($laporan->kosakata) && Auth::user()->id == $laporan->kosakata->user_id)) {
+        // pengurus hanya boleh menangani laporan dgn author kontributor & pengurus hanya boleh menangani laporan dgn author kontributors
+        if (
+            empty($laporan->status) &&
+            (Auth::user()->role == 'pengurus' && $laporan->author->role != 'kontributor') ||
+            (Auth::user()->role == 'kepala' && $laporan->author->role != 'pengurus')
+        ) {
             return $this->error403();
         }
 
@@ -582,7 +612,7 @@ class ReportController extends Controller
 
         // jika pelapor == yang menindaklanjuti laporan, maka tidak perlu dikirimi notifikasi
         if (Auth::user()->id != $pelapor->id) {
-            $pesan = 'Laporan kamu atas ' . $dilaporkan . ' yang disubmit oleh ' . $terlapor->nama . ' telah selesai ditangani';
+            $pesan = 'Laporan kamu atas ' . $dilaporkan . ' yang disubmit oleh ' . $terlapor->nama . ' telah selesai ditangani (+' . $poin_pelapor . ' poin)';
             $this->kirimNotifikasi($pelapor->id, 'laporan', $pesan, $url);
         }
         // untuk terlapor
@@ -594,6 +624,6 @@ class ReportController extends Controller
         $this->achievement($laporan->user_id, 'laporan');
 
         // kembali ke halaman detail laporan
-        return back()->with('success', 'Tindakan berhasil disimpan (+' . $poin_pengurus . ' Poin)');
+        return back()->with('success', 'Tindakan berhasil disimpan (+' . $poin_pengurus . ' poin)');
     }
 }

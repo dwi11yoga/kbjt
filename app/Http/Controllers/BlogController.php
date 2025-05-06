@@ -279,15 +279,16 @@ class BlogController extends Controller
         // dapatkan data artikel
         $post = Blog::find($id);
 
+        // Jika post tidak ditemukan atau author bukanlah user
+        if (empty($post)) {
+            return back()->with('failed', 'Artikel tidak ditemukan');
+        }
+
         // alihkan jika user bukan kepala dan bukan yang membuat artikel
-        if ($post->user_id!=Auth::user()->id) {
+        if ($post->user_id!=Auth::user()->id && Auth::user()->role != 'kepala') {
             return $this->error403();
         }
 
-        // Jika post tidak ditemukan atau author bukanlah user
-        if (empty($post) || (Auth::user()->role != 'kepala' && $post['user_id'] != Auth::user()->id)) {
-            return back()->with('failed', 'Gagal menyimpan artikel sebagai draf');
-        }
 
         $data = [];
         $pesan = 'Tidak ada pesan';
@@ -333,9 +334,11 @@ class BlogController extends Controller
             }
         }
 
+        // dd($post->status);
+
         // kirim notifikasi ke penulis jika bukan penulis yang mengubah status artikel (kepala yang mengubah)
         if ($post->user_id != Auth::user()->id) {
-            $notif = 'Artikel yang kamu tulis telah di' . (empty($post->status) ? 'publikasikan' : 'jadikan sebagai draft') . ' oleh kepala ' . $poin_toast;
+            $notif = 'Artikel yang kamu tulis telah di' . (empty($post->status) ? 'jadikan sebagai draft' : 'publikasikan') . ' oleh kepala ' . $poin_toast;
             $url = '/artikel?id=' . $post->id;
             $this->kirimNotifikasi($post->user_id, 'blog', $notif, $url);
         } else { // tambahkan poin + atau - jika yang mengubah status adalah penulis sendiri

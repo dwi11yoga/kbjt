@@ -37,10 +37,6 @@ Route::get('/dukung', [HomepageController::class, 'donasi']);
 // pencarian
 Route::get('/cari', [HomepageController::class, 'pencarian']);
 
-// tambah kosakata
-Route::get('/tambah/kosakata', [KosakataController::class, 'tambahKosakata'])->middleware('auth');
-// simpan kosakata
-Route::post('/tambah/kosakata', [KosakataController::class, 'store'])->middleware('auth');
 // tampilkan definisi & kosakata
 Route::get('/kosakata/{slug}', [HomepageController::class, 'kosakata']);
 // riwayat edit
@@ -136,7 +132,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pengurus', [DashboardController::class, 'pengurus']);
         // laporan - pengurus
         Route::get('/laporan', [ReportController::class, 'index']);
-        // Route::get('/laporan/{id}', [ReportController::class, 'detailLaporan']);
+
+        // simpan perubahan pada data laporan -> di middleware pengurusKepala (atas)
+        Route::put('/laporan/{id}/tindaklanjut', [ReportController::class, 'tindaklanjut']);
     });
 
     // hanya untuk role kepala
@@ -191,8 +189,8 @@ Route::middleware(['auth'])->group(function () {
         // publikasikan artikel yang disimpan sebagai draft
         Route::put('/artikel/edit/{id}/publikasikan', [BlogController::class, 'simpanEdit']);
 
-        // simpan perubahan pada data laporan
-        Route::put('/laporan/{id}/tindaklanjut', [ReportController::class, 'tindaklanjut']);
+        // simpan perubahan pada data laporan -> di middleware pengurusKepala (atas)
+
         // simpan hukuman yang diberikan
         // Route::post('/laporan/{id}/hukuman', [HukumanController::class, 'tindaklanjut']);
 
@@ -242,16 +240,21 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengaturan/hapus-akun', [HapusAkunController::class, 'index'])->middleware('kontributorPengurus');
     Route::put('/pengaturan/hapus-akun/konfirmasi', [HapusAkunController::class, 'hapusAkun'])->middleware('kontributorPengurus');
 
-    // Tambah definisi
-    Route::post('/kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create']);
-    // Edit definisi
-    Route::put('/kosakata/{slug}/{definisiId}/update', [DefinisiController::class, 'update']);
-    // Hapus definisi
-    Route::delete('/kosakata/{slug}/{definisiId}/delete', [DefinisiController::class, 'delete']);
+    // Tambah definisi - hanya kontributor dan pengurus
+    Route::post('/kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create'])->middleware('kontributorPengurus');
+    // Edit definisi - hanya kontributor dan pengurus
+    Route::put('/kosakata/{slug}/{definisiId}/update', [DefinisiController::class, 'update'])->middleware('kontributorPengurus');
+    // Hapus definisi - hanya kontributor dan pengurus
+    Route::delete('/kosakata/{slug}/{definisiId}/delete', [DefinisiController::class, 'delete'])->middleware('kontributorPengurus');
 
-    // Edit kosakata
-    Route::get('/kosakata/{slug}/edit', [EditKosakataController::class, 'edit']);
-    Route::post('/kosakata/{slug}/edit', [EditKosakataController::class, 'simpanEdit']);
+    // tambah kosakata - hanya bisa diakses pengurus dan kontributor
+    Route::get('/tambah/kosakata', [KosakataController::class, 'tambahKosakata'])->middleware('kontributorPengurus');
+    // simpan kosakata baru - hanya bisa diakses pengurus dan kontributor
+    Route::post('/tambah/kosakata', [KosakataController::class, 'store'])->middleware('kontributorPengurus');
+
+    // Edit kosakata - hanya bisa diakses pengurus dan kontributor
+    Route::get('/kosakata/{slug}/edit', [EditKosakataController::class, 'edit'])->middleware('kontributorPengurus');
+    Route::post('/kosakata/{slug}/edit', [EditKosakataController::class, 'simpanEdit'])->middleware('kontributorPengurus');
 
     // notifikasi
     Route::get('/notifikasi', [NotifikasiController::class, 'index']);

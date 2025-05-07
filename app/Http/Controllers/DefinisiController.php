@@ -13,30 +13,46 @@ use Illuminate\Validation\ValidationException;
 
 class DefinisiController extends Controller
 {
-    // Tambah definisi
+    // fungsi Tambah definisi baru
     public function create(Request $request)
     {
+        // validasi
+        try {
+            $validatedData = $request->validate([
+                'kosakata_id' => 'required|exists:kosakata,id',
+                'definisi' => 'required',
+                'referensi' => '',
+                'bahasa' => 'required|in:jawa,indonesia'
+            ]);
+        } catch (ValidationException $validationException) {
+            return back()->withErrors($validationException->validator)->withInput()->with('failed', 'Gagal menyimpan definisi');
+        }
         $validatedData = $request->validate([
             'kosakata_id' => 'required|exists:kosakata,id',
-            'definisi' => 'required|min:10',
+            'definisi' => 'required|string|min:10',
             'referensi' => '',
+            'bahasa' => 'required|in:jawa,indonesia'
         ]);
+
+        // Cek apakah user sudah mensubmit definisi dengan bahasa tersebut/belum
+        $cek = Definisi::where('user_id', Auth::user()->id)
+            ->where('bahasa', $validatedData['bahasa'])
+            ->exists();
+        if ($cek == true) {
+            return back()
+                ->withInput()
+                ->withErrors(['bahasa' => "Kamu sudah men-submit definisi dalam bahasa ini"])
+                ->with('failed', 'Gagal menyimpan definisi');
+            ;
+        }
 
         $arrayReferensi = null;
         if (isset($validatedData['referensi'])) {
             $arrayReferensi = array_map('trim', explode(';', $validatedData['referensi']));
         }
 
-        // tambah poin
-
+        // tambah poin user
         $poin = $this->poinKontribusi(Auth::user()->id, 'Tambah definisi');
-
-        // $tambahPoin = PoinKontribusi::where('kontribusi', '=', 'Menambah definisi')
-        //     ->where('role', '=', Auth::user()->role)
-        //     ->value('poin');
-        // if (!empty($tambahPoin)) {
-        //     User::where('id', '=', Auth::user()->id)->increment('poin', $tambahPoin);
-        // }
 
         // simpan
         $simpan = Definisi::create([
@@ -44,7 +60,8 @@ class DefinisiController extends Controller
             'user_id' => Auth::user()->id,
             'definisi' => $validatedData['definisi'],
             'referensi' => $arrayReferensi,
-            'poin_kontributor' => $poin
+            'poin_kontributor' => $poin,
+            'bahasa' => $validatedData['bahasa'],
         ]);
 
         // cek achievement
@@ -53,16 +70,17 @@ class DefinisiController extends Controller
         // kembalikan view
         // dapatkan slug kosakata
         $slug = Kosakata::find($validatedData['kosakata_id'])->slug;
-        return redirect()->to('/kosakata/' . $slug . '?definisi=' . $simpan->id)->with('success', 'Definisi berhasil ditambahkan (+' . $poin . ' Poin)');
+        return redirect()->to('/kosakata/' . $slug . '?definisi=' . $simpan->id)->with('success', 'Definisi berhasil ditambahkan (+' . $poin . ' poin)');
     }
 
     // Simpan edit definisi
-    public function update(Request $request, $slug, $userId)
+    public function update(Request $request, $slug, $definisiId)
     {
+        // dd($request);
         // Validasi
         try {
             $validatedData = $request->validate([
-                'editDefinisi' => 'required|min:10',
+                'editDefinisi' . $definisiId => 'required', // menggunakan .* agar semua yang awalannya editDefinisi menggunakan validasi yang sama
             ]);
         } catch (ValidationException $e) {
             return back()->with('failed', 'Gagal mengedit definisi')
@@ -75,9 +93,11 @@ class DefinisiController extends Controller
             $arrayReferensi = array_map('trim', explode(';', $request->editReferensi));
         }
 
+        // dd($validatedData);
+
         // Simpan
-        Definisi::find($userId)->update([
-            'definisi' => $validatedData['editDefinisi'],
+        Definisi::find($definisiId)->update([
+            'definisi' => $validatedData['editDefinisi' . $definisiId],
             'referensi' => $arrayReferensi,
             'verifikasi' => null,
             'verifikasi_oleh' => null,

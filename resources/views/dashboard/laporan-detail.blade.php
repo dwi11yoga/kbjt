@@ -248,9 +248,9 @@
                     @endif
                 </div>
                 <div class="space-y-1">
-                    <div>"{!! $laporan->definisi->definisi !!}"</div>
+                    <div>{!! strip_tags($laporan->def_dilaporkan, '<p><b><i><u><s><ol><ul><li>') !!}</div>
                     <div class="text-sm">— {{ $laporan->author->nama }} pada
-                        {{ $laporan->waktu_definisi->translatedFormat('d F Y H:i') }}.</div>
+                        {{ $laporan->waktu_definisi->translatedFormat('d F Y H:i') }} dalam bahasa {{ $laporan->definisi->bahasa }}.</div>
                 </div>
             @elseif (!empty($laporan->kosakata_id))
                 {{-- kosakata --}}

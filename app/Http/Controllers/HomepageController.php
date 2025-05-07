@@ -104,7 +104,7 @@ class HomepageController extends Controller
 
         // hitung level user
         foreach ($user as $d) {
-            $d['level'] = $this->levelCalculator($d['poin']);
+            $d['level'] = $this->levelCalculator($d['id']);
             $d['poin'] = number_format($d['poin'], 0, ',', '.');
         }
 
@@ -268,7 +268,7 @@ class HomepageController extends Controller
 
             // Hitung & tambahkan level pada $user
             foreach ($data as $d) {
-                $d['level'] = $this->levelCalculator($d['poin']);
+                $d['level'] = $this->levelCalculator($d['id']);
             }
         } else {
             $data = [];
@@ -294,11 +294,6 @@ class HomepageController extends Controller
         $kosakata = Kosakata::where('slug', '=', $slug)
             ->with('user:id,username,nama,jenis_kelamin,profile_pic')
             ->first();
-
-        // jika kosakata tidak ditemukan, maka alihkan
-        // if (empty($kosakata)) {
-        //     return $this->error404();
-        // }
 
         // tampilkan data edit (jika ada)
         if (!empty($kosakata)) {
@@ -332,15 +327,16 @@ class HomepageController extends Controller
         // ambil data definisi
         $definisi = [];
         if (isset($kosakata)) {
-            // $definisi = Kosakata::find($kosakata['id'])
-            //     ->definisi()
-            //     ->with('user:id,username,nama,profile_pic,jenis_kelamin,role')
-            //     ->get();
             $definisi = Definisi::where('kosakata_id', '=', $kosakata->id)
                 ->with('user:id,username,nama,profile_pic,jenis_kelamin,role')
                 ->with('pengurus:id,username,nama')
-                ->whereNull('hukuman_edit')
-                ->orWhere('hukuman_edit', '!=', 1);
+                ->where(function ($query) {
+                    $query->whereNull('hukuman_edit')
+                        ->orWhere('hukuman_edit', '!=', 1);
+                });
+            if (!empty(request()->bahasa) && request()->bahasa != 'semua') {
+                $definisi = $definisi->where('bahasa', request()->bahasa);
+            }
             if (isset(request()->definisi)) {
                 $definisi = $definisi->orderByRaw('id=? DESC', [request()->definisi]);
             }
@@ -358,22 +354,8 @@ class HomepageController extends Controller
         }
 
         // Cek apakah user sudah submit definisi/belum  (agar tidak bisa menambah definisi lagi jika sudah submit)
-        function cariDefinisiUser($definisi, $userId)
-        {
-            foreach ($definisi as $d) {
-                if ($d->user_id == $userId) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        $cekDefinisiUser = cariDefinisiUser($definisi, Auth::user()->id ?? 0);
 
-        // tambahkan view di database
-        // cek apakah user sudah mengunjungi halaman tsb hari ini - [belom]
-        if (empty(Auth::user()->role) || Auth::user()->role == 'kontributor') {
-            Kosakata::find($kosakata->id)->increment('view', 1);
-        }
+        // tambahkan view di database - belom
 
         // dapatkan data banner
         $banner = $this->getBanner([1, 2, 5, 6]);
@@ -389,7 +371,6 @@ class HomepageController extends Controller
             'url' => $url,
             'dataNull' => $nullCount,
             'definisi' => $definisi,
-            'cekDefinisiUser' => $cekDefinisiUser,
             'banner' => $banner
         ]);
     }

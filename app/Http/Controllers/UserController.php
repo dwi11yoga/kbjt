@@ -129,7 +129,7 @@ class UserController extends Controller
             return $this->error404();
         }
 
-        $user['level'] = $this->levelCalculator($user['poin']);
+        $user['level'] = $this->levelCalculator($user['id']);
         // url user
         $user['url'] = $this->getUrl() . '/u/' . $user['username'];
 

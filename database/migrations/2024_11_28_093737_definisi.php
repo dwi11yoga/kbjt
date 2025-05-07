@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->integer('poin_pengurus')->default(value: 0); // untuk kontributor karena telah memverifikasi
             $table->text('definisi');
             $table->json('referensi')->nullable();
+            $table->string('bahasa');
             $table->dateTime('verifikasi')->nullable();
             $table->foreignId('verifikasi_oleh')->nullable();
             $table->tinyInteger('hukuman_edit')->nullable();

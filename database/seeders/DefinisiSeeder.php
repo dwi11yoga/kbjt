@@ -19,6 +19,7 @@ class DefinisiSeeder extends Seeder
             'user_id' => 1,
             'definisi' => 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore assumenda iure quasi vero architecto voluptas repellendus ad? Iste, vero voluptas.',
             'created_at' => now(),
+            'bahasa' => 'indonesia',
             'updated_at' => now()
         ]);
 
@@ -27,6 +28,7 @@ class DefinisiSeeder extends Seeder
             'user_id' => random_int(2, 100),
             'definisi' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores ipsum, tenetur ipsa praesentium ut dignissimos.',
             'created_at' => now(),
+            'bahasa' => 'indonesia',
             'updated_at' => now()
         ]);
 
@@ -35,6 +37,7 @@ class DefinisiSeeder extends Seeder
             'user_id' => random_int(2, 100),
             'definisi' => 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore assumenda iure quasi vero architecto voluptas repellendus ad? Iste, vero voluptas.',
             'referensi' => json_encode(['https://google.com/images']),
+            'bahasa' => 'indonesia',
             'created_at' => now(),
             'updated_at' => now()
         ]);

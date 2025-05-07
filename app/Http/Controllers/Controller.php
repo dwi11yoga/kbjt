@@ -21,11 +21,27 @@ use Illuminate\Support\Facades\Auth;
 abstract class Controller
 {
     // Untuk menghitung level
-    public function levelCalculator($point)
+    public function levelCalculator($userId)
     {
+        // dapatkand ata user
+        $user = User::find($userId);
+        // dapatkan semua data level (dari yang paling besar)
         $levelSets = Level::select(['lvl', 'min_poin'])->orderBy('lvl', 'desc')->get();
+
         foreach ($levelSets as $d) {
-            if ($point >= $d->min_poin) {
+            if ($user->poin >= $d->min_poin) { // jika poin user lebih besar/= dengan min_poin suatu level...
+
+                if ($user->level == null || $d->lvl != $user->level) { // jika level user di table user != level user saat ini
+                    if ($user->level < $d->lvl) { // naik level
+                        $pesan = 'Selamat! kamu naik ke level ' . $d->lvl .'! 🥳';
+                    } else {
+                        $pesan = 'Sayang sekali, Kamu turun ke level ' . $d->lvl;
+                    }
+                    User::find($userId)->update(['level' => $d->lvl]);
+
+                    // kirim notifikasi
+                    $this->kirimNotifikasi($userId, 'level', $pesan, '#');
+                }
                 return $d->lvl;
             }
         }
@@ -83,9 +99,9 @@ abstract class Controller
     {
         // cek dulu apakah akun user sudah dihapus. jika dihapus, maka tidak perlu melakukan pengecekan achievement
         $apakahDihapus = User::withTrashed()->find($userId)->trashed(); // true=dihapus:false=tidak dihapus
-        $user=User::withTrashed()->find($userId);
+        $user = User::withTrashed()->find($userId);
 
-        if ($user->trashed() == false && $user->role!='kepala') { // jika akun user tidak dihapus dan bukan kepala, maka eksekusi kode berikut
+        if ($user->trashed() == false && $user->role != 'kepala') { // jika akun user tidak dihapus dan bukan kepala, maka eksekusi kode berikut
             $user = User::where('id', '=', $userId)->first(); // dapatkan achievement dan role user yang didapatkkan
             $data = Achievement::where('rule', '=', $rule)
                 ->whereNotIn('id', array_keys($user?->achievement ?? [])); // ?-> null-safe: agar tidak error ketika variabel==null

@@ -25,6 +25,7 @@ class DefinisiFactory extends Factory
             'poin_verifikasi' => $verifikasi == null ? 0 : 30,
             'poin_pengurus' => $verifikasi == null ? 0 : 30,
             'definisi' => fake()->text(300),
+            'bahasa' => random_int(0, 1) == 1 ? 'jawa' : 'indonesia',
             'verifikasi' => $verifikasi,
             'verifikasi_oleh' => $verifikasi == null ? null : random_int(1, 100),
             'created_at' => $date,

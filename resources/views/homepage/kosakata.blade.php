@@ -23,7 +23,7 @@
                     <div id="dropdown"
                         class="absolute hidden bg-white right-0 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
                         <ul>
-                            @if (auth()->user()->role != 'kepala')
+                            @if (!empty(auth()->user) && auth()->user()->role != 'kepala')
                                 <a href="{{ $data->slug }}/edit">
                                     <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                         <div>Edit</div>
@@ -116,18 +116,39 @@
             </div>
         @endif
 
-        @auth
-            {{-- tampilkan tombol tambah definisi jika user belum submit definisi ini dan bukan kepala --}}
-            @if ($cekDefinisiUser == false && auth()->user()->role != 'kepala')
-                <div class="flex justify-end">
-                    {{-- Tombol Tambah definisi --}}
-                    <button id="newDefButton"
-                        class="rounded-full py-2 px-4 flex items-center cursor-pointer hover:outline hover:outline-2 hover:outline-neutral-200">
-                        <i data-feather='plus' class="w-5 inline-block"></i>Buat definisi
-                    </button>
-                </div>
-            @endif
-        @endauth
+        <div class="flex items-center justify-between">
+            <div class="flex">
+                {{-- Filter bahasa  --}}
+                <form action="" method="GET" class="relative" title="Bahasa definisi">
+                    <svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" class="absolute left-2 top-2"
+                        xmlns="http://www.w3.org/2000/svg">
+                        {{-- icon dari svg repo (MIT License) --}}
+                        <path
+                            d="M20.58 19.37L17.59 11.01C17.38 10.46 16.91 10.12 16.37 10.12C15.83 10.12 15.37 10.46 15.14 11.03L12.16 19.37C12.02 19.76 12.22 20.19 12.61 20.33C13 20.47 13.43 20.27 13.57 19.88L14.19 18.15H18.54L19.16 19.88C19.27 20.19 19.56 20.38 19.87 20.38C19.95 20.38 20.04 20.37 20.12 20.34C20.51 20.2 20.71 19.77 20.57 19.38L20.58 19.37ZM14.74 16.64L16.38 12.05L18.02 16.64H14.74ZM12.19 7.85C9.92999 11.42 7.89 13.58 5.41 15.02C5.29 15.09 5.16 15.12 5.04 15.12C4.78 15.12 4.53 14.99 4.39 14.75C4.18 14.39 4.3 13.93 4.66 13.73C6.75999 12.51 8.48 10.76 10.41 7.86H4.12C3.71 7.86 3.37 7.52 3.37 7.11C3.37 6.7 3.71 6.36 4.12 6.36H7.87V4.38C7.87 3.97 8.21 3.63 8.62 3.63C9.02999 3.63 9.37 3.97 9.37 4.38V6.36H13.12C13.53 6.36 13.87 6.7 13.87 7.11C13.87 7.52 13.53 7.86 13.12 7.86H12.18L12.19 7.85ZM12.23 15.12C12.1 15.12 11.97 15.09 11.85 15.02C11.2 14.64 10.57 14.22 9.97999 13.78C9.64999 13.53 9.58 13.06 9.83 12.73C10.08 12.4 10.55 12.33 10.88 12.58C11.42 12.99 12.01 13.37 12.61 13.72C12.97 13.93 13.09 14.39 12.88 14.75C12.74 14.99 12.49 15.12 12.23 15.12Z"
+                            fill="#000000" />
+                    </svg>
+                    <select name="bahasa" id="bahasa" oninput="muatDropdown(this)"
+                        class="rounded-full appearance-none ps-8 py-2 px-4 flex items-center cursor-pointer hover:outline hover:outline-2 hover:outline-neutral-200 bg-white">
+                        <option value="semua">Semua bahasa</option>
+                        <option value="jawa" {{ request()->bahasa == 'jawa' ? 'selected' : '' }}>Bahasa Jawa</option>
+                        <option value="indonesia" {{ request()->bahasa == 'indonesia' ? 'selected' : '' }}>Bahasa Indonesia</option>
+                    </select>
+                </form>
+            </div>
+
+            @auth
+                {{-- tampilkan tombol tambah definisi jika user belum submit definisi ini dan bukan kepala --}}
+                @if (auth()->user()->role != 'kepala')
+                    <div class="flex">
+                        {{-- Tombol Tambah definisi --}}
+                        <button id="newDefButton"
+                            class="rounded-full py-2 px-4 flex items-center cursor-pointer hover:outline hover:outline-2 hover:outline-neutral-200">
+                            <i data-feather='plus' class="w-5 inline-block"></i>Tambah definisi
+                        </button>
+                    </div>
+                @endif
+            @endauth
+        </div>
 
         {{-- Popup hapus/Minta hapus kosakata --}}
         <div id="bagikan" class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
@@ -136,7 +157,8 @@
                     <h5 class="font-semibold capitalize">
                         Bagikan
                     </h5>
-                    <div onclick="closeWindow('bagikan')" class="px-2 py-1.5 border border-white hover:border-neutral-600 cursor-pointer hover:rounded-full">
+                    <div onclick="closeWindow('bagikan')"
+                        class="px-2 py-1.5 border border-white hover:border-neutral-600 cursor-pointer hover:rounded-full">
                         <i data-feather='x' class="w-5"></i>
                     </div>
                 </div>
@@ -147,7 +169,7 @@
 
                 {{-- bagikan --}}
                 <div class="my-3 flex space-x-1">
-                    <?php $teks = 'Yuk pelajari kosakata Jawa bersama! 🌾 Temukan arti kata '. strtolower($data->kosakata) . ' dan bantu lestarikan bahasa Jawa lewat kbjt. Cek di sini 👉'; ?>
+                    <?php $teks = 'Yuk pelajari kosakata Jawa bersama! 🌾 Temukan arti kata ' . strtolower($data->kosakata) . ' dan bantu lestarikan bahasa Jawa lewat kbjt. Cek di sini 👉'; ?>
                     {{-- facebook --}}
                     <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($url . request()->getRequestUri()) }}"
                         target="_blank" title="Bagikan lewat facebook">
@@ -221,7 +243,7 @@
                 <form action="/kosakata/{{ $data->slug }}/laporkan" method="POST">
                     @csrf
                     <div class="overflow-auto max-h-[27rem] space-y-2">
-                        {{-- Referensi --}}
+                        {{-- alasan --}}
                         <div>
                             <label for="alasan" class="block">Alasan</label>
                             <select name="alasan" id="kosakata_alasan"
@@ -272,7 +294,7 @@
         <div class="space-y-1">
             @auth
                 {{-- jika user belum menunggah definisi dan bukan kepala --}}
-                @if ($cekDefinisiUser == false && auth()->user()->role != 'kepala')
+                @if (auth()->user()->role != 'kepala')
                     {{-- Buat definisi --}}
                     <form action="/kosakata/{{ $data->slug }}/buat-definisi" method="POST" id="newDefinition"
                         class="hidden">
@@ -294,20 +316,36 @@
                                     $trixUndoRedo = 1;
                                     $trixBlockTool = 0;
                                     $updateInput = null;
+                                    $trixPlaceholder = 'Definisi, contoh penggunaan kata, dialek, dan informasi terkait lainnya..';
                                     ?>
 
                                     @include('partials.trix-editor')
 
                                     @error('definisi')
-                                        <div class="text-xs text-red-600 mt-2 mb-2">*{{ $message }}</div>
+                                        <div class="text-xs text-red-600 mt-2 mb-2 mx-6">*{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 {{-- Referensi --}}
                                 <div class="px-6">
                                     <label for="referensi">Referensi</label>
-                                    <textarea id="referensi" name="referensi" class="w-full appearance-none resize-none focus:outline-none mb-3 max-h-52"
+                                    <textarea id="referensi" name="referensi"
+                                        class="w-full resize-none rounded-xl max-h-52 focus:outline-none focus:outline-amber-400 focus:outline-offset-0 p-2 border border-neutral-400"
                                         placeholder="Pisahkan referensi dengan tanda titik koma (;)" oninput="textareaHeight(this)">{{ old('referensi') }}</textarea>
+                                </div>
+
+                                {{-- Bahasa --}}
+                                <div class="px-6 space-y-1">
+                                    <label for="bahasa">Dijelaskan dalam</label><br>
+                                    <select name="bahasa" id="bahasa"
+                                        class="rounded-xl focus:outline-none focus:outline-amber-400 focus:outline-offset-0 p-3 border border-neutral-400 bg-white">
+                                        <option value="jawa" {{ old('bahasa') == 'jawa' ? 'selected' : '' }}>Bahasa Jawa</option>
+                                        <option value="indonesia" {{ old('bahasa') == 'indonesia' ? 'selected' : '' }}>Bahasa Indonesia
+                                        </option>
+                                    </select>
+                                    @error('bahasa')
+                                <div class="text-xs text-red-600 mt-1 mb-2">*{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 {{-- Author --}}

@@ -189,7 +189,7 @@
                         </div>
                     </a>
                 @endforeach
-                @if ($data['definisi']->isEmpty())
+                @if ($data['verifDefinisi']->isEmpty())
                     <div class="border border-neutral-200 p-3 mt-3 rounded-xl">Tidak ada data</div>
                 @endif
             </div>
@@ -227,6 +227,7 @@
                         @endif
                     </div>
                     <div class="md:col-span-1 col-span-3">
+                        {{-- status --}}
                         @if (isset($d->status))
                             <div class="flex items-center text-sm rounded-full px-3 py-1 bg-green-300 w-fit space-x-1">
                                 <i data-feather='check-circle' class="w-5 stroke-neutral-800"></i>
@@ -239,10 +240,12 @@
                             </div>
                         @endif
                     </div>
+
+                    {{-- poin --}}
                     <div
                         class="md:text-base text-sm col-span-1 flex items-center md:justify-center justify-start space-x-1">
                         <i data-feather='heart' class="inline-block w-5 fill-amber-400" title="Poin"></i>
-                        <span>{{ $d->poin_pelapor }}</span>
+                        <span>{{ $d->poin_pelapor ?? 0 }}</span>
                     </div>
                     <div class="md:col-span-1 col-span-2 flex items-center md:text-base text-sm">
                         {{ $d->updated_at->translatedformat('d M Y') }}

@@ -38,15 +38,15 @@ class DashboardController extends Controller
                 }
             }
         }
-        $hitungLvl = Lvl($levelSets);
+        $hitungLvl = $this->levelCalculator(Auth::user()->id);
 
         $syaratNaikLvl = $levelSets
-            ->firstWhere('lvl', $hitungLvl->lvl + 1)
+            ->firstWhere('lvl', $hitungLvl + 1)
                 ?->min_poin; // menggunakan null-safe ? untuk agar ketika null tidak error
 
         if ($syaratNaikLvl == null) {
             $userProgress = [
-                'lvl' => $hitungLvl->lvl,
+                'lvl' => $hitungLvl,
                 'progress' => 100,
                 'poinKurang' => null
             ];
@@ -522,7 +522,7 @@ class DashboardController extends Controller
             ->appends(request()->query());
         foreach ($kontributor as $d) {
             // level
-            $d['level'] = $this->levelCalculator($d->poin);
+            $d['level'] = $this->levelCalculator($d->id);
             // kontribusi total
             $definisi = Definisi::where('user_id', '=', $d->id)->count();
             $kosakata = Kosakata::where('user_id', '=', $d->id)->count();
@@ -624,7 +624,7 @@ class DashboardController extends Controller
 
         foreach ($pengurus as $d) {
             // level
-            $d['level'] = $this->levelCalculator($d->poin);
+            $d['level'] = $this->levelCalculator($d->id);
             // kontribusi total
             $definisi = Definisi::where('user_id', '=', $d->id)->count();
             $kosakata = Kosakata::where('user_id', '=', $d->id)->count();

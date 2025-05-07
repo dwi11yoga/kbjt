@@ -28,7 +28,79 @@
         </div>
 
         {{-- Definisi --}}
-        <p class="mb-3">{!! $d->definisi !!}</p>
+        <div class="mb-3">
+            <style>
+                div.mb-3 h1 {
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                }
+
+                div.mb-3 ul {
+                    padding-left: 25px;
+                    /* Space before list items */
+                    list-style-type: disc;
+                    /* Bullet (•) for items */
+                }
+
+                div.mb-3 ol {
+                    padding-left: 25px;
+                    /* Space before list items */
+                    list-style-type: decimal;
+                    /* Numbers (1, 2, 3, ...) for items */
+                }
+
+                div.mb-3 li {
+                    display: list-item;
+                    /* Default display for list items */
+                }
+
+                div.mb-3 pre {
+                    display: block;
+                    /* Ditampilkan sebagai blok */
+                    font-family: monospace;
+                    /* Menggunakan font monospace */
+                    white-space: pre;
+                    /* Pertahankan spasi dan baris baru */
+                    margin: 1em 0;
+                    /* Margin atas dan bawah */
+                    background-color: #e5e5e5;
+                    padding: 0.5rem 0.5rem;
+                    font-size: 1rem;
+                    border-radius: 0.5rem;
+                    overflow-inline: scroll;
+                }
+
+                div.mb-3 blockquote {
+                    display: block;
+                    margin-top: 0.5rem;
+                    padding-left: 0.5rem;
+                    /* Margin atas */
+                    margin-bottom: 0.5rem;
+                    /* Margin bawah */
+                    margin-inline-start: 0.5rem;
+                    /* Indentasi kiri */
+                    margin-inline-end: 0.5rem;
+                    /* Indentasi kanan */
+                    font-size: inherit;
+                    /* Ukuran font sesuai elemen induk */
+                    font-style: italic;
+                    /* Teks miring */
+                    border-left: 4px solid #fbbf24;
+                }
+
+                div.mb-3 a {
+                    text-decoration: underline;
+                    text-decoration-color: #fbbf24;
+                    text-decoration-thickness: 3px;
+                    text-underline-offset: 2px;
+                }
+
+                div.mb-3 a:hover {
+                    color: #d97706;
+                }
+            </style>
+            {!! $d->definisi !!}
+        </div>
 
         {{-- Referensi --}}
         @if (isset($d->referensi) && $d->referensi != [''])
@@ -179,6 +251,9 @@
                                 <option {{ old('alasan') == 'Definisi tidak akurat' ? 'selected' : '' }}>
                                     Definisi tidak akurat
                                 </option>
+                                <option {{ old('alasan') == 'Kategori bahasa salah' ? 'selected' : '' }}>
+                                    Kategori bahasa salah
+                                </option>
                                 <option {{ old('alasan') == 'Mengandung unsur SARA' ? 'selected' : '' }}>
                                     Mengandung unsur SARA
                                 </option>
@@ -222,7 +297,7 @@
     @endif
 @endif
 
-@if (empty($d->menu)) {{-- sembunyikan jika tidak ada $d->menu (untuk halaman laporan) --}}
+@if (empty($d->menu)) {{-- sembunyikan jika tidak ada $d->menu (untuk definisi) --}}
     @if (isset(auth()->user()->id) && $d->user_id == auth()->user()->id)
         {{-- Edit definisi --}}
         <div id="editDefinisi-{{ $d->id }}"
@@ -240,12 +315,14 @@
                         <div style="padding: 0;">
 
                             <?php
-                            $trixId = 'editDefinisi';
+                            $trixId = 'editDefinisi' . $d->id;
                             $trixImg = 0;
                             $trixUndoRedo = 1;
-                            $trixBlockTool = 0;
+                            $trixBlockTool = 1;
                             $updateInput = $d->definisi;
+                            $trixPlaceholder = 'Definisi, contoh penggunaan kata, dialek, dan informasi terkait lainnya..';
                             ?>
+                            {{ $updateInput }}
                             @include('partials.trix-editor')
 
                             @error('editDefinisi')
@@ -363,7 +440,8 @@
 
                 <div class="space-y-2">
                     <p>Definisi ini sebelumnya diverifikasi oleh
-                        {{ $d->verifikasi_oleh == auth()->user()->id ? 'kamu' : $d->pengurus->nama ?? '[Akun dihapus]' }}. Pembatalan
+                        {{ $d->verifikasi_oleh == auth()->user()->id ? 'kamu' : $d->pengurus->nama ?? '[Akun dihapus]' }}.
+                        Pembatalan
                         verifikasi akan membuat definisi ini kembali berstatus belum terverifikasi. Lanjutkan?</p>
                 </div>
 

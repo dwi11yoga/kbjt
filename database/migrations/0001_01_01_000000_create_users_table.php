@@ -31,8 +31,8 @@ return new class extends Migration {
             $table->json('media_sosial')->nullable();
             $table->json('donasi')->nullable();
             $table->datetime('terakhir_aktif')->nullable();
+            $table->integer('level')->default(1);
             $table->integer('poin')->default(10);
-            $table->timestamp('poin_diperbarui')->nullable();
             $table->json('achievement')->nullable();
             $table->json('sertifikat')->nullable();
             $table->json('sembunyikan_data')->nullable();

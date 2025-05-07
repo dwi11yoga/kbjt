@@ -12,6 +12,7 @@ note: 1=enabled, 0=disabled
 // $trixUndoRedo = 1;
 // $trixBlockTool=1;
 // $updateInput=null;
+// $trixPlaceholder=null;
 ?>
 
 {{-- Trix Style --}}
@@ -114,7 +115,7 @@ note: 1=enabled, 0=disabled
 
 {{-- Trix Toolbar --}}
 <div class="sticky top-0 bg-white px-5">
-    <trix-toolbar id="my_toolbar"></trix-toolbar>
+    <trix-toolbar id="my_toolbar-{{ $trixId }}"></trix-toolbar>
     <div class="more-stuff-inbetween"></div>
 </div>
 
@@ -122,7 +123,7 @@ note: 1=enabled, 0=disabled
 <div class="mt-1 px-5">
     <input id="{{ $trixId }}" type="hidden" name="{{ $trixId }}"
         value="{{ isset($updateInput) ? old('trixId', $updateInput) : old($trixId) }}">
-    <trix-editor toolbar="my_toolbar" input="{{ $trixId }}"
+    <trix-editor toolbar="my_toolbar-{{ $trixId }}" input="{{ $trixId }}" placeholder="{{ $trixPlaceholder ?? 'Ketik disini' }}"
         class="rounded-xl min-h-52 focus:outline-none focus:outline-amber-400 focus:outline-offset-0 space-y-2"></trix-editor>
 </div>
 

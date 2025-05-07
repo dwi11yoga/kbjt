@@ -272,7 +272,6 @@ class ReportController extends Controller
         if (isset($laporan->definisi_id)) {
             // jika definisi yang dilaporkan
             $laporan->definisi = Definisi::withTrashed()
-                ->select('id', 'kosakata_id', 'user_id', 'definisi', 'referensi', 'updated_at')
                 ->where('id', '=', $laporan->definisi_id)
                 ->first();
             $laporan->author = User::withTrashed()
@@ -340,7 +339,7 @@ class ReportController extends Controller
         // statistik pelapor dan terlapor
         if (empty($laporan->status)) { //jalankan jika laporan belum ditindaklanjuti
             // pelapor
-            $pelapor['lvl'] = $this->levelCalculator($laporan->user->poin);
+            $pelapor['lvl'] = $this->levelCalculator($laporan->user->id);
             $pelapor['totalLaporan'] = Report::where('user_id', $laporan->user_id)->count(); //Definisi & Kosakata dilaporkan pelapor
             $pelapor['laporanBersalahDilaporkan'] = Report::where('user_id', $laporan->user_id)->whereHas('hukuman')->count(); //Definisi & Kosakata terbukti bersalah yang dilaporkan pelapor
             $pelapor['jmlLaporanBlnIni'] = Report::where('user_id', $laporan->user_id)->whereMonth('created_at', Carbon::now()->month)->count(); //Definisi & Kosakata dilaporkan bulan ini
@@ -370,7 +369,7 @@ class ReportController extends Controller
                 })
                     ->count(); //Jumlah hukuman yang pernah diterima
 
-            $terlapor['lvl'] = $this->levelCalculator($laporan->author->poin);
+            $terlapor['lvl'] = $this->levelCalculator($laporan->author->id);
             $terlapor['bergabung'] = $laporan->author->created_at->translatedFormat('d F Y');
 
             $data['detailTerlapor'] = $terlapor;

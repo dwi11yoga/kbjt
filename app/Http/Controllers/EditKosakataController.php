@@ -50,12 +50,16 @@ class EditKosakataController extends Controller
             $kosakata['etimologi'] = $etimologi;
         }
 
+        // cek apakah user di suspend/tidak
+        $suspend = $this->cekSuspend(Auth::user()->id);
+
         if ($kosakata != null) {
             // Jika kosakata ditemukan
             return view('homepage.edit-kosakata', [
                 'title' => 'Edit kosakata',
                 'group' => '',
-                'data' => $kosakata
+                'data' => $kosakata,
+                'suspend' => $suspend
             ]);
         } else {
             // Jika kosakata tidak ditemukan
@@ -66,7 +70,14 @@ class EditKosakataController extends Controller
     // Fungsi Simpan edit kosakata
     public function simpanEdit(Request $request, $slug)
     {
-        $id = Kosakata::select('id')->where('slug', $slug)->first();
+        // cek apakah user kena suspend/tidak
+        $suspend = $this->cekSuspend(Auth::user()->id);
+        if ($suspend->hukuman == true) {
+            return back()->withInput()->with('failed', 'Gagal menyimpan form edit kosakata karena akunmu sedang disuspend.');
+        }
+
+        // dapatkan id kosakata
+        $kosakata = Kosakata::where('slug', $slug)->first();
 
         // Validasi
         $rules = [
@@ -95,10 +106,36 @@ class EditKosakataController extends Controller
         // Membuat array serupa
         $arraySerupa = array_map('trim', explode(';', $request->serupa));
 
+        // PASTIKAN ADA DATA YANG DIRUBAH DARI DATA KOSAKATA TERBARU
+        // jika kosakat sudah diedit, maka gunakan data edit
+        $editKosakata = EditKosakata::where('kosakata_id', $kosakata->id)
+            ->whereNotNull('status')
+            ->orderBy('updated_at', 'desc')
+            ->first();
+        if (isset($editKosakata)) {
+            $data = $kosakata; // simpan data kosakata sementara
+            $kosakata = $editKosakata; // timpa data kosakata dengan editKosakata
+            //ubah id dari kosakata agar tidak menggunakan id edit kosakata (bisa error)
+            $kosakata->id = $data->id;
+        }
+
+        // cek
+        if (
+            $kosakata->aksara == $request->aksara &&
+            $kosakata->notasi_fonetik == $request->notasi_fonetik &&
+            $kosakata->ragam == $request->ragam &&
+            $kosakata->jenis == $request->jenis &&
+            $kosakata->serupa == $arraySerupa &&
+            $kosakata->arti_indo == $request->arti_indo &&
+            $kosakata->etimologi == $etimologi
+        ) {
+            return back()->with('failed', 'Detail kosakata yang kamu submit belum mengalami perubahan');
+        }
+
         // data yang akan disimpan
         $simpan = [
             'user_id' => Auth::user()->id,
-            'kosakata_id' => $id->id,
+            'kosakata_id' => $kosakata->id,
             'ragam' => $validatedData['ragam'],
             'aksara' => $request->aksara,
             'jenis' => $request->jenis,

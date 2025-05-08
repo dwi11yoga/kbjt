@@ -83,7 +83,7 @@
             <label for="serupa" id="labelSerupa">Kosakata terkait*</label>
             <input type="text" name="serupa" id="serupa" value="{{ old('serupa') }}"
                 class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-xl block">
-                <div class="text-sm mb-3">*Kosakata dalam ngoko/krama, kosakata serupa, dan sebagainya</div>
+                <div class="text-sm mb-3">*Kosakata dalam ngoko/krama, kosakata serupa, dan sebagainya (pisahkan dengan ";")</div>
 
             <label for="arti_indo">Arti dalam Bahasa Indonesia*</label>
             <input type="text" name="arti_indo" id="arti_indo" value="{{ old('arti_indo') }}"
@@ -152,8 +152,29 @@
                 </script>
             </div>
 
-            <button type="submit"
-                class=" rounded-full bg-amber-300 py-2 px-4 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-amber-400">Submit</button>
+            <div class="">
+                @if ($suspend->hukuman == false)
+                    {{-- jika user tidak tersuspend --}}
+                    <button type="submit"
+                        class="rounded-full bg-amber-300 py-2 px-4 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-amber-400">
+                        Submit
+                    </button>
+                @else
+                    {{-- jika user tersuspend --}}
+                    <?php
+                    $alert = [
+                        'warna' => 'red',
+                        'pesan' => 'Untuk sementara, kamu tidak dapat menambahkan kosakata baru hingga ' . $suspend->hukumanBerakhir . ' karena akunmu sedang disuspend.',
+                        'textsize' => 'sm',
+                    ];
+                    ?>
+                    @include('partials.alert')
+                    <div
+                        class="mb-3 w-fit cursor-pointer rounded-full bg-neutral-300 py-2 px-4 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-amber-400">
+                        Submit
+                    </div>
+                @endif
+            </div>
         </form>
 
         {{-- Jalankan fungsi js --}}

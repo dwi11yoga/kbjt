@@ -26,7 +26,7 @@
             <div class="grid grid-cols-2 space-x-3">
                 <div class="relative">
                     <label for="ragam">Ragam</label>
-                    <select name="ragam" id="ragam" onchange="ubahSerupa(this)"
+                    <select name="ragam" id="ragam"
                         class="px-4 appearance-none bg-white py-3 w-full mt-1.5 border border-neutral-200 rounded-xl block mb-3">
                         <option {{ old('ragam', $data->ragam) == 'Krama' ? 'selected' : '' }}>Krama</option>
                         <option {{ old('ragam', $data->ragam) == 'Ngoko' ? 'selected' : '' }}>Ngoko</option>
@@ -94,9 +94,10 @@
             {{-- Deskripsi jenis --}}
             <div id="jenis_deskripsi" class="text-xs -mt-2 mb-2 italic"></div>
 
-            <label for="serupa" id="labelSerupa">Arti dalam bahasa ngoko</label>
+            <label for="serupa" id="labelSerupa">Kosakata terkait*</label>
             <input type="text" name="serupa" id="serupa" value="{{ old('serupa', $data->serupa) }}"
                 class="px-4 py-3 w-full mt-1.5 border border-neutral-200 rounded-xl block mb-3">
+            <div class="text-sm mb-3">*Kosakata dalam ngoko/krama, kosakata serupa, dan sebagainya (pisahkan dengan ";")</div>
 
             <label for="arti_indo">Arti dalam Bahasa Indonesia</label>
             <input type="text" name="arti_indo" id="arti_indo" value="{{ old('arti_indo', $data->arti_indo) }}"
@@ -177,8 +178,29 @@
                 @enderror
             </div>
 
-            <button type="submit"
-                class=" rounded-full bg-amber-300 py-2 px-4 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-amber-400">Submit</button>
+            <div class="">
+                @if ($suspend->hukuman == false)
+                    {{-- jika user tidak tersuspend --}}
+                    <button type="submit"
+                        class=" rounded-full bg-amber-300 py-2 px-4 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-amber-400">
+                        Submit
+                    </button>
+                @else
+                    <?php
+                    $alert = [
+                        'warna' => 'red',
+                        'pesan' => 'Untuk sementara, kamu tidak dapat mensubmit perubahan detail kosakata hingga ' . $suspend->hukumanBerakhir . ' karena akunmu sedang disuspend.',
+                        'textsize' => 'sm',
+                    ];
+                    ?>
+                    @include('partials.alert')
+                    {{-- jika user tersuspend --}}
+                    <div
+                        class="mb-3 w-fit cursor-pointer rounded-full bg-neutral-300 py-2 px-4 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-amber-400">
+                        Submit
+                    </div>
+                @endif
+            </div>
         </form>
 
         {{-- Jalankan fungsi js --}}
@@ -187,8 +209,6 @@
 
                 // tampilkan deskripsi
                 deskripsiJenis(document.getElementById('jenis'));
-                // Ubah teks bagian serupa/arti
-                ubahSerupa(document.getElementById('ragam'));
 
                 // Atur agar bahasa dan kata asli disembunyikan ketika etimologi bernilai null
                 showEtimologiInput(document.getElementById('etimologi'));

@@ -23,7 +23,7 @@
                     <div id="dropdown"
                         class="absolute hidden bg-white right-0 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
                         <ul>
-                            @if (!empty(auth()->user) && auth()->user()->role != 'kepala')
+                            @if (!empty(auth()->user()->role) && auth()->user()->role != 'kepala')
                                 <a href="{{ $data->slug }}/edit">
                                     <li class="flex justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
                                         <div>Edit</div>
@@ -131,7 +131,8 @@
                         class="rounded-full appearance-none ps-8 py-2 px-4 flex items-center cursor-pointer hover:outline hover:outline-2 hover:outline-neutral-200 bg-white">
                         <option value="semua">Semua bahasa</option>
                         <option value="jawa" {{ request()->bahasa == 'jawa' ? 'selected' : '' }}>Bahasa Jawa</option>
-                        <option value="indonesia" {{ request()->bahasa == 'indonesia' ? 'selected' : '' }}>Bahasa Indonesia</option>
+                        <option value="indonesia" {{ request()->bahasa == 'indonesia' ? 'selected' : '' }}>Bahasa Indonesia
+                        </option>
                     </select>
                 </form>
             </div>
@@ -150,7 +151,7 @@
             @endauth
         </div>
 
-        {{-- Popup hapus/Minta hapus kosakata --}}
+        {{-- Popup bagikan kosakata --}}
         <div id="bagikan" class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
             <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
                 <div class="flex items-center justify-between">
@@ -279,13 +280,34 @@
                     ?>
                     @include('partials.alert')
 
+                    {{-- alert jika user tersuspend --}}
+                    @if ($suspend->hukuman == true)
+                        <?php
+                        $alert = [
+                            'warna' => 'red',
+                            'pesan' => 'Untuk sementara, kamu tidak dapat meminta pengurus menghapus kosakata ini hingga ' . $suspend->hukumanBerakhir . ' karena akunmu sedang disuspend.',
+                            'textsize' => 'sm',
+                        ];
+                        ?>
+                        @include('partials.alert')
+                    @endif
+
                     {{-- Button --}}
                     <div class="flex space-x-2">
                         <div onclick="closeWindow('hapausKosakata')"
                             class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
                             Batal</div>
-                        <button type="submit"
-                            class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
+                        @if ($suspend->hukuman == true)
+                            <div
+                                class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-amber-500">
+                                Simpan
+                            </div>
+                        @else
+                            <button type="submit"
+                                class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">
+                                Simpan
+                            </button>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -339,47 +361,74 @@
                                     <label for="bahasa">Dijelaskan dalam</label><br>
                                     <select name="bahasa" id="bahasa"
                                         class="rounded-xl focus:outline-none focus:outline-amber-400 focus:outline-offset-0 p-3 border border-neutral-400 bg-white">
-                                        <option value="jawa" {{ old('bahasa') == 'jawa' ? 'selected' : '' }}>Bahasa Jawa</option>
-                                        <option value="indonesia" {{ old('bahasa') == 'indonesia' ? 'selected' : '' }}>Bahasa Indonesia
+                                        <option value="jawa" {{ old('bahasa') == 'jawa' ? 'selected' : '' }}>Bahasa Jawa
+                                        </option>
+                                        <option value="indonesia" {{ old('bahasa') == 'indonesia' ? 'selected' : '' }}>Bahasa
+                                            Indonesia
                                         </option>
                                     </select>
                                     @error('bahasa')
-                                <div class="text-xs text-red-600 mt-1 mb-2">*{{ $message }}</div>
+                                        <div class="text-xs text-red-600 mt-1 mb-2">*{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 {{-- Author --}}
                                 <p class="mb-2 px-6">Disubmit oleh</p>
-                                <div class="flex justify-between items-end px-6 pb-6">
-                                    <div class="flex items-center">
-                                        <div>
-                                            <div class="h-12 w-12 rounded-full overflow-hidden mr-3">
-                                                @isset(auth()->user()->profile_pic)
-                                                    <img class="w-full h-full object-cover"
-                                                        src="{{ asset('storage/' . auth()->user()->profile_pic) }}"
-                                                        alt="Profile picture">
-                                                @else
-                                                    @if (isset(auth()->user()->jenis_kelamin) && auth()->user()->jenis_kelamin == 'Perempuan')
+                                <div class="px-6 pb-6 space-y-3">
+                                    <div class="flex justify-between items-end">
+                                        <div class="flex items-center">
+                                            <div>
+                                                <div class="h-12 w-12 rounded-full overflow-hidden mr-3">
+                                                    @isset(auth()->user()->profile_pic)
                                                         <img class="w-full h-full object-cover"
-                                                            src="{{ asset('storage/profile-pics/profile_pic-f.jpg') }}"
-                                                            alt="Profile picture (Freepik/gstudioimagen)">
+                                                            src="{{ asset('storage/' . auth()->user()->profile_pic) }}"
+                                                            alt="Profile picture">
                                                     @else
-                                                        <img class="w-full h-full object-cover"
-                                                            src="{{ asset('storage/profile-pics/profile_pic-m.jpg') }}"
-                                                            alt="Profile picture (Freepik/gstudioimagen)">
-                                                    @endif
-                                                @endisset
+                                                        @if (isset(auth()->user()->jenis_kelamin) && auth()->user()->jenis_kelamin == 'Perempuan')
+                                                            <img class="w-full h-full object-cover"
+                                                                src="{{ asset('storage/profile-pics/profile_pic-f.jpg') }}"
+                                                                alt="Profile picture (Freepik/gstudioimagen)">
+                                                        @else
+                                                            <img class="w-full h-full object-cover"
+                                                                src="{{ asset('storage/profile-pics/profile_pic-m.jpg') }}"
+                                                                alt="Profile picture (Freepik/gstudioimagen)">
+                                                        @endif
+                                                    @endisset
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>{{ auth()->user()->nama }}</div>
+                                                <div class="small-text">{{ now()->format('d F Y') }}</div>
                                             </div>
                                         </div>
-                                        <div>
-                                            <div>{{ auth()->user()->nama }}</div>
-                                            <div class="small-text">{{ now()->format('d F Y') }}</div>
-                                        </div>
+                                        {{-- Simpan --}}
+                                        @if ($suspend->hukuman == false)
+                                            {{-- user tidak tersuspend --}}
+                                            <button type="submit"
+                                                class="rounded-full bg-amber-300 py-2 px-4 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-amber-400">
+                                                Submit
+                                            </button>
+                                        @else
+                                            {{-- jika user tersuspend --}}
+                                            <div
+                                                class="rounded-full bg-neutral-300 py-2 px-4 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-amber-400 cursor-pointer">
+                                                Submit
+                                            </div>
+                                        @endif
                                     </div>
-                                    {{-- Simpan --}}
-                                    <button type="submit"
-                                        class="rounded-full bg-amber-300 py-2 px-4 hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-amber-400">Submit</button>
+                                    @if ($suspend->hukuman == true)
+                                        <?php
+                                        $alert = [
+                                            'warna' => 'red',
+                                            'pesan' => 'Sementara kamu tidak dapat mensubmit definisi baru sampai ' . $suspend->hukumanBerakhir . ' karena akun sedang disuspend.',
+                                            'textsize' => 'sm',
+                                        ];
+                                        ?>
+                                        @include('partials.alert')
+                                    @endif
                                 </div>
+
+
                             </div>
                         </div>
                     </form>

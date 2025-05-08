@@ -363,6 +363,10 @@ class HomepageController extends Controller
         // dapatkan url kosakata
         $url = $this->getUrl();
 
+        // dapatkan kapan hukuman berakhir
+        $suspend=$this->cekSuspend(Auth::user()->id);
+        // dd($suspend);
+
         return view('homepage.kosakata', [
             'group' => 'pencarian',
             'title' => 'Kosakata',
@@ -371,7 +375,8 @@ class HomepageController extends Controller
             'url' => $url,
             'dataNull' => $nullCount,
             'definisi' => $definisi,
-            'banner' => $banner
+            'banner' => $banner,
+            'suspend'=>$suspend
         ]);
     }
 

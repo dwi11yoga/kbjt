@@ -16,6 +16,12 @@ class DefinisiController extends Controller
     // fungsi Tambah definisi baru
     public function create(Request $request)
     {
+        // cek apakah user kena suspend/tidak
+        $suspend = $this->cekSuspend(Auth::user()->id);
+        if ($suspend->hukuman == true) {
+            return back()->withInput()->with('failed', 'Gagal menambahkan definisi baru karena akunmu sedang disuspend.');
+        }
+
         // validasi
         try {
             $validatedData = $request->validate([
@@ -76,7 +82,12 @@ class DefinisiController extends Controller
     // Simpan edit definisi
     public function update(Request $request, $slug, $definisiId)
     {
-        // dd($request);
+        // cek apakah user kena suspend/tidak
+        $suspend = $this->cekSuspend(Auth::user()->id);
+        if ($suspend->hukuman == true) {
+            return back()->withInput()->with('failed', 'Gagal mengedit definisi karena akunmu sedang disuspend.');
+        }
+
         // Validasi
         try {
             $validatedData = $request->validate([
@@ -110,6 +121,12 @@ class DefinisiController extends Controller
     // Hapus definisi
     public function delete($slug, $definisiId)
     {
+        // cek apakah user kena suspend/tidak
+        $suspend = $this->cekSuspend(Auth::user()->id);
+        if ($suspend->hukuman == true) {
+            return back()->withInput()->with('failed', 'Gagal mengedit definisi karena akunmu sedang disuspend.');
+        }
+
         // Cek apakah definisi benar-benar milik user
         $definisi = Definisi::select('id', 'user_id')->where('id', '=', $definisiId)->first();
         if (isset($definisi) && $definisi['user_id'] != Auth::user()->id ?? 0) {

@@ -1,14 +1,26 @@
 @extends('.../layouts/dashboard')
 
 @section('body')
-    {{-- Pemberitahuan untuk melengkapi data diri --}}
-    @if ($lengkap == false)
-        <div class="md:flex md:justify-between bg-white border border-neutral-200 rounded-xl p-3 shadow-sm mb-4">
-            <div>Segera lengkapi profil kamu.</div>
-            <a href="/pengaturan" class="text-amber-600 md:text-base text-sm">Pergi ke pengaturan<i
-                    data-feather='arrow-up-right' class="inline-block md:w-5 w-4"></i></a>
-        </div>
-    @endif
+    <div class="mb-4 space-y-2">
+        {{-- Pemberitahuan untuk melengkapi data diri --}}
+        @if ($lengkap == false)
+            <div class="md:flex md:justify-between bg-white border border-neutral-200 rounded-xl p-3 shadow-sm">
+                <div>Segera lengkapi profil kamu.</div>
+                <a href="/pengaturan/edit-user" class="text-amber-600 md:text-base text-sm">Pergi ke pengaturan<i
+                        data-feather='arrow-up-right' class="inline-block md:w-5 w-4"></i></a>
+            </div>
+        @endif
+
+        {{-- jika user tersuspend untuk berkontribusi --}}
+        @if ($suspend->hukuman == true)
+            <div class="md:flex md:justify-between bg-red-100 border border-neutral-200 rounded-xl p-3 shadow-sm">
+                <div>Saat ini kamu tidak dapat berkontribusi karena akunmu sedang ditangguhkan hingga
+                    {{ $suspend->hukumanBerakhir }}.</div>
+                <a href="#" class="text-red-600 md:text-base text-sm">Pelajari lebih lanjut<i
+                        data-feather='arrow-up-right' class="inline-block md:w-5 w-4"></i></a>
+            </div>
+        @endif
+    </div>
 
     {{-- banner --}}
     <?php $idBanner = 7; ?>
@@ -276,11 +288,11 @@
                         <div class="capitalize font-semibold">{{ $definisiRandom->kosakata->kosakata }} <span
                                 title="Definisi terverifikasi">✅</span></div>
                         <div class="line-clamp-5">{!! $definisiRandom->definisi !!}</div>
-                        <div class="text-sm">Disubmit oleh 
+                        <div class="text-sm">Disubmit oleh
                             @if (!empty($definisiRandom->user))
-                            <a href="/u/{{ $definisiRandom->user->username }}"
-                                title="Lihat profil {{ $definisiRandom->user->nama }}"
-                                class="font-semibold hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-4">{{ $definisiRandom->user->nama }}</a>
+                                <a href="/u/{{ $definisiRandom->user->username }}"
+                                    title="Lihat profil {{ $definisiRandom->user->nama }}"
+                                    class="font-semibold hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-4">{{ $definisiRandom->user->nama }}</a>
                             @else
                                 <span class="font-semibold">[Akun dihapus]</span>
                             @endif
@@ -345,7 +357,7 @@
                             Detail <i data-feather='arrow-right' class="w-4"></i>
                         </a>
                     </div>
-                        <h1 class="font-bold -mt-2">{{ $statistik['definisi'] }}</h1>
+                    <h1 class="font-bold -mt-2">{{ $statistik['definisi'] }}</h1>
                     <div class="text-sm">Bulan ini bertambah {{ $statistik['definisiBlnIni'] }} definisi</div>
                 </div>
 
@@ -359,7 +371,7 @@
                             Detail <i data-feather='arrow-right' class="w-4"></i>
                         </a>
                     </div>
-                        <h1 class="font-bold -mt-2">{{ $statistik['post'] }}</h1>
+                    <h1 class="font-bold -mt-2">{{ $statistik['post'] }}</h1>
                     <div class="text-sm">Total {{ $statistik['postPublish'] }} artikel dipublikasikan</div>
                 </div>
 
@@ -373,7 +385,7 @@
                             Detail <i data-feather='arrow-right' class="w-4"></i>
                         </a>
                     </div>
-                        <h1 class="font-bold -mt-2">{{ $statistik['laporanBlmDitangani'] }}</h1>
+                    <h1 class="font-bold -mt-2">{{ $statistik['laporanBlmDitangani'] }}</h1>
                     <div class="text-sm">Bulan ini ada {{ $statistik['laporanBlnIni'] }} laporan baru</div>
                 </div>
             </div>

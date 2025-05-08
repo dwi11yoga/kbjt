@@ -544,7 +544,6 @@
                                 <div class="">
                                     <div class="mb-2">Tindakan terhadap definisi</div>
                                     @error('tindakanDefinisi')
-                                        ``
                                         <div class="text-sm text-red-600 -mt-2 mb-2">{{ $message }}</div>
                                     @enderror
                                     <div class="space-y-2">

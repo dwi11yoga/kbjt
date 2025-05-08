@@ -28,33 +28,33 @@
         </div>
 
         {{-- Definisi --}}
-        <div class="mb-3">
+        <div class="mb-3 trix">
             <style>
-                div.mb-3 h1 {
+                div.trix h1 {
                     font-size: 1.3rem;
                     font-weight: 600;
                 }
 
-                div.mb-3 ul {
+                div.trix ul {
                     padding-left: 25px;
                     /* Space before list items */
                     list-style-type: disc;
                     /* Bullet (•) for items */
                 }
 
-                div.mb-3 ol {
+                div.trix ol {
                     padding-left: 25px;
                     /* Space before list items */
                     list-style-type: decimal;
                     /* Numbers (1, 2, 3, ...) for items */
                 }
 
-                div.mb-3 li {
+                div.trix li {
                     display: list-item;
                     /* Default display for list items */
                 }
 
-                div.mb-3 pre {
+                div.trix pre {
                     display: block;
                     /* Ditampilkan sebagai blok */
                     font-family: monospace;
@@ -70,7 +70,7 @@
                     overflow-inline: scroll;
                 }
 
-                div.mb-3 blockquote {
+                div.trix blockquote {
                     display: block;
                     margin-top: 0.5rem;
                     padding-left: 0.5rem;
@@ -88,14 +88,14 @@
                     border-left: 4px solid #fbbf24;
                 }
 
-                div.mb-3 a {
+                div.trix a {
                     text-decoration: underline;
                     text-decoration-color: #fbbf24;
                     text-decoration-thickness: 3px;
                     text-underline-offset: 2px;
                 }
 
-                div.mb-3 a:hover {
+                div.trix a:hover {
                     color: #d97706;
                 }
             </style>
@@ -281,6 +281,21 @@
                                 placeholder="Tambahkan catatan {{ auth()->user()->role != 'pengurus' ? 'untuk memperkuat laporan (opsional)' : '' }}"
                                 oninput="textareaHeight(this)">{{ old('catatan') }}</textarea>
                         </div>
+
+                        {{-- alert jika user tersuspend --}}
+                        @if (!empty($suspend) && $suspend->hukuman == true)
+                            <div class="">
+                                <?php
+                                $alert = [
+                                    'warna' => 'red',
+                                    'pesan' => 'Untuk sementara, kamu tidak melaporkan definisi ini hingga ' . $suspend->hukumanBerakhir . ' karena akunmu sedang disuspend.',
+                                    'textsize' => 'sm',
+                                ];
+                                ?>
+                                @include('partials.alert')
+                            </div>
+                        @endif
+
                     </div>
 
                     {{-- Button --}}
@@ -288,8 +303,17 @@
                         <div onclick="closeWindow('laporkan-{{ $d->id }}')"
                             class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
                             Batal</div>
-                        <button type="submit"
-                            class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
+                        @if (!empty($suspend) && $suspend->hukuman == true)
+                            <div
+                                class="w-full bg-neutral-300 rounded-xl py-2.5 cursor-pointer text-center hover:outline hover:outline-offset-2 hover:outline-amber-500">
+                                Simpan
+                            </div>
+                        @else
+                            <button type="submit"
+                                class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">
+                                Simpan
+                            </button>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -322,7 +346,6 @@
                             $updateInput = $d->definisi;
                             $trixPlaceholder = 'Definisi, contoh penggunaan kata, dialek, dan informasi terkait lainnya..';
                             ?>
-                            {{ $updateInput }}
                             @include('partials.trix-editor')
 
                             @error('editDefinisi')
@@ -340,6 +363,20 @@
                                 placeholder="Sumber referensi (opsional)..." oninput="textareaHeight(this)">{{ old('editReferensi', isset($d->referensi) ? implode('; ', $d->referensi) : '') }}</textarea>
                         </div>
 
+                        {{-- alert jika user tersuspend --}}
+                        @if (!empty($suspend) && $suspend->hukuman == true)
+                            <div class="mx-6">
+                                <?php
+                                $alert = [
+                                    'warna' => 'red',
+                                    'pesan' => 'Untuk sementara, kamu tidak dapat mengedit definisi ini hingga ' . $suspend->hukumanBerakhir . ' karena akunmu sedang disuspend.',
+                                    'textsize' => 'sm',
+                                ];
+                                ?>
+                                @include('partials.alert')
+                            </div>
+                        @endif
+
                     </div>
 
                     {{-- Button --}}
@@ -355,8 +392,17 @@
                             <div onclick="closeWindow('editDefinisi-{{ $d->id }}')"
                                 class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
                                 Batal</div>
-                            <button type="submit"
-                                class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
+                            @if (!empty($suspend) && $suspend->hukuman == true)
+                                <div
+                                    class="w-full bg-neutral-300 text-center cursor-pointer rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">
+                                    Simpan
+                                </div>
+                            @else
+                                <button type="submit"
+                                    class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">
+                                    Simpan
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </form>
@@ -384,6 +430,20 @@
                     <p>Yakin ingin melanjutkan?</p>
                 </div>
 
+                {{-- alert jika user tersuspend --}}
+                @if (!empty($suspend) && $suspend->hukuman == true)
+                    <div class="">
+                        <?php
+                        $alert = [
+                            'warna' => 'red',
+                            'pesan' => 'Untuk sementara, kamu tidak dapat menghapus definisi ini hingga ' . $suspend->hukumanBerakhir . ' karena akunmu sedang disuspend.',
+                            'textsize' => 'sm',
+                        ];
+                        ?>
+                        @include('partials.alert')
+                    </div>
+                @endif
+
                 <form action="/kosakata/{{ $d->slug }}/{{ $d->id }}/delete" method="POST">
                     @method('delete')
                     @csrf
@@ -392,9 +452,17 @@
                         <div onclick="closeWindow('hapusDefinisi-{{ $d->id }}')"
                             class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
                             Batal</div>
-                        <button type="submit"
-                            class="w-full bg-red-500 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-red-600">Ya,
-                            Yakin</button>
+                        @if (!empty($suspend) && $suspend->hukuman == true)
+                            <div
+                                class="w-full bg-neutral-300 cursor-pointer text-center rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-red-600">
+                                Ya, Yakin
+                            </div>
+                        @else
+                            <button type="submit"
+                                class="w-full bg-red-500 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-red-600">Ya,
+                                Yakin
+                            </button>
+                        @endif
                     </div>
                 </form>
             </div>

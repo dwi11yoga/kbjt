@@ -20,19 +20,28 @@ class KosakataController extends Controller
     // View tambah kosakata
     public function tambahKosakata()
     {
+        // cek apakah user disuspend/tidak
+        $suspend=$this->cekSuspend(Auth::user()->id);
         // dapatkan data banner
         $banner = $this->getBanner([1, 2]);
 
         return view('homepage.buat-kosakata', [
             'title' => 'Tambah kosakata',
             'group' => null,
-            'banner' => $banner
+            'banner' => $banner,
+            'suspend'=>$suspend
         ]);
     }
 
     // fungsi Simpan kosakata
     public function store(Request $request)
     {
+        // cek apakah user kena suspend/tidak
+        $suspend = $this->cekSuspend(Auth::user()->id);
+        if ($suspend->hukuman==true) {
+            return back()->withInput()->with('failed', 'Gagal menambahkan kosakata baru karena akunmu sedang disuspend.');
+        }
+
         // Buat slug
         $request['slug'] = strtolower($request['kosakata']);
         $request['slug'] = str_replace(' ', '-', $request['slug']);

@@ -1,6 +1,6 @@
 @extends('.../layouts/homepage-with-banner')
 @section('body')
-    @if (auth()->user()->role != 'kepala')
+    @if (!empty(auth()->user()->role) && auth()->user()->role != 'kepala')
         <div class="md:flex md:items-center md:justify-between mb-7">
             {{-- Judul --}}
             <h3 class="font-bold md:mb-0 mb-3">Daftar Kosakata</h3>

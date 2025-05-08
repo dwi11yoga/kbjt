@@ -162,6 +162,12 @@ class ReportController extends Controller
     //fungsi laporkan definisi
     public function definisi(Request $request)
     {
+        // cek apakah user kena suspend/tidak
+        $suspend = $this->cekSuspend(Auth::user()->id);
+        if ($suspend->hukuman == true) {
+            return back()->withInput()->with('failed', 'Gagal menyimpan laporan karena akunmu sedang disuspend.');
+        }
+
         // cek apakah laporan sudah dilaporkan/belum
         $cek = Report::where('definisi_id', $request->id)
             ->whereNull('pengurus_id')
@@ -211,6 +217,13 @@ class ReportController extends Controller
     // fungsi laporkan kosakata
     public function kosakata(Request $request, $slug)
     {
+
+        // cek apakah user kena suspend/tidak
+        $suspend = $this->cekSuspend(Auth::user()->id);
+        if ($suspend->hukuman == true) {
+            return back()->withInput()->with('failed', 'Gagal menyimpan permintaan hapus kosakata karena akunmu sedang disuspend.');
+        }
+
         // dapatkan id kosakata
         $kosakata = Kosakata::where('slug', '=', $slug)->value('id');
 
@@ -422,7 +435,7 @@ class ReportController extends Controller
 
     // Tindaklanjuti laporan definisi dan kosakata
     public function tindaklanjut(Request $request, $id)
-    {
+    {   
         // dapatkan data laporan
         $laporan = Report::where('id', '=', $id)
             ->with('definisi:id,user_id')

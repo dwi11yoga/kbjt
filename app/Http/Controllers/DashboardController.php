@@ -52,8 +52,8 @@ class DashboardController extends Controller
             ];
         } else {
             $userProgress = [
-                'lvl' => $hitungLvl->lvl,
-                'progress' => intval(((Auth::user()->poin - $hitungLvl->min_poin) / ($syaratNaikLvl - $hitungLvl->min_poin)) * 100),
+                'lvl' => $hitungLvl,
+                'progress' => intval(((Auth::user()->poin - $hitungLvl) / ($syaratNaikLvl - $hitungLvl)) * 100),
                 'poinKurang' => $syaratNaikLvl - Auth::user()->poin // selisih poin untuk naik level
             ];
         }
@@ -361,6 +361,9 @@ class DashboardController extends Controller
         // dapatkan data banner
         $banner = $this->getBanner([7]);
         $data['banner'] = $banner;
+
+        // cek apakah user tersuspend atau tidak
+        $data['suspend']=$this->cekSuspend(Auth::user()->id);
 
         //cek sertifikat
         $this->cekSertifikat(Auth::user()->id);

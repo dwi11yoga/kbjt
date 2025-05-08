@@ -8,6 +8,7 @@ use App\Models\Blog;
 use App\Models\Definisi;
 use App\Models\EditKosakata;
 use App\Models\HapusAkun;
+use App\Models\Hukuman;
 use App\Models\Kosakata;
 use App\Models\Level;
 use App\Models\Notifikasi;
@@ -16,6 +17,7 @@ use App\Models\Report;
 use App\Models\Sertifikat;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 abstract class Controller
@@ -33,7 +35,7 @@ abstract class Controller
 
                 if ($user->level == null || $d->lvl != $user->level) { // jika level user di table user != level user saat ini
                     if ($user->level < $d->lvl) { // naik level
-                        $pesan = 'Selamat! kamu naik ke level ' . $d->lvl .'! 🥳';
+                        $pesan = 'Selamat! kamu naik ke level ' . $d->lvl . '! 🥳';
                     } else {
                         $pesan = 'Sayang sekali, Kamu turun ke level ' . $d->lvl;
                     }
@@ -326,5 +328,36 @@ abstract class Controller
         }
 
         return $poin;
+    }
+
+    // cek apakah akun user terkena suspend/tidak
+    public function cekSuspend(int $userId)
+    {
+        // dapatkan data hukuman
+        $hukuman = Hukuman::where('hukuman', 'like', 'Suspend%')
+            ->where(function ($query) use ($userId) {
+                $query->whereHas('laporan.definisi', function ($q) use ($userId) {
+                    $q->where('user_id', $userId);
+                })
+                    ->orWhereHas('laporan.kosakata', function ($q) use ($userId) {
+                        $q->where('user_id', $userId);
+                    });
+            })
+            ->where('hukuman_berakhir', '>', Carbon::now())
+            ->orderBy('hukuman_berakhir', 'desc')
+            ->first();
+
+        // dd($hukuman);
+
+        // kirim data
+        $data = new Collection(); // buat collection
+        $data->hukuman = !empty($hukuman) ? true : false; // true=user tersuspend
+
+        if ($data->hukuman == true) {
+            $formatTgl = Carbon::now()->diffInHours($hukuman->hukuman_berakhir) < 24 ? 'H:i' : 'd F Y'; // jika hukuman berakhir <24 jam, maka tampilkan jam
+            $data->hukumanBerakhir = $hukuman->hukuman_berakhir->translatedFormat($formatTgl);
+        }
+
+        return $data;
     }
 }

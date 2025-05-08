@@ -1,6 +1,8 @@
 {{-- petunjuk penggunaan --}}
 <?php
-// $alert=['warna'=>'red/green/blue/etc','pesan'=>'lorem', 'textsize'=>'sm'];
+// $alert=['warna'=>'red/green/blue/etc',
+// 'pesan'=>'lorem',
+// 'textsize'=>'sm'];
 ?>
 
 <div

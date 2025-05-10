@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -141,14 +142,6 @@ class UserController extends Controller
             }));
         }
 
-
-        // dapatkan definisi buatan user
-        // $definisi = User::find($user['id'])
-        //     ->definisi()
-        //     ->with('kosakata:id,kosakata,slug')
-        //     ->orderBy('updated_at', 'desc')
-        //     ->paginate(10, ['*'], 'definisi-page')
-        //     ->appends(request()->query());
         $definisi = Definisi::where('user_id', $user->id);
         // jika user bukan user yang sedang login, maka sembunyikan definisi yang disembunyikan karena hukuman
         // tampilkan jika definisi==null || hukuman edit bukan 1
@@ -223,6 +216,12 @@ class UserController extends Controller
         // dapatkan data banner
         $banner = $this->getBanner([1, 2]);
         $kirim['banner'] = $banner;
+
+        // incremenet nilai view jika pengguna hari ini belom melihat akun
+        if (!Cookie::has('user_' . $user->id)) { // jika belum ada cookie = user belum melihat halaman ini
+            User::find($user->id)->increment('view', 1); // naikkan view
+            Cookie::queue('user_' . $user->id, true , 24 * 60); // buat cookie (kedaluarsa dalam 1 hari)
+        }
 
         // return
         return view('homepage.profile', $kirim);

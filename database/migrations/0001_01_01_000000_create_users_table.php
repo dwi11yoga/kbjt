@@ -33,6 +33,7 @@ return new class extends Migration {
             $table->datetime('terakhir_aktif')->nullable();
             $table->integer('level')->default(1);
             $table->integer('poin')->default(10);
+            $table->integer('view')->default(0);
             $table->json('achievement')->nullable();
             $table->json('sertifikat')->nullable();
             $table->json('sembunyikan_data')->nullable();

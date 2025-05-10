@@ -56,7 +56,7 @@
             {{-- popularitas --}}
             <div class="flex justify-center">
                 <div class="cursor-pointer bg-neutral-200 rounded-full px-2 py-1 text-sm"
-                    title="Jumlah kunjungan ke akun kamu">🔥 52.000</div>
+                    title="Jumlah kunjungan ke akun kamu">🔥 {{ auth()->user()->view ?? 0 }}</div>
             </div>
         </div>
 

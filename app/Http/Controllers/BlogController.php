@@ -51,7 +51,7 @@ class BlogController extends Controller
         }
 
         $blog = $query->orderBy('pinned', 'desc')
-            ->orderBy('updated_at', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(40)
             ->appends(request()->query());
 
@@ -163,7 +163,7 @@ class BlogController extends Controller
         $post = Blog::find($id);
 
         // alihkan jika user bukan yang membuat artikel
-        if ($post->user_id!=Auth::user()->id) {
+        if ($post->user_id != Auth::user()->id) {
             return back()->with('failed', 'Akses tidak diizinkan');
 
         }
@@ -225,6 +225,8 @@ class BlogController extends Controller
             User::find($post->user_id)->decrement('poin', $post->poin); // kurangi poin user dengan poin yang sebelumnya didapatkan
             $data['poin'] = 0;
             $poin_toast = $post->poin > 0 ? '(-' . $post->poin . ' poin)' : '';
+        } else {
+            $poin_toast = ' (+0 poin)';
         }
 
         // Simpan
@@ -285,7 +287,7 @@ class BlogController extends Controller
         }
 
         // alihkan jika user bukan kepala dan bukan yang membuat artikel
-        if ($post->user_id!=Auth::user()->id && Auth::user()->role != 'kepala') {
+        if ($post->user_id != Auth::user()->id && Auth::user()->role != 'kepala') {
             return $this->error403();
         }
 

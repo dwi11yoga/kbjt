@@ -38,7 +38,7 @@
                     </div> --}}
                         <div class="text-gray-700 md:text-base text-xs"><span
                                 class="font-semibold">{{ $d->user->nama ?? '[Akun dihapus]' }}</span>
-                            • {{ $d->updated_at->format('d F Y') }}
+                            • {{ $d->updated_at->translatedFormat('d F Y') }}
                         </div>
                     </div>
                 </div>

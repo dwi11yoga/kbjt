@@ -101,7 +101,7 @@
             <?php
             $trixId = 'konten';
             $trixImg = 1;
-            $trixUndoRedo = 0;
+            $trixUndoRedo = 1;
             $trixBlockTool = 1;
             $updateInput = $post->konten;
             ?>

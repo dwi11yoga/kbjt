@@ -281,7 +281,7 @@
                     @include('partials.alert')
 
                     {{-- alert jika user tersuspend --}}
-                    @if ($suspend->hukuman == true)
+                    @if (!empty(auth()->user()->id) && $suspend->hukuman == true)
                         <?php
                         $alert = [
                             'warna' => 'red',
@@ -297,7 +297,7 @@
                         <div onclick="closeWindow('hapausKosakata')"
                             class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
                             Batal</div>
-                        @if ($suspend->hukuman == true)
+                        @if (!empty(auth()->user()->id) && $suspend->hukuman == true)
                             <div
                                 class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-amber-500">
                                 Simpan

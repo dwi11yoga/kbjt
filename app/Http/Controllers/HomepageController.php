@@ -10,6 +10,7 @@ use App\Models\EditKosakata;
 use App\Models\Kosakata;
 use App\Models\User;
 use Carbon\Carbon;
+use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -126,7 +127,7 @@ class HomepageController extends Controller
         $blog = Blog::whereNotNull('status')
             ->with('user:id,nama')
             ->orderBy('pinned', 'desc')
-            ->orderBy('updated_at', 'desc')
+            ->orderBy('status', 'desc')
             ->paginate(10);
 
         // dapatkan data banner
@@ -162,9 +163,11 @@ class HomepageController extends Controller
         $url = $this->getUrl();
 
         // tambahkan view di database
-        // cek apakah user sudah mengunjungi halaman tsb hari ini - [belom]
-        if (empty(Auth::user()->role) || Auth::user()->role == 'kontributor') {
-            Blog::find($post->id)->increment('view', 1);
+        // cek apakah user sudah mengunjungi halaman tsb hari ini
+        // jika user hari ini belum membaca artikel, naikkan view artikel (pakai cookie)
+        if (!Cookie::has('artikel_' . $post->id) && !empty($post->status)) { // cek apakah user sudah mengunjungi artikel hari ini (cek ada/tidaknya cookie)
+            Blog::find($post->id)->increment('view', 1); // naikkan view definis
+            Cookie::queue('artikel_' . $post->id, true, (24 * 60)); // buat cookie (kedaluarsa dalam 1 hari)
         }
 
         // dapatkan data banner
@@ -259,8 +262,7 @@ class HomepageController extends Controller
                 ->appends(request()->query());
         } elseif ($filter == 'pengguna') {
             // Cari pengguna
-            $data = User::select('username', 'nama', 'profile_pic', 'poin', 'jenis_kelamin', 'poin')
-                ->where('username', 'like', '%' . $keyword . '%')
+            $data = User::where('username', 'like', '%' . $keyword . '%')
                 ->orWhere('nama', 'like', '%' . $keyword . '%')
                 ->orderBy('poin', 'desc')
                 ->paginate(10)
@@ -324,6 +326,14 @@ class HomepageController extends Controller
             }
         }
 
+        // tambahkan view di database
+        // cek apakah user sudah mengunjungi kosakata tsb hari ini
+        // jika user hari ini belum melihat kosakata, naikkan view kosakata (pakai cookie)
+        if (!Cookie::has('kosakata_' . $kosakata->id)) { // cek apakah user sudah mengunjungi kosakata hari ini (cek ada/tidaknya cookie)
+            Kosakata::find($kosakata->id)->increment('view', 1); // naikkan view kosakata
+            Cookie::queue('kosakata_' . $kosakata->id, true, (24 * 60)); // buat cookie (kedaluarsa dalam 1 hari)
+        }
+
         // ambil data definisi
         $definisi = [];
         if (isset($kosakata)) {
@@ -353,18 +363,16 @@ class HomepageController extends Controller
             }
         }
 
-        // Cek apakah user sudah submit definisi/belum  (agar tidak bisa menambah definisi lagi jika sudah submit)
-
-        // tambahkan view di database - belom
-
         // dapatkan data banner
         $banner = $this->getBanner([1, 2, 5, 6]);
 
         // dapatkan url kosakata
         $url = $this->getUrl();
 
-        // dapatkan kapan hukuman berakhir
-        $suspend=$this->cekSuspend(Auth::user()->id);
+        // cek apakah user tersuspend
+        if (!empty(Auth::user()->id)) {
+            $suspend = $this->cekSuspend(Auth::user()->id);
+        }
         // dd($suspend);
 
         return view('homepage.kosakata', [
@@ -376,7 +384,7 @@ class HomepageController extends Controller
             'dataNull' => $nullCount,
             'definisi' => $definisi,
             'banner' => $banner,
-            'suspend'=>$suspend
+            'suspend' => $suspend ?? null
         ]);
     }
 

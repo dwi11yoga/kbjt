@@ -63,38 +63,53 @@
                 <div
                     class="relative grid grid-cols-12 items-center py-4 px-5 bg-white rounded-xl group hover:outline hover:outline-amber-200 {{ request()->id == $d->id ? 'outline outline-amber-400' : '' }}">
                     <a href="{{ $d->user_id != auth()->user()->id || auth()->user()->role == 'kepala' ? (isset($d->status) ? '/blog/post/' . $d->slug : '/blog/preview/' . $d->slug) : '/artikel/edit/' . $d->id }}"
-                        class="col-span-11 grid md:grid-cols-11 grid-cols-5 md:space-x-10 space-y-2">
+                        class="col-span-11 space-y-1">
                         {{-- Judul --}}
-                        <div class="md:col-span-5 col-span-5 line-clamp-2 flex items-center md:font-normal font-semibold"
-                            title="Judul artikel">
+                        <div class="line-clamp-2 flex items-center md:font-normal font-semibold" title="Judul artikel">
                             @if ($d->pinned == 1)
                                 <span title="Disematkan">📌</span>
                             @endif
                             {{ $d->judul }}
                         </div>
 
-                        {{-- author --}}
-                        <div class="md:col-span-3 col-span-5 flex items-center space-x-1 text-neutral-700"
-                            title="Ditulis oleh {{ $d->user->nama }} {{ isset($d->user->statusUser) && $d->user->statusUser == 'dihapus' ? '(Akun dihapus)' : '' }}">
-                            <div class="md:w-7 md:h-7 w-8 h-8 rounded-full overflow-hidden">
-                                @include('partials.profil-pic-general-array2')
+                        <div class="space-x-3 md:flex text-neutral-700 items-center grid grid-cols-6">
+                            {{-- author --}}
+                            <div class="md:col-span-5 flex items-center space-x-1 col-span-4"
+                                title="Ditulis oleh {{ $d->user->nama }} {{ isset($d->user->statusUser) && $d->user->statusUser == 'dihapus' ? '(Akun dihapus)' : '' }}">
+                                <div class="md:w-7 md:h-7 w-8 h-8 rounded-full overflow-hidden">
+                                    @include('partials.profil-pic-general-array2')
+                                </div>
+                                <div class="line-clamp-2">{{ $d->user->nama }}</div>
                             </div>
-                            <div class="line-clamp-2">{{ $d->user->nama }}</div>
+
+                            {{-- Status --}}
+                            <div class="flex items-center col-span-2" title="Status">
+                                @if (isset($d->status))
+                                    <div class="flex space-x-1 text-green-600">
+                                        <i data-feather='check-circle' class="w-4"></i>
+                                        <span>Rilis</span>
+                                    </div>
+                                @else
+                                <div class="flex space-x-1 text-amber-600">
+                                    <i data-feather='save' class="w-4"></i>
+                                    <span>Draf</span>
+                                </div>
+                                @endif
+                            </div>
+
+                            {{-- view --}}
+                            <div class="flex space-x-1 items-center col-span-2" title="Terakhir diedit">
+                                <i data-feather='eye' class="w-4"></i>
+                                <span>{{ number_format($d->view, 0, ',', '.') }}x dilihat</span>
+                            </div>
+
+                            {{-- tgl --}}
+                            <div class="flex space-x-1 items-center col-span-4" title="Terakhir diedit">
+                                <i data-feather='calendar' class="w-4"></i>
+                                <span>{{ $d->updated_at->translatedformat('d M Y H:i') }}</span>
+                            </div>
                         </div>
 
-                        {{-- Status --}}
-                        <div class="col-span-1 flex items-center">
-                            @if (isset($d->status))
-                                Rilis
-                            @else
-                                Draf
-                            @endif
-                        </div>
-
-                        {{-- tgl --}}
-                        <div class="col-span-2 flex md:justify-end items-center" title="Terakhir diedit">
-                            {{ $d->updated_at->translatedformat('d M Y') }}
-                        </div>
                     </a>
 
                     {{-- Tombol --}}

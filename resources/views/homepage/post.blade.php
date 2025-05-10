@@ -43,11 +43,19 @@
     @endisset
 
     {{-- Waktu --}}
-    <div class="text-neutral-800 inline-flex items-center">
-        <i data-feather='calendar' class="w-5 mr-1"></i>
-        {{ $post->updated_at->translatedformat('d F Y') }}
-        <i data-feather='clock' class="w-5 ml-3 mr-1"></i>
-        {{ $post->updated_at->format('h:i A') }}
+    <div class="text-neutral-800 inline-flex items-center space-x-3 md:text-base text-sm">
+        <div class="flex space-x-1 items-center">
+            <i data-feather='calendar' class="md:w-5 w-4"></i>
+            <span>{{ !empty($post->status) ? $post->status->translatedFormat('d F Y') : $post->updated_at->translatedFormat('d F Y') }}</span>
+        </div>
+        <div class="flex space-x-1 items-center">
+            <i data-feather='clock' class="md:w-5 w-4"></i>
+            <span>{{ !empty($post->status) ? $post->status->format('h:i A') : $post->updated_at->format('h:i A') }}</span>
+        </div>
+        <div class="flex space-x-1 items-center">
+            <i data-feather='eye' class="md:w-5 w-4"></i>
+            <span>{{ number_format($post->view, 0, ',', '.') ?? 0 }}x dilihat</span>
+        </div>
     </div>
 
     {{-- <div class="mt-2 mb-5">Oleh <span class="font-bold">{{ $post->user->nama }}</span> •
@@ -64,31 +72,31 @@
 
     {{-- Isi Blog --}}
     <style>
-        div.space-y-3.my-5 h1 {
+        div.trix h1 {
             font-size: 1.3rem;
             font-weight: 600;
         }
 
-        div.space-y-3.my-5 ul {
+        div.trix ul {
             padding-left: 25px;
             /* Space before list items */
             list-style-type: disc;
             /* Bullet (•) for items */
         }
 
-        div.space-y-3.my-5 ol {
+        div.trix ol {
             padding-left: 25px;
             /* Space before list items */
             list-style-type: decimal;
             /* Numbers (1, 2, 3, ...) for items */
         }
 
-        div.space-y-3.my-5 li {
+        div.trix li {
             display: list-item;
             /* Default display for list items */
         }
 
-        div.space-y-3.my-5 pre {
+        div.trix pre {
             display: block;
             /* Ditampilkan sebagai blok */
             font-family: monospace;
@@ -104,7 +112,7 @@
             overflow-inline: scroll;
         }
 
-        div.space-y-3.my-5 blockquote {
+        div.trix blockquote {
             display: block;
             margin-top: 0.5rem;
             padding-left: 0.5rem;
@@ -122,20 +130,21 @@
             border-left: 4px solid #fbbf24;
         }
 
-        div.space-y-3.my-5 a {
+        div.trix a {
             text-decoration: underline;
             text-decoration-color: #fbbf24;
             text-decoration-thickness: 3px;
             text-underline-offset: 2px;
         }
 
-        div.space-y-3.my-5 a:hover {
+        div.trix a:hover {
             color: #d97706;
         }
     </style>
-    <div class="space-y-3 my-5">
+    <div class="space-y-3 my-5 md:text-justify trix">
         {!! $post->konten !!}
     </div>
+
 
     {{-- banner bawah/banner 4 --}}
     <?php $idBanner = 4; ?>

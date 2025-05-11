@@ -25,12 +25,13 @@
 
             <div class="grid grid-cols-2 space-x-3">
                 <div class="relative">
-                    <label for="ragam">Ragam</label>
+                    <label for="ragam">Tingkat tutur</label>
                     <select name="ragam" id="ragam"
                         class="px-4 appearance-none bg-white py-3 w-full mt-1.5 border border-gray-400 rounded-xl block mb-3">
                         <option value="">Pilih</option>
-                        <option {{ old('ragam') == 'Krama' ? 'selected' : '' }}>Krama</option>
                         <option {{ old('ragam') == 'Ngoko' ? 'selected' : '' }}>Ngoko</option>
+                        <option {{ old('ragam') == 'Krama' ? 'selected' : '' }}>Krama</option>
+                        <option {{ old('ragam') == 'Krama Inggil' ? 'selected' : '' }}>Krama Inggil</option>
                     </select>
                     <i data-feather='chevron-down' class="absolute top-11 right-3 w-5"></i>
                     @error('ragam')
@@ -42,7 +43,56 @@
                     <select name="jenis" id="jenis" onchange="deskripsiJenis(this)"
                         class="px-4 appearance-none bg-white py-3 w-full mt-1.5 border border-gray-400 rounded-xl block mb-3">
                         <option value="">Pilih</option>
-                        <option value="Nomina" {{ old('jenis') == 'Nomina' ? 'selected' : '' }}>Nomina (kata benda)</option>
+                        <option value="Tembung aran" {{ old('jenis') == 'Tembung aran' ? 'selected' : '' }}>
+                            Tembung aran (kata benda/nomina)
+                        </option>
+                        <option value="Tembung kriya" {{ old('jenis') == 'Tembung kriya' ? 'selected' : '' }}>
+                            Tembung kriya (kata kerja/verbal)
+                        </option>
+                        <option value="Tembung katrangan" {{ old('jenis') == 'Tembung katrangan' ? 'selected' : '' }}>
+                            Tembung katrangan (kata keterangan/adverbia)
+                        </option>
+                        <option value="Tembung kaanan" {{ old('jenis') == 'Tembung kaanan' ? 'selected' : '' }}>
+                            Tembung kaanan (kata keadaan/adjektiva)
+                        </option>
+                        <option value="Tembung sesulih" {{ old('jenis') == 'Tembung sesulih' ? 'selected' : '' }}>
+                            Tembung sesulih (kata ganti/pronomina)
+                        </option>
+                        <option value="Tembung wilangan" {{ old('jenis') == 'Tembung wilangan' ? 'selected' : '' }}>
+                            Tembung wilangan (bilangan/numeralia)
+                        </option>
+                        <option value="Tembung panggandheng"
+                            {{ old('jenis') == 'Tembung panggandheng' ? 'selected' : '' }}>
+                            Tembung panggandheng (kata sambung/konjungsi)
+                        </option>
+                        <option value="Tembung ancer-ancer" {{ old('jenis') == 'Tembung ancer-ancer' ? 'selected' : '' }}>
+                            Tembung ancer-ancer (kata depan/preposisi)
+                        </option>
+                        <option value="Tembung panyilah" {{ old('jenis') == 'Tembung panyilah' ? 'selected' : '' }}>
+                            Tembung panyilah (kata sandang/artikel)
+                        </option>
+                        <option value="Tembung panguwuh" {{ old('jenis') == 'Tembung panguwuh' ? 'selected' : '' }}>
+                            Tembung panguwuh (kata penyeru/interjeksi)
+                        </option>
+                        <option value="Paribasan" {{ old('jenis') == 'Paribasan' ? 'selected' : '' }}>
+                            Paribasan (peribahasa)
+                        </option>
+                        <option value="Bebasan" {{ old('jenis') == 'Bebasan' ? 'selected' : '' }}>
+                            Bebasan
+                        </option>
+                        <option value="Saloka" {{ old('jenis') == 'Saloka' ? 'selected' : '' }}>
+                            Saloka
+                        </option>
+                        <option value="Pacelathon" {{ old('jenis') == 'Pacelathon' ? 'selected' : '' }}>
+                            Pacelathon
+                        </option>
+                        <option value="Candra Sangkala" {{ old('jenis') == 'Candra Sangkala' ? 'selected' : '' }}>
+                            Candra Sangkala
+                        </option>
+                        <option value="Wangsalan" {{ old('jenis') == 'Wangsalan' ? 'selected' : '' }}>
+                            Wangsalan
+                        </option>
+                        {{-- <option value="Nomina" {{ old('jenis') == 'Nomina' ? 'selected' : '' }}>Nomina (kata benda)</option>
                         <option value="Verba" {{ old('jenis') == 'Verba' ? 'selected' : '' }}>Verba (kata kerja)</option>
                         <option value="Adjektiva" {{ old('jenis') == 'Adjektiva' ? 'selected' : '' }}>Adjektiva (kata
                             sifat)
@@ -71,7 +121,7 @@
                         </option>
                         <option value="Saloka" {{ old('jenis') == 'Saloka' ? 'selected' : '' }}>Saloka</option>
                         <option value="Sanepa" {{ old('jenis') == 'Sanepa' ? 'selected' : '' }}>Sanepa</option>
-                        <option value="Sesanti" {{ old('jenis') == 'Sesanti' ? 'selected' : '' }}>Sesanti</option>
+                        <option value="Sesanti" {{ old('jenis') == 'Sesanti' ? 'selected' : '' }}>Sesanti</option> --}}
 
                     </select>
                     <i data-feather='chevron-down' class="absolute top-11 right-3 w-5"></i>
@@ -83,14 +133,15 @@
             <label for="serupa" id="labelSerupa">Kosakata terkait*</label>
             <input type="text" name="serupa" id="serupa" value="{{ old('serupa') }}"
                 class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-xl block">
-                <div class="text-sm mb-3">*Kosakata dalam ngoko/krama, kosakata serupa, dan sebagainya (pisahkan dengan ";")</div>
+            <div class="text-sm mb-3">*Kosakata dalam ngoko/krama, kosakata serupa, dan sebagainya (pisahkan dengan ";")
+            </div>
 
             <label for="arti_indo">Arti dalam Bahasa Indonesia*</label>
             <input type="text" name="arti_indo" id="arti_indo" value="{{ old('arti_indo') }}"
                 class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-xl block">
             <div class="text-sm mb-3">*Digunakan untunk mempermudah pengguna dalam mencari kosakata</div>
 
-            <label for="etimologi">Etimologi</label>
+            <label for="etimologi">Etimologi (asal usul kata)</label>
             <div class="relative w-full">
                 <select name="etimologi" id="etimologi" onchange="showEtimologiInput(this)"
                     class="px-4 appearance-none bg-white py-3 w-full mt-1.5 border border-gray-400 rounded-xl block mb-3">

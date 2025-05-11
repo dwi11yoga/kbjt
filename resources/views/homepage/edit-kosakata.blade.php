@@ -23,25 +23,75 @@
                 value="{{ old('notasi_fonetik', $data->notasi_fonetik) }}"
                 class="px-4 py-3 w-full mt-1.5 border border-neutral-200 rounded-xl block mb-3 ">
 
-            <div class="grid grid-cols-2 space-x-3">
-                <div class="relative">
-                    <label for="ragam">Ragam</label>
+            <div class="grid grid-cols-2 md:space-x-3">
+                <div class="relative md:col-span-1 col-span-2">
+                    <label for="ragam">Tingkat tutur</label>
                     <select name="ragam" id="ragam"
                         class="px-4 appearance-none bg-white py-3 w-full mt-1.5 border border-neutral-200 rounded-xl block mb-3">
-                        <option {{ old('ragam', $data->ragam) == 'Krama' ? 'selected' : '' }}>Krama</option>
                         <option {{ old('ragam', $data->ragam) == 'Ngoko' ? 'selected' : '' }}>Ngoko</option>
+                        <option {{ old('ragam', $data->ragam) == 'Krama' ? 'selected' : '' }}>Krama</option>
+                        <option {{ old('ragam', $data->ragam) == 'Krama Inggil' ? 'selected' : '' }}>Krama Inggil</option>
                     </select>
                     <i data-feather='chevron-down' class="absolute top-11 right-3 w-5"></i>
                     @error('ragam')
                         <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="relative">
+                <div class="relative md:col-span-1 col-span-2">
                     <label for="jenis">Jenis</label>
                     <select name="jenis" id="jenis" onchange="deskripsiJenis(this)"
                         class="px-4 appearance-none bg-white py-3 w-full mt-1.5 border border-neutral-200 rounded-xl block mb-3">
                         <option value="">Pilih</option>
-                        <option value="Nomina" {{ old('jenis', $data->jenis) == 'Nomina' ? 'selected' : '' }}>Nomina (kata
+                        <option value="Tembung aran" {{ old('jenis', $data->jenis) == 'Tembung aran' ? 'selected' : '' }}>
+                            Tembung aran (nomina/kata benda)
+                        </option>
+                        <option value="Tembung kriya" {{ old('jenis', $data->jenis) == 'Tembung kriya' ? 'selected' : '' }}>
+                            Tembung kriya (kata kerja/verbal)
+                        </option>
+                        <option value="Tembung katrangan" {{ old('jenis', $data->jenis) == 'Tembung katrangan' ? 'selected' : '' }}>
+                            Tembung katrangan (kata keterangan/adverbia)
+                        </option>
+                        <option value="Tembung kaanan" {{ old('jenis', $data->jenis) == 'Tembung kaanan' ? 'selected' : '' }}>
+                            Tembung kaanan (kata keadaan/adjektiva)
+                        </option>
+                        <option value="Tembung sesulih" {{ old('jenis', $data->jenis) == 'Tembung sesulih' ? 'selected' : '' }}>
+                            Tembung sesulih (kata ganti/pronomina)
+                        </option>
+                        <option value="Tembung wilangan" {{ old('jenis', $data->jenis) == 'Tembung wilangan' ? 'selected' : '' }}>
+                            Tembung wilangan (bilangan/numeralia)
+                        </option>
+                        <option value="Tembung panggandheng"
+                            {{ old('jenis', $data->jenis) == 'Tembung panggandheng' ? 'selected' : '' }}>
+                            Tembung panggandheng (kata sambung/konjungsi)
+                        </option>
+                        <option value="Tembung ancer-ancer" {{ old('jenis', $data->jenis) == 'Tembung ancer-ancer' ? 'selected' : '' }}>
+                            Tembung ancer-ancer (kata depan/preposisi)
+                        </option>
+                        <option value="Tembung panyilah" {{ old('jenis', $data->jenis) == 'Tembung panyilah' ? 'selected' : '' }}>
+                            Tembung panyilah (kata sandang/artikel)
+                        </option>
+                        <option value="Tembung panguwuh" {{ old('jenis', $data->jenis) == 'Tembung panguwuh' ? 'selected' : '' }}>
+                            Tembung panguwuh (kata penyeru/interjeksi)
+                        </option>
+                        <option value="Paribasan" {{ old('jenis', $data->jenis) == 'Paribasan' ? 'selected' : '' }}>
+                            Paribasan (peribahasa)
+                        </option>
+                        <option value="Bebasan" {{ old('jenis', $data->jenis) == 'Bebasan' ? 'selected' : '' }}>
+                            Bebasan
+                        </option>
+                        <option value="Saloka" {{ old('jenis', $data->jenis) == 'Saloka' ? 'selected' : '' }}>
+                            Saloka
+                        </option>
+                        <option value="Pacelathon" {{ old('jenis', $data->jenis) == 'Pacelathon' ? 'selected' : '' }}>
+                            Pacelathon
+                        </option>
+                        <option value="Candra Sangkala" {{ old('jenis', $data->jenis) == 'Candra Sangkala' ? 'selected' : '' }}>
+                            Candra Sangkala
+                        </option>
+                        <option value="Wangsalan" {{ old('jenis', $data->jenis) == 'Wangsalan' ? 'selected' : '' }}>
+                            Wangsalan
+                        </option>
+                        {{-- <option value="Nomina" {{ old('jenis', $data->jenis) == 'Nomina' ? 'selected' : '' }}>Nomina (kata
                             benda)</option>
                         <option value="Verba" {{ old('jenis', $data->jenis) == 'Verba' ? 'selected' : '' }}>Verba (kata
                             kerja)</option>
@@ -85,19 +135,20 @@
                         <option value="Sanepa" {{ old('jenis', $data->jenis) == 'Sanepa' ? 'selected' : '' }}>Sanepa
                         </option>
                         <option value="Sesanti" {{ old('jenis', $data->jenis) == 'Sesanti' ? 'selected' : '' }}>Sesanti
-                        </option>
+                        </option> --}}
 
                     </select>
                     <i data-feather='chevron-down' class="absolute top-11 right-3 w-5"></i>
                 </div>
             </div>
             {{-- Deskripsi jenis --}}
-            <div id="jenis_deskripsi" class="text-xs -mt-2 mb-2 italic"></div>
+            <div id="jenis_deskripsi" class="text-sm -mt-2 mb-2"></div>
 
             <label for="serupa" id="labelSerupa">Kosakata terkait*</label>
             <input type="text" name="serupa" id="serupa" value="{{ old('serupa', $data->serupa) }}"
                 class="px-4 py-3 w-full mt-1.5 border border-neutral-200 rounded-xl block mb-3">
-            <div class="text-sm mb-3">*Kosakata dalam ngoko/krama, kosakata serupa, dan sebagainya (pisahkan dengan ";")</div>
+            <div class="text-sm mb-3">*Kosakata dalam ngoko/krama, kosakata serupa, dan sebagainya (pisahkan dengan ";")
+            </div>
 
             <label for="arti_indo">Arti dalam Bahasa Indonesia</label>
             <input type="text" name="arti_indo" id="arti_indo" value="{{ old('arti_indo', $data->arti_indo) }}"

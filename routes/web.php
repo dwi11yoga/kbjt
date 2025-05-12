@@ -45,7 +45,7 @@ Route::get('/kosakata/{slug}/riwayat', [HomepageController::class, 'riwayatKosak
 Route::get('/u/{username}', [UserController::class, 'profile']);
 
 // tampilan sertifikat
-Route::get('/s/{userId}/{sertifikatId}', [SertifikatController::class, 'credential']);
+Route::get('/sertifikat/{userId}/{sertifikatId}', [SertifikatController::class, 'detailSertufikat']);
 
 // Akses ditolak
 Route::get('/akses-ditolak', function () {

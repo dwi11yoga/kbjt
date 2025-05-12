@@ -58,8 +58,9 @@
                 </div>
 
                 <div class="col-span-1">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg"
-                        alt="QR Code" class="w-28">
+                    {!! $qrcode !!}
+                    {{-- <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg"
+                        alt="QR Code" class="w-28"> --}}
                 </div>
             </div>
 
@@ -86,10 +87,13 @@
 
                 <div class="flex items-end justify-center">
                     <div>
-                        <div><img src="https://upload.wikimedia.org/wikipedia/id/b/b7/Tanda_Tangan_Sjachroedin_ZP.png"
-                                alt="tanda tangan" class="w-40"></div>
+                        <div>
+                            {{-- <img src="https://upload.wikimedia.org/wikipedia/id/b/b7/Tanda_Tangan_Sjachroedin_ZP.png"
+                                alt="tanda tangan" class="w-40"> --}}
+                            Diberikan oleh
+                        </div>
                         <div class="font-medium text-xl">{{ $kepala->nama }}</div>
-                        <div class="">Ketua KBJT</div>
+                        <div class="">Kepala KBJT</div>
                     </div>
                 </div>
             </div>

@@ -173,29 +173,22 @@
                             <div>Panduan</div>
                             <ul class="text-sm">
                                 <li class="flex items-center justify-between">
-                                    <div>Cara berkontribusi dengan baik</div>
-                                    <a href="#"
+                                    <div>Cara berkontribusi</div>
+                                    <a href="/blog/post/berkontribusi-sebagai-kontributor-di-kamus-bahasa-jawa-terbuka"
                                         class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
                                         Baca <i data-feather='arrow-up-right' class="w-4"></i>
                                     </a>
                                 </li>
                                 <li class="flex items-center justify-between">
-                                    <div>Contoh definisi & kosakata yang baik</div>
-                                    <a href="#"
-                                        class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
-                                        Baca <i data-feather='arrow-up-right' class="w-4"></i>
-                                    </a>
-                                </li>
-                                <li class="flex items-center justify-between">
-                                    <div>Cara kerja level dan poin</div>
-                                    <a href="#"
+                                    <div>Memahami sistem level dan poin</div>
+                                    <a href="/blog/post/memahami-sistem-poin-level"
                                         class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
                                         Baca <i data-feather='arrow-up-right' class="w-4"></i>
                                     </a>
                                 </li>
                                 <li class="flex items-center justify-between">
                                     <div>Manfaat menjadi kontributor aktif</div>
-                                    <a href="#"
+                                    <a href="/blog/post/manfaat-berkontribusi-secara-aktif-di-kamus-bahasa-jawa-terbuka"
                                         class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
                                         Baca <i data-feather='arrow-up-right' class="w-4"></i>
                                     </a>
@@ -256,15 +249,15 @@
                                 <div class="text-sm font-semibold">Kehilangan sentuhan?</div>
                                 <ul class="text-sm">
                                     <li class="flex items-center justify-between">
-                                        <div>Cara berkontribusi dengan baik</div>
-                                        <a href="#"
+                                        <div>Cara berkontribusi</div>
+                                        <a href="/blog/post/berkontribusi-sebagai-kontributor-di-kamus-bahasa-jawa-terbuka"
                                             class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
                                             Baca <i data-feather='arrow-up-right' class="w-4"></i>
                                         </a>
                                     </li>
                                     <li class="flex items-center justify-between">
-                                        <div>Contoh definisi & kosakata yang baik</div>
-                                        <a href="#"
+                                        <div>Manfaat menjadi kontributor aktif</div>
+                                        <a href="/blog/post/manfaat-berkontribusi-secara-aktif-di-kamus-bahasa-jawa-terbuka"
                                             class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
                                             Baca <i data-feather='arrow-up-right' class="w-4"></i>
                                         </a>

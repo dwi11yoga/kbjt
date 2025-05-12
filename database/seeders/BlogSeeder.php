@@ -9,18 +9,18 @@ use Illuminate\Database\Seeder;
 
 class BlogSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
-    {
-        Blog::insert([
-            [
-                'judul' => 'Dokumentasi: Berkontribusi sebagai kontributor di Kamus Bahasa Jawa Terbuka',
-                'subjudul' => 'Panduan singkat untuk mulai berkontribusi di kbjt.',
-                'slug' => 'berkontribusi-sebagai-kontributor-di-kamus-bahasa-jawa-terbuka',
-                'user_id' => 1,
-                'konten' => '<div>
+  /**
+   * Run the database seeds.
+   */
+  public function run(): void
+  {
+    Blog::insert([
+      [
+        'judul' => 'Dokumentasi: Berkontribusi sebagai kontributor di Kamus Bahasa Jawa Terbuka',
+        'subjudul' => 'Panduan singkat untuk mulai berkontribusi di kbjt.',
+        'slug' => 'berkontribusi-sebagai-kontributor-di-kamus-bahasa-jawa-terbuka',
+        'user_id' => 1,
+        'konten' => '<div>
   Selamat datang di kamus bahasa jawa terbuka! Senang melihat semangatmu untuk
   ikut melestarikan kekayaan bahasa Jawa lewat KBJT. Di sini, setiap penambahan
   kata, perbaikan detail, atau melaporkan kesalahan bukan cuma sekadar
@@ -182,30 +182,17 @@ class BlogSeeder extends Seeder
   bahasa; semakin aktif kita berkolaborasi, semakin kaya dan terpercaya kamus
   ini. Mari terus berbagi ilmu, menjaga akurasi, dan membangun komunitas yang
   saling mendukung demi bahasa Jawa yang lestari!
-</div>
-
-        <div class="w-full border border-gray-200 rounded-2xl py-6 px-7">
-            <div><strong>Dokumentasi lain</strong></div>
-            <div class="mb-2">Butuh panduan lain? Cek artikel-artikel berikut yang mungkin bermanfaat untukmu.</div>
-            <ul class="space-y-1">
-                <li>Berkontribusi sebagai kontributor di Kamus Bahasa Jawa Terbuka</li>
-                <li><a href="/blog/post/memahami-sistem-poin-level">Memahami sistem poin & level</a></li>
-                <li><a href="/blog/post/manfaat-berkontribusi-secara-aktif-di-kamus-bahasa-jawa-terbuka">Manfaat berkontribusi secara aktif di Kamus Bahasa Jawa Terbuka</a></li>
-                <li><a href="/blog/post/tindaklanjut-terhadap-kontribusi-bermasalah">Tindaklanjut terhadap kontribusi bermasalah</a></li>
-                <li><a href="/blog/post/mengembalikan-definisi-yang-disembunyikan-setelah-dilaporkan">Mengembalikan Definisi yang Disembunyikan Setelah Dilaporkan</a></li>
-            </ul>
-        </div>
-',
-                'status' => Carbon::now(),
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ],
-            [
-                'judul' => 'Dokumentasi: Memahami sistem poin & level',
-                'subjudul' => 'Pelajari bagaimana level dan poin bekerja di kbjt.',
-                'slug' => 'memahami-sistem-poin-level',
-                'user_id' => 1,
-                'konten' => '<p>
+</div>',
+        'status' => Carbon::now(),
+        'created_at' => Carbon::now(),
+        'updated_at' => Carbon::now()
+      ],
+      [
+        'judul' => 'Dokumentasi: Memahami sistem poin & level',
+        'subjudul' => 'Pelajari bagaimana level dan poin bekerja di kbjt.',
+        'slug' => 'memahami-sistem-poin-level',
+        'user_id' => 1,
+        'konten' => '<p>
     Di KBJT, kontribusimu tidak hanya dihargai secara moral, tetapi juga tercermin dalam bentuk poin dan level. Sistem ini dirancang untuk memberikan apresiasi kepada kontributor yang aktif dan bertanggung jawab, sekaligus menjaga kualitas isi kamus secara kolektif. Semakin banyak kontribusi yang kamu lakukan, seperti menambah kosakata, memperbarui definisi, atau memberikan laporan yang berguna, semakin tinggi pula poin yang kamu kumpulkan. Ini adalah cara kami menunjukkan bahwa setiap upaya kecilmu membawa dampak besar dalam pelestarian bahasa Jawa.
   </p>
 
@@ -228,29 +215,17 @@ class BlogSeeder extends Seeder
   <h1>Kesimpulan</h1>
   <p>
     Sistem level dan poin di KBJT bukan sekadar angka—ia adalah bentuk apresiasi atas waktu, tenaga, dan perhatian yang kamu curahkan untuk melestarikan bahasa Jawa. Semakin konsisten dan jujur kamu berkontribusi, semakin tinggi pula penghargaan yang akan kamu terima. Mari bersama-sama kita ciptakan komunitas yang aktif, suportif, dan bertanggung jawab, demi bahasa Jawa yang tetap hidup dan berkembang!
-  </p>
-
-        <div class="w-full border border-gray-200 rounded-2xl py-6 px-7">
-            <div><strong>Dokumentasi lain</strong></div>
-            <div class="mb-2">Butuh panduan lain? Cek artikel-artikel berikut yang mungkin bermanfaat untukmu.</div>
-            <ul class="space-y-1">
-                <li><a href="/blog/post/berkontribusi-sebagai-kontributor-di-kamus-bahasa-jawa-terbuka">Berkontribusi sebagai kontributor di Kamus Bahasa Jawa Terbuka</a></li>
-                <li>Memahami sistem poin & level</li>
-                <li><a href="/blog/post/manfaat-berkontribusi-secara-aktif-di-kamus-bahasa-jawa-terbuka">Manfaat berkontribusi secara aktif di Kamus Bahasa Jawa Terbuka</a></li>
-                <li><a href="/blog/post/tindaklanjut-terhadap-kontribusi-bermasalah">Tindaklanjut terhadap kontribusi bermasalah</a></li>
-                <li><a href="/blog/post/mengembalikan-definisi-yang-disembunyikan-setelah-dilaporkan">Mengembalikan Definisi yang Disembunyikan Setelah Dilaporkan</a></li>
-            </ul>
-        </div>',
-                'status' => Carbon::now(),
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ],
-            [
-                'judul' => 'Dokumentasi: Manfaat berkontribusi secara aktif di Kamus Bahasa Jawa Terbuka',
-                'subjudul' => 'Mulai dari achievement, sertifikat, hingga dana donasi.',
-                'slug' => 'manfaat-berkontribusi-secara-aktif-di-kamus-bahasa-jawa-terbuka',
-                'user_id' => 1,
-                'konten' => '<p>
+  </p>',
+        'status' => Carbon::now(),
+        'created_at' => Carbon::now(),
+        'updated_at' => Carbon::now()
+      ],
+      [
+        'judul' => 'Dokumentasi: Manfaat berkontribusi secara aktif di Kamus Bahasa Jawa Terbuka',
+        'subjudul' => 'Mulai dari achievement, sertifikat, hingga dana donasi.',
+        'slug' => 'manfaat-berkontribusi-secara-aktif-di-kamus-bahasa-jawa-terbuka',
+        'user_id' => 1,
+        'konten' => '<p>
   Menjadi kontributor aktif di KBJT bukan hanya soal menambahkan data ke dalam
   kamus. Ini adalah tentang menjadi bagian dari sebuah gerakan besar untuk
   menjaga agar bahasa Jawa tetap hidup, relevan, dan dapat dipelajari oleh
@@ -303,29 +278,17 @@ class BlogSeeder extends Seeder
   donasi, kamu juga menjadi inspirasi bagi pengguna lain. Kebaikan dan kerja
   kerasmu punya tempat yang dihargai di sini. Teruslah berkontribusi dan jadilah
   bagian dari perubahan positif untuk budaya dan bahasa kita.
-</p>
-
-        <div class="w-full border border-gray-200 rounded-2xl py-6 px-7">
-            <div><strong>Dokumentasi lain</strong></div>
-            <div class="mb-2">Butuh panduan lain? Cek artikel-artikel berikut yang mungkin bermanfaat untukmu.</div>
-            <ul class="space-y-1">
-                <li><a href="/blog/post/berkontribusi-sebagai-kontributor-di-kamus-bahasa-jawa-terbuka">Berkontribusi sebagai kontributor di Kamus Bahasa Jawa Terbuka</a></li>
-                <li><a href="/blog/post/memahami-sistem-poin-level">Memahami sistem poin & level</a></li>
-                <li>Manfaat berkontribusi secara aktif di Kamus Bahasa Jawa Terbuka</li>
-                <li><a href="/blog/post/tindaklanjut-terhadap-kontribusi-bermasalah">Tindaklanjut terhadap kontribusi bermasalah</a></li>
-                <li><a href="/blog/post/mengembalikan-definisi-yang-disembunyikan-setelah-dilaporkan">Mengembalikan Definisi yang Disembunyikan Setelah Dilaporkan</a></li>
-            </ul>
-        </div>',
-                'status' => Carbon::now(),
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ],
-            [
-                'judul' => 'Dokumentasi: Tindaklanjut terhadap kontribusi bermasalah',
-                'subjudul' => 'Hukuman terhadap kontributor yang melanggar syarat dan ketentuan.',
-                'slug' => 'tindaklanjut-terhadap-kontribusi-bermasalah',
-                'user_id' => 1,
-                'konten' => '<p>
+</p>',
+        'status' => Carbon::now(),
+        'created_at' => Carbon::now(),
+        'updated_at' => Carbon::now()
+      ],
+      [
+        'judul' => 'Dokumentasi: Tindaklanjut terhadap kontribusi bermasalah',
+        'subjudul' => 'Hukuman terhadap kontributor yang melanggar syarat dan ketentuan.',
+        'slug' => 'tindaklanjut-terhadap-kontribusi-bermasalah',
+        'user_id' => 1,
+        'konten' => '<p>
   Kontribusi di KBJT bersifat terbuka dan kolaboratif, namun tetap membutuhkan
   tanggung jawab dari setiap pengguna. Setiap kosakata dan definisi yang kamu
   tambahkan atau ubah akan dibaca dan digunakan oleh banyak orang untuk memahami
@@ -405,29 +368,19 @@ class BlogSeeder extends Seeder
   bukan untuk menghukum, tetapi untuk menjaga kepercayaan publik terhadap
   kualitas isi kamus. Dengan berkontribusi secara jujur dan bertanggung jawab,
   kamu ikut menjaga nilai dan keberlangsungan proyek ini.
-</p>
+</p>',
+        'status' => Carbon::now(),
+        'created_at' => Carbon::now(),
+        'updated_at' => Carbon::now()
+      ],
 
-        <div class="w-full border border-gray-200 rounded-2xl py-6 px-7">
-            <div><strong>Dokumentasi lain</strong></div>
-            <div class="mb-2">Butuh panduan lain? Cek artikel-artikel berikut yang mungkin bermanfaat untukmu.</div>
-            <ul class="space-y-1">
-                <li><a href="/blog/post/berkontribusi-sebagai-kontributor-di-kamus-bahasa-jawa-terbuka">Berkontribusi sebagai kontributor di Kamus Bahasa Jawa Terbuka</a></li>
-                <li><a href="/blog/post/memahami-sistem-poin-level">Memahami sistem poin & level</a></li>
-                <li><a href="/blog/post/manfaat-berkontribusi-secara-aktif-di-kamus-bahasa-jawa-terbuka">Manfaat berkontribusi secara aktif di Kamus Bahasa Jawa Terbuka</a></li>
-                <li>Tindaklanjut terhadap kontribusi bermasalah</li>
-                <li><a href="/blog/post/mengembalikan-definisi-yang-disembunyikan-setelah-dilaporkan">Mengembalikan Definisi yang Disembunyikan Setelah Dilaporkan</a></li>
-            </ul>
-        </div>',
-                'status' => Carbon::now(),
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ],
-            [
-                'judul' => 'Dokumentasi: Mengembalikan Definisi yang Disembunyikan Setelah Dilaporkan',
-                'subjudul' => 'Langkah mudah untuk memperbaiki laporan yang disembunyikan.',
-                'slug' => 'mengembalikan-definisi-yang-disembunyikan-setelah-dilaporkan',
-                'user_id' => 1,
-                'konten' => '<p>
+
+      [
+        'judul' => 'Dokumentasi: Mengembalikan Definisi yang Disembunyikan Setelah Dilaporkan',
+        'subjudul' => 'Langkah mudah untuk memperbaiki laporan yang disembunyikan.',
+        'slug' => 'mengembalikan-definisi-yang-disembunyikan-setelah-dilaporkan',
+        'user_id' => 1,
+        'konten' => '<p>
   Dalam semangat menjaga kualitas konten di KBJT, setiap kontribusi yang dirasa
   kurang tepat atau membingungkan bisa dilaporkan oleh pengguna lain. Jika
   definisi yang kamu buat dilaporkan dan dinilai perlu perbaikan, sistem akan
@@ -475,25 +428,341 @@ class BlogSeeder extends Seeder
   menyempurnakan kontribusimu. Dengan mengikuti langkah-langkah di atas, kamu
   bisa memastikan bahwa apa yang kamu bagikan tetap bermanfaat dan dapat
   dipercaya oleh komunitas.
-</p>
+</p>',
+        'status' => Carbon::now(),
+        'created_at' => Carbon::now(),
+        'updated_at' => Carbon::now()
+      ],
 
-        <div class="w-full border border-gray-200 rounded-2xl py-6 px-7">
-            <div><strong>Dokumentasi lain</strong></div>
-            <div class="mb-2">Butuh panduan lain? Cek artikel-artikel berikut yang mungkin bermanfaat untukmu.</div>
-            <ul class="space-y-1">
-                <li><a href="/blog/post/berkontribusi-sebagai-kontributor-di-kamus-bahasa-jawa-terbuka">Berkontribusi sebagai kontributor di Kamus Bahasa Jawa Terbuka</a></li>
-                <li><a href="/blog/post/memahami-sistem-poin-level">Memahami sistem poin & level</a></li>
-                <li><a href="/blog/post/manfaat-berkontribusi-secara-aktif-di-kamus-bahasa-jawa-terbuka">Manfaat berkontribusi secara aktif di Kamus Bahasa Jawa Terbuka</a></li>
-                <li><a href="/blog/post/tindaklanjut-terhadap-kontribusi-bermasalah">Tindaklanjut terhadap kontribusi bermasalah</a></li>
-                <li>Mengembalikan Definisi yang Disembunyikan Setelah Dilaporkan</li>
-            </ul>
-        </div>',
-                'status' => Carbon::now(),
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ],
-        ]);
-        //factory
-        Blog::factory(100)->create();
-    }
+
+      [
+        'judul' => 'Dokumentasi: Membaca dan Menulis Aksara Jawa',
+        'subjudul' => 'Belajar Carakan, Pasangan, dan Sandangan.',
+        'slug' => 'membaca-dan-menulis-aksara-jawa',
+        'user_id' => 1,
+        'konten' => '<p>
+            Aksara Jawa adalah sistem tulisan tradisional yang digunakan untuk menulis bahasa Jawa. Aksara ini memiliki
+            bentuk
+            unik yang tidak menggunakan huruf Latin seperti alfabet dalam bahasa Indonesia. Sebagai warisan budaya yang
+            kaya,
+            aksara Jawa—juga dikenal sebagai Carakan—memiliki aturan baca dan tulis tersendiri yang berbeda dari sistem
+            ejaan
+            modern. Karena itu, banyak orang yang baru pertama kali mengenal aksara Jawa merasa bingung bagaimana cara
+            membaca
+            atau menuliskannya.
+        </p>
+        <p>
+            Panduan ini ditujukan khusus bagi kamu yang ingin mulai memahami dasar-dasar membaca aksara
+            Jawa, termasuk aksara pokok (carakan), bentuk tambahan untuk menghilangkan vokal (pasangan), dan tanda baca
+            vokal
+            atau konsonan tambahan (sandangan). Mari kita mulai dari dasar.
+        </p>
+
+        <h1>Aksara Carakan: Huruf-Huruf Dasar</h1>
+        <p>
+            Aksara Carakan terdiri dari 20 huruf dasar yang masing-masing melambangkan satu suku kata yang terdiri dari
+            konsonan dan vokal "a". Misalnya, aksara <span class="jawa">"ꦏ"</span> dibaca ka, <span
+                class="jawa">"ꦠ"</span> dibaca ta, dan <span class="jawa">"ꦱ"</span> dibaca sa. Dalam penulisan,
+            aksara carakan selalu menyertakan vokal secara default, yaitu vokal a. Jadi ketika kamu membaca huruf <span
+                class="jawa">"ꦒ"</span>, kamu
+            harus tahu bahwa ini dibaca ga, bukan hanya g. Inilah yang membedakan aksara Jawa dari huruf Latin; vokalnya
+            sudah melekat pada bentuk hurufnya.
+        </p>
+        <p>
+            Selain bentuk dasar, beberapa aksara carakan memiliki pasangan konsonan yang mirip, tapi berbeda bentuk bila
+            digunakan dalam posisi tertentu. Misalnya, <span class="jawa">"ꦚ"</span> (nya) berbeda dari pasangan bentuk
+            ny-annya. Karena itulah,
+            penting untuk mengenali tiap huruf dasar beserta bunyi yang melekat padanya.
+        </p>
+        <p>
+            Berikut ini adalah tabel lengkap dari aksara carakan.
+        </p>
+
+        <div class="grid md:grid-cols-10 grid-cols-5 gap-1 md:w-fit border-4 border-amber-400 rounded-lg">
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦲ</div>
+                <div class="text-center px-3 pb-3">Ha</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦤ</div>
+                <div class="text-center px-3 pb-3">Na</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦕ</div>
+                <div class="text-center px-3 pb-3">Ca</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦫ</div>
+                <div class="text-center px-3 pb-3">Ra</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦏ</div>
+                <div class="text-center px-3 pb-3">Ka</div>
+            </div>
+
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦢ</div>
+                <div class="text-center px-3 pb-3">Da</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦠ</div>
+                <div class="text-center px-3 pb-3">Ta</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦱ</div>
+                <div class="text-center px-3 pb-3">Sa</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦮ</div>
+                <div class="text-center px-3 pb-3">Wa</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦭ</div>
+                <div class="text-center px-3 pb-3">La</div>
+            </div>
+
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦥ</div>
+                <div class="text-center px-3 pb-3">Pa</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦝ</div>
+                <div class="text-center px-3 pb-3">Dha</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦗ</div>
+                <div class="text-center px-3 pb-3">Ja</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦪ</div>
+                <div class="text-center px-3 pb-3">Ya</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦚ</div>
+                <div class="text-center px-3 pb-3">Nya</div>
+            </div>
+
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦩ</div>
+                <div class="text-center px-3 pb-3">Ma</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦒ</div>
+                <div class="text-center px-3 pb-3">Ga</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦧ</div>
+                <div class="text-center px-3 pb-3">Ba</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦛ</div>
+                <div class="text-center px-3 pb-3">Tha</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦔ</div>
+                <div class="text-center px-3 pb-3">Nga</div>
+            </div>
+
+        </div>
+
+        <h1>Pasangan: Menggabungkan Konsonan Tanpa Vokal</h1>
+        <p>
+            Dalam aksara Jawa, jika sebuah konsonan ingin diikuti oleh konsonan lain tanpa menyisipkan vokal "a" di
+            antaranya, kita harus menggunakan bentuk pasangan. Pasangan adalah versi khusus dari huruf carakan yang biasanya
+            ditulis di bawah huruf sebelumnya. Fungsi utama pasangan adalah menghilangkan vokal "a" dari huruf sebelumnya
+            agar suku kata bisa bersambung tanpa vokal.
+        </p>
+        <p>
+            Contoh sederhana: kata montor. Jika ditulis dengan aksara carakan biasa tanpa pasangan, maka akan
+            terbaca ma-na-ta-r <span class="jawa">(ꦩꦺꦴꦤꦠꦂ)</span>, bukan montor <span class="jawa">(ꦩꦺꦴꦤ꧀ꦠꦺꦴꦂ)</span>.
+            Untuk menulisnya dengan benar, huruf "ta" harus ditulis sebagai pasangan di
+            bawah huruf "na", sehingga pembacaan menjadi montor sesuai pelafalan. Karena itu, mengenali bentuk pasangan tiap
+            huruf menjadi sangat penting agar tidak salah baca.
+        </p>
+        <p>
+            Setiap huruf carakan punya bentuk pasangan sendiri yang tidak selalu mirip dengan bentuk huruf dasarnya.
+            Penempatan pasangan umumnya berada di bawah huruf sebelumnya, kecuali pada beberapa kondisi khusus seperti pada
+            akhir baris.
+        </p>
+        <p>
+            Berikut ini adalah tabel lengkap dari aksara carakan.
+        </p>
+
+        <div class="grid md:grid-cols-10 grid-cols-5 gap-1 md:w-fit border-4 border-amber-400 rounded-lg">
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦲ</div>
+                <div class="text-center px-3 pb-3">Ha</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦤ</div>
+                <div class="text-center px-3 pb-3">Na</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦕ</div>
+                <div class="text-center px-3 pb-3">Ca</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦫ</div>
+                <div class="text-center px-3 pb-3">Ra</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦏ</div>
+                <div class="text-center px-3 pb-3">Ka</div>
+            </div>
+
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦢ</div>
+                <div class="text-center px-3 pb-3">Da</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦠ</div>
+                <div class="text-center px-3 pb-3">Ta</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦱ</div>
+                <div class="text-center px-3 pb-3">Sa</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦮ</div>
+                <div class="text-center px-3 pb-3">Wa</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦭ</div>
+                <div class="text-center px-3 pb-3">La</div>
+            </div>
+
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦥ</div>
+                <div class="text-center px-3 pb-3">Pa</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦝ</div>
+                <div class="text-center px-3 pb-3">Dha</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦗ</div>
+                <div class="text-center px-3 pb-3">Ja</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦪ</div>
+                <div class="text-center px-3 pb-3">Ya</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦚ</div>
+                <div class="text-center px-3 pb-3">Nya</div>
+            </div>
+
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦩ</div>
+                <div class="text-center px-3 pb-3">Ma</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦒ</div>
+                <div class="text-center px-3 pb-3">Ga</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦧ</div>
+                <div class="text-center px-3 pb-3">Ba</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦛ</div>
+                <div class="text-center px-3 pb-3">Tha</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀ꦔ</div>
+                <div class="text-center px-3 pb-3">Nga</div>
+            </div>
+
+        </div>
+
+
+        <h1>Sandangan: Menambah atau Mengubah Bunyi</h1>
+        <p>
+            Selain carakan dan pasangan, aksara Jawa juga mengenal yang disebut sandangan, yaitu tanda tambahan untuk
+            mengubah atau menambahkan vokal atau konsonan. Sandangan sangat penting karena suara vokal dalam aksara Jawa
+            tidak selalu “a”—bisa menjadi i, u, e, é, o, dan bahkan diftong seperti ai atau au.
+        </p>
+        <p>
+            Contohnya, sandangan <span class="jawa">ꦶ</span> disebut wulu, berfungsi untuk mengubah vokal "a" menjadi
+            "i". Jadi huruf <span class="jawa">"ꦏ"</span> (ka)
+            ditambah sandangan <span class="jawa">ꦶ</span> menjadi "ki" <span class="jawa">(ꦏꦶ)</span>. Ada juga
+            sandangan <span class="jawa">ꦼ</span> (pepet) untuk vokal "e", atau <span class="jawa">ꦺ</span> untuk
+            vokal
+            “é”. Selain vokal, ada pula sandangan untuk konsonan akhir seperti <span class="jawa">ꦁ</span> (cecak) untuk
+            bunyi ng, atau <span class="jawa">“ꦃ”</span>
+            (wignyan) untuk bunyi h.
+        </p>
+        <p>
+            Penggunaan sandangan ini harus hati-hati karena letaknya tidak selalu di samping atau bawah huruf. Beberapa
+            berada di atas, dan bahkan beberapa di tengah huruf. Penempatan yang salah bisa menyebabkan makna berubah atau
+            tulisan menjadi tidak terbaca.
+        </p>
+        <p>
+            Berikut ini adalah tabel dari sandangan yang sering digunakan.
+        </p>
+        <div class="grid md:grid-cols-9 grid-cols-5 gap-1 md:w-fit border-4 border-amber-400 rounded-lg">
+
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦶ</div>
+                <div class="text-center px-3 pb-3">wulu (-i)</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦸ</div>
+                <div class="text-center px-3 pb-3">suku (-u)</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦺ</div>
+                <div class="text-center px-3 pb-3">taling (-é)</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦺꦴ</div>
+                <div class="text-center px-3 pb-3">taling tarung (-o)</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦼ</div>
+                <div class="text-center px-3 pb-3">pepet (-e/-eu)</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦁ</div>
+                <div class="text-center px-3 pb-3">cecak (-ng)</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦂ</div>
+                <div class="text-center px-3 pb-3">layar (-r)</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">ꦃ</div>
+                <div class="text-center px-3 pb-3">wignyan (-h)</div>
+            </div>
+            <div class="">
+                <div class="text-center px-3 pt-3 jawa font-bold text-2xl">꧀</div>
+                <div class="text-center px-3 pb-3">pangkon</div>
+            </div>
+        </div>
+
+        <h1>Kesimpulan</h1>
+        <p>
+            Membaca aksara Jawa memang membutuhkan kesabaran dan latihan, terutama jika kamu belum terbiasa dengan
+            bentuk-bentuk hurufnya. Dengan mengenali tiga unsur penting yaitu carakan (huruf dasar), pasangan (penggabung
+            konsonan), dan sandangan (tanda vokal atau tambahan), kamu sudah memegang kunci utama dalam membaca teks aksara
+            Jawa. Semakin sering kamu membaca dan mencoba menulis, maka akan semakin mudah kamu mengenali pola dan
+            bentuknya.
+        </p>
+        <p>
+            Jika kamu ingin mempelajari lebih dalam tentang bentuk lengkap aksara Jawa—termasuk angka Jawa (angka Jawa),
+            tanda baca (pada), aksara rekan (untuk bunyi asing), dan contoh kalimat, silakan buka panduan lengkapnya melalui
+            link berikut:
+            <a href="https://bukubiruku.com/aksara-jawa-lengkap-dan-pasangan/">
+                <span>Aksara Jawa Lengkap dan Pasangan dari Bukubiruku.com</span>
+                <i data-feather="arrow-up-right" class="w-5 inline"></i>
+            </a>
+        </p>',
+        'status' => Carbon::now(),
+        'created_at' => Carbon::now(),
+        'updated_at' => Carbon::now()
+      ],
+    ]);
+    //factory
+    Blog::factory(100)->create();
+  }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\KataSandiBerubah;
+use App\Mail\WelcomeMail;
 use App\Models\Achievement;
 use App\Models\Blog;
 use App\Models\Definisi;
@@ -19,6 +21,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\ValidationException;
 
+use Mail;
 use function Laravel\Prompts\error;
 
 class UserController extends Controller
@@ -103,19 +106,28 @@ class UserController extends Controller
         ]);
     }
 
-    //Buat akun (daftar)
+    //fungsi Buat akun (daftar)
     public function store(Request $request)
     {
+        // dd($request);   
+        // validasi data
         $validatedData = $request->validate([
             'nama' => 'required|max:255',
             'email' => 'required|email:dns|unique:users,email',
             'username' => 'required|min:6|max:255|lowercase|unique:users,username|regex:/^[A-Za-z0-9_.]+$/',
             'password' => 'required|min:6|max:255|same:password2',
             'password2' => 'required|min:6|max:255|same:password',
-            'remember' => 'required'
+            'eula' => 'required'
         ]);
 
+        // simpan user
         User::create($validatedData);
+
+        // kirim email selamat datang
+        $url = $this->getUrl();
+        Mail::to($validatedData['email'])->send(new WelcomeMail($validatedData, $url));
+
+        // redirect ke view login
         return redirect('/masuk')->with('success', 'Akun berhasil terdaftar, silahkan login');
     }
 
@@ -220,7 +232,7 @@ class UserController extends Controller
         // incremenet nilai view jika pengguna hari ini belom melihat akun
         if (!Cookie::has('user_' . $user->id)) { // jika belum ada cookie = user belum melihat halaman ini
             User::find($user->id)->increment('view', 1); // naikkan view
-            Cookie::queue('user_' . $user->id, true , 24 * 60); // buat cookie (kedaluarsa dalam 1 hari)
+            Cookie::queue('user_' . $user->id, true, 24 * 60); // buat cookie (kedaluarsa dalam 1 hari)
         }
 
         // return
@@ -494,7 +506,7 @@ class UserController extends Controller
             'group' => 'settings'
         ]);
     }
-    // Update Password User
+    // fungsi Update Password User
     public function updatePassword(Request $request)
     {
         // dd($request);
@@ -507,13 +519,18 @@ class UserController extends Controller
 
         // Cek apakah password lama benar
         if (!Hash::check($validatedData['oldPassword'], Auth::user()->password)) {
-            return back()->with('failed', 'Gagal mengubah kata sandi')->withErrors(['oldPassword' => 'Old password are incorrect'])->withInput();
+            return back()->with('failed', 'Gagal mengubah kata sandi')
+                ->withErrors(['oldPassword' => 'Old password are incorrect'])
+                ->withInput();
         }
 
         // simpan ke db
-        User::find(Auth::user()->id)->update(['password' => $validatedData['newPassword2']]);
+        $user = User::find(Auth::user()->id);
+        $user->update(['password' => $validatedData['newPassword2']]);
 
-        // kirim notifikasi lewat email - belum
+        // kirim notifikasi lewat email
+        $url = $this->getUrl();
+        Mail::to($user->email)->send(new KataSandiBerubah($user, $url));
 
         // kembali ke view
         return back()->with('success', 'Kata sandi berhasil diubah');

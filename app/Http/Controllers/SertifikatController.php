@@ -13,6 +13,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class SertifikatController extends Controller
 {
@@ -121,34 +122,43 @@ class SertifikatController extends Controller
         User::find(Auth::user()->id)->update(['sertifikat' => $sertifDimiliki]);
 
         // kirimkan notifikasi
-        $pesan = 'Kamu berhasil meng-klaim sertifikat karena ' . strtolower($sertifikat->nama) . ' ✍';
+        $pesan = 'Kamu berhasil meng-klaim sertifikat karena ' . strtolower($sertifikat->nama) . '(+' . $sertifikat->reward . ' poin)';
         $url = '/sertifikat';
         $this->kirimNotifikasi(Auth::user()->id, 'sertifikat', $pesan, $url);
 
         return back()->with('success', 'Sertifikat berhasil diklaim');
     }
 
-    // View sertifikat
-    public function credential($userId, $sertifikatId)
+    // View detail sertifikat
+    public function detailSertufikat($userId, $sertifikatId)
     {
         // dapatkan data dari db
-        $user = User::select('nama', 'id', 'sertifikat')->where('username', $userId)->first();
+        $user = User::select('nama', 'username', 'id', 'sertifikat')->where('username', $userId)->first();
         $user->idZerofill = str_pad($user->id, 10, '0', STR_PAD_LEFT);
 
-        // tampilkan halaman kosong jika user belum dapat sertifikat
+        // tampilkan halaman eerror jika user belum dapat sertifikat
         if (empty($user->sertifikat[$sertifikatId])) {
             return $this->error404();
         }
 
+        // dapatkan data sertifikat
         $sertifikat = Sertifikat::find($sertifikatId);
         $sertifikat->didapat = Carbon::parse($user->sertifikat[$sertifikat->id])->setTimezone('Asia/Jakarta')->translatedFormat('d F Y');
+
+        // dapatkan data kepala
         $kepala = User::select('nama')->where('role', 'kepala')->first();
+
+        // generate qr code menggunakan simple qrcode (untuk membuktikan bahwa sertifikatnya asli)
+        $url = $this->getUrl() . '/sertifikat/' . $user->username . '/' . $sertifikat->id;
+        $qrcode = QrCode::size(112)->generate($url);
+
         // tampilkan view
         return view('homepage.sertifikat-view', [
             'title' => 'Sertifikat ' . $user->nama,
             'sertifikat' => $sertifikat,
             'user' => $user,
-            'kepala' => $kepala
+            'kepala' => $kepala,
+            'qrcode' => $qrcode
         ]);
     }
 

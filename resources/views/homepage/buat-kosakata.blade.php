@@ -153,11 +153,23 @@
             </div>
             <div class="grid grid-cols-2 space-x-3">
                 <div>
-                    <input type="text" name="bahasa" id="bahasa" oninput="disabledEtimologi(this)"
+                    <input type="text" list="daftar_bahasa" name="bahasa" id="bahasa" oninput="disabledEtimologi(this)"
                         placeholder="Diserap dari bahasa..." value="{{ old('bahasa') }}"
                         class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-xl block mb-3 @error('bahasa')
                             border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
-                        @enderror">
+                            @enderror">
+                    <datalist id="daftar_bahasa">
+                        <option value="Arab">Arab</option>
+                        <option value="Belanda">Belanda</option>
+                        <option value="Cina">Cina</option>
+                        <option value="Indonesia">Indonesia</option>
+                        <option value="Jawa Kuno">Jawa Kuno</option>
+                        <option value="Kawi">Kawi</option>
+                        <option value="Melayu">Melayu</option>
+                        <option value="Persia">Persia</option>
+                        <option value="Portugis">Portugis</option>
+                        <option value="Sansekerta">Sansekerta</option>
+                    </datalist>
                     @error('bahasa')
                         <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
                     @enderror

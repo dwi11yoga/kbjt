@@ -145,6 +145,21 @@
         {!! $post->konten !!}
     </div>
 
+    {{-- jika artikel adalah dokumentasi --}}
+    @if ($post->dokumentasi == true)
+        <div class="w-full border border-gray-200 rounded-2xl py-6 px-7 space-y-3">
+            <div><strong>📚 Dokumentasi lainnya</strong></div>
+            <p>
+                Kami telah menyiapkan berbagai artikel dan panduan tambahan yang mungkin bisa lebih membantumu memahami
+                fitur dan cara kerja kamus bahasa jawa terbuka. Jangan lewatkan dokumentasi lainnya yang bisa memperkaya
+                pengalamanmu saat menggunakan kamus ini. Yuk, cek beberapa artikel pilihan berikut!
+            </p>
+            <a href="/cari?keyword=dokumentasi%3A&filter=artikel">
+                <button class="py-3 px-3 mt-3 rounded-lg bg-amber-400 hover:outline hover:outline-2 hover:outline-offset-2 outline-amber-400">Cek sekarang!</button>
+            </a>
+        </div>
+    @endif
+
 
     {{-- banner bawah/banner 4 --}}
     <?php $idBanner = 4; ?>

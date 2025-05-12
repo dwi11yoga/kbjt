@@ -144,7 +144,7 @@ class HomepageController extends Controller
     // Blog Post
     public function blogPost($slug)
     {
-        // Ambil data blog
+        // Ambil data artikel
         $post = Blog::where('slug', '=', $slug)
             ->with('user:id,username,nama,jenis_kelamin,profile_pic')
             ->first();
@@ -158,6 +158,16 @@ class HomepageController extends Controller
         if ($_SERVER['REQUEST_URI'] == '/blog/preview/' . $slug && isset($post['status'])) {
             return redirect('/blog/post/' . $slug);
         }
+
+        // cek apakah artikel adalah dokumentasi/tidak
+        $potongJudul = substr($post->judul, 0, 12);
+        if ($potongJudul == 'Dokumentasi:') {
+            $post->dokumentasi = true;
+        } else {
+            $post->dokumentasi = false;
+        }
+
+        // dd($potongJudul);
 
         // dapatkan url web
         $url = $this->getUrl();
@@ -377,7 +387,7 @@ class HomepageController extends Controller
 
         return view('homepage.kosakata', [
             'group' => 'pencarian',
-            'title' => 'Kosakata',
+            'title' => ucfirst($kosakata->kosakata),
             'kosakata' => $slug,
             'data' => $kosakata,
             'url' => $url,

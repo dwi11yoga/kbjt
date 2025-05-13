@@ -37,6 +37,11 @@ Route::get('/dukung', [HomepageController::class, 'donasi']);
 // pencarian
 Route::get('/cari', [HomepageController::class, 'pencarian']);
 
+// credit
+Route::get('/tentang', [HomepageController::class, 'tentang']);
+// syarat dan ketentuan
+Route::get('/syarat-ketentuan', [HomepageController::class, 'syaratKetentuan']);
+
 // tampilkan definisi & kosakata
 Route::get('/kosakata/{slug}', [HomepageController::class, 'kosakata']);
 // riwayat edit

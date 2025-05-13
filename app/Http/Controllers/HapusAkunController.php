@@ -7,41 +7,48 @@ use App\Models\User;
 use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Mail;
 
 class HapusAkunController extends Controller
 {
     // view hapus akun
-    public function index(){
-        return view('dashboard.setting-hapusakun',[
-            'title'=>'Hapus akun',
-            'group'=>'settings'
+    public function index()
+    {
+        return view('dashboard.setting-hapusakun', [
+            'title' => 'Hapus akun',
+            'group' => 'settings'
         ]);
     }
 
     // fungsi hapus akun
-    public function hapusAkun (Request $request){
+    public function hapusAkun(Request $request)
+    {
 
         // validasi
-        $validatedData=$request->validate([
-            'alasan'=>'required|min:20',
-            'password'=>'required|min:6|max:255',
-            'konfirmasi1'=>'required',
-            'konfirmasi2'=>'required',
+        $validatedData = $request->validate([
+            'alasan' => 'required|min:20',
+            'password' => 'required|min:6|max:255',
+            'konfirmasi1' => 'required',
+            'konfirmasi2' => 'required',
         ]);
 
         // cek apakah password yang dimasukkan sudah benar
         if (!Hash::check($validatedData['password'], Auth::user()->password)) {
             return back()
-            ->withErrors(['password'=>'Password are incorrect'])
-            ->with('failed', 'Gagal menghapus akun')
-            ->withInput();
+                ->withErrors(['password' => 'Password are incorrect'])
+                ->with('failed', 'Gagal menghapus akun')
+                ->withInput();
         }
 
         // simpan alasan di db
         HapusAkun::create([
-            'user_id'=>Auth::user()->id,
-            'alasan'=>$validatedData['alasan']
+            'user_id' => Auth::user()->id,
+            'alasan' => $validatedData['alasan']
         ]);
+
+        // kirim email notifikasi ke user
+        $url = $this->getUrl();
+        Mail::to(Auth::user()->email)->send(new \App\Mail\HapusAkun(Auth::user(), $url));
 
         // hapus akun
         // User::find(Auth::user()->id)->delete();
@@ -50,10 +57,10 @@ class HapusAkunController extends Controller
         // meng-logout-kan user
         Auth::logout();
         //menghapus semua data session yang ada saat ini, mencegah session fixation attack.
-        $request->session()->invalidate(); 
+        $request->session()->invalidate();
         //mengganti CSRF token, Cross-Site Request Forgery
-        $request->session()->regenerateToken(); 
+        $request->session()->regenerateToken();
         // alihkan ke homepage
-        return redirect('/')->with('success', "Akun kamu berhasil dihapus dari sistem :')");
+        return redirect('/')->with('success', "Selamat tinggal, akun kamu berhasil dihapus");
     }
 }

@@ -86,16 +86,16 @@
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-10 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                     <div
                         class="md:col-span-5 col-span-10 flex items-center line-clamp-2 md:font-normal font-semibold capitalize">
-                        Kosakata {{ $d->kosakata ?? '[Kosakata dihapus]'}}
+                        Kosakata {{ $d->kosakata ?? '[Kosakata dihapus]' }}
                     </div>
                     <div class="flex gap-2 md:col-span-3 col-span-10 items-center">
                         <div class="rounded-full w-8 h-8 overflow-hidden">
                             <?php
                             $sementara = $d;
-                            $d = $d->user; 
+                            $d = $d->user;
                             ?>
                             @include('partials.profile-pic-general')
-                            <?php $d=$sementara; ?>
+                            <?php $d = $sementara; ?>
                         </div>
                         <div class="line-clamp-2">{{ $d->user->nama }}</div>
                     </div>
@@ -126,17 +126,18 @@
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-10 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                     <div class="md:col-span-5 col-span-10 flex items-center line-clamp-2 md:font-normal font-semibold">
                         <div>
-                            Definisi untuk kosakata <span class="capitalize">{{ $d->kosakata->kosakata ?? '[Kosakata dihapus]' }}</span>
+                            Definisi untuk kosakata <span
+                                class="capitalize">{{ $d->kosakata->kosakata ?? '[Kosakata dihapus]' }}</span>
                         </div>
                     </div>
                     <div class="flex gap-2 md:col-span-3 col-span-10 items-center">
                         <div class="rounded-full w-8 h-8 overflow-hidden">
                             <?php
                             $sementara = $d;
-                            $d = $d->user; 
+                            $d = $d->user;
                             ?>
                             @include('partials.profile-pic-general')
-                            <?php $d=$sementara; ?>
+                            <?php $d = $sementara; ?>
                         </div>
                         <div class="line-clamp-2">{{ $d->user->nama }}</div>
                     </div>
@@ -164,6 +165,51 @@
                 class="border border-neutral-200 p-3 mt-3 rounded-xl text-center"> Beralih ke halaman <a href="/laporan"
                     class="underline underline-offset-2 decoration-amber-400 decoration-2">Laporan</a>.
             </div>
+        </div>
+    </div>
+
+    {{-- Daftar kontributor yang menghapus akunnya --}}
+    <div class="p-5 bg-white rounded-2xl" id="laporan">
+        <div class="py-2">
+            Kontributor yang menghapus akunnya
+        </div>
+
+        <div class="space-y-3">
+            @if ($kontributorDihapus->isEmpty())
+                <div class="border border-neutral-200 p-3 mt-3 rounded-xl">Tidak ada data</div>
+            @else
+                @foreach ($kontributorDihapus as $d)
+                    <a href="#"
+                        class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-10 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
+                        <div class="flex gap-2 md:col-span-3 col-span-9 items-center">
+                            <div class="rounded-full w-8 h-8 overflow-hidden">
+                                <?php $sementara = $d;
+                                $d = $d->user;
+                                ?>
+                                @include('partials.profile-pic-general')
+                                <?php $d = $sementara; ?>
+                            </div>
+                            <div class="line-clamp-1">{{ $d->user->nama }}</div>
+                        </div>
+                        <div class="md:col-span-2 col-span-7 text-neutral-700 md:flex hidden items-center line-clamp-2">
+                            &#64;{{ $d->user->username }}
+                        </div>
+                        <div class="md:col-span-1 col-span-1 flex items-center">
+                            <div class="rounded-full py-1 px-3 bg-amber-200 w-fit text-sm">
+                                <span class="md:block hidden">Level {{ $d->user->level }}</span>
+                                <span class="md:hidden block">{{ $d->user->level }}</span>
+                            </div>
+                        </div>
+                        <div class="md:col-span-4 col-span-10 flex items-center md:justify-end">
+                            Dihapus pada {{ $d->created_at->translatedFormat('d F Y') }}
+                        </div>
+                    </a>
+                @endforeach
+            @endif
+        </div>
+
+        <div class="mt-3">
+            {{ $kontributorDihapus->links() }}
         </div>
     </div>
 @endsection

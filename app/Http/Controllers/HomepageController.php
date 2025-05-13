@@ -437,4 +437,21 @@ class HomepageController extends Controller
             'group' => null,
         ]);
     }
+
+    // halaman credit/tentang
+    public function tentang()
+    {
+        return view('homepage.credit', [
+            'title' => 'Tentang',
+            'group' => null
+        ]);
+    }
+
+    public function syaratKetentuan()
+    {
+        return view('homepage.syarat-ketentuan', [
+            'title' => 'Syarat dan Ketentuan',
+            'group' => null
+        ]);
+    }
 }

@@ -9,8 +9,6 @@
 
 @section('body')
     {{-- Header profil --}}
-    {{ $user->poin }}
-    <div>{{ $user->id }}</div>
     <section class="md:px-28 px-5 pt-14 mx-auto bg-neutral-100">
         <div class="container mx-auto">
             <div class="grid grid-cols-4 md:space-x-20 space-y-4">

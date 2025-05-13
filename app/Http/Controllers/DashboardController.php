@@ -6,6 +6,7 @@ use App\Models\Achievement;
 use App\Models\Blog;
 use App\Models\Definisi;
 use App\Models\EditKosakata;
+use App\Models\HapusAkun;
 use App\Models\Kosakata;
 use App\Models\Level;
 use App\Models\Report;
@@ -363,7 +364,7 @@ class DashboardController extends Controller
         $data['banner'] = $banner;
 
         // cek apakah user tersuspend atau tidak
-        $data['suspend']=$this->cekSuspend(Auth::user()->id);
+        $data['suspend'] = $this->cekSuspend(Auth::user()->id);
 
         //cek sertifikat
         $this->cekSertifikat(Auth::user()->id);
@@ -540,6 +541,20 @@ class DashboardController extends Controller
             $d['kontribusiBlnIni'] = $definisi + $kosakata + $editkosakata + $laporan;
         }
 
+        // data kontributor yang telah menghapus akunnya
+        $kontributorDihapus = HapusAkun::with([
+            'user' => function ($query) {
+                $query->withTrashed();
+            }
+        ])
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'kontributor');
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, '*', 'kontributor')
+            ->onEachSide(2)
+            ->appends(request()->query());
+
         // data kosakata & definisi baru
         $kosakata = Kosakata::whereHas('user', function ($query) {
             $query->where('role', 'kontributor');
@@ -566,8 +581,9 @@ class DashboardController extends Controller
             'group' => 'kontributor',
             'overview' => $overview,
             'kontributor' => $kontributor,
+            'kontributorDihapus' => $kontributorDihapus,
             'kosakata' => $kosakata,
-            'definisi' => $definisi
+            'definisi' => $definisi,
         ]);
     }
 
@@ -649,6 +665,20 @@ class DashboardController extends Controller
             }
         }
 
+        // data pengurus yang telah menghapus akunnya
+        $pengurusDihapus = HapusAkun::with([
+            'user' => function ($query) {
+                $query->withTrashed();
+            }
+        ])
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'pengurus');
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, '*', 'pengurus')
+            ->onEachSide(2)
+            ->appends(request()->query());
+
         // data kosakata & definisi baru
         $kosakata = Kosakata::whereHas('user', function ($query) {
             $query->where('role', 'pengurus');
@@ -686,6 +716,7 @@ class DashboardController extends Controller
             'group' => 'pengurus',
             'overview' => $overview,
             'pengurus' => $pengurus,
+            'pengurusDihapus'=>$pengurusDihapus ,
             'kosakata' => $kosakata,
             'definisi' => $definisi,
             'editKosakata' => $editKosakata

@@ -10,19 +10,21 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class KataSandiBerubah extends Mailable
+class EmailBerubah extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user, $url;
+    // data yang akan digunakan
+    public $user, $emailBaru, $url;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user, $url)
+    public function __construct($user, $emailBaru, $url)
     {
         // menggunakan ini agar bisa digunakan oleh variabel dibawahnya
         $this->user = $user;
+        $this->emailBaru = $emailBaru;
         $this->url = $url;
     }
 
@@ -32,7 +34,7 @@ class KataSandiBerubah extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Kata Sandi Akunmu Telah Diubah',
+            subject: 'Alamat email akun kamu berubah',
         );
     }
 
@@ -41,14 +43,15 @@ class KataSandiBerubah extends Mailable
      */
     public function content(): Content
     {
-        $tanggal=Carbon::now();
+        $tanggal = Carbon::now();
         return new Content(
-            view: 'mail.katasandi-berubah', //view yang akan dikirim
-            with:[ // data yang akan dikirim ke view
-                'user'=>$this->user,
-                'url'=>$this->url,
-                'tanggal'=>$tanggal->translatedFormat('d F Y'),
-                'waktu'=>$tanggal->translatedFormat('H:i')
+            view: 'mail.email-berubah', //view yang akan dikirim
+            with: [ // data yang akan dikirim ke view
+                'user' => $this->user,
+                'emailBaru' => $this->emailBaru,
+                'tanggal' => $tanggal->translatedFormat('d F Y'),
+                'waktu' => $tanggal->format('H:i'),
+                'url' => $this->url
             ]
         );
     }

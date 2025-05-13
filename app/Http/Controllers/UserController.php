@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EmailBerubah;
 use App\Mail\KataSandiBerubah;
 use App\Mail\WelcomeMail;
 use App\Models\Achievement;
@@ -469,19 +470,17 @@ class UserController extends Controller
     // fungsi update ubah email
     public function simpanUbahEmail(Request $request)
     {
-
         // validasi
         $validatedData = $request->validate([
             'email' => 'required|email:dns|unique:users,email,' . Auth::user()->id . ',id',
             'password' => 'required|min:6|max:255',
         ]);
 
-        // jika username yang dimasukkan sama (tidak berubah), kembalikan ke view
+        // jika email yang dimasukkan sama (tidak berubah), kembalikan ke view
         if ($validatedData['email'] == Auth::user()->email) {
             return back()->with('success', 'Tidak ada perubahan yang dilakukan');
         }
 
-        // SIMPAN PERUBAHAN USERNAME
         // authentikasi: cek apakah password yang dimasukkan sudah sama dengan password user
         if (!Hash::check($request->password, Auth::user()->password)) { //jika tidak sama...
             return back()->with('failed', 'Gagal menyimpan perubahan')
@@ -489,10 +488,13 @@ class UserController extends Controller
                 ->withErrors(['password' => 'The password are incorrect.']);
         }
 
-        // jika password yang diinput sama, simpan di db
+        // simpan di db
         User::find(Auth::user()->id)->update(['email' => $validatedData['email']]);
 
-        // kirim notifikasi via email - belum
+        // kirim notifikasi ke email lama
+        $url = $this->getUrl();
+        Mail::to(Auth::user()->email)
+            ->send(new EmailBerubah(Auth::user(), $validatedData['email'], $url));
 
         // kembalikan ke view
         return back()->with('success', 'Berhasil menyimpan perubahan');

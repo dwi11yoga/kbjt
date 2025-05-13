@@ -11,11 +11,15 @@
 
                 <div class="md:order-2 order-1 md:col-span-2 col-span-3 space-y-3">
                     <h4 class="font-semibold">{{ $title }}</h4>
-                    <div>
-                        Mohon maaf, akun kamu saat ini diblokir karena terdeteksi adanya aktivitas yang tidak sesuai dengan
-                        kebijakan kami. Jika kamu merasa ini adalah kekeliruan, silakan hubungi kami untuk klarifikasi lebih
-                        lanjut.
-                    </div>
+                    <p>
+                        Mohon maaf, akun kamu saat ini tidak lagi tersedia — ini bisa disebabkan karena adanya pemblokiran
+                        akibat aktivitas yang melanggar kebijakan, atau karena kamu sendiri telah memilih untuk
+                        menghapusnya.
+                    </p>
+                    <p>
+                        Jika kamu merasa ini terjadi tanpa sepengetahuanmu dan membutuhkan bantuan, jangan ragu untuk
+                        menghubungi kami melalui email atau media sosial.
+                    </p>
                     <div>— Terima kasih.</div>
                 </div>
 

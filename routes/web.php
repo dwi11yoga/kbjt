@@ -16,6 +16,7 @@ use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\PoinKontribusiController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SertifikatController;
+use App\Http\Controllers\StatistikController;
 use App\Http\Controllers\TrixController;
 use App\Http\Controllers\UserController;
 use App\Models\Definisi;
@@ -69,7 +70,7 @@ Route::post('/upload-image', [TrixController::class, 'store']);
 // Delete gambar
 Route::post('/delete-image', [TrixController::class, 'delete']);
 
-Route::middleware(['guest'])->group(function () {
+Route::middleware(['guest'])->group(function () { // hanya bisa diakses  jika user belum login
     // Login
     Route::get('/masuk', [UserController::class, 'signin'])->name('login');
     Route::post('/masuk', [UserController::class, 'authenticate']);
@@ -135,11 +136,18 @@ Route::middleware(['auth'])->group(function () {
 
         // pengurus - pengurus
         Route::get('/pengurus', [DashboardController::class, 'pengurus']);
+
+        // view detail user yang menhapus akunnya sendiri
+        Route::get('/akun-dihapus/{id}', [HapusAkunController::class, 'detail']);
+        
         // laporan - pengurus
         Route::get('/laporan', [ReportController::class, 'index']);
 
         // simpan perubahan pada data laporan -> di middleware pengurusKepala (atas)
         Route::put('/laporan/{id}/tindaklanjut', [ReportController::class, 'tindaklanjut']);
+
+        // halaman statistik
+        Route::get('/statistik', [StatistikController::class, 'index']);
     });
 
     // hanya untuk role kepala

@@ -97,9 +97,21 @@
                             </p>
                         </div>
 
+                        <div class="flex space-x-3 items-center">
+                            <div class="flex space-x-1">
+                                <i data-feather='heart' class="w-5 fill-amber-400"></i>
+                                <span>{{ number_format($user->poin, 0, ',', '.') }} poin</span>
+                            </div>
+                            <div class="flex space-x-1">
+                                <i data-feather='trending-up' class="w-5"></i>
+                                <span>{{ number_format($user->view, 0, ',', '.') }} kunjungan</span>
+                            </div>
+                        </div>
+
                         {{-- Bergabung --}}
-                        <div class="text-neutral-600 capitalize">
-                            {{ $user->role }} • Bergabung sejak {{ $user->created_at->translatedFormat('d F Y') }}.
+                        <div class="text-neutral-600">
+                            <span class="capitalize">{{ $user->role }}</span> • Bergabung sejak
+                            {{ $user->created_at->translatedFormat('d F Y') }}.
                         </div>
 
                         {{-- Website & Media sosial --}}
@@ -229,7 +241,8 @@
                     <div id="editkosakatapane" class="space-y-3">
                         @if (!$editKosakata->isEmpty())
                             @foreach ($editKosakata as $d)
-                                <a href="/kosakata/{{ $d->kosakata->slug }}/riwayat" title="Lihat riwayat edit kosakata {{ strtolower($d->kosakata->kosakata) }}"
+                                <a href="/kosakata/{{ $d->kosakata->slug }}/riwayat"
+                                    title="Lihat riwayat edit kosakata {{ strtolower($d->kosakata->kosakata) }}"
                                     class="rounded-2xl border border-neutral-200 p-5 md:flex md:justify-between hover:outline hover:outline-amber-400">
                                     <div class="font-semibold">Kosakata
                                         {{ $d->kosakata->kosakata ?? '[Kosakata dihapus]' }}</div>

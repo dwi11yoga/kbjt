@@ -17,6 +17,11 @@ use function PHPUnit\Framework\isNull;
 
 class KosakataController extends Controller
 {
+    public function __construct(){
+        // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
+        $this->statKunjungan();
+    }
+    
     // View tambah kosakata
     public function tambahKosakata()
     {
@@ -89,6 +94,9 @@ class KosakataController extends Controller
             'serupa' => $arraySerupa,
             'poin' => $poin
         ]);
+
+        // increment kosakata baru di statistik
+        $this->stat('kosakata_baru');
 
         // cek achievement
         $userId = Auth::user()->id;

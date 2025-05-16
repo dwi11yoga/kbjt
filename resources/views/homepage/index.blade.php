@@ -3,7 +3,7 @@
 @section('body')
     {{-- Section selamat datang --}}
     <div class="container w-screen mx-auto py-28 text-center">
-        {{-- <p class="jawa-h2 -mb-3">ꦱꦸꦒꦼꦁ ꦫꦮꦸꦃ!</p> --}}
+        {{-- <p class="jawa-h2">ꦱꦸꦒꦼꦁ ꦫꦮꦸꦃ!</p> --}}
         <h1 class="md:text-5xl text-2xl">Selamat datang di <br> <b>Kamus Bahasa Jawa Terbuka</b></h1>
         <p class="mt-5">Kamus bahasa jawa online terlengkap dengan <br> dukungan dari komunitas.</p>
         <form action="/cari" method="GET">

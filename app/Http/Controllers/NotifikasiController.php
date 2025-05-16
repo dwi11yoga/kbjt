@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class NotifikasiController extends Controller
 {
+    public function __construct(){
+        // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
+        $this->statKunjungan();
+    }
+    
     //view notifikasi
     public function index()
     {

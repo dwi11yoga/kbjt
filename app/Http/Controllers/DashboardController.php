@@ -19,6 +19,11 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
+    public function __construct(){
+        // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
+        $this->statKunjungan();
+    }
+    
     // Dashboard
     public function index()
     {
@@ -320,19 +325,20 @@ class DashboardController extends Controller
                 }
             } else {
                 // tampilakan definisi random (untuk semacam trivia)
-                $definisiRandom = Definisi::where(function ($query) {
-                    $query->whereNotNull('verifikasi_oleh')
-                        ->orWhereHas('user', function ($q) {
-                            $q->where('role', 'pengurus');
-                        });
-                })
-                    ->whereNull('hukuman_edit')
-                    ->whereHas('kosakata')
-                    ->with('kosakata')
-                    ->with('user')
-                    ->with('pengurus')
-                    ->inRandomOrder()
-                    ->first();
+                // $definisiRandom = Definisi::where(function ($query) {
+                //     $query->whereNotNull('verifikasi_oleh')
+                //         ->orWhereHas('user', function ($q) {
+                //             $q->where('role', 'pengurus');
+                //         });
+                // })
+                //     ->whereNull('hukuman_edit')
+                //     ->whereHas('kosakata')
+                //     ->with('kosakata')
+                //     ->with('user')
+                //     ->with('pengurus')
+                //     ->inRandomOrder()
+                //     ->first();
+                $definisiRandom=Definisi::find(1);
 
                 // jika tidak ada definisi random yang terverifikasi, maka tampilkan yang tidak terverifikasi
                 if (empty($definisiRandom)) {

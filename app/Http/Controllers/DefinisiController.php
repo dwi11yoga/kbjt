@@ -70,6 +70,9 @@ class DefinisiController extends Controller
             'bahasa' => $validatedData['bahasa'],
         ]);
 
+        // increment definisi baru di statistik
+        $this->stat('definisi_baru');
+
         // cek achievement
         $this->achievement(Auth::user()->id, 'definisi');
 
@@ -79,7 +82,7 @@ class DefinisiController extends Controller
         return redirect()->to('/kosakata/' . $slug . '?definisi=' . $simpan->id)->with('success', 'Definisi berhasil ditambahkan (+' . $poin . ' poin)');
     }
 
-    // Simpan edit definisi
+    // fungsi Simpan edit definisi
     public function update(Request $request, $slug, $definisiId)
     {
         // cek apakah user kena suspend/tidak
@@ -118,7 +121,7 @@ class DefinisiController extends Controller
         return back()->with('success', 'Definisi berhasil diedit');
     }
 
-    // Hapus definisi
+    // fungsi Hapus definisi
     public function delete($slug, $definisiId)
     {
         // cek apakah user kena suspend/tidak
@@ -138,7 +141,7 @@ class DefinisiController extends Controller
 
     }
 
-    // Verifikasi dan unverifikasi laporan
+    // fungsi Verifikasi dan unverifikasi definisi
     public function verifikasi($kosakata_slug, $id)
     {
         // jika user != pengurus, maka alihkan ke halaman 403
@@ -195,6 +198,14 @@ class DefinisiController extends Controller
             'poin_verifikasi' => $poin_verifikasi,
             'poin_pengurus' => $poin_pengurus
         ]);
+
+        if (empty($definisi->verifikasi)) { // jika definisi diverifikasi
+            // increment definisi diverifikasi di statistik
+            $this->stat('definisi_diverifikasi');
+        } else { // jika definisi di unverifikasi
+            // decrement definisi diverifikasi di statistik
+            $this->statDecrement('definisi_diverifikasi', $definisi->verifikasi);
+        }
 
         // buat notifikasi untuk author
         $url = '/kosakata/' . $kosakata_slug . '?definisi=' . $id;

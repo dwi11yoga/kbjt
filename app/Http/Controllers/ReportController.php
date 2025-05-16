@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserDiblokir;
 use App\Models\Definisi;
 use App\Models\EditKosakata;
 use App\Models\Hukuman;
@@ -12,11 +13,18 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use stdClass;
 
 class ReportController extends Controller
 {
-    // Tampilan halaman laporan
+    public function __construct()
+    {
+        // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
+        $this->statKunjungan();
+    }
+
+    // Tampilan halaman laporan (dashboard)
     public function index()
     {
         // Laporan (definisi)
@@ -206,6 +214,9 @@ class ReportController extends Controller
 
         $laporan = Report::create($data);
 
+        // increment laporan baru di statistik
+        $this->stat('laporan_baru');
+
         // kembalikan ke view
         if (Auth::user()->role == 'pengurus') {
             return redirect('/laporan/' . $laporan->id)->with('success', 'Form laporan berhasil dibuat, silahkan ditindaklanjuti');
@@ -248,6 +259,9 @@ class ReportController extends Controller
             'catatan' => $request->catatan,
         ]);
 
+        // increment laporan baru di statistik
+        $this->stat('laporan_baru');
+
         // kembalikan ke view
         if (Auth::user()->role == 'pengurus') {
             return redirect('/laporan/' . $laporan->id)->with('success', 'Form laporan berhasil dibuat, silahkan ditindaklanjuti');
@@ -256,7 +270,7 @@ class ReportController extends Controller
         }
     }
 
-    // Detail Laporan
+    // Detail Laporan (dashboard)
     public function detailLaporan($id)
     {
         // ambil data laporan
@@ -435,13 +449,14 @@ class ReportController extends Controller
 
     // Tindaklanjuti laporan definisi dan kosakata
     public function tindaklanjut(Request $request, $id)
-    {   
+    {
         // dapatkan data laporan
         $laporan = Report::where('id', '=', $id)
-            ->with('definisi:id,user_id')
-            ->with('kosakata:id,user_id')
+            ->with('definisi:id,user_id,definisi')
+            ->with('kosakata:id,user_id,kosakata')
             ->first();
 
+        // dapatkan data author
         if (!empty($laporan->definisi_id)) {
             $laporan->author = User::find($laporan->definisi->user_id);
         } elseif ($laporan->kosakata_id) {
@@ -521,7 +536,6 @@ class ReportController extends Controller
         } elseif ($request->hukuman == 'blokir') { // jika hukumannya memblokir akun author
             $hukuman = 'Blokir akun pengguna';
             $hukuman_berakhir = null;
-
         } elseif ($request->hukuman == '3hr') { // jika hukumannya suspend selama 3 hari
             $hukuman = 'Suspend selama 3 hari';
             $hukuman_berakhir = Carbon::now()->addDays(3);
@@ -565,8 +579,7 @@ class ReportController extends Controller
 
                 // Jika user diblokir, maka hapus user
                 if ($validatedData['hukuman'] == 'blokir') {
-                    $definisi = Definisi::withTrashed()->select('id', 'user_id')->where('id', '=', $report->definisi_id)->first();
-                    User::find($definisi->user_id)->delete();
+                    User::find($laporan->author->id)->delete();
                 }
             }
 
@@ -610,11 +623,31 @@ class ReportController extends Controller
             'poin_pengurus' => $poin_pengurus
         ]);
 
+        // increment laporan ditangani di statistik
+        $this->stat('laporan_ditangani');
+        if ($validatedData['pelanggaran'] == 'true') { // jika laporan dinyatakan bersalah
+            // increment laporan bersalah di statistik
+            $this->stat('laporan_bersalah');
+        }
+
+        // kirimkan notifikasi email jika hukuman user adalah blokir permanen
+        if ($request->pelanggaran == 'true' && $request->hukuman == 'blokir') {
+            if (!empty($laporan->definisi)) {
+                $kontibusi = $laporan->definisi->definisi;
+            } else {
+                $kontibusi = $laporan->kosakata->kosakata;
+            }
+            $url = $this->getUrl();
+            Mail::to($laporan->author->email)
+                ->send(new UserDiblokir($laporan->author, $kontibusi, $laporan, $url));
+        }
+
         // KIRIM NOTIFIKASI
         $pelapor = User::select('id', 'nama')
             ->where('id', $laporan->user_id)
             ->first();
-        $terlapor = User::select('id', 'nama')
+        $terlapor = User::withTrashed()
+            ->select('id', 'nama')
             ->where('id', $laporan->definisi->user_id ?? $laporan->kosakata->user_id)
             ->first();
         $dilaporkan = isset($laporan->definisi_id) ? 'definisi' : 'kosakata';
@@ -624,7 +657,7 @@ class ReportController extends Controller
 
         // jika pelapor == yang menindaklanjuti laporan, maka tidak perlu dikirimi notifikasi
         if (Auth::user()->id != $pelapor->id) {
-            $pesan = 'Laporan kamu atas ' . $dilaporkan . ' yang disubmit oleh ' . $terlapor->nama . ' telah selesai ditangani (+' . $poin_pelapor . ' poin)';
+            $pesan = 'Laporan kamu atas ' . $dilaporkan . ' yang disubmit oleh ' . $terlapor->nama . ' telah selesai ditangani (+' . $validatedData['pelanggaran'] == 'true' ? $poin_pelapor : 0 . ' poin)';
             $this->kirimNotifikasi($pelapor->id, 'laporan', $pesan, $url);
         }
         // untuk terlapor

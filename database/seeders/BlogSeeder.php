@@ -761,6 +761,88 @@ class BlogSeeder extends Seeder
         'created_at' => Carbon::now(),
         'updated_at' => Carbon::now()
       ],
+
+      [
+        'judul' => 'Dokumentasi: Menulis Aksara Jawa di Kamus Besar Bahasa Jawa',
+        'subjudul' => 'Panduan singkat dalam menginput aksara jawa di kbjt.',
+        'slug' => 'menulis-aksara-jawa-di-kbjt',
+        'user_id' => 1,
+        'konten' => '<p>
+  Kini, menambahkan kosakata atau deskripsi di Kamus Bahasa Jawa Terbuka (KBJT)
+  jadi jauh lebih praktis berkat aplikasi dan alat daring. Kalau kamu masih
+  bingung cara mengetik aksara Jawa di ponsel maupun komputer, panduan ini siap
+  membantumu. Simak langkah‑langkah mudah berikut untuk memasukkan aksara Jawa
+  langsung ke form KBJT, baik melalui Android maupun PC/laptop.
+</p>
+
+<h1>Cara Menulis Aksara Jawa di HP Android dengan Gboard</h1>
+<p>
+  Jika kamu pengguna Android, kamu bisa menulis aksara Jawa secara langsung
+  menggunakan Google Keyboard (Gboard). Gboard adalah aplikasi keyboard bawaan
+  yang banyak digunakan di Android, dan kini telah mendukung bahasa Jawa
+  termasuk aksara Jawanya.
+</p>
+<p>Langkah-langkahnya:</p>
+
+<ol>
+  <li>
+    Buka pengaturan HP kamu dan masuk ke menu Bahasa & Input atau Bahasa &
+    Keyboard.
+  </li>
+  <li>Pilih Gboard → Bahasa → Tambahkan Keyboard.</li>
+  <li>
+    Cari dan pilih Jawa. Pastikan kamu mengaktifkan mode Aksara Jawa, bukan
+    hanya Latin.
+  </li>
+  <li>
+    Setelah aktif, saat mengetik di aplikasi apa pun, kamu bisa mengganti ke
+    keyboard Jawa dengan menahan ikon globe 🌐 di keyboard.
+  </li>
+</ol>
+
+<h1>Cara lainnya?</h1>
+<p>
+  Apabila ponselmu belum mendukung pengetikan aksara Jawa, atau kamu lebih
+  sering bekerja di komputer/laptop, kamu dapat memanfaatkan situs online yang
+  menyediakan keyboard aksara Jawa virtual. Dua pilihan yang sangat mudah
+  digunakan adalah menggunakan lexilagos atau keymanweb. Berikut merupakan
+  langkah-langkahnya
+</p>
+
+<ol>
+  <li>
+    Kunjungi
+    <a href="https://www.lexilogos.com/keyboard/jawa.htm" target="_blank">
+      Lexilogos <i data-feather="arrow-up-right" class="w-4 inline"></i>
+    </a>
+     atau
+    <a href="https://keymanweb.com/#jv-java,Keyboard_jawa" target="_blank">
+      KeymanWeb <i data-feather="arrow-up-right" class="w-4 inline"></i>
+    </a>
+  </li>
+  <li>
+    Kamu dapat mengetik huruf Latin seperti biasa, lalu secara otomatis hasilnya
+    akan berubah menjadi aksara Jawa di kotak samping, atau langsung menggunakan
+    tombol/keyboard virtual aksara Jawa yang disediakan.
+  </li>
+  <li>
+    Setelah selesai, kamu bisa menyalin hasilnya dan menempelkannya ke form Kamus Bahasa Jawa Terbuka.
+  </li>
+</ol>
+
+<h1>Kesimpulan</h1>
+<p>
+  Menulis dalam aksara Jawa kini bukan hal yang sulit lagi. Dengan dukungan
+  teknologi seperti Gboard di Android dan situs seperti Lexilogos atau
+  KeymanWeb, siapa pun bisa mencoba dan belajar menulis dalam aksara tradisional
+  ini. Mari kita lestarikan bahasa dan aksara Jawa dengan cara yang menyenangkan
+  dan mudah diakses oleh semua orang!
+</p>
+',
+        'status' => Carbon::now(),
+        'created_at' => Carbon::now(),
+        'updated_at' => Carbon::now()
+      ],
     ]);
     //factory
     Blog::factory(100)->create();

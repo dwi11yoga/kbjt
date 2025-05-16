@@ -14,7 +14,13 @@
                 <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
             @enderror --}}
 
-            <label for="aksara">Aksara Jawa</label>
+            <div class="flex justify-between">
+                <label for="aksara">Aksara Jawa</label>
+                <a title="Butuh bantuan?" href="/blog/post/menulis-aksara-jawa-di-kbjt" class="text-sm hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400">
+                    <i data-feather='help-circle' class="w-4 inline"></i>
+                    <span>Bantuan</span>
+                </a>
+            </div>
             <input type="text" name="aksara" id="aksara" value="{{ old('aksara', $data->aksara) }}"
                 class="px-4 py-3 w-full mt-1.5 border border-neutral-200 rounded-xl block mb-3 jawa">
 
@@ -76,17 +82,14 @@
                         <option value="Paribasan" {{ old('jenis', $data->jenis) == 'Paribasan' ? 'selected' : '' }}>
                             Paribasan (peribahasa)
                         </option>
-                        <option value="Bebasan" {{ old('jenis', $data->jenis) == 'Bebasan' ? 'selected' : '' }}>
-                            Bebasan
+                        <option value="Rinenggo" {{ old('jenis', $data->jenis) == 'Rinenggo' ? 'selected' : '' }}>
+                            Rinenggo
                         </option>
                         <option value="Saloka" {{ old('jenis', $data->jenis) == 'Saloka' ? 'selected' : '' }}>
                             Saloka
                         </option>
                         <option value="Pacelathon" {{ old('jenis', $data->jenis) == 'Pacelathon' ? 'selected' : '' }}>
                             Pacelathon
-                        </option>
-                        <option value="Candra Sangkala" {{ old('jenis', $data->jenis) == 'Candra Sangkala' ? 'selected' : '' }}>
-                            Candra Sangkala
                         </option>
                         <option value="Wangsalan" {{ old('jenis', $data->jenis) == 'Wangsalan' ? 'selected' : '' }}>
                             Wangsalan

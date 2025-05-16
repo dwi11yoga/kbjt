@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Auth;
 
 class HomepageController extends Controller
 {
+    public function __construct(){
+        // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
+        $this->statKunjungan();
+    }
+
     //Beranda
     public function index()
     {
@@ -98,16 +103,10 @@ class HomepageController extends Controller
     public function hallOfFame()
     {
         // dapatkan data user
-        $user = User::select('id', 'username', 'poin', 'created_at', 'jenis_kelamin', 'profile_pic')
+        $user = User::select('id', 'username', 'poin', 'created_at', 'jenis_kelamin', 'profile_pic', 'level')
             ->orderBy('poin', 'desc')
             ->limit(100)
             ->get();
-
-        // hitung level user
-        foreach ($user as $d) {
-            $d['level'] = $this->levelCalculator($d['id']);
-            $d['poin'] = number_format($d['poin'], 0, ',', '.');
-        }
 
         // dapatkan data banner
         $banner = $this->getBanner([1, 2]);
@@ -306,6 +305,7 @@ class HomepageController extends Controller
         $kosakata = Kosakata::where('slug', '=', $slug)
             ->with('user:id,username,nama,jenis_kelamin,profile_pic')
             ->first();
+        // dd($kosakata);
 
         // tampilkan data edit (jika ada)
         if (!empty($kosakata)) {
@@ -323,6 +323,20 @@ class HomepageController extends Controller
                 $kosakata->etimologi = $cekEdit->etimologi;
                 $kosakata->serupa = $cekEdit->serupa;
             }
+        }
+
+        // dapatkan data yang mengedit
+        $kosakata->totalEdit = EditKosakata::where('kosakata_id', $kosakata->id)
+            ->whereNotNull('status')
+            ->count();
+        if ($kosakata->totalEdit > 0) {
+            $kosakata->pengedit = EditKosakata::where('kosakata_id', $kosakata->id)
+                ->whereNotNull('status')
+                ->with('user:id,profile_pic,jenis_kelamin,nama')
+                ->orderBy('status', 'desc')
+                ->limit(3)
+                ->get();
+                // dd($kosakata->pengedit);
         }
 
         // Hitung jumlah kolom null
@@ -409,8 +423,14 @@ class HomepageController extends Controller
         }
 
         $riwayat = EditKosakata::where('kosakata_id', '=', $kosakata->id);
-        if (empty(Auth::user()->role) || Auth::user()->role == 'kontributor') {
+
+        if (empty(Auth::user()->role)) {
             $riwayat = $riwayat->whereNotNull('status');
+        } elseif (Auth::user()->role=='kontributor') {
+            $riwayat=$riwayat->where(function($query){
+                $query->where('user_id', Auth::user()->id)
+                ->orWhereNotNull('status');
+            });
         }
         $riwayat = $riwayat->with('user:id,username,nama,jenis_kelamin,profile_pic')
             ->with('pengurus:id,username,nama,jenis_kelamin,profile_pic')

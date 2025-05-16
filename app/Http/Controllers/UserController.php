@@ -27,6 +27,10 @@ use function Laravel\Prompts\error;
 
 class UserController extends Controller
 {
+    public function __construct(){
+        // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
+        $this->statKunjungan();
+    }
 
     // View Masuk (Login)
     public function signin()
@@ -110,7 +114,6 @@ class UserController extends Controller
     //fungsi Buat akun (daftar)
     public function store(Request $request)
     {
-        // dd($request);   
         // validasi data
         $validatedData = $request->validate([
             'nama' => 'required|max:255',
@@ -123,6 +126,9 @@ class UserController extends Controller
 
         // simpan user
         User::create($validatedData);
+
+        // incremenr nilai user baru pada tabel statistik
+        $this->stat('user_baru');
 
         // kirim email selamat datang
         $url = $this->getUrl();

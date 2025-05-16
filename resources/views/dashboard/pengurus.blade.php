@@ -232,7 +232,7 @@
                 <div class="border border-neutral-200 p-3 mt-3 rounded-xl">Tidak ada data</div>
             @else
                 @foreach ($pengurusDihapus as $d)
-                    <a href="#"
+                    <a href="/akun-dihapus/{{ $d->id }}"
                         class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-10 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                         <div class="flex gap-2 md:col-span-3 col-span-9 items-center">
                             <div class="rounded-full w-8 h-8 overflow-hidden">

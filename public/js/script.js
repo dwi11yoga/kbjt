@@ -94,9 +94,9 @@ function deskripsiJenis(item) {
     } else if (item.value == "Paribasan") {
         jenis_deskripsi.innerText =
             "*Paribasan: Ungkapan tetap (idiom) yang maknanya tidak bisa diartikan secara harfiah (Cnth. Jer basuki mawa béya: Segala keberhasilan butuh pengorbanan).";
-    } else if (item.value == "Bebasan") {
+    } else if (item.value == "Rinenggo") {
         jenis_deskripsi.innerText =
-            "*Bebasan: Ungkapan yang bisa diganti-ganti unsurnya, tapi maknanya masih bisa ditangkap (Cnth. Atine kaya watu: tidak mudah iba).";
+            "*Rinenggo: gaya berbahasa yang halus, indah, dan kadang puitis.";
     } else if (item.value == "Saloka") {
         jenis_deskripsi.innerText =
             "*Saloka: Ungkapan perbandingan yang sangat halus dan penuh sindiran (Cnth. Wong ngapusi kaya lintah darat: Orang pembohong diibaratkan lintah darat).";

@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Storage;
 
 class AchievementController extends Controller
 {
+    public function __construct(){
+        // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
+        $this->statKunjungan();
+    }
+    
     //view achievement (dashboard)
     public function index()
     {

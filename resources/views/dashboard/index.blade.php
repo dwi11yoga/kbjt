@@ -56,7 +56,7 @@
             {{-- popularitas --}}
             <div class="flex justify-center">
                 <div class="cursor-pointer bg-neutral-200 rounded-full px-2 py-1 text-sm"
-                    title="Jumlah kunjungan ke akun kamu">🔥 {{ auth()->user()->view ?? 0 }}</div>
+                    title="Jumlah kunjungan ke akun kamu">🔥 {{ number_format(auth()->user()->view, 0, ',','.') }}</div>
             </div>
         </div>
 
@@ -280,6 +280,7 @@
                     <div class="space-y-1">
                         <div class="capitalize font-semibold">{{ $definisiRandom->kosakata->kosakata }} <span
                                 title="Definisi terverifikasi">✅</span></div>
+                        {{-- <div class="line-clamp-5">{!! $definisiRandom->definisi !!}</div> --}}
                         <div class="line-clamp-5">{!! $definisiRandom->definisi !!}</div>
                         <div class="text-sm">Disubmit oleh
                             @if (!empty($definisiRandom->user))

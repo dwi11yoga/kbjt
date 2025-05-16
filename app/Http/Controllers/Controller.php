@@ -15,10 +15,12 @@ use App\Models\Notifikasi;
 use App\Models\PoinKontribusi;
 use App\Models\Report;
 use App\Models\Sertifikat;
+use App\Models\Statistik;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 abstract class Controller
 {
@@ -360,4 +362,60 @@ abstract class Controller
 
         return $data;
     }
+
+    // cek apakah sudah ada bulan dan tahun di tabel statistik
+    public function cekDataStatistik()
+    {
+        $bulan = Carbon::now()->month;
+        $tahun = Carbon::now()->year;
+        $cek = Statistik::where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->first();
+
+        if (empty($cek)) {
+            Statistik::create([
+                'tahun' => $tahun,
+                'bulan' => $bulan
+            ]);
+        }
+    }
+
+    // fungsi increment untuk statistik general (tanpa cek cookie)
+    public function stat($kolom)
+    {
+        // cek apakah sudah ada data untuk tahun dan bulan ini/belum
+        $this->cekDataStatistik();
+        // increment data
+        $bulan = Carbon::now()->month;
+        $tahun = Carbon::now()->year;
+        Statistik::where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->increment($kolom, 1);
+    }
+
+    // fungsi decrement statistik general (tanpa cek cookie)
+    public function statDecrement($kolom, $datetime)
+    {
+        // increment data
+        $bulan = Carbon::parse($datetime)->month;
+        $tahun = Carbon::parse($datetime)->year;
+        Statistik::where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->decrement($kolom, 1);
+    }
+
+    // fungsi untuk statistik kunjungan - akan dijalankan di semua controller
+    public function statKunjungan()
+    {
+        // cek apakah hari ini pengguna mengunjungi web (lewat cookie)
+        if (!Cookie::get('dikunjungi')) {
+
+            // increment kolom penunjung
+            $this->stat('pengunjung');
+
+            // buat cookie kalau user sudah mengunjungi web agar tidak dihitung kembali
+            Cookie::queue('dikunjungi', true, 60 * 24);
+        }
+    }
+
 }

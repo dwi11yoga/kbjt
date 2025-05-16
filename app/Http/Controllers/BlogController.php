@@ -12,6 +12,12 @@ use Illuminate\Validation\Rules\File;
 
 class BlogController extends Controller
 {
+    public function __construct()
+    {
+        // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
+        $this->statKunjungan();
+    }
+
     //blog view di dashboard
     public function index(Request $request)
     {
@@ -141,6 +147,9 @@ class BlogController extends Controller
             return redirect('/artikel/edit/' . $post->id)->with('success', 'Artikel berhasil disimpan sebagai draf');
         } elseif ($apakahPublish == true) {
 
+            // increment artikel dipublikasikan di statistik
+            $this->stat('artikel_dipublikasikan');
+
             // cek achievement
             $userId = Auth::user()->id;
             // rule yang akan dicek achievementnya
@@ -234,8 +243,20 @@ class BlogController extends Controller
 
         // redirect ke halaman edit
         if ($apakahSimpan == true) {
+            // cek apakah blog sebelumnya sudah dipublikasikan sebelumnya
+            if (!empty($post->status)) { // jika sebelumnya sudah dipublikasikan
+                // decrement artikel dipublikasikan di statistik
+                $this->statDecrement('artikel_dipublikasikan', $post->status);
+            }
+
             return redirect('/artikel/edit/' . $post->id)->with('success', 'Artikel berhasil disimpan sebagai draf' . $poin_toast);
         } elseif ($apakahPublish == true) {
+
+            // cek apakah blog sebelumnya sudah dipublikasikan sebelumnya
+            if (empty($post->status)) { // jika sebelumnya belum dipublikasikan
+                // increment artikel dipublikasikan di statistik
+                $this->stat('artikel_dipublikasikan');
+            }
 
             // cek achievement 
             $userId = $post->user_id;
@@ -322,6 +343,15 @@ class BlogController extends Controller
 
         // Simpan
         Blog::where('id', '=', $id)->update($data);
+
+        // cek apakah blog sebelumnya sudah dipublikasikan sebelumnya
+        if (empty($post->status)) { // jika sebelumnya belum dipublikasikan
+            // increment artikel dipublikasikan di statistik
+            $this->stat('artikel_dipublikasikan');
+        } else { // jika belum maka decrement
+            // decrement artikel dipublikasikan di statistik
+            $this->statDecrement('artikel_dipublikasikan', $post->status);
+        }
 
         // cek achievement
         $post->status = $data['status']; // update nilai status dari post, karena nilainya bisa saja berubah

@@ -33,8 +33,10 @@
                             <div class="text-xs">{{ $r->catatan ?? 'Tidak ada catatan' }}</div>
                         </div>
                     </div>
+
                     <div class="md:col-span-1 col-span-10 md:justify-end justify-start flex items-center space-x-1">
                         @if (isset(auth()->user()->role) && auth()->user()->role == 'pengurus' && empty($r->pengurus_id))
+                        {{-- jika role user adalah pengurus dan kosakata belum diverifikasi --}}
                             <form action="/kosakata/{{ $kosakata->slug }}/riwayat/{{ $r->id }}/setujui"
                                 method="POST">
                                 @csrf
@@ -44,7 +46,8 @@
                                     Setujui
                                 </button>
                             </form>
-                        @elseif (isset(auth()->user()->role) && auth()->user()->role == 'kepala' && empty($r->pengurus_id))
+                        @elseif (isset(auth()->user()->role) && (auth()->user()->role == 'kepala'|| auth()->user()->id==$r->user_id) && empty($r->pengurus_id))
+                        {{-- jika role user adalah kepala/user yang mensubmit dan kosakata belum diverifikasi --}}
                             <div class="flex items-center space-x-1"><i data-feather='clock'
                                     class="w-5"></i><span>Pending</span></div>
                         @elseif (isset(auth()->user()->role) && auth()->user()->role != 'kontributor' && isset($r->pengurus_id))

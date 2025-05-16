@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Storage;
 
 class DonasiController extends Controller
 {
+    public function __construct(){
+        // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
+        $this->statKunjungan();
+    }
+    
     //view donasi (dashboard)
     public function index()
     {

@@ -12,7 +12,12 @@ use Illuminate\Support\Facades\Auth;
 
 class EditKosakataController extends Controller
 {
-    // View Edit kosakata
+    public function __construct(){
+        // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
+        $this->statKunjungan();
+    }
+    
+    // View Edit kosakata (form)
     public function edit($slug)
     {
         $data = Kosakata::where('slug', $slug)->first();
@@ -159,6 +164,9 @@ class EditKosakataController extends Controller
         // simpan
         EditKosakata::create($simpan);
 
+        // increment kosakata edit baru di statistik
+        $this->stat('kosakata_edit');
+
         // CEK ACHIEVEMENT 
         // rule yang akan dicek achievementnya
         $userId = Auth::user()->id;
@@ -201,6 +209,9 @@ class EditKosakataController extends Controller
             'poin_pengurus' => $poin_pengurus,
             'status' => now(),
         ]);
+
+        // increment kosakata edit yang disetujui di statistik
+        $this->stat('kosakata_edit_disetujui');
 
         // kirim notifikasi ke kontributor
         $kosakata = Kosakata::find($editKosakata->kosakata_id);

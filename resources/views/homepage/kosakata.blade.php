@@ -15,13 +15,19 @@
             <div class="flex justify-between">
                 <h4 class="capitalize">{{ $data->kosakata }} <span class="text-sm jawa">{{ $data->aksara }}</span></h4>
 
-                {{-- Menu --}}
-                <div class="relative">
+                <div class="relative flex items-center space-x-2">
+                    {{-- total view --}}
+                    <div title="Jumlah tayangan"
+                        class="cursor-pointer space-x-1 items-center mt-1 hover:bg-neutral-100 rounded-full px-3 py-2  md:flex hidden">
+                        <i data-feather='eye' class="w-4 inline"></i>
+                        <div class="">{{ $data->view }}</div>
+                    </div>
 
+                    {{-- Menu --}}
                     <button id="dropdownBtn" onclick="dropdown(this, 'dropdown')"
                         class="p-2 rounded-full hover:bg-neutral-100"><i data-feather='more-horizontal'></i></button>
                     <div id="dropdown"
-                        class="absolute hidden bg-white right-0 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
+                        class="absolute hidden bg-white right-0 top-0 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
                         <ul>
                             @if (!empty(auth()->user()->role) && auth()->user()->role != 'kepala')
                                 <a href="{{ $data->slug }}/edit">
@@ -55,12 +61,15 @@
                             </li>
                         </ul>
                     </div>
-
                 </div>
             </div>
+
+            {{-- notasi fonetik --}}
             @if ($data->notasi_fonetik)
                 <div>/{{ $data->notasi_fonetik }}/</div>
             @endif
+
+            {{-- etimologi --}}
             <div>
                 @if (isset($data->etimologi) && $data->etimologi != [''] && $data->etimologi[0] == 'Asli')
                     Kosakata asli dalam Bahasa Jawa.
@@ -68,23 +77,47 @@
                     Kata serapan dari bahasa {{ $data->etimologi[0] }} "{{ $data->etimologi[1] }}"
                 @endif
             </div>
+
             {{-- <div>Dalam Bahasa Indonesia, kata ini berarti "Perut".</div> --}}
             <div class="md:flex block md:space-x-2 space-x-0 md:space-y-0 space-y-2 items-center mt-1">
                 <div class="flex space-x-2">
+                    {{-- ragam/kelas kata --}}
                     @isset($data->ragam)
                         <div class="py-1 px-2 bg-blue-100 rounded-lg">{{ $data->ragam }}</div>
                     @endisset
+                    {{-- jenis kata --}}
                     @isset($data->jenis)
-                        <div class="py-1 px-2 bg-red-100 rounded-lg">{{ $data->jenis }}</div>
+                        <div class="py-1 px-2 bg-red-100 rounded-lg capitalize">{{ $data->jenis }}</div>
                     @endisset
                 </div>
 
+            </div>
+
+            <div class="mt-2">
+                {{-- yang mengedit kosakata --}}
+                @if (!empty($data->totalEdit))
+                    <a title="Lihat riwayat edit" href="/kosakata/{{ $data->kosakata }}/riwayat"
+                        class="flex space-x-2 items-center w-fit">
+                        <div class="flex -space-x-5">
+                            @foreach ($data->pengedit as $d)
+                                <?php $d = $d->user; ?>
+                                <div class="overflow-hidden h-8 w-8 rounded-full border-white border-2">
+                                    @include('partials.profile-pic-general')
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="line-clamp-1">Diedit oleh
+                            {{ $data->totalEdit > 1 ? $data->totalEdit . ' pengguna' : $d->nama }}</div>
+                    </a>
+                @endif
+
+                {{-- yang menamahkan kosakata --}}
                 <div class="flex space-x-2 items-center">
                     <div class="overflow-hidden h-8 w-8 rounded-full border-white border-2">
                         <?php $d = $data->user; ?>
                         @include('partials.profile-pic-general')
                     </div>
-                    <div class="line-clamp-1">Diinisialisasi oleh
+                    <div class="line-clamp-1">Ditambahkan oleh
                         @if (isset($d))
                             <a href='/u/{{ $d->username }}'>{{ $d->nama }}</a>
                         @else
@@ -94,6 +127,13 @@
                     </div>
                 </div>
             </div>
+
+            {{-- total view --}}
+            <div class="flex space-x-1 items-center mt-1 md:hidden">
+                <i data-feather='eye' class="w-4 inline"></i>
+                <div class="">Jumlah tayangan {{ $data->view }}</div>
+            </div>
+
             @if ($dataNull > 3)
                 <div class="mt-1 text-sm">Detail kosakata belum lengkap. <a href="{{ $data->slug }}/edit"
                         class="text-blue-600">Bantu

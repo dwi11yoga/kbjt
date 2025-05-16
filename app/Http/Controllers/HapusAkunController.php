@@ -11,7 +11,12 @@ use Mail;
 
 class HapusAkunController extends Controller
 {
-    // view hapus akun
+    public function __construct(){
+        // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
+        $this->statKunjungan();
+    }
+    
+    // view hapus akun (form)
     public function index()
     {
         return view('dashboard.setting-hapusakun', [
@@ -46,6 +51,9 @@ class HapusAkunController extends Controller
             'alasan' => $validatedData['alasan']
         ]);
 
+         // increment akun dihapus di statistik
+         $this->stat('akun_dihapus');
+
         // kirim email notifikasi ke user
         $url = $this->getUrl();
         Mail::to(Auth::user()->email)->send(new \App\Mail\HapusAkun(Auth::user(), $url));
@@ -62,5 +70,38 @@ class HapusAkunController extends Controller
         $request->session()->regenerateToken();
         // alihkan ke homepage
         return redirect('/')->with('success', "Selamat tinggal, akun kamu berhasil dihapus");
+    }
+
+    // view detail user yang menghapus akun
+    public function detail($id)
+    {
+        // dapatkan data user dan alasan user menghapus akun
+        $alasan = HapusAkun::with('user')->find($id);
+        $user = $alasan->user;
+
+        // buat id jadi zerofill
+        $user->idZeroFill = str_pad($alasan->user_id, 10, '0', STR_PAD_LEFT);
+
+        // hitung total kontibusi user sebagai kontributor
+        $user->kontribusi=$this->hitungRequirementSertifikat('kontribusi', $user->id);
+        if ($user->role=='pengurus') {
+            $user->kontribusi=$user->kontribusi+$this->hitungRequirementSertifikat('kontribusiPengurus', $user->id);
+        }
+
+        // dd($user->achievement);
+        // total achievement
+        $user->totalAchievement=count($user->achievement ?? []);
+
+        // total sertifikat
+        $user->totalSertifikat=count($user->sertifikat ?? []);
+
+
+
+        return view('dashboard.detail-user-dihapus', [
+            'title' => 'Laporan akun dihapus',
+            'group' => $user->role,
+            'user' => $user,
+            'alasan'=>$alasan
+        ]);
     }
 }

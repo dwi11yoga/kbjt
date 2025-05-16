@@ -15,7 +15,13 @@
                 <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
             @enderror
 
-            <label for="aksara">Aksara Jawa</label>
+            <div class="flex justify-between">
+                <label for="aksara">Aksara Jawa</label>
+                <a title="Butuh bantuan?" href="/blog/post/menulis-aksara-jawa-di-kbjt" class="text-sm hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400">
+                    <i data-feather='help-circle' class="w-4 inline"></i>
+                    <span>Bantuan</span>
+                </a>
+            </div>
             <input type="text" name="aksara" id="aksara" value="{{ old('aksara') }}"
                 class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-xl block mb-3 jawa">
 
@@ -77,17 +83,14 @@
                         <option value="Paribasan" {{ old('jenis') == 'Paribasan' ? 'selected' : '' }}>
                             Paribasan (peribahasa)
                         </option>
-                        <option value="Bebasan" {{ old('jenis') == 'Bebasan' ? 'selected' : '' }}>
-                            Bebasan
+                        <option value="Rinenggo" {{ old('jenis') == 'Rinenggo' ? 'selected' : '' }}>
+                            Rinenggo
                         </option>
                         <option value="Saloka" {{ old('jenis') == 'Saloka' ? 'selected' : '' }}>
                             Saloka
                         </option>
                         <option value="Pacelathon" {{ old('jenis') == 'Pacelathon' ? 'selected' : '' }}>
                             Pacelathon
-                        </option>
-                        <option value="Candra Sangkala" {{ old('jenis') == 'Candra Sangkala' ? 'selected' : '' }}>
-                            Candra Sangkala
                         </option>
                         <option value="Wangsalan" {{ old('jenis') == 'Wangsalan' ? 'selected' : '' }}>
                             Wangsalan
@@ -153,8 +156,8 @@
             </div>
             <div class="grid grid-cols-2 space-x-3">
                 <div>
-                    <input type="text" list="daftar_bahasa" name="bahasa" id="bahasa" oninput="disabledEtimologi(this)"
-                        placeholder="Diserap dari bahasa..." value="{{ old('bahasa') }}"
+                    <input type="text" list="daftar_bahasa" name="bahasa" id="bahasa"
+                        oninput="disabledEtimologi(this)" placeholder="Diserap dari bahasa..." value="{{ old('bahasa') }}"
                         class="px-4 py-3 w-full mt-1.5 border border-gray-400 rounded-xl block mb-3 @error('bahasa')
                             border-red-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 text-red-700
                             @enderror">

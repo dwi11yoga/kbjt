@@ -50,6 +50,18 @@
                 </div>
             </a>
 
+            {{-- Banner | Pengurus & kepala --}}
+            <a href="/statistik">
+                <div
+                    class="flex group py-3 px-4 rounded-xl {{ $group == 'statistik' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
+                    <i data-feather='trending-up' class="w-5"></i>
+                    <div
+                        class="inline-block ml-3 {{ $group == 'statistik' ? '' : 'text-neutral-700 group-hover:text-black' }}">
+                        Statistik
+                    </div>
+                </div>
+            </a>
+
             {{-- Banner | Pengurus --}}
             <a href="/banner">
                 <div
@@ -316,6 +328,18 @@
                     <div
                         class="inline-block ml-3 {{ $group == 'artikel' ? '' : 'text-neutral-700 group-hover:text-black' }}">
                         Artikel
+                    </div>
+                </div>
+            </a>
+
+            {{-- Banner | Pengurus --}}
+            <a href="/statistik">
+                <div
+                    class="flex group py-4 px-6 w-fit rounded-2xl {{ $group == 'statistik' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
+                    <i data-feather='trending-up'></i>
+                    <div
+                        class="inline-block ml-3 {{ $group == 'statistik' ? '' : 'text-neutral-700 group-hover:text-black' }}">
+                        Statistik
                     </div>
                 </div>
             </a>

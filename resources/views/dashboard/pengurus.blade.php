@@ -169,7 +169,7 @@
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-10 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
                     <div class="md:col-span-5 col-span-10 flex items-center line-clamp-2 md:font-normal font-semibold">
                         <div>
-                            Menyetujui {{ $d->user->username }} untuk mengganti detail kosakata <span
+                            Menyetujui {{ $d->user->username ?? '[Akun dihapus]' }} untuk mengganti detail kosakata <span
                                 class="capitalize">{{ $d->kosakata->kosakata ?? '[Kosakata dihapus]' }}</span>
                         </div>
                     </div>

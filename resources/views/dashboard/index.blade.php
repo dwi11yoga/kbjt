@@ -308,9 +308,15 @@
                 {{-- Pengunjung --}}
                 <div
                     class="md:col-span-1 col-span-3 border bg-white border-neutral-200 rounded-xl px-4 py-5 hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:decoration-1">
-                    <div>Pengunjung bulan ini</div>
-                    <h1 class="font-bold -mt-2">3.000</h1>
-                    <div class="text-sm">Bulan sebelumnya 2.167 pengunjung</div>
+                    <div class="flex items-center justify-between">
+                        <div class="">Pengunjung bulan ini</div>
+                        <a href="/statistik" title="Lihat statistik lengkap"
+                            class="text-sm flex items-center hover:underline hover:decoration-4 hover:underline-offset-4 hover:decoration-amber-400">
+                            Statistik <i data-feather='arrow-right' class="w-4"></i>
+                        </a>
+                    </div>
+                    <h1 class="font-bold -mt-2">{{ number_format($pengunjung['blnIni'], 0, ',', '.') }}</h1>
+                    <div class="text-sm">Bulan sebelumnya {{ number_format($pengunjung['blnKemarin'], 0, ',', '.') }} pengunjung</div>
                 </div>
 
                 {{-- Anggota --}}

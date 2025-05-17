@@ -10,6 +10,7 @@ use App\Models\HapusAkun;
 use App\Models\Kosakata;
 use App\Models\Level;
 use App\Models\Report;
+use App\Models\Statistik;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -19,11 +20,12 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function __construct(){
+    public function __construct()
+    {
         // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
         $this->statKunjungan();
     }
-    
+
     // Dashboard
     public function index()
     {
@@ -338,7 +340,7 @@ class DashboardController extends Controller
                 //     ->with('pengurus')
                 //     ->inRandomOrder()
                 //     ->first();
-                $definisiRandom=Definisi::find(1);
+                $definisiRandom = Definisi::find(1);
 
                 // jika tidak ada definisi random yang terverifikasi, maka tampilkan yang tidak terverifikasi
                 if (empty($definisiRandom)) {
@@ -371,6 +373,21 @@ class DashboardController extends Controller
 
         // cek apakah user tersuspend atau tidak
         $data['suspend'] = $this->cekSuspend(Auth::user()->id);
+
+        // dapatkan data pengunjung bulanan (jika user!=kontributor)
+        if (Auth::user()->role != 'kontributor') {
+            // bulan ini
+            $data['pengunjung']['blnIni'] = Statistik::where('tahun', Carbon::now()->year)
+                ->where('bulan', Carbon::now()->month)
+                ->first()
+                ->pengunjung ?? 0;
+            // bulan kemarin
+            $tahun = Carbon::now()->month == 1 ? Carbon::now()->subYear()->year : Carbon::now()->year;
+            $data['pengunjung']['blnKemarin'] = Statistik::where('tahun', $tahun)
+            ->where('bulan', Carbon::now()->subMonth()->month)
+            ->first()
+            ->pengunjung ?? 0;
+        }
 
         //cek sertifikat
         $this->cekSertifikat(Auth::user()->id);
@@ -722,7 +739,7 @@ class DashboardController extends Controller
             'group' => 'pengurus',
             'overview' => $overview,
             'pengurus' => $pengurus,
-            'pengurusDihapus'=>$pengurusDihapus ,
+            'pengurusDihapus' => $pengurusDihapus,
             'kosakata' => $kosakata,
             'definisi' => $definisi,
             'editKosakata' => $editKosakata

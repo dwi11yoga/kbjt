@@ -70,7 +70,7 @@
                 class="mr-1 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             <label for="remember">Ingat saya</label>
             <div class="text-right">
-                <a href="#"
+                <a href="/reset-kata-sandi"
                     class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-[3px] active:text-blue-800">Lupa
                     kata sandi</a>
             </div>

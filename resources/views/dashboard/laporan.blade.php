@@ -151,7 +151,7 @@
                     class="border border-neutral-200 p-3 mt-3 rounded-xl grid md:grid-cols-8 gap-2 hover:outline hover:outline-amber-400">
                     <div
                         class="line-clamp-1 @if (isset($d->pengurus_id)) md:col-span-6 @else md:col-span-7 @endif col-span-8 flex items-center">
-                        {{ $d->user->nama }} ingin mengganti detail kosakata
+                        {{ $d->user->nama ?? '[Akun dihapus]' }} ingin mengganti detail kosakata
                         "{{ $d->kosakata->kosakata }}".
                     </div>
                     @if (isset($d->pengurus_id))

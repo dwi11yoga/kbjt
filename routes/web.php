@@ -77,6 +77,14 @@ Route::middleware(['guest'])->group(function () { // hanya bisa diakses  jika us
     // Daftar
     Route::get('/daftar', [UserController::class, 'signup']);
     Route::post('/daftar', [UserController::class, 'store']);
+
+    // LUPA KATA SANDI
+    // halaman masukkan email untuk reset kata sandi
+    Route::get('/reset-kata-sandi', [UserController::class, 'lupaSandi']);
+    Route::post('/reser-kata-sandi/eksekusi', [UserController::class, 'fungsiLupaSandi']);
+    // autentikasi reset kata sandi
+    Route::get('/reset-kata-sandi/autentikasi', [UserController::class, 'autentikasiLupaSandi']);
+    Route::post('/reset-kata-sandi/autentikasi/elsekusi', [UserController::class, 'fungsiAutentikasiLupaSandi']);
 });
 
 // DASHBOARD

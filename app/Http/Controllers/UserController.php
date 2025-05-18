@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Mail\EmailBerubah;
 use App\Mail\KataSandiBerubah;
+use App\Mail\ResetPassword;
+use App\Mail\ResetPasswordBerhasil;
 use App\Mail\WelcomeMail;
 use App\Models\Achievement;
 use App\Models\Blog;
 use App\Models\Definisi;
 use App\Models\EditKosakata;
 use App\Models\Kosakata;
+use App\Models\ResetPassword as ResetPasswordModel;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -23,11 +26,13 @@ use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\ValidationException;
 
 use Mail;
+use Str;
 use function Laravel\Prompts\error;
 
 class UserController extends Controller
 {
-    public function __construct(){
+    public function __construct()
+    {
         // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
         $this->statKunjungan();
     }
@@ -102,7 +107,7 @@ class UserController extends Controller
         return redirect('/');
     }
 
-    // View Daftar
+    // View Sign up (daftar)
     public function signup()
     {
         return view('homepage.signup', [
@@ -137,6 +142,123 @@ class UserController extends Controller
         // redirect ke view login
         return redirect('/masuk')->with('success', 'Akun berhasil terdaftar, silahkan login');
     }
+
+    // LUPA KATA SANDI
+    // view lupa kata sandi (memasukkan username/email)
+    public function lupaSandi()
+    {
+        return view('homepage.lupa-sandi', [
+            'title' => 'Reset kata sandi',
+        ]);
+    }
+
+    // fungsi Lupa Sandi
+    public function fungsiLupaSandi(Request $request)
+    {
+        // Cek apakah username/email yang diinput user
+        $fieldType = filter_var($request->user, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        // validasi
+        if ($fieldType == 'email') {
+            $rule = ['user' => 'required|email:dns'];
+        } else {
+            $rule = ['user' => 'required|min:6|max:255|regex:/^[A-Za-z0-9_.@-]+$/'];
+        }
+        $validatedData = $request->validate($rule);
+
+        // cek apakah user ditemukan di db
+        $user = User::where($fieldType, $request->user)->first();
+        // dd(empty($user));
+
+        if (empty($user)) { // jika user tidak ditemukan
+            return back()->with('failed', 'Akun tidak ditemukan')->withInput();
+        }
+
+        // generate kode random untuk dikirim ke user
+        $kode = Str::upper(Str::random(6));
+
+        // simpan di database
+        // jika user mengenerate ulang kode (kode sebelumnya belum kedaluarsa agar lebih efisien)
+        $cek = ResetPasswordModel::where('user_id', $user->id)
+            ->whereNull('status')
+            ->where('kedaluarsa', '>', Carbon::now()) // yang belum kedaluarsa
+            ->first();
+        // dd($cek, empty($cek));
+        if (empty($cek)) { // jika $cek kosong, maka buat data baru
+            ResetPasswordModel::create([
+                'user_id' => $user->id,
+                'kode' => $kode,
+                'kedaluarsa' => Carbon::now()->addMinutes(5)
+            ]);
+        } else { // jika $cek ada datanya, maka update data lama
+            $cek->update([
+                'kode' => $kode,
+                'kedaluarsa' => Carbon::now()->addMinutes(5)
+            ]);
+        }
+
+        // kirim email dengan kode verifikasi ke user
+        $url = $this->getUrl();
+        Mail::to($user->email)->send(new ResetPassword($user, $kode, $url));
+
+        // redirect ke view 
+        return redirect()->to('/reset-kata-sandi/autentikasi');
+    }
+
+    // view autentikasi reset kata sandi (masukkan kode) & ganti kata sandi
+    public function autentikasiLupaSandi()
+    {
+        return view('homepage.lupa-sandi-kode', [
+            'title' => 'Autentikasi reset kata sandi'
+        ]);
+    }
+
+    // fungsi autentikasi reset kata sandi (masukkan kode) & ganti kata sandi baru
+    public function fungsiAutentikasiLupaSandi(Request $request)
+    {
+        // validasi
+        $validatedData = $request->validate([
+            'kode' => 'required|size:6',
+            'password1' => 'required|min:6|same:password2',
+            'password2' => 'required|min:6|same:password1',
+        ]);
+
+        // cari data reset password
+        $data = ResetPasswordModel::where('kode', $request->kode)
+            ->where('kedaluarsa', '>', Carbon::now()) // belum kedaluarsa (yang tanggal kedaluarsanya lebih besar dari hari ini)
+            ->first();
+
+        // jika tidak ada data, maka kembalikan
+        if (empty($data)) {
+            return back()->with('failed', 'Permintaan reset tidak ditemukan atau kedaluarsa')->withInput();
+        }
+
+        // ganti kata sandi akun
+        $user = User::find($data->user_id);
+        $user->update([
+            'password' => $request->password1 // tidak perlu di hash karena sudah diatur hash di model
+        ]);
+
+        // update status reset kata sandi
+        $data->update([
+            'status' => Carbon::now(),
+        ]);
+
+        // buat notifikasi
+        $pesan='Kata sandi akun kamu berhasil direset';
+        $this->kirimNotifikasi($user->id, 'akun', $pesan, '#');
+
+        // kirim email
+        $url = $this->getUrl();
+        Mail::to($user->email)->send(new ResetPasswordBerhasil($user, $url));
+
+        // kembalikan ke halaman login
+        return redirect()->to('/masuk')->with('success', 'Kata sandi berhasil direset');
+    }
+
+
+
+
 
     // Profil user
     public function profile($username)

@@ -13,12 +13,14 @@ return new class extends Migration {
         //
         Schema::create('verifikasi_user', function (Blueprint $table) {
             $table->id();
-            $table->string('email');
-            $table->string('username');
-            $table->string('nama');
-            $table->string('password');
+            $table->foreignId('user_id');
+            // $table->string('email');
+            // $table->string('username');
+            // $table->string('nama');
+            // $table->string('password');
             $table->string('kode');
             $table->dateTime('status')->nullable();
+            $table->dateTime('kedaluarsa');
             $table->datetimes();
         });
     }

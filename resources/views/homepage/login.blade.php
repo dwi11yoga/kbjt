@@ -31,7 +31,7 @@
         <i data-feather='arrow-left' class="w-4 inline-block"></i> kembali</a>
     {{-- Judul --}}
     <h3 class="font-bold mb-3 mt-3">Masuk</h3>
-    <p class="mb-7">Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, soluta.</p>
+    <p class="mb-7">Masuk dan lanjutkan perjalanan dalam mengenal dan menjaga bahasa Jawa.</p>
 
     {{-- Form --}}
     <form action="/masuk" method="POST">

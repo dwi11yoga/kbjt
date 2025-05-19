@@ -6,6 +6,7 @@ use App\Mail\EmailBerubah;
 use App\Mail\KataSandiBerubah;
 use App\Mail\ResetPassword;
 use App\Mail\ResetPasswordBerhasil;
+use App\Mail\VerifikasiUserMail;
 use App\Mail\WelcomeMail;
 use App\Models\Achievement;
 use App\Models\Blog;
@@ -14,6 +15,7 @@ use App\Models\EditKosakata;
 use App\Models\Kosakata;
 use App\Models\ResetPassword as ResetPasswordModel;
 use App\Models\User;
+use App\Models\VerifikasiUser;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -62,11 +64,32 @@ class UserController extends Controller
         $fieldType = filter_var($credentials['user'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
         // cek apakah user dihapus (soft delete). jika iya, maka alihkan ke halaman diblokir
-        $cekDihapus = User::onlyTrashed()
+        $cekAkun = User::withTrashed()
             ->where($fieldType, $credentials['user'])
             ->first();
-        if (isset($cekDihapus) && Hash::check($credentials['password'], $cekDihapus->password)) { // jika user ditemukan dan password benar..
+        if ($cekAkun->trashed() && Hash::check($credentials['password'], $cekAkun->password)) { // jika user ditemukan dan password benar..
             return redirect()->to('/akses-gagal');
+        }
+
+        // cek apakah user sudah terverifikasi/belum
+        if (empty($cekAkun->email_verified_at) && Hash::check($credentials['password'], $cekAkun->password)) { // jika verified email kosong dan password benar..
+            // generate kode verifikasi random baru
+            $kode = Str::upper(Str::random(6));
+
+            // update data verifikasi user
+            VerifikasiUser::where('user_id', $cekAkun->id)
+                ->update([
+                    'kode' => $kode,
+                    'kedaluarsa' => Carbon::now()->addMinutes(5), // kedaluarsa dalam lima menit
+                ]);
+
+            // kirim kode verifikasi ke email
+            $url = $this->getUrl();
+            Mail::to($cekAkun->email)->send(new VerifikasiUserMail($cekAkun, $url, $kode));
+
+            // arahkan ke halaman verifikasi
+            return redirect()->to('/daftar/verifikasi');
+
         }
 
         // Authentikasi
@@ -130,18 +153,83 @@ class UserController extends Controller
         ]);
 
         // simpan user
-        User::create($validatedData);
+        $user = User::create($validatedData);
+        // dd($user);
 
-        // incremenr nilai user baru pada tabel statistik
+        // generate kode verifikasi random
+        $kode = Str::upper(Str::random(6));
+
+        // buat data verifikasi
+        VerifikasiUser::create([
+            'user_id' => $user->id,
+            'kode' => $kode,
+            'kedaluarsa' => Carbon::now()->addMinutes(5), // kedaluarsa dalam lima menit
+        ]);
+
+        // kirim kode verifikasi ke email
+        $url = $this->getUrl();
+        Mail::to($user->email)->send(new VerifikasiUserMail($user, $url, $kode));
+
+        // arahkan ke halaman verifikasi
+        return redirect()->to('/daftar/verifikasi');
+    }
+
+    // view verifikasi email
+    // akan dijalankan setelah user mendaftarkan akunnya
+    public function verifikasiUser()
+    {
+        return view('homepage.verifikasi-user', [
+            'title' => 'Verifikasi email'
+        ]);
+    }
+
+    // fungsi verifikasi user/email
+    public function fungsiVerifikasiUser(Request $request)
+    {
+        // valisasi
+        $validatedData = $request->validate([
+            'kode' => 'required|size:6'
+        ]);
+
+        // cari datanya di database
+        $dataVerifikasi = VerifikasiUser::where('kode', $validatedData['kode'])
+            ->whereNull('status')
+            ->where('kedaluarsa', '>', Carbon::now()) // belum kedaluarsa (yang tanggal kedaluarsanya lebih besar dari hari ini)
+            ->first();
+
+        // kembalikan jika data tidak ditemukan/kedaluarsa
+        if (empty($dataVerifikasi)) {
+            return back()->with('failed', 'Kode verifikasi tidak dikanali atau kedaluarsa')->withInput();
+        }
+
+        // tambah waktu verifikasi pada data user
+        $user = User::find($dataVerifikasi->user_id);
+        $user->update([
+            'email_verified_at' => Carbon::now()
+        ]);
+
+        // update data verifikasi jadi sudah dipakai
+        $dataVerifikasi->update([
+            'status' => Carbon::now()
+        ]);
+
+        // increment nilai user baru pada tabel statistik
         $this->stat('user_baru');
+
+        // buat notifikasi
+        $pesan = 'Sugeng rawuh! Selamat datang di komunitas pelestari bahasa Jawa. 
+        Baca dokumentasi berikut sebagai langkah awal dalam melestarikan bahasa jawa.';
+        $url = '/cari?keyword=dokumentasi%3A&filter=artikel';
+        $this->kirimNotifikasi($user->id, 'user', $pesan, $url);
 
         // kirim email selamat datang
         $url = $this->getUrl();
-        Mail::to($validatedData['email'])->send(new WelcomeMail($validatedData, $url));
+        Mail::to($user->email)->send(new WelcomeMail($user, $url));
 
         // redirect ke view login
         return redirect('/masuk')->with('success', 'Akun berhasil terdaftar, silahkan login');
     }
+
 
     // LUPA KATA SANDI
     // view lupa kata sandi (memasukkan username/email)
@@ -245,7 +333,7 @@ class UserController extends Controller
         ]);
 
         // buat notifikasi
-        $pesan='Kata sandi akun kamu berhasil direset';
+        $pesan = 'Kata sandi akun kamu berhasil direset';
         $this->kirimNotifikasi($user->id, 'akun', $pesan, '#');
 
         // kirim email

@@ -32,7 +32,7 @@
         <i data-feather='arrow-left' class="w-4 inline-block"></i> kembali</a>
     {{-- Judul --}}
     <h3 class="font-bold mb-3 mt-3">Buat akun</h3>
-    <p id="deskripsi" class="mb-7">Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, soluta.</p>
+    <p id="deskripsi" class="mb-7">Daftar sekarang dan jadilah bagian dari komunitas pelestari bahasa Jawa.</p>
     {{-- Form --}}
     <form action="/daftar" method="POST">
         @csrf
@@ -113,8 +113,12 @@
             <label for="eula"
                 class="@error('eula')
                 underline underline-offset-2 decoration-red-600 decoration-2
-            @enderror">Dengan
-                ini, saya telah membaca dan menyetujui syarat dan ketentuan yang berlaku dan siap mematuhinya.</label>
+            @enderror">
+                Dengann ini, saya telah membaca dan menyetujui <a href="/syarat-ketentuan"
+                    class="text-blue-500 hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400">syarat
+                    dan ketentuan</a>
+                yang berlaku dan siap mematuhinya.
+            </label>
 
             <div class="grid grid-cols-7 space-x-3 mt-6">
                 <div id="back"

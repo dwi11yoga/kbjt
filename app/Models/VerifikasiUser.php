@@ -10,5 +10,5 @@ class VerifikasiUser extends Model
     protected $table='verifikasi_user';
 
     // lindungi id dkk agar tidak dapat diedit
-    protected $guarded=['id', 'email', 'username', 'password', 'nama'];
+    protected $guarded=['id'];
 }

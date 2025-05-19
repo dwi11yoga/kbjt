@@ -70,13 +70,20 @@ Route::post('/upload-image', [TrixController::class, 'store']);
 // Delete gambar
 Route::post('/delete-image', [TrixController::class, 'delete']);
 
-Route::middleware(['guest'])->group(function () { // hanya bisa diakses  jika user belum login
+// hanya bisa diakses  jika user belum login
+Route::middleware(['guest'])->group(function () {
     // Login
     Route::get('/masuk', [UserController::class, 'signin'])->name('login');
     Route::post('/masuk', [UserController::class, 'authenticate']);
     // Daftar
     Route::get('/daftar', [UserController::class, 'signup']);
     Route::post('/daftar', [UserController::class, 'store']);
+
+    // Verifikasi user/email
+    // dijalankan setelah daftar
+    Route::get('/daftar/verifikasi', [UserController::class, 'verifikasiUser']);
+    Route::put('/daftar/verifikasi', [UserController::class, 'fungsiverifikasiUser']);
+
 
     // LUPA KATA SANDI
     // halaman masukkan email untuk reset kata sandi
@@ -147,7 +154,7 @@ Route::middleware(['auth'])->group(function () {
 
         // view detail user yang menhapus akunnya sendiri
         Route::get('/akun-dihapus/{id}', [HapusAkunController::class, 'detail']);
-        
+
         // laporan - pengurus
         Route::get('/laporan', [ReportController::class, 'index']);
 

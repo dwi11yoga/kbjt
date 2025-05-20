@@ -32,9 +32,11 @@
     {{-- Konten --}}
     <div class="container mx-auto p-10">
         <div class="grid grid-cols-4 md:space-x-7 md:space-y-0 space-y-10">
+            {{-- isi konten --}}
             <div class="md:col-span-3 col-span-4 space-y-5">
                 @yield('body')
             </div>
+
             {{-- Banner --}}
             <div class="md:col-span-1 col-span-4">
                 <hr class="sm:hidden mb-10 w-1/3 border-2 align-middle mx-auto ">

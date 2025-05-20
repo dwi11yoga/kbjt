@@ -144,11 +144,12 @@
         @if (isset($data->serupa) && $data->serupa != [''])
             <div class="bg-amber-300 rounded-b-2xl px-5 py-2 flex">
                 Lihat juga:&nbsp;
+                
                 {!! implode(
                     ',&nbsp;',
                     array_map(
                         fn($d) => "<a href=\"/kosakata/" .
-                            str_replace(' ', '-', $d) .
+                            str_replace(' ', '-', strtolower($d)) .
                             "\" class=\"text-amber-950 capitalize\">{$d}<i data-feather='arrow-up-right' class='inline-block w-5'></i></a>",
                         $data->serupa,
                     ),

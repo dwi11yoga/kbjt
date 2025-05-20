@@ -76,12 +76,23 @@ class UserController extends Controller
             // generate kode verifikasi random baru
             $kode = Str::upper(Str::random(6));
 
-            // update data verifikasi user
-            VerifikasiUser::where('user_id', $cekAkun->id)
-                ->update([
+            // cek apakah kode verifikasi pernah dikirim
+            $cek = VerifikasiUser::where('user_id', $cekAkun->id)->first();
+            if (empty($cek)) { // jika belum pernah dikirim
+                // buat data verifikasi baru
+                VerifikasiUser::create([
+                    'user_id' => $cekAkun->id,
                     'kode' => $kode,
                     'kedaluarsa' => Carbon::now()->addMinutes(5), // kedaluarsa dalam lima menit
                 ]);
+            } else { // jika sudah
+                // update data verifikasi user
+                VerifikasiUser::where('user_id', $cekAkun->id)
+                    ->update([
+                        'kode' => $kode,
+                        'kedaluarsa' => Carbon::now()->addMinutes(5), // kedaluarsa dalam lima menit
+                    ]);
+            }
 
             // kirim kode verifikasi ke email
             $url = $this->getUrl();

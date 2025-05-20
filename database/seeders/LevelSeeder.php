@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Level;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -15,25 +16,31 @@ class LevelSeeder extends Seeder
      */
     public function run(): void
     {
+        $requirement = [
+            1,
+            100,
+            300,
+            600,
+            1000,
+            1500,
+            2100,
+            2800,
+            3500,
+            4500
+
+        ];
+
+        for ($i = 1; $i <= 10; $i++) {
+
+            $level[$i] = [
+                'lvl' => $i,
+                'min_poin' => $requirement[$i - 1],
+                'created_at'=>now(),
+                'updated_at'=>now(),
+            ];
+        }
+
         // Level Seeder
-        DB::table('levels')->insert([
-            'lvl' => 1,
-            'min_poin' => 1,
-        ]);
-
-        DB::table('levels')->insert([
-            'lvl' => 2,
-            'min_poin' => 100,
-        ]);
-
-        DB::table('levels')->insert([
-            'lvl' => 3,
-            'min_poin' => 200,
-        ]);
-
-        DB::table('levels')->insert([
-            'lvl' => 4,
-            'min_poin' => 400,
-        ]);
+        Level::insert($level);
     }
 }

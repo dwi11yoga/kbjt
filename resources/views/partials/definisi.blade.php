@@ -28,7 +28,7 @@
         </div>
 
         {{-- Definisi --}}
-        <div class="mb-3 trix">
+        <div class="mb-3 trix jawa">
             <style>
                 div.trix h1 {
                     font-size: 1.3rem;

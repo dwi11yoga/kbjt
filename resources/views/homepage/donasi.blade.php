@@ -35,7 +35,77 @@
                 {{-- deskripsi/cara donasi & link/rekening --}}
                 <div class="md:col-span-3 col-span-4 space-y-3">
 
-                    <div class="">
+                    <div class="trix">
+                        <style>
+                            div.trix h1 {
+                                font-size: 1.3rem;
+                                font-weight: 600;
+                            }
+                    
+                            div.trix ul {
+                                padding-left: 25px;
+                                /* Space before list items */
+                                list-style-type: disc;
+                                /* Bullet (•) for items */
+                            }
+                    
+                            div.trix ol {
+                                padding-left: 25px;
+                                /* Space before list items */
+                                list-style-type: decimal;
+                                /* Numbers (1, 2, 3, ...) for items */
+                            }
+                    
+                            div.trix li {
+                                display: list-item;
+                                /* Default display for list items */
+                            }
+                    
+                            div.trix pre {
+                                display: block;
+                                /* Ditampilkan sebagai blok */
+                                font-family: monospace;
+                                /* Menggunakan font monospace */
+                                white-space: pre;
+                                /* Pertahankan spasi dan baris baru */
+                                margin: 1em 0;
+                                /* Margin atas dan bawah */
+                                background-color: #e5e5e5;
+                                padding: 0.5rem 0.5rem;
+                                font-size: 1rem;
+                                border-radius: 0.5rem;
+                                overflow-inline: scroll;
+                            }
+                    
+                            div.trix blockquote {
+                                display: block;
+                                margin-top: 0.5rem;
+                                padding-left: 0.5rem;
+                                /* Margin atas */
+                                margin-bottom: 0.5rem;
+                                /* Margin bawah */
+                                margin-inline-start: 0.5rem;
+                                /* Indentasi kiri */
+                                margin-inline-end: 0.5rem;
+                                /* Indentasi kanan */
+                                font-size: inherit;
+                                /* Ukuran font sesuai elemen induk */
+                                font-style: italic;
+                                /* Teks miring */
+                                border-left: 4px solid #fbbf24;
+                            }
+                    
+                            div.trix a {
+                                text-decoration: underline;
+                                text-decoration-color: #fbbf24;
+                                text-decoration-thickness: 3px;
+                                text-underline-offset: 2px;
+                            }
+                    
+                            div.trix a:hover {
+                                color: #d97706;
+                            }
+                        </style>
                         {!! $donasi->cara_donasi ?? 'Deskripsi belum tersedia' !!}
                     </div>
 

@@ -844,7 +844,9 @@ class BlogSeeder extends Seeder
         'updated_at' => Carbon::now()
       ],
     ]);
+
+
     //factory
-    Blog::factory(100)->create();
+    // Blog::factory(100)->create();
   }
 }

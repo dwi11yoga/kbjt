@@ -16,12 +16,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
 
         // Edit kosakata
         DB::table('editkosakata')->insert([
@@ -52,19 +46,20 @@ class DatabaseSeeder extends Seeder
             'updated_at' => now()
         ]);
 
-        Donasi::factory(11)->create();
-
+        // panggil file seeder yang akan dijalankan
         $this->call([
             AchievementSeeder::class,
             BannerSeeder::class,
             BlogSeeder::class,
-            DefinisiSeeder::class,
             KosakataSeeder::class,
+            DefinisiSeeder::class,
             ReportSeeder::class,
             LevelSeeder::class,
             PoinKontribusiSeeder::class,
             SertifikatSeeder::class,
             UserSeeder::class,
+            StatistikSeeder::class,
+            DonasiSeeder::class,
         ]);
     }
 

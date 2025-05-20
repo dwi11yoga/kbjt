@@ -17,13 +17,40 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         //User
-        DB::table('users')->insert([
-            'nama' => 'Muklis Ambatukam',
-            'username' => 'moeklis',
-            'email' => Str::random(10) . '@example.com',
-            'password' => Hash::make('muklis1'),
-            'poin' => random_int(10, 10000),
-            'created_at' => now()
+        User::insert([
+            [
+                'nama' => 'Muklis Hartono',
+                'username' => 'moeklis',
+                'role' => 'kepala',
+                'email' => 'moeklis@kbjt.com',
+                'password' => Hash::make('muklis1'),
+                'poin' => random_int(10, 10000),
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nama' => 'Rohmat Soebagyo',
+                'username' => 'rohmatsubagyo',
+                'role' => 'pengurus',
+                'email' => 'rohmat@kbjt.com',
+                'password' => Hash::make('password'),
+                'poin' => random_int(10, 1000),
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nama' => 'Agus Kuncoro',
+                'username' => 'agoes',
+                'role' => 'pengurus',
+                'email' => 'aguskuncoro@kbjt.com',
+                'password' => Hash::make('password'),
+                'poin' => random_int(10, 1000),
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
         ]);
 
         User::factory(100)->create();

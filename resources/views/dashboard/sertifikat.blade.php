@@ -20,7 +20,7 @@
         <div class="space-y-2">
             @foreach ($sertifikat as $d)
                 <div class="grid grid-cols-10 md:space-x-2 md:space-y-0 space-y-1">
-                    <a href="{{ auth()->user()->role == 'kepala' ? '/sertifikat/edit/' . $d->id : ($d->didapat == 1 ? '/sertifikat/' . auth()->user()->username . '/' . $d->id : '#') }}"
+                    <a href="{{ auth()->user()->role == 'kepala' ? '/sertifikat/edit/' . $d->id : ($d->didapat == 1 ? '/s/' . auth()->user()->username . '/' . $d->id : '#') }}"
                         class="{{ auth()->user()->role != 'kepala' && $d->progress >= $d->requirement ? 'md:col-span-9' : 'md:col-span-10' }}  col-span-10 px-5 py-6 bg-white rounded-2xl grid md:grid-cols-12 grid-cols-10 space-x-4 hover:outline hover:outline-amber-400">
 
                         @if (auth()->user()->role != 'kepala' && isset($d->didapat) && $d->didapat == 1)

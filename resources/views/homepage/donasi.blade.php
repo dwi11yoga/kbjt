@@ -8,7 +8,7 @@
     {{-- donais --}}
     @if (isset($metode))
         <div class="w-full border border-gray-200 rounded-2xl py-6 px-7">
-            <div class="font-semibold">Donasi</div>
+            <div class="font-semibold" id="donasi">Donasi</div>
             {{-- Select metode pembayaran --}}
             <label for="metode-pembayaran" class="block mb-2 text-sm font-medium text-gray-800">Metode
                 donasi</label>
@@ -158,7 +158,7 @@
     <div class="w-full border border-gray-200 rounded-2xl py-6 px-7 grid grid-cols-3 items-center">
         <div class="md:col-span-2 col-span-3">
 
-            <div class="font-semibold">Bagikan ke teman</div>
+            <div class="font-semibold" id="bagikan">Bagikan ke teman</div>
             <div class="text-sm">Bantu lestarikan Bahasa Jawa—ajak temanmu untuk mengunjungi dan berkontribusi di Kamus
                 Besar Bahasa Jawa!
             </div>

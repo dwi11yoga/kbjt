@@ -37,7 +37,6 @@ class DefinisiSeeder extends Seeder
                 'Kata ' . $kosakata->kosakata . ', yang termasuk ragam ' . $kosakata->ragam . ', diterjemahkan sebagai ' . $kosakata->arti_indo . '.',
                 'Istilah ' . $kosakata->kosakata . ' muncul dalam ragam ' . $kosakata->ragam . ' dan merujuk pada arti ' . $kosakata->arti_indo . '.',
                 'Dalam struktur bahasa Jawa ' . $kosakata->ragam . ', kata ' . $kosakata->kosakata . ' memiliki makna ' . $kosakata->arti_indo . '.',
-                'Contoh kata dari ragam ' . $kosakata->ragam . ' adalah ' . $kosakata->kosakata . ', yang artinya ' . $kosakata->arti_indo . '.',
                 'Kamu akan menemukan ' . $kosakata->kosakata . ' dalam ragam ' . $kosakata->ragam . ', yang berarti ' . $kosakata->arti_indo . '.',
                 'Bahasa Jawa ragam ' . $kosakata->ragam . ' mengenal ' . $kosakata->kosakata . ' sebagai kata yang berarti ' . $kosakata->arti_indo . '.',
             ];

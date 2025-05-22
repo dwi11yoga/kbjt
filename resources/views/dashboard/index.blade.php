@@ -421,11 +421,11 @@
     @endif
 
     {{-- Sertifikat, donasi, ajak teman --}}
-    <div class="flex space-x-2">
+    <div class="gap-2 grid md:grid-cols-3 grid-cols-2">
         {{-- Sertifikat --}}
         @if (auth()->user()->role != 'kepala')
             <a href="/sertifikat"
-                class="w-1/3 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
+                class="col-span-1 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
                 <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
                     <img class="object-cover w-full h-full"
                         src="https://img.freepik.com/free-vector/certification-concept-illustration_114360-5171.jpg?w=740"
@@ -439,8 +439,8 @@
         @endif
 
         {{-- Ajak teman --}}
-        <a href="#"
-            class="w-1/3 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
+        <a href="/dukung#bagikan"
+            class="col-span-1 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
             <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
                 <img class="object-cover w-full h-full"
                     src="https://img.freepik.com/free-vector/solidarity-concept-illustration_114360-6286.jpg?w=740"
@@ -454,7 +454,7 @@
 
         {{-- donasi --}}
         <a href="/dukung"
-            class="w-1/3 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
+            class="col-span-1 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
             <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
                 <img class="object-cover w-full h-full"
                     src="https://img.freepik.com/free-vector/inflation-concept-illustration_114360-25779.jpg"

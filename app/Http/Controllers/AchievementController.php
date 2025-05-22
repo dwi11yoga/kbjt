@@ -16,11 +16,12 @@ use Illuminate\Support\Facades\Storage;
 
 class AchievementController extends Controller
 {
-    public function __construct(){
+    public function __construct()
+    {
         // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
         $this->statKunjungan();
     }
-    
+
     //view achievement (dashboard)
     public function index()
     {
@@ -85,7 +86,7 @@ class AchievementController extends Controller
                 $d->achieved = 1;
                 $d->date_achieved = Carbon::parse($achieved[$d->id])->timezone('Asia/Jakarta');
                 $d->progress = '100%';
-            } else {
+            } else {  //hitung progress dari achievement
 
                 // cek jumlah kontribusi user
                 if ($d->rule == 'keanggotaan') {
@@ -122,7 +123,7 @@ class AchievementController extends Controller
                     $value = 0;
                 }
 
-                $d->progress = round(($value / $d->requirement) * 100) . '%';
+                $d->progress = round(($value / ($d->requirement > 0 ? $d->requirement : 1)) * 100) . '%';
             }
         }
 

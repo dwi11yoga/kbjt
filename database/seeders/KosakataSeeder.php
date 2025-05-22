@@ -51,10 +51,6 @@ class KosakataSeeder extends Seeder
             ];
         }
 
-        // kombinasikan kosakata
-        $kosakata = array_merge($kosakataNgoko, $kosakataKrama);
-
-        Kosakata::insert($kosakata);
         // tambah kosakata madaran
         Kosakata::create([
             'kosakata' => 'Madaran',
@@ -70,6 +66,10 @@ class KosakataSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now()
         ]);
+
+        // kombinasikan kosakata
+        $kosakata = array_merge($kosakataNgoko, $kosakataKrama);
+        Kosakata::insert($kosakata);
 
         // factory
         // Kosakata::factory(50)->create();

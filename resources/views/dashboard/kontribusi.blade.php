@@ -132,18 +132,20 @@
                         {{ $d->kosakata->kosakata ?? '[Kosakata dihapus]' }}.
                     </div>
                     <div class="md:col-span-1 col-span-3 flex items-center">
-                        @if (isset($d->verifikasi))
-                            <div title="Diverifikasi oleh pengurus"
-                                class="flex items-center text-sm rounded-full px-3 py-1 bg-amber-300 w-fit space-x-1">
-                                <i data-feather='star' class="w-5 fill-neutral-800 stroke-none"></i>
-                                <span>Terverifikasi</span>
-                            </div>
-                        @else
-                            <div title="Belum diverifikasi oleh pengurus"
-                                class="flex items-center text-sm rounded-full px-3 py-1 bg-red-300 w-fit space-x-1">
-                                <i data-feather='star' class="w-5 fill-neutral-800 stroke-none"></i>
-                                <span class="">Tak terverifikasi</span>
-                            </div>
+                        @if (auth()->user()->role == 'kontributor')
+                            @if (isset($d->verifikasi))
+                                <div title="Diverifikasi oleh pengurus"
+                                    class="flex items-center text-sm rounded-full px-3 py-1 bg-amber-300 w-fit space-x-1">
+                                    <i data-feather='star' class="w-5 fill-neutral-800 stroke-none"></i>
+                                    <span>Terverifikasi</span>
+                                </div>
+                            @else
+                                <div title="Belum diverifikasi oleh pengurus"
+                                    class="flex items-center text-sm rounded-full px-3 py-1 bg-red-300 w-fit space-x-1">
+                                    <i data-feather='star' class="w-5 fill-neutral-800 stroke-none"></i>
+                                    <span class="">Tak terverifikasi</span>
+                                </div>
+                            @endif
                         @endif
                     </div>
                     <div

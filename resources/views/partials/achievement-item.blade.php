@@ -2,8 +2,9 @@
     class="px-5 py-6 bg-white rounded-2xl grid md:grid-cols-12 grid-cols-10 space-x-4 hover:outline hover:outline-amber-400 border border-neutral-200">
 
     <div class="md:col-span-1 col-span-3 flex items-center justify-center rounded-md overflow-hidden">
-        <img src="{{ asset(isset($d->emblem) ? 'storage/' . $d->emblem : 'storage/achievement/no-icon') }}"
-            class="w-full @if ($d->achieved != 1 && isset(auth()->user()->role) && auth()->user()->role != 'kepala') grayscale @endif" alt="Icon">
+        <img src="{{ asset(isset($d->emblem) ? 'storage/' . $d->emblem : 'storage/achievement/no-icon.jpg') }}"
+            class="w-full {{ $d->achieved != 1 && isset(auth()->user()->role) && auth()->user()->role != 'kepala' ? 'grayscale' : '' }}"
+            alt="Icon">
     </div>
 
     {{-- detail --}}
@@ -19,13 +20,15 @@
                     </div>
                     <div>{{ $d->progress }}</div>
                     @isset($d->date_achieved)
-                        <div class="text-sm md:block hidden"></span>— Diperoleh pada {{ $d->date_achieved->translatedFormat('d F Y H:i') }}
+                        <div class="text-sm md:block hidden"></span>— Diperoleh pada
+                            {{ $d->date_achieved->translatedFormat('d F Y H:i') }}
                             WIB.</div>
                     @endisset
                 </div>
                 {{-- mobile --}}
                 @isset($d->date_achieved)
-                    <div class="text-sm md:hidden"></span>— Diperoleh pada {{ $d->date_achieved->translatedFormat('d F Y H:i') }} WIB.
+                    <div class="text-sm md:hidden"></span>— Diperoleh pada
+                        {{ $d->date_achieved->translatedFormat('d F Y H:i') }} WIB.
                     </div>
                 @endisset
             </div>

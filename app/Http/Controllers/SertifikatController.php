@@ -22,7 +22,7 @@ class SertifikatController extends Controller
         $this->statKunjungan();
     }
     
-    // view alaman sertifikat
+    // view halaman sertifikat
     public function index()
     {
         // dapatkan data sertifikat
@@ -135,7 +135,7 @@ class SertifikatController extends Controller
     }
 
     // View detail sertifikat
-    public function detailSertufikat($userId, $sertifikatId)
+    public function detailSertifikat($userId, $sertifikatId)
     {
         // dapatkan data dari db
         $user = User::select('nama', 'username', 'id', 'sertifikat')->where('username', $userId)->first();

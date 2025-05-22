@@ -23,6 +23,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'keanggotaan',
                 'requirement' => 0, //hari
                 'reward' => 10,
+                'emblem'=>'achievement/achievement-01.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -33,6 +34,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'keanggotaan',
                 'requirement' => 90, //hari
                 'reward' => 100,
+                'emblem'=>'achievement/achievement-02.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -43,6 +45,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'keanggotaan',
                 'requirement' => 182, //hari
                 'reward' => 200,
+                'emblem'=>'achievement/achievement-03.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -53,6 +56,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'keanggotaan',
                 'requirement' => 365, //hari
                 'reward' => 400,
+                'emblem'=>'achievement/achievement-04.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -63,6 +67,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'keanggotaan',
                 'requirement' => 730, //hari
                 'reward' => 800,
+                'emblem'=>'achievement/achievement-05.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -73,6 +78,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'keanggotaan',
                 'requirement' => 1825, //hari
                 'reward' => 2000,
+                'emblem'=>'achievement/achievement-06.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -83,6 +89,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'keanggotaan',
                 'requirement' => 3650, //hari
                 'reward' => 5000,
+                'emblem'=>'achievement/achievement-07.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -95,6 +102,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'definisi',
                 'requirement' => 1, //jumlah definisi
                 'reward' => 10,
+                'emblem'=>'achievement/achievement-08.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -105,6 +113,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'definisi',
                 'requirement' => 20, //jumlah definisi
                 'reward' => 50,
+                'emblem'=>'achievement/achievement-09.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -115,6 +124,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'definisi',
                 'requirement' => 50, //jumlah definisi
                 'reward' => 100,
+                'emblem'=>'achievement/achievement-10.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -125,6 +135,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'definisi',
                 'requirement' => 100, //jumlah definisi
                 'reward' => 300,
+                'emblem'=>'achievement/achievement-11.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -137,6 +148,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'kosakata',
                 'requirement' => 1, //kosakata
                 'reward' => 30,
+                'emblem'=>'achievement/achievement-12.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -147,6 +159,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'kosakata',
                 'requirement' => 20, //kosakata
                 'reward' => 150,
+                'emblem'=>'achievement/achievement-13.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -157,6 +170,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'kosakata',
                 'requirement' => 50, //kosakata
                 'reward' => 300,
+                'emblem'=>'achievement/achievement-14.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -167,6 +181,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'kosakata',
                 'requirement' => 100, //kosakata
                 'reward' => 700,
+                'emblem'=>'achievement/achievement-15.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -179,6 +194,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'editKosakata',
                 'requirement' => 1, //kosakata
                 'reward' => 20,
+                'emblem'=>'achievement/achievement-16.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -189,6 +205,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'editKosakata',
                 'requirement' => 20, //kosakata
                 'reward' => 100,
+                'emblem'=>'achievement/achievement-17.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -199,6 +216,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'editKosakata',
                 'requirement' => 50, //kosakata
                 'reward' => 200,
+                'emblem'=>'achievement/achievement-18.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -209,6 +227,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'editKosakata',
                 'requirement' => 100, //kosakata
                 'reward' => 500,
+                'emblem'=>'achievement/achievement-19.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -221,6 +240,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'laporan',
                 'requirement' => 1, //laporan
                 'reward' => 20,
+                'emblem'=>'achievement/achievement-20.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -231,6 +251,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'laporan',
                 'requirement' => 20, //laporan
                 'reward' => 100,
+                'emblem'=>'achievement/achievement-21.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -241,6 +262,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'laporan',
                 'requirement' => 50, //laporan
                 'reward' => 300,
+                'emblem'=>'achievement/achievement-22.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -251,6 +273,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'laporan',
                 'requirement' => 100, //laporan
                 'reward' => 700,
+                'emblem'=>'achievement/achievement-23.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -263,6 +286,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'artikel',
                 'requirement' => 1, //artikel
                 'reward' => 20,
+                'emblem'=>'achievement/achievement-24.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -273,6 +297,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'artikel',
                 'requirement' => 20, //artikel
                 'reward' => 200,
+                'emblem'=>'achievement/achievement-25.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -283,6 +308,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'artikel',
                 'requirement' => 50, //artikel
                 'reward' => 500,
+                'emblem'=>'achievement/achievement-26.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -293,6 +319,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'artikel',
                 'requirement' => 100, //artikel
                 'reward' => 1000,
+                'emblem'=>'achievement/achievement-27.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -306,6 +333,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'totalViewKosakata',
                 'requirement' => 1000, //view
                 'reward' => 200,
+                'emblem'=>'achievement/achievement-28.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -316,6 +344,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'totalViewKosakata',
                 'requirement' => 5000, //view
                 'reward' => 400,
+                'emblem'=>'achievement/achievement-29.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -326,6 +355,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'totalViewKosakata',
                 'requirement' => 10000, //view
                 'reward' => 800,
+                'emblem'=>'achievement/achievement-30.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -338,6 +368,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'viewKosakata',
                 'requirement' => 1000, //view
                 'reward' => 200,
+                'emblem'=>'achievement/achievement-31.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -348,6 +379,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'viewKosakata',
                 'requirement' => 5000, //view
                 'reward' => 400,
+                'emblem'=>'achievement/achievement-32.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -358,6 +390,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'viewKosakata',
                 'requirement' => 10000, //view
                 'reward' => 800,
+                'emblem'=>'achievement/achievement-33.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -370,6 +403,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'totalViewBlog',
                 'requirement' => 1000, //view
                 'reward' => 200,
+                'emblem'=>'achievement/achievement-34.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -380,6 +414,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'totalViewBlog',
                 'requirement' => 5000, //view
                 'reward' => 400,
+                'emblem'=>'achievement/achievement-35.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -390,6 +425,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'totalViewBlog',
                 'requirement' => 10000, //view
                 'reward' => 800,
+                'emblem'=>'achievement/achievement-36.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -402,6 +438,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'viewBlog',
                 'requirement' => 1000, //view
                 'reward' => 200,
+                'emblem'=>'achievement/achievement-37.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -412,6 +449,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'viewBlog',
                 'requirement' => 5000, //view
                 'reward' => 400,
+                'emblem'=>'achievement/achievement-38.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -422,6 +460,7 @@ class AchievementSeeder extends Seeder
                 'rule' => 'viewBlog',
                 'requirement' => 10000, //view
                 'reward' => 800,
+                'emblem'=>'achievement/achievement-39.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

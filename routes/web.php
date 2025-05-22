@@ -51,7 +51,8 @@ Route::get('/kosakata/{slug}/riwayat', [HomepageController::class, 'riwayatKosak
 Route::get('/u/{username}', [UserController::class, 'profile']);
 
 // tampilan sertifikat
-Route::get('/sertifikat/{userId}/{sertifikatId}', [SertifikatController::class, 'detailSertufikat']);
+// pakai 's' saja agar tidak sama dengan route untuk edit sertifikat
+Route::get('/s/{userId}/{sertifikatId}', [SertifikatController::class, 'detailSertifikat']);
 
 // Akses ditolak
 Route::get('/akses-ditolak', function () {

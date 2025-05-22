@@ -447,6 +447,7 @@ class UserController extends Controller
             $achievement = Achievement::whereIn('id', array_keys($achieved))->get();
             // tambahkan kapan achievement tsb didapatkan
             foreach ($achievement as $d) {
+                $d->achieved = 1;
                 $d->progress = '100%';
                 $d->date_achieved = Carbon::parse($achieved[$d->id])->timezone('Asia/Jakarta');
             }

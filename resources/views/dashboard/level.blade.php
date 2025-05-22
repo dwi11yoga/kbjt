@@ -83,9 +83,11 @@
                     class="flex py-4 px-5 w-full border bg-white border-gray-200 rounded-xl shadow-sm justify-between cursor-pointer items-center hover:bg-neutral-100">
                     <div>Level <span id="lvl-{{ $d->id }}">{{ $d->lvl }}</span></div>
                     <div class="flex items-center space-x-2 text-neutral-700">
-                        <div class="border rounded-lg py-1 px-2 flex items-center" title="Jumlah pengguna berlevel {{ $d->lvl }}"><i data-feather='users'
+                        <div class="border rounded-lg py-1 px-2 flex items-center"
+                            title="Jumlah pengguna berlevel {{ $d->lvl }}"><i data-feather='users'
                                 class="w-4 inline-block mr-1"></i>{{ $d->user_total }}</div>
-                        <div class="border rounded-lg py-1 px-2 flex items-center" title="Persentase pengguna berlevel {{ $d->lvl }}"><i data-feather='percent'
+                        <div class="border rounded-lg py-1 px-2 flex items-center"
+                            title="Persentase pengguna berlevel {{ $d->lvl }}"><i data-feather='percent'
                                 class="w-4 inline-block mr-1"></i>{{ $d->persentase }}</div>
                         <div class="flex items-center border py-1 px-2 rounded-lg">
                             <i data-feather='heart' class="fill-amber-400 w-4 inline-block mr-1"></i>
@@ -160,159 +162,163 @@
         </div>
     </div>
 
-    {{-- Popup tambah level --}}
-    <div id="tambahLevel"
-        class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
+    <div>
+        {{-- Popup tambah level --}}
+        <div id="tambahLevel"
+            class="fixed inset-0 m-auto z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
 
-            <h5 class="font-semibold mb-5 capitalize">Tambah level</h5>
+                <h5 class="font-semibold mb-5 capitalize">Tambah level</h5>
 
-            <form action="/level/tambah" method="POST">
-                @csrf
-                <div class="overflow-auto max-h-[27rem]">
-                    {{-- Level --}}
-                    <label for="lvl" class="block">Level</label>
-                    <input id="lvl" name="lvl" placeholder="Level baru..." type="number" min="0"
-                        value="{{ old('lvl') }}"
-                        class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('lvl')
-        border-b border-red-600 @enderror">
-                    @error('lvl')
-                        <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
-                    @enderror
+                <form action="/level/tambah" method="POST">
+                    @csrf
+                    <div class="overflow-auto max-h-[27rem]">
+                        {{-- Level --}}
+                        <label for="lvl" class="block">Level</label>
+                        <input id="lvl" name="lvl" placeholder="Level baru..." type="number" min="0"
+                            value="{{ old('lvl') }}"
+                            class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('lvl')
+    border-b border-red-600 @enderror">
+                        @error('lvl')
+                            <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
+                        @enderror
 
-                    {{-- poin --}}
-                    <label for="min_poin" class="block">Poin Minimal</label>
-                    <input id="min_poin" name="min_poin" placeholder="Poin minimal untuk mencapai level..." type="number"
-                        value="{{ old('min_poin') }}" min="1"
-                        class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('min_poin')
-        border-b border-red-600 @enderror">
-                    @error('min_poin')
-                        <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
-                    @enderror
-                </div>
+                        {{-- poin --}}
+                        <label for="min_poin" class="block">Poin Minimal</label>
+                        <input id="min_poin" name="min_poin" placeholder="Poin minimal untuk mencapai level..."
+                            type="number" value="{{ old('min_poin') }}" min="1"
+                            class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('min_poin')
+    border-b border-red-600 @enderror">
+                        @error('min_poin')
+                            <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
+                        @enderror
+                    </div>
 
-                {{-- Button --}}
-                <div class="text-xs text-red-500 mb-2">*Pastikan level yang ditambahkan belum ada, dan poin minimum tidak
-                    melebihi level di atasnya atau lebih rendah dari level di bawahnya.</div>
-                <div class="flex space-x-2">
-                    <div onclick="closeWindow('tambahLevel')"
-                        class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
-                        Batal</div>
-                    <button type="submit"
-                        class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
-                </div>
-            </form>
+                    {{-- Button --}}
+                    <div class="text-xs text-red-500 mb-2">*Pastikan level yang ditambahkan belum ada, dan poin minimum
+                        tidak
+                        melebihi level di atasnya atau lebih rendah dari level di bawahnya.</div>
+                    <div class="flex space-x-2">
+                        <div onclick="closeWindow('tambahLevel')"
+                            class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
+                            Batal</div>
+                        <button type="submit"
+                            class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
 
-    @if ($errors->has('lvl') || $errors->has('min_poin'))
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                openWindow('tambahLevel');
-            });
-        </script>
-    @endif
+        @if ($errors->has('lvl') || $errors->has('min_poin'))
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    openWindow('tambahLevel');
+                });
+            </script>
+        @endif
 
-    {{-- Popup edit level --}}
-    <div id="editLevel" class="fixed inset-0 z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
+        {{-- Popup edit level --}}
+        <div id="editLevel" class="fixed inset-0 z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
 
-            <h5 class="font-semibold mb-5 capitalize">Edit level</h5>
+                <h5 class="font-semibold mb-5 capitalize">Edit level</h5>
 
-            <form action="/level/update" method="POST">
-                @method('put')
-                @csrf
-                <div class="overflow-auto max-h-[27rem]">
-                    {{-- Level --}}
-                    <label for="editLvl" class="block">Level</label>
-                    <input id="editLvl" name="editLvl" placeholder="Level baru..." type="number" min="0" readonly
-                        value="{{ old('editLvl') }}"
-                        class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('editLvl')
-        border-b border-red-600 @enderror">
-                    @error('editLvl')
-                        <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
-                    @enderror
+                <form action="/level/update" method="POST">
+                    @method('put')
+                    @csrf
+                    <div class="overflow-auto max-h-[27rem]">
+                        {{-- Level --}}
+                        <label for="editLvl" class="block">Level</label>
+                        <input id="editLvl" name="editLvl" placeholder="Level baru..." type="text" min="0"
+                            readonly value="{{ old('editLvl') }}"
+                            class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('editLvl')
+    border-b border-red-600 @enderror">
+                        @error('editLvl')
+                            <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
+                        @enderror
 
-                    {{-- poin --}}
-                    <label for="editMinPoin" class="block">Poin Minimal</label>
-                    <input id="editMinPoin" name="editMinPoin" placeholder="Poin minimal untuk mencapai level..."
-                        type="number" value="{{ old('editMinPoin') }}" min="1"
-                        class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('editMinPoin')
-        border-b border-red-600 @enderror">
-                    @error('editMinPoin')
-                        <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
-                    @enderror
-                </div>
+                        {{-- poin --}}
+                        <label for="editMinPoin" class="block">Poin Minimal</label>
+                        <input id="editMinPoin" name="editMinPoin" placeholder="Poin minimal untuk mencapai level..."
+                            type="number" value="{{ old('editMinPoin') }}" min="1"
+                            class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('editMinPoin')
+    border-b border-red-600 @enderror">
+                        @error('editMinPoin')
+                            <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
+                        @enderror
+                    </div>
 
-                {{-- Button --}}
-                <div class="text-xs text-red-500 mb-2">*Pastikan level yang ditambahkan belum ada, dan poin minimum tidak
-                    melebihi level di atasnya atau lebih rendah dari level di bawahnya.</div>
-                <div class="flex space-x-2">
-                    <div onclick="closeWindow('editLevel')"
-                        class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
-                        Batal</div>
-                    <button type="submit"
-                        class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
-                </div>
-            </form>
+                    {{-- Button --}}
+                    <div class="text-xs text-red-500 mb-2">*Pastikan level yang ditambahkan belum ada, dan poin minimum
+                        tidak
+                        melebihi level di atasnya atau lebih rendah dari level di bawahnya.</div>
+                    <div class="flex space-x-2">
+                        <div onclick="closeWindow('editLevel')"
+                            class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
+                            Batal</div>
+                        <button type="submit"
+                            class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
 
-    {{-- Popup edit poin kontribusi --}}
-    <div id="editPoinKontribusi"
-        class="fixed inset-0 z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
+        {{-- Popup edit poin kontribusi --}}
+        <div id="editPoinKontribusi"
+            class="fixed inset-0 z-50 invisible flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
 
-            <h5 class="font-semibold mb-5 capitalize">Edit poin kontribusi</h5>
+                <h5 class="font-semibold mb-5 capitalize">Edit poin kontribusi</h5>
 
-            <form action="/poin-kontribusi/update" method="POST">
-                @method('put')
-                @csrf
-                <div class="overflow-auto max-h-[27rem]">
-                    {{-- id --}}
-                    <input class="hidden" id="idPoinKontribusi" name="idPoinKontribusi" type="text" value=""
-                        hidden readonly>
-                    {{-- kontribusi --}}
-                    <label for="editKontribusi" class="block">Kontribusi</label>
-                    <input id="editKontribusi" name="editKontribusi" placeholder="Nama kontribusi..." type="text"
-                        readonly value="{{ old('editKontribusi') }}"
-                        class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('editKontribusi')
-        border-b border-red-600 @enderror">
-                    @error('editKontribusi')
-                        <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
-                    @enderror
+                <form action="/poin-kontribusi/update" method="POST">
+                    @method('put')
+                    @csrf
+                    <div class="overflow-auto max-h-[27rem]">
+                        {{-- id --}}
+                        <input class="hidden" id="idPoinKontribusi" name="idPoinKontribusi" type="text"
+                            value="" hidden readonly>
+                        {{-- kontribusi --}}
+                        <label for="editKontribusi" class="block">Kontribusi</label>
+                        <input id="editKontribusi" name="editKontribusi" placeholder="Nama kontribusi..." type="text"
+                            readonly value="{{ old('editKontribusi') }}"
+                            class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('editKontribusi')
+    border-b border-red-600 @enderror">
+                        @error('editKontribusi')
+                            <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
+                        @enderror
 
-                    {{-- deskripsi --}}
-                    <label for="editDeskripsi" class="block">Deskripsi</label>
-                    <textarea id="editDeskripsi" name="editDeskripsi" placeholder="Tambahkan deskripsi..."
-                        oninput="textareaHeight(this)" readonly
-                        class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 @error('editDeskripsi')
-                border-b border-red-600
-            @enderror">{{ old('editDeskripsi') }}</textarea>
-                    @error('editDeskripsi')
-                        <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
-                    @enderror
+                        {{-- deskripsi --}}
+                        <label for="editDeskripsi" class="block">Deskripsi</label>
+                        <textarea id="editDeskripsi" name="editDeskripsi" placeholder="Tambahkan deskripsi..."
+                            oninput="textareaHeight(this)" readonly
+                            class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 @error('editDeskripsi')
+            border-b border-red-600
+        @enderror">{{ old('editDeskripsi') }}</textarea>
+                        @error('editDeskripsi')
+                            <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
+                        @enderror
 
-                    {{-- poin --}}
-                    <label for="editPoinDiperoleh" class="block">Poin Diperoleh</label>
-                    <input id="editPoinDiperoleh" name="editPoinDiperoleh" placeholder="Poin yang diperoleh user..."
-                        type="number" value="{{ old('editPoinDiperoleh') }}" min="1"
-                        class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('editPoinDiperoleh')
-        border-b border-red-600 @enderror">
-                    @error('editPoinDiperoleh')
-                        <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
-                    @enderror
-                </div>
+                        {{-- poin --}}
+                        <label for="editPoinDiperoleh" class="block">Poin Diperoleh</label>
+                        <input id="editPoinDiperoleh" name="editPoinDiperoleh" placeholder="Poin yang diperoleh user..."
+                            type="number" value="{{ old('editPoinDiperoleh') }}" min="1"
+                            class="w-full appearance-none resize-none text-neutral-800 focus:outline-none mb-3 h-auto max-h-52 py-1 @error('editPoinDiperoleh')
+    border-b border-red-600 @enderror">
+                        @error('editPoinDiperoleh')
+                            <div class="text-xs text-red-600 -mt-2 mb-2">*{{ $message }}</div>
+                        @enderror
+                    </div>
 
-                {{-- Button --}}
-                <div class="flex space-x-2">
-                    <div onclick="closeWindow('editPoinKontribusi')"
-                        class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
-                        Batal</div>
-                    <button type="submit"
-                        class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
-                </div>
-            </form>
+                    {{-- Button --}}
+                    <div class="flex space-x-2">
+                        <div onclick="closeWindow('editPoinKontribusi')"
+                            class="w-full bg-neutral-300 rounded-xl py-2.5 text-center cursor-pointer hover:outline hover:outline-offset-2 hover:outline-neutral-400">
+                            Batal</div>
+                        <button type="submit"
+                            class="w-full bg-amber-400 rounded-xl py-2.5 hover:outline hover:outline-offset-2 hover:outline-amber-500">Simpan</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

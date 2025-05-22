@@ -49,7 +49,9 @@
                     @endforeach
                 </div>
             </div>
+
         </div>
+        @yield('popup')
     </div>
 
     {{-- footer --}}

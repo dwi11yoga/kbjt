@@ -16,7 +16,7 @@
         <div class="bg-white p-5 rounded-2xl">
             <div class="mb-3">Sidebar</div>
             <div class="grid grid-cols-6 md:space-x-4 md:space-y-0 space-y-4">
-                {{-- konten --}}
+                {{-- contoh konten --}}
                 <div class="md:col-span-4 col-span-6 animate-pulse space-y-2">
                     <div class="w-full h-52 bg-gray-200 rounded-xl flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -38,6 +38,7 @@
                     <div class="h-4 w-3/4 bg-gray-200 rounded-full"></div>
 
                     <div class="flex space-x-3">
+                        {{-- pulse gambar bawah --}}
                         @for ($i = 0; $i < 3; $i++)
                             <div class="w-1/3 h-52 bg-gray-200 rounded-xl flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -73,16 +74,17 @@
                                 </div>
 
                                 <div class="text-sm">
-                                    {{ auth()->user()->id == $banner[1]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                                    {{ auth()->user()->id == $banner[1]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }}
+                                    {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)' : '' }}
                                 </div>
                             </div>
                         @endif
 
                         {{-- jika banner disembunyikan  --}}
                         @if (isset($banner[1]['img']) && $banner[1]['status'] == 0)
-                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                                 title="Banner Disembunyikan">
-                                <i data-feather='eye-off' class="stroke-white"></i>
+                                    <i data-feather='eye-off' class="stroke-white"></i>
                             </div>
                         @endif
 
@@ -124,14 +126,15 @@
                                 </div>
 
                                 <div class="text-sm">
-                                    {{ auth()->user()->id == $banner[2]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                                    {{ auth()->user()->id == $banner[2]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }}
+                                    {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)' : '' }}
                                 </div>
                             </div>
                         @endif
 
                         {{-- jika banner disembunyikan  --}}
                         @if (isset($banner[2]['img']) && $banner[2]['status'] == 0)
-                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                                 title="Banner Disembunyikan">
                                 <i data-feather='eye-off' class="stroke-white"></i>
                             </div>
@@ -217,14 +220,15 @@
                             </div>
 
                             <div class="text-sm">
-                                {{ auth()->user()->id == $banner[3]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                                {{ auth()->user()->id == $banner[3]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }}
+                                {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)' : '' }}
                             </div>
                         </div>
                     @endif
 
                     {{-- jika banner disembunyikan  --}}
                     @if (isset($banner[3]['img']) && $banner[3]['status'] == 0)
-                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                             title="Banner Disembunyikan">
                             <i data-feather='eye-off' class="stroke-white"></i>
                         </div>
@@ -281,14 +285,15 @@
                             </div>
 
                             <div class="text-sm">
-                                {{ auth()->user()->id == $banner[4]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                                {{ auth()->user()->id == $banner[4]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }}
+                                {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)' : '' }}
                             </div>
                         </div>
                     @endif
 
                     {{-- jika banner disembunyikan  --}}
                     @if (isset($banner[4]['img']) && $banner[4]['status'] == 0)
-                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                             title="Banner Disembunyikan">
                             <i data-feather='eye-off' class="stroke-white"></i>
                         </div>
@@ -365,14 +370,15 @@
                             </div>
 
                             <div class="text-sm">
-                                {{ auth()->user()->id == $banner[5]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                                {{ auth()->user()->id == $banner[5]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }}
+                                {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)' : '' }}
                             </div>
                         </div>
                     @endif
 
                     {{-- jika banner disembunyikan  --}}
                     @if (isset($banner[5]['img']) && $banner[5]['status'] == 0)
-                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                             title="Banner Disembunyikan">
                             <i data-feather='eye-off' class="stroke-white"></i>
                         </div>
@@ -449,14 +455,15 @@
                             </div>
 
                             <div class="text-sm">
-                                {{ auth()->user()->id == $banner[6]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                                {{ auth()->user()->id == $banner[6]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }}
+                                {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)' : '' }}
                             </div>
                         </div>
                     @endif
 
                     {{-- jika banner disembunyikan  --}}
                     @if (isset($banner[6]['img']) && $banner[6]['status'] == 0)
-                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                             title="Banner Disembunyikan">
                             <i data-feather='eye-off' class="stroke-white"></i>
                         </div>
@@ -507,14 +514,15 @@
                             </div>
 
                             <div class="text-sm">
-                                {{ auth()->user()->id == $banner[7]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }} {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
+                                {{ auth()->user()->id == $banner[7]['user_id'] ? 'Terakhir diedit oleh kamu' : $d['nama'] }}
+                                {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)' : '' }}
                             </div>
                         </div>
                     @endif
 
                     {{-- jika banner disembunyikan  --}}
                     @if (isset($banner[7]['img']) && $banner[7]['status'] == 0)
-                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                             title="Banner Disembunyikan">
                             <i data-feather='eye-off' class="stroke-white"></i>
                         </div>
@@ -571,143 +579,150 @@
         </div>
 
 
-        {{-- Window/popup --}}
-        @for ($i = 1; $i <= 7; $i++)
-            <div id="edit-{{ $i }}"
-                class="fixed inset-0 m-auto invisible z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
+        {{-- Window/popup untuk edit ad/banner --}}
+        <div class="">
+            @for ($i = 1; $i <= 7; $i++)
+                <div id="edit-{{ $i }}"
+                    class="fixed inset-0 m-auto invisible z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div class="bg-white border border-neutral-200 p-6 rounded-2xl md:w-1/3 w-5/6">
 
-                    {{-- judul & subjudul --}}
-                    <div class="flex justify-between">
-                        <div>
-                            <h5 class="font-semibold capitalize">{{ $banner[$i]['name'] }}</h5>
-                            <div class="mb-5">{{ $banner[$i]['catatan'] }}</div>
-                        </div>
-                        <div>
-                            <div class="rounded-full p-2 hover:bg-neutral-200 hover:text-red-500 cursor-pointer"
-                                onclick="closeWindow('edit-{{ $i }}')">
-                                <i data-feather='x'></i>
+                        {{-- judul & subjudul --}}
+                        <div class="flex justify-between">
+                            <div>
+                                <h5 class="font-semibold capitalize">{{ $banner[$i]['name'] }}</h5>
+                                <div class="mb-5">{{ $banner[$i]['catatan'] }}</div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="overflow-auto max-h-[27rem] space-y-3">
-
-                        {{-- keterangan tambahan jika banner ditampilkan namun gambar belum diupload  --}}
-                        @if ($banner[$i]['status'] == 1 && (empty($banner[$i]['img']) || $banner[$i]['img'] == null))
-                            <?php
-                            $alert = [
-                                'warna' => 'green',
-                                'pesan' => 'Meskipun banner diatur untuk ditampilkan, banner tidak akan muncul jika belum ada gambar yang diunggah',
-                                'textsize' => 'sm',
-                            ];
-                            ?>
-                            @include('partials.alert')
-                        @endif
-
-                        {{-- gambar --}}
-                        <div>
-                            <div onclick="document.getElementById('img-{{ $i }}').click()"
-                                title="Pilih gambar"
-                                class="bg-neutral-100 rounded-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
-                                <div id="upload-{{ $i }}" class="line-clamp-1 md:max-w-80 max-w-64">Pilih
-                                    gambar
-                                </div>
-                                <i data-feather='folder' class="w-5"></i>
-                            </div>
-                            @error('img-' . $i)
-                                <div class="text-xs text-red-600 mt-2">*{{ $message }}</div>
-                            @enderror
-
-                            <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif"
-                                id="img-{{ $i }}" name="img-{{ $i }}"
-                                onchange="previewImage(this,'bannerPreview-{{ $i }}'); previewImageDir(this, 'upload-{{ $i }}')"
-                                class="hidden">
-                        </div>
-
-                        {{-- radiobutton status --}}
-                        <div>
-                            <div class="mb-1 text-sm">Tampilan banner</div>
-                            <div class="flex space-x-3">
-                                <div>
-                                    <input type="radio" class="peer/show cursor-pointer"
-                                        name="status-{{ $i }}" id="show-{{ $i }}" value="1"
-                                        {{ old('status-' . $i, $banner[$i]['status']) == 1 ? 'checked' : '' }}>
-                                    <label for="show-{{ $i }}"
-                                        class="peer-checked/show:text-blue-600 cursor-pointer">Tampilkan</label>
-                                </div>
-
-                                <div>
-                                    <input type="radio" class="peer/hide cursor-pointer"
-                                        name="status-{{ $i }}" id="hide{{ $i }}" value="0"
-                                        {{ old('status-' . $i, $banner[$i]['status']) == 0 ? 'checked' : '' }}>
-                                    <label for="hide{{ $i }}"
-                                        class="peer-checked/hide:text-blue-600 cursor-pointer">Sembunyikan</label>
+                            <div>
+                                <div class="rounded-full p-2 hover:bg-neutral-200 hover:text-red-500 cursor-pointer"
+                                    onclick="closeWindow('edit-{{ $i }}')">
+                                    <i data-feather='x'></i>
                                 </div>
                             </div>
-                            @error('status-' . $i)
-                                <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
-                            @enderror
                         </div>
 
-                        {{-- url --}}
-                        <div>
-                            <label for="url-{{ $i }}" class="text-sm">URL</label>
-                            <input type="text" id="url" name="url-{{ $i }}"
-                                placeholder="Masukkan tautan..." title="URL"
-                                value="{{ old('url-' . $i, $banner[$i]['url']) }}"
-                                class="w-full hover:border-b-2 focus:outline-none focus:border-b-2 py-1 @error('url-' . $i) 
+                        <div class="overflow-auto max-h-[27rem] space-y-3">
+
+                            {{-- keterangan tambahan jika banner ditampilkan namun gambar belum diupload  --}}
+                            @if ($banner[$i]['status'] == 1 && (empty($banner[$i]['img']) || $banner[$i]['img'] == null))
+                                <?php
+                                $alert = [
+                                    'warna' => 'green',
+                                    'pesan' => 'Meskipun banner diatur untuk ditampilkan, banner tidak akan muncul jika belum ada gambar yang diunggah',
+                                    'textsize' => 'sm',
+                                ];
+                                ?>
+                                @include('partials.alert')
+                            @endif
+
+                            {{-- gambar --}}
+                            <div>
+                                <div onclick="document.getElementById('img-{{ $i }}').click()"
+                                    title="Pilih gambar"
+                                    class="bg-neutral-100 rounded-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+                                    <div id="upload-{{ $i }}" class="line-clamp-1 md:max-w-80 max-w-64">Pilih
+                                        gambar
+                                    </div>
+                                    <i data-feather='folder' class="w-5"></i>
+                                </div>
+                                @error('img-' . $i)
+                                    <div class="text-xs text-red-600 mt-2">*{{ $message }}</div>
+                                @enderror
+
+                                <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif"
+                                    id="img-{{ $i }}" name="img-{{ $i }}"
+                                    onchange="previewImage(this,'bannerPreview-{{ $i }}'); previewImageDir(this, 'upload-{{ $i }}')"
+                                    class="hidden">
+                            </div>
+
+                            {{-- radiobutton status --}}
+                            <div>
+                                <div class="mb-1 text-sm">Tampilan banner</div>
+                                <div class="flex space-x-3">
+                                    <div>
+                                        <input type="radio" class="peer/show cursor-pointer"
+                                            name="status-{{ $i }}" id="show-{{ $i }}"
+                                            value="1"
+                                            {{ old('status-' . $i, $banner[$i]['status']) == 1 ? 'checked' : '' }}>
+                                        <label for="show-{{ $i }}"
+                                            class="peer-checked/show:text-blue-600 cursor-pointer">Tampilkan</label>
+                                    </div>
+
+                                    <div>
+                                        <input type="radio" class="peer/hide cursor-pointer"
+                                            name="status-{{ $i }}" id="hide{{ $i }}"
+                                            value="0"
+                                            {{ old('status-' . $i, $banner[$i]['status']) == 0 ? 'checked' : '' }}>
+                                        <label for="hide{{ $i }}"
+                                            class="peer-checked/hide:text-blue-600 cursor-pointer">Sembunyikan</label>
+                                    </div>
+                                </div>
+                                @error('status-' . $i)
+                                    <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- url --}}
+                            <div>
+                                <label for="url-{{ $i }}" class="text-sm">URL</label>
+                                <input type="text" id="url" name="url-{{ $i }}"
+                                    placeholder="Masukkan tautan..." title="URL"
+                                    value="{{ old('url-' . $i, $banner[$i]['url']) }}"
+                                    class="w-full hover:border-b-2 focus:outline-none focus:border-b-2 py-1 @error('url-' . $i) 
                 border-red-600 text-red-600 hover:border-red-300 @else hover:border-amber-200 focus:border-amber-400
                 @enderror">
-                            @error('url-' . $i)
-                                <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
-                            @enderror
-                        </div>
+                                @error('url-' . $i)
+                                    <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                                @enderror
+                            </div>
 
-                        {{-- hover teks --}}
-                        <div>
-                            <label for="hover_title-{{ $i }}" class="text-sm">Teks tooltip</label>
-                            <input type="text" id="hover_title" name="hover_title-{{ $i }}"
-                                placeholder="Masukkan teks tooltip..." title="Teks tooltip"
-                                value="{{ old('hover_title-' . $i, $banner[$i]['hover_title']) }}"
-                                class="w-full hover:border-b-2 focus:outline-none focus:border-b-2 py-1 @error('hover_title-' . $i) 
+                            {{-- hover teks --}}
+                            <div>
+                                <label for="hover_title-{{ $i }}" class="text-sm">Teks tooltip</label>
+                                <input type="text" id="hover_title" name="hover_title-{{ $i }}"
+                                    placeholder="Masukkan teks tooltip..." title="Teks tooltip"
+                                    value="{{ old('hover_title-' . $i, $banner[$i]['hover_title']) }}"
+                                    class="w-full hover:border-b-2 focus:outline-none focus:border-b-2 py-1 @error('hover_title-' . $i) 
                             border-red-600 text-red-600 hover:border-red-300 @else hover:border-amber-200 focus:border-amber-400
                             @enderror">
-                            <div class="text-xs">*Keterangan saat banner dihover</div>
-                            @error('hover_title-' . $i)
-                                <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        {{-- author tarakhir yang mengedit --}}
-                        @if (isset($banner[$i]['user_id']))
-                            <div class="rounded-xl py-2 px-3 bg-amber-100 flex items-center space-x-2 w-fit">
-
-                                <?php $d = $banner[$i]['user']; ?> {{-- convert array jadi object --}}
-                                <div class="rounded-full w-8 h-8 overflow-hidden object-cover">
-                                    @include('partials.profile-pic-general')
-                                </div>
-
-                                <div class="text-sm"> 
-                                    Terakhir diedit oleh
-                                    @if (isset($d)) {{-- agar tidak error ketika data user tidak dihapus --}}
-                                        <a
-                                            href="/u/{{ $d['username'] }}">{{ auth()->user()->id == $banner[$i]['user_id'] ? 'kamu' : $d['nama'] }}</a> {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)':'' }}
-                                    @else
-                                        [Akun dihapus]
-                                    @endif
-                                </div>
+                                <div class="text-xs">*Keterangan saat banner dihover</div>
+                                @error('hover_title-' . $i)
+                                    <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                                @enderror
                             </div>
-                        @endif
 
+                            {{-- author tarakhir yang mengedit --}}
+                            @if (isset($banner[$i]['user_id']))
+                                <div class="rounded-xl py-2 px-3 bg-amber-100 flex items-center space-x-2 w-fit">
+
+                                    <?php $d = $banner[$i]['user']; ?> {{-- convert array jadi object --}}
+                                    <div class="rounded-full w-8 h-8 overflow-hidden object-cover">
+                                        @include('partials.profile-pic-general')
+                                    </div>
+
+                                    <div class="text-sm">
+                                        Terakhir diedit oleh
+                                        @if (isset($d))
+                                            {{-- agar tidak error ketika data user tidak dihapus --}}
+                                            <a
+                                                href="/u/{{ $d['username'] }}">{{ auth()->user()->id == $banner[$i]['user_id'] ? 'kamu' : $d['nama'] }}</a>
+                                            {{ isset($d['statusUser']) && $d['statusUser'] == 'dihapus' ? '(Akun dihapus)' : '' }}
+                                        @else
+                                            [Akun dihapus]
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+
+                        </div>
                     </div>
                 </div>
-            </div>
-        @endfor
+            @endfor
+        </div>
+
 
     </form>
 
-    <script>
+    {{-- <script>
         function toggleShowElement(element) {
             var object = document.getElementById(element);
             object.classList.toggle('hidden');
@@ -717,5 +732,5 @@
             var object = document.getElementById(element);
             object.classList.remove('hidden');
         }
-    </script>
+    </script> --}}
 @endsection

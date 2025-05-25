@@ -81,10 +81,10 @@
                         @endif
 
                         {{-- jika banner disembunyikan  --}}
-                        @if (isset($banner[1]['img']) && $banner[1]['status'] == 0)
+                        @if (isset($banner[1]['img']) && empty($banner[1]['status']))
                             <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                                 title="Banner Disembunyikan">
-                                    <i data-feather='eye-off' class="stroke-white"></i>
+                                <i data-feather='eye-off' class="stroke-white"></i>
                             </div>
                         @endif
 
@@ -133,7 +133,7 @@
                         @endif
 
                         {{-- jika banner disembunyikan  --}}
-                        @if (isset($banner[2]['img']) && $banner[2]['status'] == 0)
+                        @if (isset($banner[2]['img']) && empty($banner[2]['status']))
                             <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                                 title="Banner Disembunyikan">
                                 <i data-feather='eye-off' class="stroke-white"></i>
@@ -227,7 +227,7 @@
                     @endif
 
                     {{-- jika banner disembunyikan  --}}
-                    @if (isset($banner[3]['img']) && $banner[3]['status'] == 0)
+                    @if (isset($banner[3]['img']) && empty($banner[3]['status']))
                         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                             title="Banner Disembunyikan">
                             <i data-feather='eye-off' class="stroke-white"></i>
@@ -292,7 +292,7 @@
                     @endif
 
                     {{-- jika banner disembunyikan  --}}
-                    @if (isset($banner[4]['img']) && $banner[4]['status'] == 0)
+                    @if (isset($banner[4]['img']) && empty($banner[4]['status']))
                         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                             title="Banner Disembunyikan">
                             <i data-feather='eye-off' class="stroke-white"></i>
@@ -377,7 +377,7 @@
                     @endif
 
                     {{-- jika banner disembunyikan  --}}
-                    @if (isset($banner[5]['img']) && $banner[5]['status'] == 0)
+                    @if (isset($banner[5]['img']) && empty($banner[5]['status']))
                         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                             title="Banner Disembunyikan">
                             <i data-feather='eye-off' class="stroke-white"></i>
@@ -462,7 +462,7 @@
                     @endif
 
                     {{-- jika banner disembunyikan  --}}
-                    @if (isset($banner[6]['img']) && $banner[6]['status'] == 0)
+                    @if (isset($banner[6]['img']) && empty($banner[6]['status']))
                         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                             title="Banner Disembunyikan">
                             <i data-feather='eye-off' class="stroke-white"></i>
@@ -521,7 +521,7 @@
                     @endif
 
                     {{-- jika banner disembunyikan  --}}
-                    @if (isset($banner[7]['img']) && $banner[7]['status'] == 0)
+                    @if (isset($banner[7]['img']) && empty($banner[7]['status']))
                         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-black bg-opacity-20 p-3 rounded-lg"
                             title="Banner Disembunyikan">
                             <i data-feather='eye-off' class="stroke-white"></i>
@@ -636,27 +636,31 @@
 
                             {{-- radiobutton status --}}
                             <div>
-                                <div class="mb-1 text-sm">Tampilan banner</div>
-                                <div class="flex space-x-3">
-                                    <div>
-                                        <input type="radio" class="peer/show cursor-pointer"
-                                            name="status-{{ $i }}" id="show-{{ $i }}"
-                                            value="1"
-                                            {{ old('status-' . $i, $banner[$i]['status']) == 1 ? 'checked' : '' }}>
-                                        <label for="show-{{ $i }}"
-                                            class="peer-checked/show:text-blue-600 cursor-pointer">Tampilkan</label>
+                                <label class="flex items-center justify-between cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" name="status-{{ $i }}"
+                                        {{ !empty($banner[$i]['status']) ? 'checked' : '' }}>
+                                    <span class="">Tampilkan</span>
+                                    <div
+                                        class="relative w-11 h-6 mr-1 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-amber-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-400">
                                     </div>
-
-                                    <div>
-                                        <input type="radio" class="peer/hide cursor-pointer"
-                                            name="status-{{ $i }}" id="hide{{ $i }}"
-                                            value="0"
-                                            {{ old('status-' . $i, $banner[$i]['status']) == 0 ? 'checked' : '' }}>
-                                        <label for="hide{{ $i }}"
-                                            class="peer-checked/hide:text-blue-600 cursor-pointer">Sembunyikan</label>
-                                    </div>
-                                </div>
+                                </label>
                                 @error('status-' . $i)
+                                    <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- Tandai sebagai iklan --}}
+                            <div>
+                                <label class="flex items-center justify-between cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" name="iklan-{{ $i }}"
+                                        {{ $banner[$i]['iklan']==1 ? 'checked' : '' }}>
+                                    <span class="">Tandai sebagai iklan</span>
+                                    <div
+                                        class="relative w-11 h-6 mr-1 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-amber-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-400">
+                                    </div>
+                                </label>
+
+                                @error('iklan-' . $i)
                                     <div class="text-xs text-red-600 mb-2">*{{ $message }}</div>
                                 @enderror
                             </div>

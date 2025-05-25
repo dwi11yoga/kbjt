@@ -33,7 +33,7 @@
         <div class="bg-white px-5 py-4 rounded-xl">
             <label for="judul" class="text-sm">Judul</label>
             <input type="text" id="judul" name="judul" placeholder="Masukkan judul"
-                oninput="buatSlug(this, 'slug')" value="{{ old('judul', $post->judul) }}"
+                value="{{ old('judul', $post->judul) }}"
                 class="w-full font-semibold focus:outline-none focus:border-b-2 py-1 @error('judul') 
             border-red-600 text-red-600 @else focus:border-amber-400
             @enderror">

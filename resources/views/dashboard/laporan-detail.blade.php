@@ -180,8 +180,10 @@
                             <?php $d = $laporan->author; ?>
                             @include('partials.profile-pic-general')
                         </div>
-                        <div class="">{{ $laporan->author->nama }}<i data-feather='arrow-up-right'
-                                class="w-5 inline"></i></div>
+                        <div class="">
+                            {{ $laporan->author->nama }}
+                            <i data-feather='arrow-up-right' class="w-5 inline"></i>
+                        </div>
                     </a>
                 </div>
 
@@ -250,7 +252,8 @@
                 <div class="space-y-1">
                     <div>{!! strip_tags($laporan->def_dilaporkan, '<p><b><i><u><s><ol><ul><li>') !!}</div>
                     <div class="text-sm">— {{ $laporan->author->nama }} pada
-                        {{ $laporan->waktu_definisi->translatedFormat('d F Y H:i') }} dalam bahasa {{ $laporan->definisi->bahasa }}.</div>
+                        {{ $laporan->waktu_definisi->translatedFormat('d F Y H:i') }} dalam bahasa
+                        {{ $laporan->definisi->bahasa }}.</div>
                 </div>
             @elseif (!empty($laporan->kosakata_id))
                 {{-- kosakata --}}

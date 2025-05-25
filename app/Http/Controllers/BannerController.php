@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -11,11 +12,12 @@ use Illuminate\Validation\ValidationException;
 
 class BannerController extends Controller
 {
-    public function __construct(){
+    public function __construct()
+    {
         // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
         $this->statKunjungan();
     }
-    
+
     // View edit banner
     public function index()
     {
@@ -59,17 +61,32 @@ class BannerController extends Controller
                 $rules['img-' . $i] = [File::types(['jpg', 'jpeg', 'png', 'webp', 'tiff', 'bmp'])->max(1024)];
             }
             // validasi status
-            if (isset($request['status-' . $i]) && $request['status-' . $i] != $banner[$i]['status']) {
-                $rules['status-' . $i] = 'required';
-                $simpan[$i]['status'] = $request['status-' . $i];
-                $simpan[$i]['user_id'] = Auth::user()->id; // pengurus yang mengedit
+            // if (isset($request['status-' . $i]) && $request['status-' . $i] != $banner[$i]['status']) {
+            //     $rules['status-' . $i] = 'required';
+            //     $simpan[$i]['status'] = $request['status-' . $i];
+            //     $simpan[$i]['user_id'] = Auth::user()->id; // pengurus yang mengedit
+            // }
+
+            // tanagani status
+
+            if (!empty($request['status-' . $i]) && !isset($banner[$i]['status'])) {
+                $simpan[$i]['status'] = Carbon::now();
+            } elseif (empty($request['status-' . $i]) && isset($banner[$i]['status'])) {
+                $simpan[$i]['status'] = null;
             }
+
+            // tangani iklan
+            if (!empty($request['iklan-' . $i]) && $banner[$i]['iklan'] == 0) {
+                $simpan[$i]['iklan'] = 1;
+            } elseif (empty($request['iklan-' . $i]) && $banner[$i]['iklan'] == 1) {
+                $simpan[$i]['iklan'] = 0;
+            }
+
             // validasi url
             if ((empty($request['url-' . $i]) || $request['url-' . $i] == null) && $request['url-' . $i] != $banner[$i]['url']) {
                 $rules['url-' . $i] = '';
                 $simpan[$i]['url'] = null;
                 $simpan[$i]['user_id'] = Auth::user()->id; // pengurus yang mengedit
-
             } elseif (isset($request['url-' . $i]) && $request['url-' . $i] != $banner[$i]['url']) {
                 $rules['url-' . $i] = 'url';
                 $simpan[$i]['url'] = $request['url-' . $i];
@@ -92,6 +109,8 @@ class BannerController extends Controller
                 ->withErrors($e->errors())
                 ->withInput();
         }
+
+        // dd($simpan, $request);
 
         // Simpan data
         for ($i = 1; $i <= 7; $i++) {

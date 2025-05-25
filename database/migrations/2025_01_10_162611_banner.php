@@ -12,7 +12,8 @@ return new class extends Migration {
     {
         Schema::create('banners', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('status')->default(0);
+            $table->dateTime('status')->nullable();
+            $table->boolean('iklan')->default(0);
             $table->string('name')->nullable();
             $table->string('img')->nullable();
             $table->string('url')->nullable();

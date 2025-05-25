@@ -110,7 +110,7 @@
                     </div>
                 </a>
             @endforeach
-            @if ($data['definisi']->isEmpty())
+            @if ($data['editKosakata']->isEmpty())
                 <div class="border border-neutral-200 p-3 mt-3 rounded-xl">Tidak ada data</div>
             @endif
         </div>
@@ -202,6 +202,7 @@
 
         </div>
     @endif
+
     {{-- Laporan --}}
     <div class="p-5 bg-white rounded-2xl" id="laporan">
         <div class="flex items-center justify-between">

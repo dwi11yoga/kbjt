@@ -131,13 +131,22 @@ class DefinisiController extends Controller
         }
 
         // Cek apakah definisi benar-benar milik user
-        $definisi = Definisi::select('id', 'user_id')->where('id', '=', $definisiId)->first();
+        $definisi = Definisi::where('id', '=', $definisiId)
+            ->first();
+
         if (isset($definisi) && $definisi['user_id'] != Auth::user()->id ?? 0) {
             return back()->with('failed', 'Gagal menghapus definisi');
         }
+
         // hapus definisi
         Definisi::destroy($definisiId);
-        return back()->with('success', 'Definisi berhasil dihapus');
+
+        // kurangi poin yang diterima oleh user dari definisi yang dihapus
+        $poin_dikurang = $definisi->poin_kontributor + $definisi->poin_verifikasi;
+        User::find($definisi->user_id)->decrement('poin', $poin_dikurang);
+
+        // kembali ke view
+        return back()->with('success', 'Definisi berhasil dihapus (-' . $poin_dikurang . ' poin)');
 
     }
 

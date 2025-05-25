@@ -414,8 +414,15 @@ class BlogController extends Controller
             return back()->with('failed', 'Gagal menghapus artikel');
         }
 
+        // hapus artikel
         Blog::destroy($id);
-        return back()->with('success', 'Artikel berhasil dihapus');
+
+        // kurangi poin yang diterima oleh user dari definisi yang dihapus
+        $poin_dikurang = $post->poin;
+        User::find($post->user_id)->decrement('poin', $poin_dikurang);
+
+        // kembali ke view
+        return back()->with('success', 'Artikel berhasil dihapus (-' . $poin_dikurang . ' poin)');
     }
 
     // function cekAchievement()

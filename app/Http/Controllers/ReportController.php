@@ -567,14 +567,20 @@ class ReportController extends Controller
 
 
                 // tindakan untuk definisi (jika ada)
-                if ($validatedData['tindakanDefinisi'] == 'edit') {
+                if ($validatedData['tindakanDefinisi'] == 'edit') { // minta user untuk edit definisi
                     Definisi::find($laporan->definisi_id)->update([
                         'hukuman_edit' => 1, // maka definisi tidak akan ditampilkan di web
                         'verifikasi' => null, // cabut status terverifikasi
                         'verifikasi_oleh' => null
                     ]);
-                } elseif ($validatedData['tindakanDefinisi'] == 'hapus') {
+                } elseif ($validatedData['tindakanDefinisi'] == 'hapus') { // hapus definisi
+                    // hapus definisi
                     Definisi::find($laporan->definisi_id)->delete();
+
+                    // kurangi poin yang diterima oleh user dari definisi yang dihapus
+                    $definisi_dihapus = Definisi::withTrashed()->find($laporan->definisi_id);
+                    $poin_dikurang = $definisi_dihapus->poin_kontributor + $definisi_dihapus->poin_verifikasi;
+                    User::find($laporan->author->id)->decrement('poin', $poin_dikurang);
                 }
 
                 // Jika user diblokir, maka hapus user
@@ -587,12 +593,17 @@ class ReportController extends Controller
 
             if ($validatedData['pelanggaran'] == 'true') {
                 // hapus kosakata
-                Kosakata::find($laporan->kosakata_id)->delete();
-
+                Kosakata::destroy($laporan->kosakata_id);
+                
                 // Jika user diblokir, maka hapus user
                 if ($validatedData['hukuman'] == 'blokir') {
                     $terlapor = Kosakata::where('id', '=', $laporan->kosakata_id)->value('user_id');
                     User::find($terlapor)->delete();
+                } else { // jika user tidak dihapus, maka kurangi poin
+                    // kurangi poin yang diterima oleh user dari definisi yang dihapus
+                    $kosakata_dihapus = Kosakata::withTrashed()->find($laporan->kosakata_id);
+                    $poin_dikurang = $kosakata_dihapus->poin;
+                    User::find($laporan->author->id)->decrement('poin', $poin_dikurang);
                 }
 
                 // simpan data hukuman
@@ -661,7 +672,7 @@ class ReportController extends Controller
             $this->kirimNotifikasi($pelapor->id, 'laporan', $pesan, $url);
         }
         // untuk terlapor
-        $pesan = 'Seseorang melaporkan ' . $dilaporkan . ' yang kamu submit';
+        $pesan = 'Seseorang melaporkan ' . $dilaporkan . ' yang kamu submit (-' . ($poin_dikurang ?? 0) . ' poin) ';
         $this->kirimNotifikasi($terlapor->id, 'laporan', $pesan, $url);
 
         // cek achievement

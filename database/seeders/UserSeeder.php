@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
                 'role' => 'kepala',
                 'email' => 'moeklis@kbjt.com',
                 'password' => Hash::make('muklis1'),
-                'poin' => random_int(10, 10000),
+                'poin' => 1,
                 'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
@@ -41,8 +41,8 @@ class UserSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'nama' => 'Agus Kuncoro',
-                'username' => 'agoes',
+                'nama' => 'Amar Goyono',
+                'username' => 'margoyono',
                 'role' => 'pengurus',
                 'email' => 'aguskuncoro@kbjt.com',
                 'password' => Hash::make('password'),

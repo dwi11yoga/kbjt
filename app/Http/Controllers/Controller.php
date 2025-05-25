@@ -212,7 +212,7 @@ abstract class Controller
         return $nilai;
     }
 
-    // fungsi untuk mengambil data banner
+    // fungsi untuk mengambil data banner/iklan
     function getBanner(array $id)
     {
         // dapatkan data banner -> ubah jadi array
@@ -312,13 +312,13 @@ abstract class Controller
         return 'selesai :)';
     }
 
-    // tambahkan poin atas kontribusi
+    // tambahkan (increment) poin atas kontribusi
     public function poinKontribusi(int $userId, string $kontribusi)
     {
 
         // dapatkan role user
         $role = User::find($userId)->role;
-        // dapatkan poin reward untuk user
+        // dapatkan poin reward untuk user sesuai role
         $poin = PoinKontribusi::where('role', $role)
             ->where('kontribusi', $kontribusi)
             ->first()
@@ -330,6 +330,11 @@ abstract class Controller
         }
 
         return $poin;
+    }
+
+    // decrement poin ketika kontribusi dibatalkan/dihapus
+    public function decrementPoinKontribusi(int $userId, string $kontribusi){
+
     }
 
     // cek apakah akun user terkena suspend/tidak

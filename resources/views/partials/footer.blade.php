@@ -1,7 +1,7 @@
 {{-- Footer --}}
 <footer class="flex items-center justify-between py-4 gap-6 md:text-base text-sm container mx-auto md:px-0 px-6">
     <a href="/tentang" class="hover:underline hover:underline-offset-4 hover:decoration-yellow-400 hover:decoration-4">
-        Copyright © {{ date('Y') }} Kamus Besar Bahasa Indonesia
+        Copyright © {{ date('Y') }} Kamus Bahasa Jawa Terbuka
     </a>
 
     <div class="flex space-x-2 justify-end text-right">

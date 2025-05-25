@@ -31,7 +31,8 @@ class HomepageController extends Controller
         // dd(count($indonesia), count($ngoko), count($krama));
         // Ambil top 100 user
         $topContributor = User::select(['username', 'nama', 'profile_pic', 'jenis_kelamin', 'poin'])
-            ->orderBy('poin', 'asc')
+            ->whereNot('role', 'kepala')
+            ->orderBy('poin', 'desc')
             ->limit(100)
             ->get();
 
@@ -109,6 +110,7 @@ class HomepageController extends Controller
     {
         // dapatkan data user
         $user = User::select('id', 'username', 'poin', 'created_at', 'jenis_kelamin', 'profile_pic', 'level')
+            ->whereNot('role', 'kepala')
             ->orderBy('poin', 'desc')
             ->limit(100)
             ->get();
@@ -333,17 +335,17 @@ class HomepageController extends Controller
         // dapatkan data yang mengedit
         if (!empty($kosakata)) {
             $kosakata->totalEdit = EditKosakata::where('kosakata_id', $kosakata->id)
-            ->whereNotNull('status')
-            ->count();
-        if ($kosakata->totalEdit > 0) {
-            $kosakata->pengedit = EditKosakata::where('kosakata_id', $kosakata->id)
                 ->whereNotNull('status')
-                ->with('user:id,profile_pic,jenis_kelamin,nama')
-                ->orderBy('status', 'desc')
-                ->limit(3)
-                ->get();
-            // dd($kosakata->pengedit);
-        }
+                ->count();
+            if ($kosakata->totalEdit > 0) {
+                $kosakata->pengedit = EditKosakata::where('kosakata_id', $kosakata->id)
+                    ->whereNotNull('status')
+                    ->with('user:id,profile_pic,jenis_kelamin,nama')
+                    ->orderBy('status', 'desc')
+                    ->limit(3)
+                    ->get();
+                // dd($kosakata->pengedit);
+            }
         }
 
         // Hitung jumlah kolom null

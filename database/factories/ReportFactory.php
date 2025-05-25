@@ -34,7 +34,7 @@ class ReportFactory extends Factory
         ];
         $catatan = [
             'Akun ini ngirim entri yang sama berulang-ulang tanpa arti yang jelas. Sepertinya cuma nyepam doang.',
-            'Penjelasan arti kata ini nggak sesuai. Saya rasa harusnya artinya "rumah", bukan "jalan".',
+            'Penjelasan arti kata ini nggak sesuai. Saya rasa harusnya artinya "rumah"',
             'Kosakata ini dimasukkan ke kategori Krama, padahal ini jelas-jelas ngoko.',
             'Ada kata-kata yang menyinggung suku dan agama tertentu. Nggak pantas ada di kamus umum.',
             'User ini kasih tautan yang mengarah ke situs pinjaman online ilegal. Bisa-bisa orang ketipu.',

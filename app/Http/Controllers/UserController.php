@@ -67,12 +67,12 @@ class UserController extends Controller
         $cekAkun = User::withTrashed()
             ->where($fieldType, $credentials['user'])
             ->first();
-        if ($cekAkun->trashed() && Hash::check($credentials['password'], $cekAkun->password)) { // jika user ditemukan dan password benar..
+        if (isset($cekAkun) && $cekAkun->trashed() && Hash::check($credentials['password'], $cekAkun->password)) { // jika user ditemukan dan password benar..
             return redirect()->to('/akses-gagal');
         }
 
         // cek apakah user sudah terverifikasi/belum
-        if (empty($cekAkun->email_verified_at) && Hash::check($credentials['password'], $cekAkun->password)) { // jika verified email kosong dan password benar..
+        if (isset($cekAkun) && empty($cekAkun->email_verified_at) && Hash::check($credentials['password'], $cekAkun->password)) { // jika verified email kosong dan password benar..
             // generate kode verifikasi random baru
             $kode = Str::upper(Str::random(6));
 

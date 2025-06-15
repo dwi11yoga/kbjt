@@ -62,7 +62,7 @@ Route::get('/akses-ditolak', function () {
     ]);
 });
 
-// view untuk user terbanned
+// view untuk user terbanned atau akunnya dihapus
 Route::get('/akses-gagal', [HomepageController::class, 'dibanned']);
 
 // TRIX
@@ -133,8 +133,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/artikel', [BlogController::class, 'index']);
         // preview artikel
         Route::get('/blog/preview/{slug}', [HomepageController::class, 'blogPost']);
-        // Edit artikel/post
-        Route::get('/artikel/edit/{id}', [BlogController::class, 'editPost']);
+        // Edit artikel/post -> kepala tidak bisa edit artikel, jadi ini tidak usah 
+        // Route::get('/artikel/edit/{id}', [BlogController::class, 'editPost']);
         // draf/terbitkan post
         Route::put('/artikel/draf/{id}', [BlogController::class, 'draft']);
         // sematkan/tidak post

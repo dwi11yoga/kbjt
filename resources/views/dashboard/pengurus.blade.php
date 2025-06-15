@@ -181,7 +181,7 @@
                         <div class="rounded-full w-8 h-8 overflow-hidden">
                             @include('partials.profile-pic-general')
                         </div>
-                        <div class="line-clamp-2">{{ $d->nama }}</div>
+                        <div class="line-clamp-2">{{ $d->nama ?? '[Akun dihapus]' }}</div>
                         <?php $d = $sementara; ?>
                     </div>
                     <div class="md:col-span-2 col-span-10 flex items-center md:justify-end">

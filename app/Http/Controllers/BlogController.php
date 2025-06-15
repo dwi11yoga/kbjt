@@ -421,6 +421,8 @@ class BlogController extends Controller
         $poin_dikurang = $post->poin;
         User::find($post->user_id)->decrement('poin', $poin_dikurang);
 
+        // Kirim notifikasi ke author jika user yang hapus == kepala
+
         // kembali ke view
         return back()->with('success', 'Artikel berhasil dihapus (-' . $poin_dikurang . ' poin)');
     }

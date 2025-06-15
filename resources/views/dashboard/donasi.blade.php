@@ -54,7 +54,7 @@
                                 </li>
                             </a>
 
-                            {{-- Hapus BELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM --}}
+                            {{-- Hapus --}}
                             <button type="submit" id="{{ $d->id }}"
                                 onclick="deleteMessage(this,'hapusDonasi', 'formHapus')"
                                 class="flex w-full justify-between py-2 px-3 rounded-lg text-red-500 hover:bg-neutral-100">

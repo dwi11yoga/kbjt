@@ -52,13 +52,13 @@
                                     class="w-5"></i><span>Pending</span></div>
                         @elseif (isset(auth()->user()->role) && auth()->user()->role != 'kontributor' && isset($r->pengurus_id))
                             <?php $d = $r->pengurus; ?>
-                            <a href="/u/{{ $d->username }}"
+                            <a href="{{ empty($d)? '#':('/u/'.$d->username) }}"
                                 class="rounded-full overflow-hidden w-8 h-8 hover:outline hover:outline-offset-2 hover:outline-amber-400"
-                                title="Disetujui oleh {{ $d->nama }}">
+                                title="Disetujui oleh {{ $d->nama ?? '[Akun dihapus]'}}">
                                 @include('partials.profile-pic-general')
                             </a>
                             <span class="md:hidden block text-sm line-clamp-1">Disetujui oleh <a
-                                    href="/u/{{ $d->username }}">{{ $d->nama }}</a></span>
+                                    href="{{ empty($d)? '#':('/u/'.$d->username) }}">{{ $d->nama ?? '[Akun dihapus]' }}</a></span>
                         @endif
                     </div>
 

@@ -475,7 +475,7 @@
     @endif
 
     {{-- popup Verifikasi definisi --}}
-    @if (auth()->user() && auth()->user()->role == 'pengurus' && $d->user->role != 'pengurus' && isset($d->id))
+    @if (isset($d->user) && auth()->user() && auth()->user()->role == 'pengurus' && $d->user->role != 'pengurus' && isset($d->id))
         {{-- pada if ditambahkan isset($d->id) agar tidak error saat ditampilkan di halaman laporan(hal. laporan tidak membutukan ini) --}}
         @if (empty($d->verifikasi_oleh))
             <div id="verifikasi-{{ $d->id }}"

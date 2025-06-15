@@ -384,9 +384,9 @@ class DashboardController extends Controller
             // bulan kemarin
             $tahun = Carbon::now()->month == 1 ? Carbon::now()->subYear()->year : Carbon::now()->year;
             $data['pengunjung']['blnKemarin'] = Statistik::where('tahun', $tahun)
-            ->where('bulan', Carbon::now()->subMonth()->month)
-            ->first()
-            ->pengunjung ?? 0;
+                ->where('bulan', Carbon::now()->subMonth()->month)
+                ->first()
+                ->pengunjung ?? 0;
         }
 
         //cek sertifikat
@@ -571,7 +571,8 @@ class DashboardController extends Controller
             }
         ])
             ->whereHas('user', function ($query) {
-                $query->where('role', 'kontributor');
+                $query->withTrashed()
+                    ->where('role', 'kontributor');
             })
             ->orderBy('created_at', 'desc')
             ->paginate(10, '*', 'kontributor')
@@ -695,7 +696,8 @@ class DashboardController extends Controller
             }
         ])
             ->whereHas('user', function ($query) {
-                $query->where('role', 'pengurus');
+                $query->withTrashed()
+                ->where('role', 'pengurus');
             })
             ->orderBy('created_at', 'desc')
             ->paginate(10, '*', 'pengurus')

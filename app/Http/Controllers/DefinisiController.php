@@ -33,15 +33,16 @@ class DefinisiController extends Controller
         } catch (ValidationException $validationException) {
             return back()->withErrors($validationException->validator)->withInput()->with('failed', 'Gagal menyimpan definisi');
         }
-        $validatedData = $request->validate([
-            'kosakata_id' => 'required|exists:kosakata,id',
-            'definisi' => 'required|string|min:10',
-            'referensi' => '',
-            'bahasa' => 'required|in:jawa,indonesia'
-        ]);
+        // $validatedData = $request->validate([
+        //     'kosakata_id' => 'required|exists:kosakata,id',
+        //     'definisi' => 'required|string|min:10',
+        //     'referensi' => '',
+        //     'bahasa' => 'required|in:jawa,indonesia'
+        // ]);
 
         // Cek apakah user sudah mensubmit definisi dengan bahasa tersebut/belum
-        $cek = Definisi::where('user_id', Auth::user()->id)
+        $cek = Definisi::where('kosakata_id', $validatedData['kosakata_id'])
+        ->where('user_id', Auth::user()->id)
             ->where('bahasa', $validatedData['bahasa'])
             ->exists();
         if ($cek == true) {
@@ -91,6 +92,12 @@ class DefinisiController extends Controller
             return back()->withInput()->with('failed', 'Gagal mengedit definisi karena akunmu sedang disuspend.');
         }
 
+        // cek apakah definisi milik user
+        $definisi=Definisi::find($definisiId);
+        if ($definisi->user_id != Auth::user()->id) {
+            return back()->withInput()->with('failed', 'Tidak dapat mengedit definisi milik pengguna lain.');
+        }
+
         // Validasi
         try {
             $validatedData = $request->validate([
@@ -127,7 +134,7 @@ class DefinisiController extends Controller
         // cek apakah user kena suspend/tidak
         $suspend = $this->cekSuspend(Auth::user()->id);
         if ($suspend->hukuman == true) {
-            return back()->withInput()->with('failed', 'Gagal mengedit definisi karena akunmu sedang disuspend.');
+            return back()->withInput()->with('failed', 'Gagal menghapus definisi karena akunmu sedang disuspend.');
         }
 
         // Cek apakah definisi benar-benar milik user

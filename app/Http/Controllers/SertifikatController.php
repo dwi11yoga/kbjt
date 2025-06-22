@@ -17,19 +17,20 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class SertifikatController extends Controller
 {
-    public function __construct(){
+    public function __construct()
+    {
         // increment kunjungan di statistik jika user hari ini baru mengunjungi halaman web (berdasarkan cookie)
         $this->statKunjungan();
     }
-    
+
     // view halaman sertifikat
     public function index()
     {
         // dapatkan data sertifikat
-        if (Auth::user()->role == 'kontributor') {
-            $sertifikat = Sertifikat::where('role', '!=', 'pengurus')->orWhereNull('role');
-        } else {
+        if (Auth::user()->role == 'kepala') {
             $sertifikat = Sertifikat::select('*');
+        } else {
+            $sertifikat = Sertifikat::where('role', Auth::user()->role)->orWhereNull('role');
         }
 
         $sertifikat = $sertifikat->orderBy('rule', 'asc')
@@ -114,8 +115,14 @@ class SertifikatController extends Controller
             }
         }
 
-        // cek kembali apakah user berhak menerima sertifikat
+        // cek kembali apakah user memenuhi syarat untuk mendapat sertifikat
         $sertifikat = Sertifikat::find($id);
+        // cek apakah role user berhak mendapatkan sertifikat
+        // jika sertifikat rule diset, hanya role tsb berhak 
+        if (!empty($sertifikat->role) && Auth::user()->role != $sertifikat->role) {
+            return back()->with('failed', 'Kamu tidak berhak untuk mengklaim sertifikat ini');
+        }
+        // apakan kontribusi pengguna > requirement
         $totalKontribusi = $this->hitungRequirementSertifikat($sertifikat->rule, Auth::user()->id);
 
         if (round($totalKontribusi) < $sertifikat->requirement) {
@@ -126,8 +133,11 @@ class SertifikatController extends Controller
         $sertifDimiliki[$id] = now();
         User::find(Auth::user()->id)->update(['sertifikat' => $sertifDimiliki]);
 
+        // tambah poin pengguna yang mengklaim
+        User::find(Auth::user()->id)->increment('poin', $sertifikat->reward);
+
         // kirimkan notifikasi
-        $pesan = 'Kamu berhasil meng-klaim sertifikat karena ' . strtolower($sertifikat->nama) . '(+' . $sertifikat->reward . ' poin)';
+        $pesan = 'Kamu berhasil meng-klaim sertifikat ' . strtolower($sertifikat->nama) . '(+' . $sertifikat->reward . ' poin)';
         $url = '/sertifikat';
         $this->kirimNotifikasi(Auth::user()->id, 'sertifikat', $pesan, $url);
 

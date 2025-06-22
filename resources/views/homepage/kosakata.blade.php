@@ -107,7 +107,7 @@
                             @endforeach
                         </div>
                         <div class="line-clamp-1">Diedit oleh
-                            {{ $data->totalEdit > 1 ? $data->totalEdit . ' pengguna' : $d->nama }}</div>
+                            {{ $data->totalEdit > 1 ? $data->totalEdit . ' pengguna' : $d->nama ?? '[Akun dihapus]' }}</div>
                     </a>
                 @endif
 

@@ -27,7 +27,7 @@ abstract class Controller
     // Untuk menghitung level
     public function levelCalculator($userId)
     {
-        // dapatkand ata user
+        // dapatkan data user
         $user = User::find($userId);
         // dapatkan semua data level (dari yang paling besar)
         $levelSets = Level::select(['lvl', 'min_poin'])->orderBy('lvl', 'desc')->get();
@@ -316,10 +316,13 @@ abstract class Controller
     public function poinKontribusi(int $userId, string $kontribusi)
     {
 
-        // dapatkan role user
-        $role = User::find($userId)->role;
-        // dapatkan poin reward untuk user sesuai role
-        $poin = PoinKontribusi::where('role', $role)
+        // dapatkan data pengguna
+        $user = User::find($userId);
+        if (!isset($user)) {
+            return 0;
+        }
+
+        $poin = PoinKontribusi::where('role', $user->role)
             ->where('kontribusi', $kontribusi)
             ->first()
             ->poin ?? 0; // jika null, maka nilai poin adalah 0
@@ -330,10 +333,12 @@ abstract class Controller
         }
 
         return $poin;
+        // dapatkan poin reward untuk user sesuai role
     }
 
     // decrement poin ketika kontribusi dibatalkan/dihapus
-    public function decrementPoinKontribusi(int $userId, string $kontribusi){
+    public function decrementPoinKontribusi(int $userId, string $kontribusi)
+    {
 
     }
 

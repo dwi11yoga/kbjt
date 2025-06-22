@@ -394,7 +394,7 @@
                 <div class="flex items-center">
                     <div class="text-neutral-600 text-sm">Level</div>
                     <hr class="flex-grow  border-t border-neutral-200 mx-2">
-                    <div class="text-sm">{{ $detailPelapor['lvl'] }}</div>
+                    <div class="text-sm">{{ $laporan->pelapor->level ?? 'T/A' }}</div>
                 </div>
                 <div class="flex items-center">
                     <div class="text-neutral-600 text-sm">Definisi & Kosakata dilaporkan*</div>
@@ -429,7 +429,7 @@
                 <div class="flex items-center">
                     <div class="text-neutral-600 text-sm">Level</div>
                     <hr class="flex-grow  border-t border-neutral-200 mx-2">
-                    <div class="text-sm">{{ $detailTerlapor['lvl'] }}</div>
+                    <div class="text-sm">{{ $laporan->author->level ?? 'T/A' }}</div>
                 </div>
                 <div class="flex items-center">
                     <div class="text-neutral-600 text-sm">Definisi & kosakata dilaporkan*</div>

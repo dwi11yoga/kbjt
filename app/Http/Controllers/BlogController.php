@@ -407,6 +407,7 @@ class BlogController extends Controller
     // Hapus artikel
     public function delete($id)
     {
+        // ambil data artikel
         $post = Blog::find($id);
 
         // cek apakah post ada atau user adalah author atau user adalah kepala
@@ -422,6 +423,11 @@ class BlogController extends Controller
         User::find($post->user_id)->decrement('poin', $poin_dikurang);
 
         // Kirim notifikasi ke author jika user yang hapus == kepala
+        if ($post->user_id != Auth::user()->id) {
+            $notif = 'Artikel yang kamu tulis telah dihapus oleh kepala (-' . $poin_dikurang . ')';
+            $url = '/artikel' . $post->id;
+            $this->kirimNotifikasi($post->user_id, 'blog', $notif, $url);
+        }
 
         // kembali ke view
         return back()->with('success', 'Artikel berhasil dihapus (-' . $poin_dikurang . ' poin)');

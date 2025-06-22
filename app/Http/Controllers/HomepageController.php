@@ -406,7 +406,7 @@ class HomepageController extends Controller
         if (!empty(Auth::user()->id)) {
             $suspend = $this->cekSuspend(Auth::user()->id);
         }
-        // dd($suspend);
+        // dd($definisi);
 
         return view('homepage.kosakata', [
             'group' => 'pencarian',

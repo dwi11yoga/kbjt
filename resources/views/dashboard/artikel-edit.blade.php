@@ -106,7 +106,9 @@
             $updateInput = $post->konten;
             ?>
             @include('partials.trix-editor')
-
+            @error('konten')
+            <div class="text-xs text-red-600 ml-6 mt-2">*{{ $message }}</div>
+        @enderror
         </div>
     </form>
 

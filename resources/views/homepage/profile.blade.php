@@ -21,10 +21,15 @@
                             <?php $d = $user; ?>
                             @include('partials.profile-pic-general')
                         </div>
-                        <div
-                            class="absolute top-3 md:left-48 left-32 bg-amber-400 border-4 border-neutral-100 rounded-full py-2 px-4 font-semibold md:text-lg text-base">
-                            Lv.{{ $user->level }}
-                        </div>
+
+                        {{-- level --}}
+                        @if ($user->role != 'kepala')
+                            <div
+                                class="absolute top-3 md:left-48 left-32 bg-amber-400 border-4 border-neutral-100 rounded-full py-2 px-4 font-semibold md:text-lg text-base">
+                                Lv.{{ $user->level }}
+                            </div>
+                        @endif
+
                     </div>
                 </div>
 
@@ -46,7 +51,7 @@
                                 @endif
 
                                 {{-- menu --}}
-                                @if (isset(auth()->user()->role) && auth()->user()->role == 'kepala')
+                                @if (isset(auth()->user()->role) && auth()->user()->role == 'kepala' && $user->role!='kepala')
                                     <div class="relative">
                                         {{-- tombol menu --}}
                                         <button id="dropdownBtn" onclick="dropdown(this, 'dropdown')"
@@ -98,10 +103,14 @@
                         </div>
 
                         <div class="flex space-x-3 items-center">
-                            <div class="flex space-x-1">
-                                <i data-feather='heart' class="w-5 fill-amber-400"></i>
-                                <span>{{ number_format($user->poin, 0, ',', '.') }} poin</span>
-                            </div>
+                            {{-- poin --}}
+                            @if ($user->role != 'kepala')
+                                <div class="flex space-x-1">
+                                    <i data-feather='heart' class="w-5 fill-amber-400"></i>
+                                    <span>{{ number_format($user->poin, 0, ',', '.') }} poin</span>
+                                </div>
+                            @endif
+                            {{-- jumlah kunjungan --}}
                             <div class="flex space-x-1">
                                 <i data-feather='trending-up' class="w-5"></i>
                                 <span>{{ number_format($user->view, 0, ',', '.') }} kunjungan</span>

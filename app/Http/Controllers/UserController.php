@@ -6,6 +6,7 @@ use App\Mail\EmailBerubah;
 use App\Mail\KataSandiBerubah;
 use App\Mail\ResetPassword;
 use App\Mail\ResetPasswordBerhasil;
+use App\Mail\UsernameBerubah;
 use App\Mail\VerifikasiUserMail;
 use App\Mail\WelcomeMail;
 use App\Models\Achievement;
@@ -511,7 +512,7 @@ class UserController extends Controller
             $arraySimpan['profile_pic'] = null;
         } elseif ($request->profile_pic != null) {
             if (isset(Auth::user()->profile_pic)) {
-                // hapus foto jika ada
+                // hapus foto lama jika ada
                 Storage::delete(Auth::user()->profile_pic);
             }
             $validatedData['profile_pic'] = $request->file('profile_pic')->store('profile-pics');
@@ -677,10 +678,13 @@ class UserController extends Controller
                 ->withErrors(['password' => 'The password are incorrect.']);
         }
 
-        // jika password yang diinput sama, simpan di db
+        // jika password yang diinput benar, simpan di db
         User::find(Auth::user()->id)->update(['username' => $validatedData['username']]);
 
-        // kirim notifikasi via email - belum
+        // kirim notifikasi via email
+        // $url = $this->getUrl(); // url website
+        // Mail::to(Auth::user()->email)
+        //     ->send(new UsernameBerubah(Auth::user(), $validatedData['username'], $url));
 
         // kembalikan ke view
         return back()->with('success', 'Berhasil menyimpan perubahan');

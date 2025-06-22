@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
 use stdClass;
 
 class ReportController extends Controller
@@ -247,9 +248,15 @@ class ReportController extends Controller
         }
 
         // validasi
-        $validatedData = $request->validate([
-            'alasan' => 'required'
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'alasan' => 'required'
+            ]);
+        } catch (ValidationException $validationException) {
+            return back()->withErrors($validationException->validator)
+                ->withInput()
+                ->with('failed', 'Laporan tidak berhasil disimpan');
+        }
 
         // simpan
         $laporan = Report::create([
@@ -366,7 +373,6 @@ class ReportController extends Controller
         // statistik pelapor dan terlapor
         if (empty($laporan->status)) { //jalankan jika laporan belum ditindaklanjuti
             // pelapor
-            $pelapor['lvl'] = $this->levelCalculator($laporan->user->id);
             $pelapor['totalLaporan'] = Report::where('user_id', $laporan->user_id)->count(); //Definisi & Kosakata dilaporkan pelapor
             $pelapor['laporanBersalahDilaporkan'] = Report::where('user_id', $laporan->user_id)->whereHas('hukuman')->count(); //Definisi & Kosakata terbukti bersalah yang dilaporkan pelapor
             $pelapor['jmlLaporanBlnIni'] = Report::where('user_id', $laporan->user_id)->whereMonth('created_at', Carbon::now()->month)->count(); //Definisi & Kosakata dilaporkan bulan ini
@@ -395,8 +401,6 @@ class ReportController extends Controller
                     $query->whereNot('hukuman', 'peringatan');
                 })
                     ->count(); //Jumlah hukuman yang pernah diterima
-
-            $terlapor['lvl'] = $this->levelCalculator($laporan->author->id);
             $terlapor['bergabung'] = $laporan->author->created_at->translatedFormat('d F Y');
 
             $data['detailTerlapor'] = $terlapor;
@@ -594,7 +598,7 @@ class ReportController extends Controller
             if ($validatedData['pelanggaran'] == 'true') {
                 // hapus kosakata
                 Kosakata::destroy($laporan->kosakata_id);
-                
+
                 // Jika user diblokir, maka hapus user
                 if ($validatedData['hukuman'] == 'blokir') {
                     $terlapor = Kosakata::where('id', '=', $laporan->kosakata_id)->value('user_id');
@@ -654,7 +658,7 @@ class ReportController extends Controller
         }
 
         // KIRIM NOTIFIKASI
-        $pelapor = User::select('id', 'nama')
+        $pelapor = User::withTrashed()->select('id', 'nama')
             ->where('id', $laporan->user_id)
             ->first();
         $terlapor = User::withTrashed()
@@ -668,8 +672,7 @@ class ReportController extends Controller
 
         // jika pelapor == yang menindaklanjuti laporan, maka tidak perlu dikirimi notifikasi
         if (Auth::user()->id != $pelapor->id) {
-            $pesan = 'Laporan kamu atas ' . $dilaporkan . ' yang disubmit oleh ' . $terlapor->nama . ' telah selesai ditangani (+' . $validatedData['pelanggaran'] == 'true' ? $poin_pelapor : 0 . ' poin)';
-            $this->kirimNotifikasi($pelapor->id, 'laporan', $pesan, $url);
+            $pesan = 'Laporan kamu atas ' . $dilaporkan . ' yang disubmit oleh ' . $terlapor->nama . ' telah selesai ditangani (+' . ($validatedData['pelanggaran'] == 'true' ? $poin_pelapor : 0) . ' poin)';            $this->kirimNotifikasi($pelapor->id, 'laporan', $pesan, $url);
         }
         // untuk terlapor
         $pesan = 'Seseorang melaporkan ' . $dilaporkan . ' yang kamu submit (-' . ($poin_dikurang ?? 0) . ' poin) ';

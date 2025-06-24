@@ -149,18 +149,6 @@
         @endif
 
         @if (auth()->user()->role == 'kepala')
-            {{-- Donasi --}}
-            <a href="/metode-donasi">
-                <div
-                    class="flex group py-3 px-4 rounded-xl {{ $group == 'donasi' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
-                    <i data-feather='dollar-sign'
-                        class="{{ $group == 'donasi' ? 'stroke-neutral-800' : 'text-neutral-700 group-hover:text-black' }}"></i>
-                    <div
-                        class="inline-block ml-3 {{ $group == 'donasi' ? '' : 'text-neutral-700 group-hover:text-black' }}">
-                        Donasi
-                    </div>
-                </div>
-            </a>
 
             {{-- Level & Poin --}}
             <a href="/level">

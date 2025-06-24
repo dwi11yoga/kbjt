@@ -164,14 +164,14 @@
             </div>
         </a>
 
-        {{-- donasi --}}
+        {{-- dukung --}}
         <a href="/dukung">
             <div
-                class="flex group py-4 px-6 w-fit rounded-2xl {{ $group == 'donasi' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
+                class="flex group py-4 px-6 w-fit rounded-2xl {{ $group == 'dukung' ? 'bg-amber-100' : 'hover:bg-neutral-100' }}">
                 <i data-feather='gift'
-                    class="{{ $group == 'donasi' ? '' : 'text-neutral-700 group-hover:text-black' }}"></i>
+                    class="{{ $group == 'dukung' ? '' : 'text-neutral-700 group-hover:text-black' }}"></i>
                 <div
-                    class="inline-block ml-3 {{ $group == 'donasi' ? '' : 'text-neutral-700 group-hover:text-black' }}">
+                    class="inline-block ml-3 {{ $group == 'dukung' ? '' : 'text-neutral-700 group-hover:text-black' }}">
                     Dukung
                 </div>
             </div>
@@ -253,7 +253,7 @@
         </li>
         <li>
             <a href="/dukung"
-                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ isset($group) && $group == 'donasi' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Dukung</a>
+                class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ isset($group) && $group == 'dukung' ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">Dukung</a>
         </li>
         <li>
             @auth

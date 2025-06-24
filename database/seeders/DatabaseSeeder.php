@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Achievement;
-use App\Models\Donasi;
 use App\Models\EditKosakata;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -84,7 +83,6 @@ class DatabaseSeeder extends Seeder
             SertifikatSeeder::class,
             UserSeeder::class,
             StatistikSeeder::class,
-            DonasiSeeder::class,
         ]);
     }
 

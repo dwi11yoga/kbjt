@@ -5,7 +5,6 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefinisiController;
-use App\Http\Controllers\DonasiController;
 use App\Http\Controllers\EditKosakataController;
 use App\Http\Controllers\HapusAkunController;
 use App\Http\Controllers\HomepageController;
@@ -33,8 +32,8 @@ Route::get('/hall-of-fame', [HomepageController::class, 'hallOfFame']);
 Route::get('/blog', [HomepageController::class, 'blog']);
 // post/artikel
 Route::get('/blog/post/{slug}', [HomepageController::class, 'blogPost']);
-// donasi
-Route::get('/dukung', [HomepageController::class, 'donasi']);
+// halaman dukung
+Route::get('/dukung', [HomepageController::class, 'dukung']);
 // pencarian
 Route::get('/cari', [HomepageController::class, 'pencarian']);
 
@@ -168,19 +167,6 @@ Route::middleware(['auth'])->group(function () {
 
     // hanya untuk role kepala
     Route::middleware(['kepala'])->group(function () {
-        // donasi - kepala
-        Route::get('/metode-donasi', [DonasiController::class, 'index']);
-        // tambah donasi - kepala
-        Route::get('/metode-donasi/baru', [DonasiController::class, 'tambah']);
-        // simpan tambah donasi donasi
-        Route::post('/metode-donasi/baru', [DonasiController::class, 'save']);
-        // edit donasi - kepala
-        Route::get('/metode-donasi/{id}/edit', [DonasiController::class, 'edit']);
-        // simpan edit donasi
-        Route::put('/metode-donasi/{id}/edit', [DonasiController::class, 'store']);
-        // hapus donasi
-        Route::delete('/metode-donasi/{id}/hapus', [DonasiController::class, 'delete']);
-
         // level - kepala
         Route::get('/level', [LevelController::class, 'index']);
         // tambah level - kepala

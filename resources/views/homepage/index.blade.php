@@ -203,12 +203,12 @@
                 [
                     'id' => 2,
                     'title' => 'Apakah ada keuntungan menjadi kontributor?',
-                    'content' => 'Ya! Kontributor akan mendapatkan poin setiap kali berkontribusi pada komunitas. Poin tersebutmenentukanlevel kontributor. Kontributor juga akan menerima sertifikat saat mencapai level tertentu. Selain itu, kontributor bisa meraih pencapaian (achievement) khusus dengan menyelesaikan aktivitas tertentu.Pengguna lain pun dapat memberikan donasi langsung kepada kontributor sebagai bentuk apresiasi.',
+                    'content' => 'Ya! Kontributor akan mendapatkan poin setiap kali berkontribusi pada komunitas. Poin tersebutmenentukan level kontributor. Kontributor juga akan menerima sertifikat saat mencapai level tertentu. Selain itu, kontributor bisa meraih pencapaian (achievement) khusus dengan menyelesaikan aktivitas tertentu. Pengguna lain pun dapat memberikan donasi langsung kepada kontributor sebagai bentuk apresiasi.',
                 ],
                 [
                     'id' => 3,
                     'title' => 'Apakah platform ini gratis untuk digunakan?',
-                    'content' => 'Ya, platform ini gratis untuk semua pengguna. Meski begitu, kamu dapat mendukung keberlanjutan aplikasi ini melalui donasi. Uang donasi nantinya digunakan untuk membayar hosting dan domain.',
+                    'content' => 'Ya, platform ini gratis untuk digunakan oleh semua pengguna.',
                 ],
                 [
                     'id' => 4,

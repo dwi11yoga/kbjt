@@ -420,7 +420,7 @@
         </div>
     @endif
 
-    {{-- Sertifikat, donasi, ajak teman --}}
+    {{-- Sertifikat, dukung, ajak teman --}}
     <div class="gap-2 grid md:grid-cols-3 grid-cols-2">
         {{-- Sertifikat --}}
         @if (auth()->user()->role != 'kepala')
@@ -428,8 +428,8 @@
                 class="col-span-1 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
                 <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
                     <img class="object-cover w-full h-full"
-                        src="https://img.freepik.com/free-vector/certification-concept-illustration_114360-5171.jpg?w=740"
-                        alt="Certification concept illustration (freepik/storyset)">
+                        src="https://img.freepik.com/free-vector/completed-concept-illustration_114360-31751.jpg"
+                        alt="Completed concept illustration (freepik/storyset)">
                 </div>
                 <div class="p-4">
                     <div>Dapatkan sertifikat</div>
@@ -443,8 +443,8 @@
             class="col-span-1 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
             <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
                 <img class="object-cover w-full h-full"
-                    src="https://img.freepik.com/free-vector/solidarity-concept-illustration_114360-6286.jpg?w=740"
-                    alt="Solidarity concept illustration (freepik/storyset)">
+                    src="https://img.freepik.com/free-vector/collective-hug-concept-illustration_114360-19747.jpg"
+                    alt="Collective hug concept illustration (freepik/storyset)">
             </div>
             <div class="p-4">
                 <div>Ajak teman</div>
@@ -452,17 +452,17 @@
             </div>
         </a>
 
-        {{-- donasi --}}
+        {{-- dukung --}}
         <a href="/dukung"
             class="col-span-1 bg-white rounded-xl border border-neutral-200 hover:outline hover:outline-amber-400 hover:outline-offset-4">
             <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
                 <img class="object-cover w-full h-full"
-                    src="https://img.freepik.com/free-vector/inflation-concept-illustration_114360-25779.jpg"
-                    alt="Inflation concept illustration (freepik/storyset)">
+                    src="https://img.freepik.com/free-vector/team-work-concept-illustration_114360-28760.jpg"
+                    alt="Team work concept illustration by storyset">
             </div>
             <div class="p-4">
                 <div>Beri dukungan</div>
-                <p class="text-xs">Setiap donasi membantu mengembangkan kamus dan meningkatkan akses Bahasa Jawa.</p>
+                <p class="text-xs">Setiap dukungan yang kamu berikan berdampak langsung pada kelestarian Bahasa Jawa.</p>
             </div>
         </a>
     </div>

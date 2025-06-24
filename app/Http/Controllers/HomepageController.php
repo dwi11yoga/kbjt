@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Banner;
 use App\Models\Blog;
 use App\Models\Definisi;
-use App\Models\Donasi;
 use App\Models\EditKosakata;
 use App\Models\Kosakata;
 use App\Models\User;
@@ -207,19 +206,17 @@ class HomepageController extends Controller
         ]);
     }
 
-    // Donasi
-    public function donasi()
+    // dukung
+    public function dukung()
     {
-
-        // ambil daftar metode donasi
-        $metode = Donasi::select('metode')->orderBy('metode', 'asc')->get();
-        if (!empty(request('metode-pembayaran'))) {
-            $metode_dipilih = request('metode-pembayaran');
-        } else {
-            $metode_dipilih = $metode->first()->metode;
-            // $metode_dipilih = Donasi::orderBy('metode', 'asc')->value('metode');
-        }
-        $donasi = Donasi::where('metode', '=', $metode_dipilih)->first();
+        $jumlahKosakata=Kosakata::count() ?? 1;
+        // pilih kosakata random untuk lengkapi definisi
+        $kosakataRandom=random_int(1, $jumlahKosakata);
+        $lengkapiDetail=Kosakata::find($kosakataRandom);
+        
+        // pilih kosakata random untuk awasi dan lengkapi kosakata
+        $kosakataRandom=random_int(1, $jumlahKosakata);
+        $pantauKonten=Kosakata::find($kosakataRandom);
 
         // dapatkan data banner
         $banner = $this->getBanner([1, 2]);
@@ -227,11 +224,11 @@ class HomepageController extends Controller
         // dapatkan url web
         $urlweb = $this->getUrl();
 
-        return view('homepage.donasi', [
-            'group' => 'donasi',
+        return view('homepage.dukung', [
+            'group' => 'dukung',
             'title' => 'Dukungan',
-            'donasi' => $donasi,
-            'metode' => $metode,
+            'lengkapiDetail'=>$lengkapiDetail,
+            'pantauKonten'=>$pantauKonten,
             'banner' => $banner,
             'urlweb' => $urlweb,
         ]);

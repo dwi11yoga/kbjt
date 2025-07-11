@@ -30,10 +30,10 @@ class UserSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'nama' => 'Rohmat Soebagyo',
-                'username' => 'rohmatsubagyo',
+                'nama' => 'Supriyanto',
+                'username' => 'supriyanto',
                 'role' => 'pengurus',
-                'email' => 'rohmat@kbjt.com',
+                'email' => 'supriyanto@kbjt.com',
                 'password' => Hash::make('password'),
                 'poin' => random_int(10, 1000),
                 'email_verified_at' => now(),
@@ -45,6 +45,17 @@ class UserSeeder extends Seeder
                 'username' => 'margoyono',
                 'role' => 'pengurus',
                 'email' => 'aguskuncoro@kbjt.com',
+                'password' => Hash::make('password'),
+                'poin' => random_int(10, 1000),
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nama' => 'Susilowati',
+                'username' => 'susilowati',
+                'role' => 'kontributor',
+                'email' => 'susilowati@gmail.com',
                 'password' => Hash::make('password'),
                 'poin' => random_int(10, 1000),
                 'email_verified_at' => now(),

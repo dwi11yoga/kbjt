@@ -24,10 +24,6 @@ class HomepageController extends Controller
     //Beranda
     public function index()
     {
-        // $indonesia = ["Saya", "Kamu", "Kami", "Dia", "Ini", "Itu", "Apa", "Kapan", "Di mana", "Yang Mana", "Siapa", "Mengapa", "Bagaimana", "Ya", "Tidak", "Barangkali", "Satu", "Tiga", "Empat", "Lima", "Sepuluh", "Seratus", "Seribu", "Orang", "Laki-Laki", "Perempuan", "Ayah", "Ibu", "Anak", "Nama", "Uang", "Kamar Kecil", "Air", "Jalan", "Kira-Kira", "Semua", "Lebih", "Sangat", "Dari", "Ke", "Sekarang", "Baru", "Tua", "Panjang", "Pendek", "Murah", "Mahal", "Panas", "Dingin", "Kemarin", "Besok", "Atas", "Bawah", "Lapar", "Sakit", "Maaf", "Pagi", "Siang", "Malam", "Apa Kabar", "Berapa", "Silahkan", "Terima Kasih", "Selamat Jalan", "Belum", "Karena", "Di sini", "Baik", "Jelek", "Betul", "Besar", "Kecil", "Banyak", "Sedikit", "Sama", "Bisa", "Punya", "Ada", "Mau", "Jangan", "Pergi", "Datang", "Berjalan", "Bicara", "Bilang", "Lihat", "Makan", "Minum", "Dengar", "Tahu", "Kasi", "Cinta", "Pikir", "Membuat", "Duduk", "Potong", "Beli", "Berhenti", "Jauh", "Dekat", "Kanan", "Kiri",];
-        // $ngoko = ['Kula', 'Kowe', 'Awake dhewe', 'Dheweke', 'Iki', 'Kuwi', 'Apa', 'Kapan', 'Ngendhi', 'Sing endhi', 'Sapa', 'Ngapa', 'Piye', 'Yoh', 'Ora', 'Menawa', 'Siji', 'Telu', 'Papat', 'Lima', 'Sepuluh', 'Satus', 'Sewu', 'Uwong', 'Lanang', 'Wedok', 'Rama', 'Ibu', 'Lare', 'Jeneng', 'Duwit', 'Mburi', 'Banyu', 'Dalan', 'Kira-Kira', 'Kabeh', 'Luwih', 'Banget', 'Seka', 'Dateng', 'Saiki', 'Anyar', 'Tuwa', 'Dawa', 'Cendhek', 'Murah', 'Larang', 'Panas', 'Adem', 'Wingi', 'Sesuk', 'Ndhuwur', 'Ngisar', 'Ngelih', 'Lara', 'Ngapunten', 'Esuk', 'Awan', 'Bengi', 'Piye kabare', 'Pira', 'Mangga', 'Muwun', 'Sugeng Tindak', 'Durung', 'Sebabe', 'Nangkene', 'Apik', 'Elek', 'Bener', 'Gedhe', 'Cilik', 'Akeh', 'Sithik', 'Padha', 'Isa', 'Duwe', 'Ana', 'Gelem', 'Aja', 'Lunga', 'Teka', 'Mlaku', 'Omong', 'Ngomong', 'Ndelok', 'Mangan', 'Ngombe', 'Krungu', 'Ngerti', 'Wenehi', 'Seneng', 'Pikir', 'Nggawe', 'Lungguh', 'Tugel', 'Tuku', 'Mangdheg', 'Adoh', 'Cedhak', 'Tengen', 'Kiwa',];
-        // $krama = ['Dalem', 'Panjenengan', 'Kita', 'Piyambakipun', 'Menika', 'Niku', 'Menapa', 'Kapan', 'Wonten Pundhi', 'Ingkang pundhi', 'Sinten', 'Kadhasmenapa', 'Kadhospundi', 'Inggih', 'Mboten', 'Menawi', 'Setunggal', 'Tiga', 'Sekawan', 'Gangsal', 'Sedasa', 'Setunggalatus', 'Setunggalewu', 'Tiyang', 'Kakung', 'Estri', 'Rama', 'Ibu', 'Putra', 'Asma', 'Arta', '(Kamar) Wingking', 'Toya', 'Mergi', 'Kinten-Kinten', 'Sedanten', 'Langkung', 'Sanget', 'Saking', 'Dateng', 'Sakmenika', 'Enggal', 'Sepuh', 'Panjang', 'Cendhak', 'Mirah', 'Awis', 'Benther', 'Asrep', 'Kalawingi', 'Mbenjang', 'Nginggil', 'Ngandhap', 'Luwe', 'Gerah', 'Ngapura', 'Enjing-Injing', 'Siang', 'Dalu', 'Pripun kabaripun', 'Pinten', 'Manggapunaturi', 'Maturnuwun', 'Sugeng tindak', 'Dereng', 'Amargi', 'Wonten mriki', 'Sae', 'Kirang sae', 'Leres', 'Ageng', 'Alit', 'Kathah', 'Sakedhik', 'Sami', 'Saget', 'Kagungan', 'Wonten', 'Kersa', 'Ampun', 'Tindak', 'Rawuh', 'Mlampah', 'Ngendika', 'Dhawuh', 'Mrisani', 'Dhahar', 'Ngunjuk', 'Mireng', 'Ngertos', 'Paringi', 'Tresna', 'Penggalih', 'Nadamel', 'Pinarak', 'Potong', 'Tumbas', 'Kendhel', 'Tebih', 'Cerak', 'Tengen', 'Kiwa',];
-        // dd(count($indonesia), count($ngoko), count($krama));
         // Ambil top 100 user
         $topContributor = User::select(['username', 'nama', 'profile_pic', 'jenis_kelamin', 'poin'])
             ->whereNot('role', 'kepala')
@@ -56,7 +52,10 @@ class HomepageController extends Controller
         }
 
         // ambil 5 artikel terbaru
-        $artikel = Blog::orderBy('created_at', 'desc')->take(5)->get();
+        $artikel = Blog::whereNotNull('status')
+        ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
 
         // dapatkan statistik web
         $jmlAnggota = number_format(User::select('id')->count(), 0, ',', '.');
@@ -209,14 +208,14 @@ class HomepageController extends Controller
     // dukung
     public function dukung()
     {
-        $jumlahKosakata=Kosakata::count() ?? 1;
+        $jumlahKosakata = Kosakata::count() ?? 1;
         // pilih kosakata random untuk lengkapi definisi
-        $kosakataRandom=random_int(1, $jumlahKosakata);
-        $lengkapiDetail=Kosakata::find($kosakataRandom);
-        
+        $kosakataRandom = random_int(1, $jumlahKosakata);
+        $lengkapiDetail = Kosakata::find($kosakataRandom);
+
         // pilih kosakata random untuk awasi dan lengkapi kosakata
-        $kosakataRandom=random_int(1, $jumlahKosakata);
-        $pantauKonten=Kosakata::find($kosakataRandom);
+        $kosakataRandom = random_int(1, $jumlahKosakata);
+        $pantauKonten = Kosakata::find($kosakataRandom);
 
         // dapatkan data banner
         $banner = $this->getBanner([1, 2]);
@@ -227,8 +226,8 @@ class HomepageController extends Controller
         return view('homepage.dukung', [
             'group' => 'dukung',
             'title' => 'Dukungan',
-            'lengkapiDetail'=>$lengkapiDetail,
-            'pantauKonten'=>$pantauKonten,
+            'lengkapiDetail' => $lengkapiDetail,
+            'pantauKonten' => $pantauKonten,
             'banner' => $banner,
             'urlweb' => $urlweb,
         ]);

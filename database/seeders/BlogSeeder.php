@@ -19,7 +19,7 @@ class BlogSeeder extends Seeder
         'judul' => 'Dokumentasi: Berkontribusi sebagai kontributor di Kamus Bahasa Jawa Terbuka',
         'subjudul' => 'Panduan singkat untuk mulai berkontribusi di kbjt.',
         'slug' => 'berkontribusi-sebagai-kontributor-di-kamus-bahasa-jawa-terbuka',
-        'thumbnail'=>'post-thumbnail/dokumentasi-01.jpg',
+        'thumbnail' => 'post-thumbnail/dokumentasi-01.jpg',
         'user_id' => 1,
         'konten' => '<div>
   Selamat datang di kamus bahasa jawa terbuka! Senang melihat semangatmu untuk
@@ -192,7 +192,7 @@ class BlogSeeder extends Seeder
         'judul' => 'Dokumentasi: Memahami sistem poin & level',
         'subjudul' => 'Pelajari bagaimana level dan poin bekerja di kbjt.',
         'slug' => 'memahami-sistem-poin-level',
-        'thumbnail'=>'post-thumbnail/dokumentasi-02.jpg',
+        'thumbnail' => 'post-thumbnail/dokumentasi-02.jpg',
         'user_id' => 1,
         'konten' => '<p>
     Di KBJT, kontribusimu tidak hanya dihargai secara moral, tetapi juga tercermin dalam bentuk poin dan level. Sistem ini dirancang untuk memberikan apresiasi kepada kontributor yang aktif dan bertanggung jawab, sekaligus menjaga kualitas isi kamus secara kolektif. Semakin banyak kontribusi yang kamu lakukan, seperti menambah kosakata, memperbarui definisi, atau memberikan laporan yang berguna, semakin tinggi pula poin yang kamu kumpulkan. Ini adalah cara kami menunjukkan bahwa setiap upaya kecilmu membawa dampak besar dalam pelestarian bahasa Jawa.
@@ -226,7 +226,7 @@ class BlogSeeder extends Seeder
         'judul' => 'Dokumentasi: Manfaat berkontribusi secara aktif di Kamus Bahasa Jawa Terbuka',
         'subjudul' => 'Mulai dari achievement, sertifikat, hingga dana donasi.',
         'slug' => 'manfaat-berkontribusi-secara-aktif-di-kamus-bahasa-jawa-terbuka',
-        'thumbnail'=>'post-thumbnail/dokumentasi-03.jpg',
+        'thumbnail' => NULL,
         'user_id' => 1,
         'konten' => '<p>
   Menjadi kontributor aktif di KBJT bukan hanya soal menambahkan data ke dalam
@@ -290,7 +290,7 @@ class BlogSeeder extends Seeder
         'judul' => 'Dokumentasi: Tindaklanjut terhadap kontribusi bermasalah',
         'subjudul' => 'Hukuman terhadap kontributor yang melanggar syarat dan ketentuan.',
         'slug' => 'tindaklanjut-terhadap-kontribusi-bermasalah',
-        'thumbnail'=>'post-thumbnail/dokumentasi-04.jpg',
+        'thumbnail' => 'post-thumbnail/dokumentasi-04.jpg',
         'user_id' => 1,
         'konten' => '<p>
   Kontribusi di KBJT bersifat terbuka dan kolaboratif, namun tetap membutuhkan
@@ -383,7 +383,7 @@ class BlogSeeder extends Seeder
         'judul' => 'Dokumentasi: Mengembalikan Definisi yang Disembunyikan Setelah Dilaporkan',
         'subjudul' => 'Langkah mudah untuk memperbaiki laporan yang disembunyikan.',
         'slug' => 'mengembalikan-definisi-yang-disembunyikan-setelah-dilaporkan',
-        'thumbnail'=>'post-thumbnail/dokumentasi-05.jpg',
+        'thumbnail' => 'post-thumbnail/dokumentasi-05.jpg',
         'user_id' => 1,
         'konten' => '<p>
   Dalam semangat menjaga kualitas konten di KBJT, setiap kontribusi yang dirasa
@@ -444,7 +444,7 @@ class BlogSeeder extends Seeder
         'judul' => 'Dokumentasi: Membaca dan Menulis Aksara Jawa',
         'subjudul' => 'Belajar Carakan, Pasangan, dan Sandangan.',
         'slug' => 'membaca-dan-menulis-aksara-jawa',
-        'thumbnail'=>'post-thumbnail/dokumentasi-06.jpg',
+        'thumbnail' => 'post-thumbnail/dokumentasi-06.jpg',
         'user_id' => 1,
         'konten' => '<p>
             Aksara Jawa adalah sistem tulisan tradisional yang digunakan untuk menulis bahasa Jawa. Aksara ini memiliki
@@ -772,7 +772,7 @@ class BlogSeeder extends Seeder
         'judul' => 'Dokumentasi: Menulis Aksara Jawa di Kamus Bahasa Jawa Terbuka',
         'subjudul' => 'Panduan singkat dalam menginput aksara jawa di kbjt.',
         'slug' => 'menulis-aksara-jawa-di-kbjt',
-        'thumbnail'=>'post-thumbnail/dokumentasi-07.jpg',
+        'thumbnail' => 'post-thumbnail/dokumentasi-07.jpg',
         'user_id' => 1,
         'konten' => '<p>
   Kini, menambahkan kosakata atau deskripsi di Kamus Bahasa Jawa Terbuka (KBJT)

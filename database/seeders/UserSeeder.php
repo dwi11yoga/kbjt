@@ -19,12 +19,16 @@ class UserSeeder extends Seeder
         //User
         User::insert([
             [
-                'nama' => 'Muklis Hartono',
+                'nama' => 'Anwar Mashudi',
                 'username' => 'moeklis',
                 'role' => 'kepala',
                 'email' => 'moeklis@kbjt.com',
                 'password' => Hash::make('muklis1'),
                 'poin' => 1,
+                'profile_pic' => 'profile-pics/Q5cKx60ohkIzkU2N0qkWL0DdDSYqTH0Y38AbQERs.jpg',
+                'tgl_lahir' => '1989-12-05',
+                'kota' => 'Pati, Jawa Tengah',
+                'jenis_kelamin' => 'Laki-laki',
                 'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
@@ -36,6 +40,10 @@ class UserSeeder extends Seeder
                 'email' => 'supriyanto@kbjt.com',
                 'password' => Hash::make('password'),
                 'poin' => random_int(10, 1000),
+                'profile_pic' => 'profile-pics/WFpNq9ZMIBAI6ruSRPY4GeUucAjyWXAWQZZL1KOB.jpg',
+                'tgl_lahir' => '1972-06-23',
+                'kota' => 'Pati, Jawa Tengah',
+                'jenis_kelamin' => 'Laki-laki',
                 'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
@@ -47,6 +55,10 @@ class UserSeeder extends Seeder
                 'email' => 'aguskuncoro@kbjt.com',
                 'password' => Hash::make('password'),
                 'poin' => random_int(10, 1000),
+                'profile_pic' => NULL,
+                'tgl_lahir' => NULL,
+                'kota' => NULL,
+                'jenis_kelamin' => NULL,
                 'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
@@ -58,6 +70,10 @@ class UserSeeder extends Seeder
                 'email' => 'susilowati@gmail.com',
                 'password' => Hash::make('password'),
                 'poin' => random_int(10, 1000),
+                'profile_pic' => 'profile-pics/ShCzc3Hs8Fl712y060spkNLaw6eXhXlCfDIgrrWX.jpg',
+                'tgl_lahir' => '1968-05-05',
+                'kota' => 'Pati, Jawa Tengah',
+                'jenis_kelamin' => 'Perempuan',
                 'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()

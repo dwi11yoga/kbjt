@@ -59,6 +59,7 @@ class User extends Authenticatable
         'donasi' => 'array',
         'sembunyikan_data' => 'array',
         'tgl_lahir' => 'datetime',
+        'suspended_time' => 'datetime',
         'achievement' => 'array',
         'sertifikat' => 'array'
     ];

@@ -23,31 +23,54 @@ use App\Models\EditKosakata;
 use Illuminate\Support\Facades\Route;
 
 // HOMEPAGE
-Route::get('/', [HomepageController::class, 'index']);
+// Route::get('/', [HomepageController::class, 'index']);
+Route::livewire('/', 'pages::index');
+
+// alih aksara: konversi tulisan latin ke aksara jawa
+Route::livewire('/alih-aksara', 'pages::converter');
+
 // daftar kosakata
-Route::get('/daftar-kosakata', [HomepageController::class, 'daftarKosakata']);
+// Route::get('/daftar-kosakata', [HomepageController::class, 'daftarKosakata']);
+Route::livewire('/kosakata', 'pages::word-list');
+
 // hall of fame
-Route::get('/hall-of-fame', [HomepageController::class, 'hallOfFame']);
+// Route::get('/hall-of-fame', [HomepageController::class, 'hallOfFame']);
+Route::livewire('/hall-of-fame', 'pages::hall-of-fame');
+
 // blog
-Route::get('/blog', [HomepageController::class, 'blog']);
+// Route::get('/blog', [HomepageController::class, 'blog']);
+Route::livewire('/blog', 'pages::blog');
+
 // post/artikel
-Route::get('/blog/post/{slug}', [HomepageController::class, 'blogPost']);
+// Route::get('/blog/post/{slug}', [HomepageController::class, 'blogPost']);
+Route::livewire('/blog/{slug}', 'pages::blog-post');
+
 // halaman dukung
-Route::get('/dukung', [HomepageController::class, 'dukung']);
+// Route::get('/dukung', [HomepageController::class, 'dukung']);
+
 // pencarian
-Route::get('/cari', [HomepageController::class, 'pencarian']);
+// Route::get('/cari', [HomepageController::class, 'pencarian']);
+Route::livewire('/cari', 'pages::search');
 
 // credit
-Route::get('/tentang', [HomepageController::class, 'tentang']);
+// Route::get('/tentang', [HomepageController::class, 'tentang']);
+Route::livewire('/tentang', 'pages::about');
+
 // syarat dan ketentuan
-Route::get('/syarat-ketentuan', [HomepageController::class, 'syaratKetentuan']);
+// Route::get('/syarat-ketentuan', [HomepageController::class, 'syaratKetentuan']);
+Route::livewire('/syarat-ketentuan', 'pages::policies');
 
 // tampilkan definisi & kosakata
-Route::get('/kosakata/{slug}', [HomepageController::class, 'kosakata']);
+// Route::get('/kosakata/{slug}', [HomepageController::class, 'kosakata']);
+Route::livewire('/kosakata/{word}', 'pages::word-detail');
+
 // riwayat edit
-Route::get('/kosakata/{slug}/riwayat', [HomepageController::class, 'riwayatKosakata']);
+// Route::get('/kosakata/{slug}/riwayat', [HomepageController::class, 'riwayatKosakata']);
+
 // Profil user
-Route::get('/u/{username}', [UserController::class, 'profile']);
+// Route::get('/u/{username}', [UserController::class, 'profile']);
+Route::livewire('/u/{username}', 'pages::user-detail');
+Route::livewire('/u/{username}/{tab}', 'pages::user-detail');
 
 // tampilan sertifikat
 // pakai 's' saja agar tidak sama dengan route untuk edit sertifikat
@@ -55,14 +78,12 @@ Route::get('/s/{userId}/{sertifikatId}', [SertifikatController::class, 'detailSe
 
 // Akses ditolak
 Route::get('/akses-ditolak', function () {
-    return view('403', [
-        'title' => 'Akses ditolak',
-        'group' => ''
-    ]);
+    abort(403, 'Lorem ipsum dolor sit amet');
 });
 
 // view untuk user terbanned atau akunnya dihapus
-Route::get('/akses-gagal', [HomepageController::class, 'dibanned']);
+// Route::get('/akses-gagal', [HomepageController::class, 'dibanned']);
+Route::livewire('/akses-gagal', 'pages::banned');
 
 // TRIX
 // Upload gambar
@@ -73,11 +94,13 @@ Route::post('/delete-image', [TrixController::class, 'delete']);
 // hanya bisa diakses  jika user belum login
 Route::middleware(['guest'])->group(function () {
     // Login
-    Route::get('/masuk', [UserController::class, 'signin'])->name('login');
-    Route::post('/masuk', [UserController::class, 'authenticate']);
+    // Route::get('/masuk', [UserController::class, 'signin'])->name('login');
+    // Route::post('/masuk', [UserController::class, 'authenticate']);
+    Route::livewire('/masuk', 'pages::login')->name('login');
     // Daftar
-    Route::get('/daftar', [UserController::class, 'signup']);
-    Route::post('/daftar', [UserController::class, 'store']);
+    // Route::get('/daftar', [UserController::class, 'signup']);
+    // Route::post('/daftar', [UserController::class, 'store']);
+    Route::livewire('/daftar', 'pages::signup');
 
     // Verifikasi user/email
     // dijalankan setelah daftar

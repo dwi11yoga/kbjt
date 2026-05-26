@@ -16,6 +16,8 @@
         "vite": "^6.2.0"
     },
     "dependencies": {
-        "feather-icons": "^4.29.2"
+        "carakanjs": "^1.2.1",
+        "feather-icons": "^4.29.2",
+        "lucide": "^1.14.0"
     }
 }

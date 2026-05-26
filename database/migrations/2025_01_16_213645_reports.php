@@ -15,17 +15,19 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('definisi_id')->nullable(); //definisi_id !null = definisi dilaporkan
-            $table->foreignId('kosakata_id')->nullable(); //kosakata_id !null = kosakata dilaporkan
+            // $table->foreignId('kosakata_id')->nullable(); //kosakata_id !null = kosakata dilaporkan
             $table->foreignId('pengurus_id')->nullable();
             $table->dateTime('status')->nullable();
             $table->string('alasan');
             $table->text('catatan')->nullable();
             $table->text('catatan_pengurus')->nullable();
             $table->text('def_dilaporkan')->nullable();
-            $table->json('ref_dilaporkan')->nullable();
             $table->dateTime('waktu_definisi')->nullable();
             $table->integer('poin_pelapor')->nullable(); // poin untuk pelapor jika di-acc
             $table->integer('poin_pengurus')->nullable(); // poin untuk pengurus jika menindaklanjuti
+            // tindakan & hukuman
+            $table->string('tindakan')->nullable(); // tindakan untuk definisi dilaporakn
+            $table->string('hukuman')->nullable(); // tindakan untuk pengguna
             $table->timestamps();
         });
     }

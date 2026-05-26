@@ -15,7 +15,9 @@ class Definisi extends Model
     protected $guarded = ['id'];
     protected $casts = [
         'verifikasi' => 'datetime',
-        'referensi' => 'array',
+        // 'referensi' => 'array',
+        'upvotes' => 'array',
+        'downvotes' => 'array',
     ];
 
     // relasi dengan user
@@ -25,10 +27,10 @@ class Definisi extends Model
     }
 
     // relasi dengan kosakata
-    public function kosakata(): BelongsTo
-    {
-        return $this->belongsTo(Kosakata::class);
-    }
+    // public function kosakata(): BelongsTo
+    // {
+    //     return $this->belongsTo(Kosakata::class);
+    // }
 
     // relasi dengan pengurus
     public function pengurus():BelongsTo

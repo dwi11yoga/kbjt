@@ -11,6 +11,7 @@
         "php": "^8.2",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
+        "livewire/livewire": "^4.3",
         "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {
@@ -29,7 +30,8 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/NotifikasiHelper.php"
+            "app/Helpers/NotifikasiHelper.php",
+            "app/Helpers/helpers.php"
         ]
     },
     "autoload-dev": {

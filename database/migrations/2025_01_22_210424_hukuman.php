@@ -10,14 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('hukuman', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('laporan_id');
-            $table->string('tindakan');
-            $table->string('hukuman');
-            $table->dateTime('hukuman_berakhir')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('hukuman', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('laporan_id');
+        //     $table->string('tindakan');
+        //     $table->string('hukuman');
+        //     $table->dateTime('hukuman_berakhir')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -26,5 +26,6 @@ return new class extends Migration {
     public function down(): void
     {
         //
+        Schema::dropIfExists('hukuman');
     }
 };

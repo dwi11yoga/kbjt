@@ -1,3 +1,134 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+.javanese {
+    font-family: "Noto Sans Javanese", sans-serif;
+}
+
+/* html {
+    scroll-behavior: smooth;
+} */
+
+body {
+    font-family: "Noto Sans", sans-serif;
+    @apply text-neutral-800;
+}
+
+h1 {
+    @apply text-4xl;
+    @apply font-bold;
+    /* font-size: 3rem; */
+}
+
+h2 {
+    @apply text-2xl;
+    @apply font-bold;
+    /* font-size: 2.5rem; */
+}
+
+h3 {
+    font-size: 2rem;
+}
+
+h4 {
+    font-size: 1.5rem;
+}
+
+h5 {
+    font-size: 1.2rem;
+}
+
+/* STYLING UNTUK TRIX */
+div.trix {
+    @apply text-neutral-700;
+}
+div.trix h1 {
+    @apply text-neutral-800;
+    @apply text-3xl;
+    @apply font-bold;
+    @apply pt-2;
+    /* font-size: 1.25 rem; */
+    /* font-weight: 600; */
+}
+
+div.trix ul {
+    padding-left: 25px;
+    /* Space before list items */
+    list-style-type: disc;
+    /* Bullet (•) for items */
+}
+
+div.trix ol {
+    padding-left: 25px;
+    /* Space before list items */
+    list-style-type: decimal;
+    /* Numbers (1, 2, 3, ...) for items */
+}
+
+div.trix li {
+    display: list-item;
+    /* Default display for list items */
+}
+
+div.trix pre {
+    display: block;
+    /* Ditampilkan sebagai blok */
+    font-family: monospace;
+    /* Menggunakan font monospace */
+    white-space: pre;
+    /* Pertahankan spasi dan baris baru */
+    margin: 1em 0;
+    /* Margin atas dan bawah */
+    background-color: #e5e5e5;
+    padding: 0.5rem 0.5rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    overflow-inline: scroll;
+}
+
+div.trix blockquote {
+    display: block;
+    margin-top: 0.5rem;
+    padding-left: 0.5rem;
+    /* Margin atas */
+    margin-bottom: 0.5rem;
+    /* Margin bawah */
+    margin-inline-start: 0.5rem;
+    /* Indentasi kiri */
+    margin-inline-end: 0.5rem;
+    /* Indentasi kanan */
+    font-size: inherit;
+    /* Ukuran font sesuai elemen induk */
+    font-style: italic;
+    /* Teks miring */
+    border-left: 4px solid #fbbf24;
+}
+
+div.trix a {
+    @apply text-blue-500;
+    @apply font-semibold;
+    /* text-decoration: underline;
+    text-decoration-color: #fbbf24;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 2px; */
+}
+
+div.trix a:hover {
+    /* color: #d97706; */
+    @apply underline;
+    @apply underline-offset-2;
+    @apply decoration-amber-400;
+    @apply decoration-4;
+}
+
+/* cegah agar icon lucide tidak menghalangi klik */
+svg {
+    @apply pointer-events-none;
+}

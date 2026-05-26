@@ -10,23 +10,23 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('kosakata', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id');
-            $table->integer('poin')->default(0);
-            $table->string('kosakata', 100);
-            $table->string('slug', length: 100)->unique();
-            $table->enum('ragam', ['Krama', 'Krama Inggil', 'Ngoko'])->nullable();
-            $table->string('aksara')->nullable();
-            $table->string('jenis', 50)->nullable();
-            $table->string('notasi_fonetik')->nullable();
-            $table->string('arti_indo')->nullable();
-            $table->json('etimologi')->nullable();
-            $table->integer('view')->default(0);
-            $table->json('serupa')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
-        });
+        // Schema::create('kosakata', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('user_id');
+        //     $table->integer('poin')->default(0);
+        //     $table->string('kosakata', 100);
+        //     $table->string('slug', length: 100)->unique();
+        //     $table->enum('ragam', ['Krama', 'Krama Inggil', 'Ngoko'])->nullable();
+        //     $table->string('aksara')->nullable();
+        //     $table->string('jenis', 50)->nullable();
+        //     $table->string('notasi_fonetik')->nullable();
+        //     $table->string('arti_indo')->nullable();
+        //     $table->json('etimologi')->nullable();
+        //     $table->integer('view')->default(0);
+        //     $table->json('serupa')->nullable();
+        //     $table->timestamps();
+        //     $table->softDeletes();
+        // });
     }
 
     /**

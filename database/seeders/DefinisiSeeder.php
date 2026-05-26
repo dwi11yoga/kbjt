@@ -2646,24 +2646,26 @@ class DefinisiSeeder extends Seeder
         for ($i = 1; $i <= 4000; $i++) {
         // foreach ($indonesiaSingkat as $key => $d) {
             // Definisi dalam bahasa indonesia
-            $kosakata = Kosakata::find(random_int(1, 2620));
-            $def = $indonesiaSingkat[$kosakata->kosakata];
+            $key=random_int(0, 2619);
+            $kosakata=array_keys($indonesiaSingkat)[$key];
+            $def = $indonesiaSingkat[$kosakata];
+            // $kosakata = Kosakata::find(random_int(1, 2620));
             // $kosakata = Kosakata::where('kosakata', $key)->first();
             // $def = $d;
             $indonesia = [
-                $kosakata->kosakata . ' berarti ' . $def . '.',
-                'Dalam Bahasa Jawa, ' . $kosakata->kosakata . ' artinya ' . $def . '.',
-                'Dalam Bahasa Jawa, ' . $kosakata->kosakata . ' memiliki arti ' . $def . '.',
-                'Makna kata ' . $kosakata->kosakata . ' adalah ' . $def . '.',
-                'Kata ' . $kosakata->kosakata . ' memiliki arti ' . $def . '.',
-                'Secara harfiah, ' . $kosakata->kosakata . ' memiliki arti ' . $def . '.',
-                $kosakata->kosakata . ' dapat diartikan sebagai ' . $def . '.',
-                'Jika diterjemahkan, ' . $kosakata->kosakata . ' memiliki makna ' . $def . '.',
-                'Arti denotatif dari ' . $kosakata->kosakata . ' adalah ' . $def . '.',
-                'Secara umum, ' . $kosakata->kosakata . ' bermakna ' . $def . '.',
-                'Makna leksikal dari kata ' . $kosakata->kosakata . ' adalah ' . $def . '.',
-                'Kosa kata ' . $kosakata->kosakata . ' dapat diterjemahkan sebagai ' . $def . '.',
-                $kosakata->kosakata . ' kerap digunakan untuk menyatakan ' . $def . '.',
+                $kosakata . ' berarti ' . $def . '.',
+                'Dalam Bahasa Jawa, ' . $kosakata . ' artinya ' . $def . '.',
+                'Dalam Bahasa Jawa, ' . $kosakata . ' memiliki arti ' . $def . '.',
+                'Makna kata ' . $kosakata . ' adalah ' . $def . '.',
+                'Kata ' . $kosakata . ' memiliki arti ' . $def . '.',
+                'Secara harfiah, ' . $kosakata . ' memiliki arti ' . $def . '.',
+                $kosakata . ' dapat diartikan sebagai ' . $def . '.',
+                'Jika diterjemahkan, ' . $kosakata . ' memiliki makna ' . $def . '.',
+                'Arti denotatif dari ' . $kosakata . ' adalah ' . $def . '.',
+                'Secara umum, ' . $kosakata . ' bermakna ' . $def . '.',
+                'Makna leksikal dari kata ' . $kosakata . ' adalah ' . $def . '.',
+                'Kosa kata ' . $kosakata . ' dapat diterjemahkan sebagai ' . $def . '.',
+                $kosakata . ' kerap digunakan untuk menyatakan ' . $def . '.',
             ];
 
             // referensi
@@ -2678,8 +2680,8 @@ class DefinisiSeeder extends Seeder
 
             // definisi terverifikasi
             $verifikasi = random_int(0, 5);
-            $verifikasiTanggal = $verifikasi == 1 ? now() : NULL;
-            $verifikasiOleh = $verifikasi == 1 ? random_int(2, 3) : NULL;
+            $verifikasiTanggal = $verifikasi == 1 ? now() : null;
+            $verifikasiOleh = $verifikasi == 1 ? random_int(2, 3) : null;
 
             // poin
             $poin_kontributor = 20;
@@ -2690,11 +2692,11 @@ class DefinisiSeeder extends Seeder
             $waktu = fake()->dateTimeBetween('-1 year', 'now');
 
             $definisi[$i] = [
-                'kosakata_id' => $kosakata->id,
+                'kosakata' => $kosakata,
                 'user_id' => random_int(2, 100),
                 'definisi' => $indonesia[random_int(0, count($indonesia) - 1)],
-                'bahasa' => 'indonesia',
-                'referensi' => random_int(0, 1) === 1 ? json_encode([$referensi[random_int(0, 5)]]) : null,
+                'bahasa' => 'id',
+                // 'referensi' => random_int(0, 1) === 1 ? json_encode([$referensi[random_int(0, 5)]]) : null,
                 'verifikasi' => $verifikasiTanggal,
                 'verifikasi_oleh' => $verifikasiOleh,
                 'poin_kontributor' => $poin_kontributor,

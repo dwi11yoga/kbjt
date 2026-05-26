@@ -1,7 +1,7 @@
-@extends('layouts.errors')
+@extends('layouts.app')
 
-@section('body')
-    <div class="text-center">
+@section('slot')
+    <div class="flex flex-col items-center">
         <a
             href="https://www.freepik.com/free-vector/403-error-forbidden-concept-illustration_13416125.htm#fromView=author&page=1&position=2&uuid=1770dd53-5728-488d-9499-452899351659">
             <img class="w-96"

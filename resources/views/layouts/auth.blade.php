@@ -1,55 +1,43 @@
-{{-- Layout untuk bantuan terhadap akun user --}}
-{{-- misal: lupa kata sandi & verifikasi email --}}
-
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 
 <head>
     {{-- Meta --}}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ $title }} | Kamus Besar Bahasa Jawa</title>
 
-    {{-- favicon --}}
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <title>{{ isset($title) ? $title . ' - ' : '' }} {{ env('APP_NAME') }}</title>
 
-    {{-- Import CSS --}}
-    @vite('resources/css/app.css')
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    {{-- font --}}
+    {{-- NOTO SANS & NOTO SANS JAVANESE --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Javanese:wght@400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 
-    {{-- Feathericon --}}
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    @livewireStyles
 </head>
 
 <body>
     {{-- Content --}}
-    <div class="container p-10 mx-auto flex flex-col justify-center h-screen items-center space-y-5">
-        {{-- logo --}}
-        <div class="">
-            <a href="/">
-                <h4 class="font-bold underline decoration-amber-400 underline-offset-4 decoration-4">kbjt</h4>
+    <div class="container md:p-0 p-10 mx-auto flex flex-col justify-center h-screen items-center">
+        <div class="space-y-2">
+            <a href="/"
+                class="small-text items-center border border-white p-2 -ml-2 hover:border-gray-500 hover:rounded-full active:bg-black active:text-white">
+                <i data-lucide='arrow-left' class="w-4 inline-block"></i> kembali
             </a>
-        </div>
-
-        {{-- konten --}}
-        <div class="p-6 rounded-2xl space-y-2 border border-neutral-200 md:w-1/3 w-11/12 shadow-sm">
-            <h5 class="font-semibold mb-2">{{ $title }}</h5>
+            {{ $slot ?? '' }}
             @yield('body')
         </div>
-
-        {{-- footer --}}
-        <div class="text-sm">Copyright © {{ date('Y') }} Kamus Besar Bahasa Indonesia</div>
     </div>
-    
-    {{-- toast --}}
-    @include('partials.toast')
 
+    <x-toast type="dispatch" />
+    <x-toast type="session" />
 
-    {{-- Feathericon --}}
-    <script>
-        feather.replace();
-    </script>
 </body>
 
 </html>

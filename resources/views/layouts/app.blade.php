@@ -2,10 +2,15 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
+    {{-- Meta --}}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    {{-- judul --}}
     <title>{{ isset($title) ? $title . ' - ' : '' }} {{ env('APP_NAME') }}</title>
+
+    {{-- favicon --}}
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
     {{-- font --}}
     {{-- NOTO SANS & NOTO SANS JAVANESE --}}
@@ -22,7 +27,11 @@
     <script src="{{ asset('js/trix.umd.min.js') }}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    @livewireStyles
+    {{-- Import custom --}}
+    {{-- @yield('head') --}}
+
+    {{-- Feathericon --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script> --}}
 </head>
 
 <body>
@@ -32,7 +41,7 @@
     @if (isset($header))
         <div class="">{{ $header }}</div>
     @endif
-    
+
     {{-- Konten --}}
     @php
         // cek apakah user berada di home/tidak
@@ -41,7 +50,8 @@
     @endphp
     <main class="container mx-auto px-5 md:px-0 pt-10 pb-2 min-h-[90vh]">
         <div class="grid grid-cols-4 gap-6">
-            <div class="{{ !in_array($location, ['', 'masuk']) ? 'md:col-span-3' : 'md:col-span-4' }} col-span-4 space-y-5">
+            <div
+                class="{{ !in_array($location, ['', 'masuk']) ? 'md:col-span-3' : 'md:col-span-4' }} col-span-4 space-y-5">
                 {{ $slot ?? '' }}
                 @yield('slot')
             </div>

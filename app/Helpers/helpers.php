@@ -5,8 +5,6 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Achievement;
 use App\Models\Definisi;
-use App\Models\Kosakata;
-use App\Models\EditKosakata;
 use App\Models\Blog;
 use App\Models\Hukuman;
 use App\Models\Report;
@@ -20,7 +18,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 // Hitung level pengguna
 if (!function_exists('levelCalculator')) {
-    function levelCalculator($point)
+    function levelCalculator(int $point)
     {
         $levelSets = Level::select(['lvl', 'min_poin'])->orderBy('lvl', 'desc')->get();
         foreach ($levelSets as $d) {
@@ -78,12 +76,8 @@ if (!function_exists('achievement')) {
         $rules = [
             'keanggotaan',
             'definisi',
-            'kosakata',
-            'editKosakata',
             'laporan',
             'artikel',
-            'totalViewKosakata',
-            'viewKosakata',
             'totalViewBlog',
             'viewBlog'
         ];
@@ -116,24 +110,12 @@ if (!function_exists('achievement')) {
             case "definisi":
                 $value = Definisi::where('user_id', '=', $userId)->count() ?? 0;
                 break;
-            // case "kosakata":
-            //     $value = Kosakata::where('user_id', '=', $userId)->count() ?? 0;
-            //     break;
-            // case "editKosakata":
-            //     $value = EditKosakata::where('user_id', '=', $userId)->whereNotNull('status')->count() ?? 0;
-            //     break;
             case "laporan":
                 $value = Report::where('user_id', '=', $userId)->whereNotNull('status')->count() ?? 0;
                 break;
             case "artikel":
                 $value = Blog::where('user_id', '=', $userId)->whereNotNull('status')->count() ?? 0;
                 break;
-            // case "totalViewKosakata":
-            //     $value = Kosakata::where('user_id', '=', $userId)->sum('view') ?? 0;
-            //     break;
-            // case "viewKosakata":
-            //     $value = Kosakata::where('user_id', '=', $userId)->orderBy('view', 'desc')->value('view') ?? 0;
-            //     break;
             case "totalViewBlog":
                 $value = Blog::where('user_id', '=', $userId)->sum('view') ?? 0;
                 break;
@@ -205,14 +187,11 @@ if (!function_exists('cekSertifikat')) {
                 $nilai = Auth::user()->created_at->diffInDays(now());
             } elseif ($d->rule == 'kontribusi') {
                 // hitung kontribusi user
-                // $kosakata = Kosakata::where('user_id', Auth::user()->id)->count();
-                // $editKosakata = EditKosakata::where('user_id', Auth::user()->id)->whereNotNull('status')->count();
                 $definisi = Definisi::where('user_id', Auth::user()->id)->count();
-                $laporan = Report::with('hukuman')->where('user_id', Auth::user()->id)->whereNotNull('status')->whereHas('hukuman')->count();
+                $laporan = Report::where('user_id', Auth::user()->id)->whereNotNull('status')->whereNotNull('pengurus_id')->count();
                 $nilai = $definisi + $laporan;
             } elseif ($d->rule == 'kontribusiPengurus') {
                 // hitung kontribusi user pengurus
-                // $editKosakata = EditKosakata::where('pengurus_id', Auth::user()->id)->whereNotNull('status')->count();
                 $definisi = Definisi::where('verifikasi_oleh', Auth::user()->id)->count();
                 $laporan = Report::where('pengurus_id', Auth::user()->id)->whereNotNull('status')->count();
                 // banner - BELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM
@@ -256,7 +235,7 @@ if (!function_exists('createNotification')) {
 
 // cekSuspend akun
 if (!function_exists('suspendedAccount')) {
-    function suspendedAccount(int $userId)
+    function suspendedAccount()
     {
         // cek apakah user tersuspend/tidak
         $suspendedTime = Auth::user()->suspended_time;

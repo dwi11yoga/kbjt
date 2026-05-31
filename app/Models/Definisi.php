@@ -18,6 +18,7 @@ class Definisi extends Model
         // 'referensi' => 'array',
         'upvotes' => 'array',
         'downvotes' => 'array',
+        'edited_at' => 'datetime',
     ];
 
     // relasi dengan user
@@ -33,8 +34,8 @@ class Definisi extends Model
     // }
 
     // relasi dengan pengurus
-    public function pengurus():BelongsTo
+    public function pengurus(): BelongsTo
     {
-        return $this->belongsTo(User::class,'verifikasi_oleh', 'id');
+        return $this->belongsTo(User::class, 'verifikasi_oleh', 'id');
     }
 }

@@ -13,6 +13,8 @@ new class extends Component {
     #[Url]
     public $lang;
     #[Url]
+    public $sort = 'terpopuler';
+    #[Url]
     public $id;
 
     // jumlah definisi
@@ -49,6 +51,15 @@ new class extends Component {
         if ($this->id) {
             $definitions = $definitions->orderByRaw('id=? DESC', $this->id);
         }
+        // urutkan
+        if ($this->sort == 'terbaru') {
+            $definitions = $definitions->orderByDesc('created_at');
+        } elseif ($this->sort == 'terlama') {
+            $definitions = $definitions->orderBy('created_at');
+        } else {
+            $definitions = $definitions->orderByRaw('(JSON_LENGTH(upvotes) - JSON_LENGTH(downvotes)) DESC');
+        }
+        
         $definitions = $definitions->paginate(20);
         return $definitions;
     }
@@ -136,7 +147,7 @@ new class extends Component {
                 </script>
             </div>
             <div wire:ignore class="relative">
-                <label for="lang" class="absolute top-3 left-4">
+                <label for="sort" class="absolute top-3 left-4">
                     <i data-lucide='arrow-down-wide-narrow' class="size-5 my-0.5"></i>
                 </label>
                 <select wire:model.live='sort' name="sort" id="sort"

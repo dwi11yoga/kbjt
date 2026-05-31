@@ -296,11 +296,7 @@
             </div>
         </div>
     @endif
-
-
-
-
-
+    
     {{-- Statistik web (hanya untuk pengurus dan kepala) --}}
     @if (auth()->user()->role == 'pengurus' || auth()->user()->role == 'kepala')
         <div class="">

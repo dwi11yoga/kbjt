@@ -2644,10 +2644,10 @@ class DefinisiSeeder extends Seeder
 
 
         for ($i = 1; $i <= 4000; $i++) {
-        // foreach ($indonesiaSingkat as $key => $d) {
+            // foreach ($indonesiaSingkat as $key => $d) {
             // Definisi dalam bahasa indonesia
-            $key=random_int(0, 2619);
-            $kosakata=array_keys($indonesiaSingkat)[$key];
+            $key = random_int(0, 2619);
+            $kosakata = array_keys($indonesiaSingkat)[$key];
             $def = $indonesiaSingkat[$kosakata];
             // $kosakata = Kosakata::find(random_int(1, 2620));
             // $kosakata = Kosakata::where('kosakata', $key)->first();
@@ -2702,6 +2702,7 @@ class DefinisiSeeder extends Seeder
                 'poin_kontributor' => $poin_kontributor,
                 'poin_verifikasi' => $poin_verifikasi,
                 'poin_pengurus' => $poin_pengurus,
+                'edited_at' => $waktu,
                 'created_at' => $waktu,
                 'updated_at' => $waktu
             ];

@@ -2,7 +2,10 @@
 
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Validate;
+use App\Models\User;
 use App\Models\Definisi;
+use App\Models\Report;
 use Illuminate\Database\QueryException;
 
 new class extends Component {
@@ -11,6 +14,13 @@ new class extends Component {
         $showWord = false,
         $author,
         $highlight = false;
+
+    // status popup
+    public $openReport = false,
+        $openShare = false,
+        $openVerify = false,
+        $openEdit = false,
+        $openDelete = false;
 
     // set jumlah upvote & downvote
     public $upvotes, $downvotes;
@@ -79,7 +89,27 @@ new class extends Component {
             $this->dispatch('notify', message: 'Gagal melakukan voting, coba lagi', type: 'failed');
         }
     }
-    // report
+
+    // listen dispatch dari child untuk menutup popup
+    // key=mendengarkan dispatch
+    // value=function yang akan dijalankan
+    protected $listeners = ['closeDelete' => 'closeDelete', 'closeVerify' => 'closeVerify', 'closeReport' => 'closeReport'];
+    public function closeDelete()
+    {
+        $this->openDelete = false;
+    }
+    public function closeVerify()
+    {
+        $this->openVerify = false;
+    }
+    public function closeReport()
+    {
+        $this->openReport = false;
+    }
+    public function closeEdit()
+    {
+        $this->openEdit = false;
+    }
 };
 ?>
 
@@ -98,7 +128,7 @@ new class extends Component {
                 <div class="group-hover:underline underline-offset-4 decoration-amber-400 decoration-4">
                     {{ $author->nama }}
                     {{ auth()->user() && auth()->user()->username == $author->username ? '(Anda)' : '' }}</div>
-                <div class="text-sm"> · {{ dateFormat($wordDefinition->created_at) }}</div>
+                <div class="text-sm"> · {{ dateFormat($wordDefinition->edited_at) }}</div>
             </div>
         </a>
 
@@ -114,37 +144,29 @@ new class extends Component {
                     <ul>
                         {{-- edit --}}
                         @if ($wordDefinition->user_id == auth()->user()->id)
-                            <li onclick="openWindow('editDefinisi-{{ $wordDefinition->id }}')"
+                            <a href="/definisi/{{ $wordDefinition->id }}/edit"
                                 class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
                                 <div>Edit</div>
                                 <i data-lucide='pencil' class="size-5"></i>
-                            </li>
+                            </a>
                         @endif
                         {{-- verifikasi --}}
                         @if (auth()->check() && auth()->user()->role == 'pengurus' && $wordDefinition->user_id !== auth()->user()->id)
-                            @if (empty($wordDefinition->verifikasi))
-                                <li onclick="openWindow('editDefinisi-{{ $wordDefinition->id }}')"
-                                    class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
-                                    <div>Verifikasi</div>
-                                    <i data-lucide='check-circle' class="size-5"></i>
-                                </li>
-                            @else
-                                <li onclick="openWindow('editDefinisi-{{ $wordDefinition->id }}')"
-                                    class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
-                                    <div>Verifikasi</div>
-                                    <i data-lucide='check-circle' class="size-5"></i>
-                                </li>
-                            @endif
+                            <li wire:click='$toggle("openVerify")'
+                                class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
+                                <div>{{ empty($wordDefinition->verifikasi) ? 'Verifikasi' : 'Unverifikasi' }}</div>
+                                <i data-lucide='check-circle' class="size-5"></i>
+                            </li>
                         @endif
                         {{-- bagikan --}}
-                        <li onclick="openWindow('editDefinisi-{{ $wordDefinition->id }}')"
+                        <li wire:click='$toggle("openShare")'
                             class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
                             <div>Bagikan</div>
                             <i data-lucide='share-2' class="size-5"></i>
                         </li>
                         {{-- hapus --}}
                         @if ($wordDefinition->user_id == auth()->user()->id)
-                            <li onclick="openWindow('hapusDefinisi-{{ $wordDefinition->id }}')"
+                            <li wire:click='$toggle("openDelete")'
                                 class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500 cursor-pointer">
                                 <div>Hapus</div>
                                 <i data-lucide='trash' class="size-5"></i>
@@ -152,7 +174,7 @@ new class extends Component {
                         @endif
                         {{-- laporkan --}}
                         @if ($wordDefinition->user_id != auth()->user()->id)
-                            <li onclick="openWindow('laporkan-{{ $wordDefinition->id }}')"
+                            <li wire:click='$toggle("openReport")'
                                 class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500 cursor-pointer">
                                 <div>Laporkan</div>
                                 <i data-lucide='flag-triangle-right' class="size-5"></i>
@@ -182,17 +204,17 @@ new class extends Component {
     <div class="flex justify-between items-center">
         {{-- vote --}}
         <div
-            class="rounded-full p-1 flex items-center hover:bg-neutral-100 w-fit border border-neutral-100 hover:border-neutral-200">
+            class="rounded-full p-1 flex items-center {{ auth()->check() && in_array(auth()->user()->id, $upvotes ?? []) ? 'bg-green-100' : (auth()->check() && in_array(auth()->user()->id, $downvotes ?? []) ? 'bg-red-100' : 'hover:bg-neutral-100') }} w-fit border border-neutral-100 hover:border-neutral-200">
             <div class="p-2 ml-1 font-bold text-xs {{ $this->totalVotes < 0 ? 'text-red-600' : '' }}">
                 {{ $this->totalVotes }}</div>
             <div class="">
-                <button wire:click='vote(true)'
-                    class="rounded-full p-2 hover:bg-neutral-200 {{ in_array(auth()->user()->id, $upvotes ?? []) ? 'bg-green-100 text-green-700' : '' }}">
-                    <i wire:ignore data-lucide='chevron-up' class="size-4"></i>
+                <button wire:click='vote(true)' class="rounded-full p-2 hover:bg-neutral-100 group">
+                    <i wire:ignore data-lucide='arrow-big-up'
+                        class="size-4 {{ auth()->check() && in_array(auth()->user()->id, $upvotes ?? []) ? 'fill-green-700 stroke-green-700' : 'group-hover:fill-green-500 group-hover:stroke-green-500' }}"></i>
                 </button>
-                <button wire:click='vote(false)'
-                    class="rounded-full p-2 hover:bg-neutral-200 hover:text-red-500 {{ in_array(auth()->user()->id, $downvotes ?? []) ? 'bg-red-100 text-red-700' : '' }}">
-                    <i wire:ignore data-lucide='chevron-down' class="size-4"></i>
+                <button wire:click='vote(false)' class="rounded-full p-2 hover:bg-neutral-100 group">
+                    <i wire:ignore data-lucide='arrow-big-down'
+                        class="size-4 {{ auth()->check() && in_array(auth()->user()->id, $downvotes ?? []) ? 'fill-red-700 stroke-red-700' : 'group-hover:fill-red-500 group-hover:stroke-red-500' }}"></i>
                 </button>
             </div>
         </div>
@@ -203,10 +225,10 @@ new class extends Component {
                     <span class="md:block hidden">Salinan definisi</span>
                 </div>
             @elseif (isset($author->role) && $author->role == 'pengurus')
-                <div class="text-sm rounded-full md:py-2 md:px-3 p-2 bg-purple-200 h-fit flex items-center gap-1"
+                <div class="text-sm rounded-full md:py-2 md:px-3 p-2 bg-amber-200 h-fit flex items-center gap-1"
                     title="Disubmit oleh pengurus">
-                    <i data-lucide='circle-star' class="size-5"></i>
-                    <span class="md:block hidden">Pengurus</span>
+                    <i data-lucide='badge-check' class="size-5"></i>
+                    <span class="md:block hidden">Terverifikasi</span>
                 </div>
             @elseif (isset($wordDefinition->verifikasi))
                 <div class="text-sm rounded-full md:py-2 md:px-3 p-2 bg-amber-200 h-fit flex items-center gap-1">
@@ -216,4 +238,24 @@ new class extends Component {
             @endif
         </div>
     </div>
+
+    {{-- popup laporkan --}}
+    @if ($openReport)
+        <livewire:definition.report :author="$author" :definition="$wordDefinition" />
+    @endif
+
+    {{-- popup bagikan --}}
+    @if ($openShare)
+        <x-definition.share :definition="$wordDefinition" />
+    @endif
+
+    {{-- verifikasi definisi --}}
+    @if ($openVerify)
+        <livewire:definition.verify :definition="$wordDefinition" :author="$author" />
+    @endif
+
+    {{-- hapus --}}
+    @if ($openDelete)
+        <livewire:definition.delete :definition="$wordDefinition" closeStatusVariable="openDelete" />
+    @endif
 </div>

@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->dateTime('verifikasi')->nullable();
             $table->foreignId('verifikasi_oleh')->nullable();
             $table->tinyInteger('hukuman_edit')->nullable();
-            $table->timestamp('edited_at')->nullable();
+            $table->dateTime('edited_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

@@ -26,7 +26,7 @@
     {{-- Content --}}
     <div class="container md:p-0 p-10 mx-auto flex flex-col justify-center h-screen items-center">
         <div class="space-y-2">
-            <a href="/"
+            <a href="{{ url()->previous() == url()->current() || request()->path() == 'masuk' ? '/' : url()->previous() }}"
                 class="small-text items-center border border-white p-2 -ml-2 hover:border-gray-500 hover:rounded-full active:bg-black active:text-white">
                 <i data-lucide='arrow-left' class="w-4 inline-block"></i> kembali
             </a>

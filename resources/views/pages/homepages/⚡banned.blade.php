@@ -6,6 +6,7 @@ use Livewire\Attributes\Title;
 new class extends Component {
     //
     #[Title('Akun anda tidak dapat diakses')]
+    public $lorem;
 };
 ?>
 

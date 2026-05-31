@@ -3,6 +3,7 @@
 use Livewire\Component;
 use Livewire\Attributes\Url;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Title;
 use Livewire\WithPagination;
 use App\Models\Definisi;
 use App\Models\Blog;
@@ -11,6 +12,7 @@ use App\Models\User;
 new class extends Component {
     //
     use WithPagination;
+    #[Title('Hasil pencarian')]
     #[Url]
     public $keyword;
     #[Url]
@@ -22,7 +24,7 @@ new class extends Component {
         if ($this->filter !== 'kosakata' && $this->filter !== 'semua') {
             return [];
         }
-        $words = Definisi::distinct('kosakata')->where('kosakata', 'like', '%' . $this->keyword . '%');
+        $words = Definisi::select('kosakata')->distinct()->where('kosakata', 'like', '%' . $this->keyword . '%');
         if ($this->filter === 'semua') {
             $words = $words
                 ->limit(10)

@@ -26,7 +26,6 @@ new class extends Component {
 
     public function save()
     {
-        sleep(3);
         $data = $this->validate();
         // simpan user
         try {
@@ -39,8 +38,8 @@ new class extends Component {
                 ->intended('/dashboard')
                 ->with('success', 'Selamat datang, ' . $user->nama . '!');
         } catch (QueryException $err) {
+            $this->dispatch('notify', message: 'Gagal membuat akun, coba lagi', type: 'failed');
             report($err); //catat error ke log
-            $this->dispatch('failed', );
         }
     }
 };
@@ -77,14 +76,8 @@ new class extends Component {
                 </label>
             </div>
         </div>
-        <button type="submit"
-            class="flex items-center gap-2 justify-center bg-amber-400 text-center p-3 w-full rounded-full cursor-pointer hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-amber-400 active:bg-amber-300">
-            <div wire:loading wire:target='save' class="animate-spin">
-                <i data-lucide='loader' class="size-5"></i>
-            </div>
-            <div wire:loading wire:target='save' class="">Menyimpan...</div>
-            <div wire:loading.remove wire:target='save' class="">Daftar</div>
-        </button>
+        <x-button type="submit" rounded="full" text="Daftar" width="w-full" target="save"
+            textLoading="Menyimpan..." />
         {{-- <input type="submit" value="Buat akun"
             class="block bg-amber-400 text-center p-3 w-full rounded-full cursor-pointer hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-amber-400 active:bg-amber-300"> --}}
         <p id="masuk" class="">

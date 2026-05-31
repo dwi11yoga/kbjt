@@ -39,6 +39,7 @@ new class extends Component {
             'definisi' => $this->definition,
             'poin_kontributor' => $poin,
             'bahasa' => $this->lang,
+            'edited_at' => now(),
         ]);
 
         // increment definisi baru di statistik

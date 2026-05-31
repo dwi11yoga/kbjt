@@ -62,9 +62,9 @@ note: 1=enabled, 0=disabled
     </div>
 
     {{-- Trix Editor --}}
-    <div class="">
-        <input id="{{ $id }}" name="{{ $id }}" hidden value={{ $value }}>
-        <trix-editor wire:ignore toolbar="my_toolbar-{{ $id }}" input="{{ $id }}"
+    <div wire:ignore class="">
+        <input id="{{ $id }}" name="{{ $id }}" hidden value="{!! $value ?? '' !!}">
+        <trix-editor toolbar="my_toolbar-{{ $id }}" input="{{ $id }}"
             placeholder="{{ $placeholder ?? 'Ketik disini...' }}"
             class="px-4 py-3 w-full min-h-52 rounded-md block bg-neutral-100 focus:border-b-2 border-0 focus:rounded-b-none outline-none transition-all ease-in-out duration-75 
         {{ $errors->has($id) ? 'border-red-500' : 'border-amber-400' }}">
@@ -74,15 +74,14 @@ note: 1=enabled, 0=disabled
         <div class="text-xs text-red-600 mt-2 mb-2">{{ $message }}</div>
     @enderror
 
-    {{-- update value variabel livewire --}}
     <script>
         document.addEventListener('trix-change', (e) => {
-        const input = document.getElementById('{{ $id }}');
-        clearTimeout(window._trixTimeout);
-        window._trixTimeout = setTimeout(() => {
-            @this.set('{{ $id }}', input.value);
-        }, 800); // tambah debounce
-    });
+            const input = document.getElementById('{{ $id }}');
+            clearTimeout(window._trixTimeout);
+            window._trixTimeout = setTimeout(() => {
+                @this.set('{{ $id }}', input.value);
+            }, 800); // tambah debounce
+        });
     </script>
 
     @if ($undoRedo == 0)

@@ -139,8 +139,7 @@ new class extends Component {
             </div>
         </div>
         {{-- <a href="/dashboard" class="block mt-6 bg-amber-400 text-center p-3 w-full rounded-full cursor-pointer hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-amber-400 active:bg-amber-300">Masuk</a> --}}
-        <input type="submit" value="Masuk"
-            class="block mt-6 bg-amber-400 text-center p-3 w-full rounded-full cursor-pointer hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-amber-400 active:bg-amber-300">
+        <x-button type="submit" rounded="full" text="Masuk" width="w-full" target="authenticate" textLoading="Mencoba masuk..." />
     </form>
 
     <p class="mt-3">Belum punya akun?

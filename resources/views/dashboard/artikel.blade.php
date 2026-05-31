@@ -2,7 +2,6 @@
 
 @section('body')
     <div class="space-y-3">
-
         {{-- Filter --}}
         <div class="md:flex md:justify-between">
             <form action="/artikel" method="GET">

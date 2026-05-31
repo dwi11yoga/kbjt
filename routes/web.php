@@ -24,53 +24,53 @@ use Illuminate\Support\Facades\Route;
 
 // HOMEPAGE
 // Route::get('/', [HomepageController::class, 'index']);
-Route::livewire('/', 'pages::index');
+Route::livewire('/', 'pages::homepages.index');
 
 // alih aksara: konversi tulisan latin ke aksara jawa
-Route::livewire('/alih-aksara', 'pages::converter');
+Route::livewire('/alih-aksara', 'pages::homepages.converter');
 
 // daftar kosakata
 // Route::get('/daftar-kosakata', [HomepageController::class, 'daftarKosakata']);
-Route::livewire('/kosakata', 'pages::word-list');
+Route::livewire('/kosakata', 'pages::homepages.word-list');
 
 // hall of fame
 // Route::get('/hall-of-fame', [HomepageController::class, 'hallOfFame']);
-Route::livewire('/hall-of-fame', 'pages::hall-of-fame');
+Route::livewire('/hall-of-fame', 'pages::homepages.hall-of-fame');
 
 // blog
 // Route::get('/blog', [HomepageController::class, 'blog']);
-Route::livewire('/blog', 'pages::blog');
+Route::livewire('/blog', 'pages::homepages.blog');
 
 // post/artikel
 // Route::get('/blog/post/{slug}', [HomepageController::class, 'blogPost']);
-Route::livewire('/blog/{slug}', 'pages::blog-post');
+Route::livewire('/blog/{slug}', 'pages::homepages.blog-post');
 
 // halaman dukung
 // Route::get('/dukung', [HomepageController::class, 'dukung']);
 
 // pencarian
 // Route::get('/cari', [HomepageController::class, 'pencarian']);
-Route::livewire('/cari', 'pages::search');
+Route::livewire('/cari', 'pages::homepages.search');
 
 // credit
 // Route::get('/tentang', [HomepageController::class, 'tentang']);
-Route::livewire('/tentang', 'pages::about');
+Route::livewire('/tentang', 'pages::homepages.about');
 
 // syarat dan ketentuan
 // Route::get('/syarat-ketentuan', [HomepageController::class, 'syaratKetentuan']);
-Route::livewire('/syarat-ketentuan', 'pages::policies');
+Route::livewire('/syarat-ketentuan', 'pages::homepages.policies');
 
 // tampilkan definisi & kosakata
 // Route::get('/kosakata/{slug}', [HomepageController::class, 'kosakata']);
-Route::livewire('/kosakata/{word}', 'pages::word-detail');
+Route::livewire('/kosakata/{word}', 'pages::homepages.word-detail');
 
 // riwayat edit
 // Route::get('/kosakata/{slug}/riwayat', [HomepageController::class, 'riwayatKosakata']);
 
 // Profil user
 // Route::get('/u/{username}', [UserController::class, 'profile']);
-Route::livewire('/u/{username}', 'pages::user-detail');
-Route::livewire('/u/{username}/{tab}', 'pages::user-detail');
+Route::livewire('/u/{username}', 'pages::homepages.user-detail');
+Route::livewire('/u/{username}/{tab}', 'pages::homepages.user-detail');
 
 // tampilan sertifikat
 // pakai 's' saja agar tidak sama dengan route untuk edit sertifikat
@@ -83,7 +83,7 @@ Route::get('/akses-ditolak', function () {
 
 // view untuk user terbanned atau akunnya dihapus
 // Route::get('/akses-gagal', [HomepageController::class, 'dibanned']);
-Route::livewire('/akses-gagal', 'pages::banned');
+Route::livewire('/akses-gagal', 'pages::homepages.banned');
 
 // TRIX
 // Upload gambar
@@ -96,11 +96,11 @@ Route::middleware(['guest'])->group(function () {
     // Login
     // Route::get('/masuk', [UserController::class, 'signin'])->name('login');
     // Route::post('/masuk', [UserController::class, 'authenticate']);
-    Route::livewire('/masuk', 'pages::login')->name('login');
+    Route::livewire('/masuk', 'pages::homepages.login')->name('login');
     // Daftar
     // Route::get('/daftar', [UserController::class, 'signup']);
     // Route::post('/daftar', [UserController::class, 'store']);
-    Route::livewire('/daftar', 'pages::signup');
+    Route::livewire('/daftar', 'pages::homepages.signup');
 
     // Verifikasi user/email
     // dijalankan setelah daftar
@@ -110,22 +110,26 @@ Route::middleware(['guest'])->group(function () {
 
     // LUPA KATA SANDI
     // halaman masukkan email untuk reset kata sandi
-    Route::get('/reset-kata-sandi', [UserController::class, 'lupaSandi']);
-    Route::post('/reser-kata-sandi/eksekusi', [UserController::class, 'fungsiLupaSandi']);
+    // Route::get('/reset-kata-sandi', [UserController::class, 'lupaSandi']);
+    // Route::post('/reser-kata-sandi/eksekusi', [UserController::class, 'fungsiLupaSandi']);
+    Route::livewire('/reset-kata-sandi', 'pages::homepages.reset-password');
     // autentikasi reset kata sandi
-    Route::get('/reset-kata-sandi/autentikasi', [UserController::class, 'autentikasiLupaSandi']);
-    Route::post('/reset-kata-sandi/autentikasi/elsekusi', [UserController::class, 'fungsiAutentikasiLupaSandi']);
+    // Route::get('/reset-kata-sandi/autentikasi', [UserController::class, 'autentikasiLupaSandi']);
+    // Route::post('/reset-kata-sandi/autentikasi/elsekusi', [UserController::class, 'fungsiAutentikasiLupaSandi']);
+    Route::livewire('/reset-kata-sandi/autentikasi', 'pages::homepages.change-password');
 });
 
 // DASHBOARD
 Route::middleware(['auth'])->group(function () {
     // Dashboard view
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    // Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::livewire('/dashboard', 'pages::dashboards.index');
     // Logout
     Route::post('/logout', [UserController::class, 'logout']);
 
     // kontribusi - kontributor
-    Route::get('/kontribusi', [DashboardController::class, 'kontribusi']);
+    // Route::get('/kontribusi', [DashboardController::class, 'kontribusi']);
+    Route::livewire('/kontribusi', 'pages::dashboards.contribution');
     // achivement - semua achievement
     Route::get('/achievement', [AchievementController::class, 'index']);
 
@@ -152,7 +156,9 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['pengurusKepala'])->group(function () {
 
         // artikel - pengurus & kepala
-        Route::get('/artikel', [BlogController::class, 'index']);
+        // Route::get('/artikel', [BlogController::class, 'index']);
+        Route::livewire('/artikel', 'pages::dashboards.articles');
+
         // preview artikel
         Route::get('/blog/preview/{slug}', [HomepageController::class, 'blogPost']);
         // Edit artikel/post -> kepala tidak bisa edit artikel, jadi ini tidak usah 
@@ -284,6 +290,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/kosakata/{slug}/{definisiId}/update', [DefinisiController::class, 'update'])->middleware('kontributorPengurus');
     // Hapus definisi - hanya kontributor dan pengurus
     Route::delete('/kosakata/{slug}/{definisiId}/delete', [DefinisiController::class, 'delete'])->middleware('kontributorPengurus');
+    // edit definisi -livewire
+    Route::livewire('definisi/{id}/edit', 'pages::homepages.definition-edit');
 
     // tambah kosakata - hanya bisa diakses pengurus dan kontributor
     Route::get('/tambah/kosakata', [KosakataController::class, 'tambahKosakata'])->middleware('kontributorPengurus');
@@ -295,5 +303,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/kosakata/{slug}/edit', [EditKosakataController::class, 'simpanEdit'])->middleware('kontributorPengurus');
 
     // notifikasi
-    Route::get('/notifikasi', [NotifikasiController::class, 'index']);
+    // Route::get('/notifikasi', [NotifikasiController::class, 'index']);
+    Route::livewire('/notifikasi', 'pages::dashboards.notification');
 });

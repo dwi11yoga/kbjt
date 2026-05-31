@@ -1,109 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     {{-- Meta --}}
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ $title }} | Kamus Besar Bahasa Jawa</title>
+
+    {{-- judul --}}
+    <title>{{ isset($title) ? $title . ' - ' : '' }} {{ env('APP_NAME') }}</title>
 
     {{-- favicon --}}
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
-    {{-- Import CSS --}}
-    @vite('resources/css/app.css')
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    {{-- font --}}
+    {{-- NOTO SANS & NOTO SANS JAVANESE --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Javanese:wght@400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 
-    {{-- Import js --}}
-    <script src="{{ asset('js/script.js') }}"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- import trix editor 2.0.8 --}}
+    <link rel="stylesheet" href="{{ asset('css/trix.css') }}">
+    <script src="{{ asset('js/trix.umd.min.js') }}"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- Import custom --}}
-    @yield('head')
+    {{-- @yield('head') --}}
 
     {{-- Feathericon --}}
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script> --}}
 </head>
 
-<body class="bg-neutral-50 relative">
+<body class="relative">
 
     <div class="2xl:container 2xl:mx-auto">
         <div class="grid grid-cols-10">
 
             {{-- Menu --}}
-            @include('partials.dashboard-menu')
+            <livewire:menu />
+            {{-- @include('partials.dashboard-menu') --}}
 
             {{-- Isi --}}
-            <div class="md:col-span-8 md:col-start-3 col-span-12 m-7">
+            <div class="md:col-span-8 md:col-start-3 col-span-12 md:ml-1 m-7">
 
                 {{-- header --}}
-                <div
-                    class="grid grid-cols-8 space-x-1 mb-5 md:py-0 py-2 md:static sticky top-0 flex items-center bg-neutral-50 z-10">
+                <div class="mb-5 md:py-0 py-2 md:static sticky top-0 flex items-center justify-between z-10">
 
-                    {{-- Menu mobile --}}
-                    <button class="col-span-1 md:hidden" onclick="openWindow('menu')">
-                        <div
-                            class="w-12 h-12 rounded-full flex justify-center cursor-pointer items-center hover:bg-gray-200 active:bg-gray-300">
-                            <i data-feather='menu'></i>
+                    <div class="flex md:translate-x-0 -translate-x-3 gap-1">
+                        {{-- Menu mobile --}}
+                        <button class="md:hidden z-40" onclick="toggleClass('menu', 'invisible')">
+                            <div
+                                class="w-12 h-12 rounded-full flex justify-center cursor-pointer items-center hover:bg-gray-200 active:bg-gray-300">
+                                <i data-lucide='menu'></i>
+                            </div>
+                        </button>
+
+                        {{-- Judul halaman --}}
+                        <div class="md:col-span-5 col-span-4 flex items-center">
+                            {{-- <h5>{{ $title }}</h5> --}}
+                            <h5>{{ $title }} @yield('afterTitle')</h5>
                         </div>
-                    </button>
-
-                    {{-- Judul halaman --}}
-                    <div class="md:col-span-5 col-span-4 flex items-center">
-                        {{-- <h5>{{ $title }}</h5> --}}
-                        <h5>{{ $title }} @yield('afterTitle')</h5>
                     </div>
-
-                    {{-- Profil & notifikasi --}}
-                    @if ($group=='dashboard')
-                        {{-- <div class="md:col-span-3 col-span-3 flex justify-end items-center">Selamat datang!</div> --}}
-                    @else
-
-                    <div class="md:col-span-3 col-span-3 flex justify-end items-center">
-
-                        {{-- notifikasi --}}
-                        <a href="/notifikasi"
-                            title="{{ cekNotifikasi() == true ? 'Kamu punya notifikasi baru' : 'Cek notifikasi' }}"
-                            class="group mr-2 w-10 h-10 rounded-full flex justify-center items-center hover:bg-gray-100 active:bg-gray-300 relative">
-                            <i data-feather='bell'
-                                class="group-active:fill-black {{ $group == 'notifikasi' ? 'fill-black' : '' }}"></i>
-                            @if (cekNotifikasi() == true)
-                                <div class="absolute right-2 top-2 w-2.5 h-2.5 rounded-full bg-red-500"></div>
-                            @endif
-                        </a>
-
-                        {{-- foto profil --}}
-                        <a href="/u/{{ auth()->user()->username }}"
-                            class="overflow-hidden w-10 h-10 rounded-full flex justify-center hover:outline hover:outline-offset-2 hover:outline-amber-400 hover:outline-2">
-                            @include('partials.profile-pic')
-                        </a>
-                    </div>
-                    @endif
-
-                    {{-- <div class="md:col-span-1 col-span-2 col-start-6 flex md:justify-start justify-end mr-2">
-                        <a href="#"
-                            class="group bg-gray-100 w-12 h-12 rounded-full flex justify-center items-center hover:bg-gray-200 active:bg-gray-300">
-                            <i data-feather='bell' class="group-active:fill-amber-300"></i>
-                        </a>
-                    </div> --}}
-
+                    {{-- foto profil --}}
+                    <a href="/u/{{ auth()->user()->username }}"
+                        class="rounded-full hover:outline outline-offset-2 outline-amber-400 outline-2">
+                        <x-avatar avatarUrl="{{ auth()->user()->profile_pic }}" size="10" rounded="full" />
+                        {{-- @include('partials.profile-pic') --}}
+                    </a>
                 </div>
 
                 {{-- Konten --}}
                 <div class="text-neutral-900 space-y-5">
+                    {{ $slot ?? '' }}
+                    @yield('slot')
                     @yield('body')
                 </div>
+                {{-- footerr --}}
+                <div class="text-center text-xs text-neutral-600 p-2">Copyright © 2026 Kamus Bahasa Jawa Terbuka</div>
             </div>
         </div>
     </div>
 
     {{-- Toast --}}
-    @include('partials.toast')
-
-    {{-- Feathericon --}}
-    <script>
-        feather.replace();
-    </script>
+    <x-toast type="session" />
+    <x-toast type="dispatch" />
 </body>
 
 </html>

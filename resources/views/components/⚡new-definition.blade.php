@@ -24,9 +24,10 @@ new class extends Component {
         }
 
         // cek apakah pengguna disuspend
-        $suspend = suspendedAccount(Auth::user()->id);
+        $suspend = suspendedAccount();
         if ($suspend == true) {
             $this->dispatch('notify', message: 'Definisi gagal disimpan: Akun anda masih dalam masa hukuman.', type: 'failed');
+            return;
         }
 
         // tambah poin user
@@ -66,8 +67,11 @@ new class extends Component {
         <div class="flex gap-2 items-center">
             <x-avatar avatarUrl="{{ auth()->user()?->profile_pic }}" size="8" />
             <div class="flex gap-1 items-center">
-                <div class="group-hover:underline underline-offset-4 decoration-amber-400 decoration-4">
+                <div class="group-hover:underline underline-offset-4 flex flex-wrap gap-1 decoration-amber-400 decoration-4">
                     {{ auth()->check() ? auth()->user()->nama . '(Anda)' : 'Anda' }}
+                    @if (suspendedAccount())
+                        <x-badge color="bg-red-100" hoverColor="hover:bg-red-300">Tersuspend</x-badge>
+                    @endif
                 </div>
                 <div class="text-sm"> · {{ dateFormat(now()) }}</div>
             </div>

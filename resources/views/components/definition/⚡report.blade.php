@@ -22,7 +22,7 @@ new class extends Component {
         }
         // cek apakah user kena suspend/tidak
         if (suspendedAccount() == true) {
-            $this->dispatch('notify', message: 'Gagal menyimpan laporan karena akunmu sedang disuspend.', type: 'failed');
+            $this->dispatch('notify', message: 'Gagal menyimpan laporan: akun anda sedang disuspend.', type: 'failed');
             return;
         }
 

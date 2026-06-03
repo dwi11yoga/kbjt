@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->dateTime('waktu_definisi')->nullable();
             $table->integer('poin_pelapor')->nullable(); // poin untuk pelapor jika di-acc
             $table->integer('poin_pengurus')->nullable(); // poin untuk pengurus jika menindaklanjuti
+            $table->integer('poin_terlapor')->nullable(); // poin terlapor yang dikurang jika hukuman adalah pengurangan poin
             // tindakan & hukuman
             $table->string('tindakan')->nullable(); // tindakan untuk definisi dilaporakn
             $table->string('hukuman')->nullable(); // tindakan untuk pengguna

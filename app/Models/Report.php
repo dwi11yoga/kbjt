@@ -40,7 +40,7 @@ class Report extends Model
         return $this->belongsTo(Kosakata::class)->withTrashed(); // dihasih withTrashed agar bisa memanggil data yang sudah dihapus;
     }
 
-    // Relasi dengan user
+    // Relasi dengan user yang melaporkan
     /**
      * Get the user that owns the Report
      *

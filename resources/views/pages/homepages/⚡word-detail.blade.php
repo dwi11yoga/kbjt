@@ -23,7 +23,7 @@ new class extends Component {
     public function render()
     {
         // hitung jumlah definisi dan definisi terverifikasi
-        $definitionCount = Definisi::where('kosakata', $this->word)->count();
+        $definitionCount = Definisi::where('kosakata', $this->word)->whereNull('hukuman_edit')->count();
         $verifiedCount = Definisi::where('kosakata', $this->word)->whereNotNull('verifikasi')->count();
         $this->definitionCount = $definitionCount;
         $this->verifiedCount = $verifiedCount;
@@ -41,8 +41,12 @@ new class extends Component {
     public function definitions()
     {
         // dapatkan data definisi
-        $definitions = Definisi::with('user') //
-            ->where('kosakata', $this->word);
+        $definitions = Definisi::with('user')
+            ->where('kosakata', $this->word)
+            ->where(function ($query) {
+                //  tampilkan definisi yang hukuman_edit kosong, atau definisi milik pengguna yang sedang login
+                $query->whereNull('hukuman_edit')->orWhere('user_id', auth()->id());
+            });
         // jika filter bahasa digunakan
         if (!empty($this->lang)) {
             $definitions = $definitions->where('bahasa', $this->lang);
@@ -59,7 +63,7 @@ new class extends Component {
         } else {
             $definitions = $definitions->orderByRaw('(JSON_LENGTH(upvotes) - JSON_LENGTH(downvotes)) DESC');
         }
-        
+
         $definitions = $definitions->paginate(20);
         return $definitions;
     }

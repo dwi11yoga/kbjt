@@ -218,23 +218,24 @@ new class extends Component {
                 </button>
             </div>
         </div>
-        <div class="flex justify-between">
-            @if (isset($wordDefinition->copies) && $wordDefinition->copies == 1)
-                <div class="text-sm rounded-full md:py-2 md:px-3 p-2 bg-blue-200 h-fit flex items-center gap-1">
-                    <i data-lucide='copy' class="size-5"></i>
-                    <span class="md:block hidden">Salinan definisi</span>
-                </div>
+        {{-- keterangan --}}
+        <div class="flex w-fit justify-between">
+            @if ($wordDefinition->hukuman_edit)
+                {{-- tampilkan jika definisi perlu diedit --}}
+                <x-badge color="bg-red-200" hoverColor="" gap="1">
+                    <i data-lucide='eye-off' class="size-4"></i>
+                    <div class="">Disembunyikan: perlu diperbaiki</div>
+                </x-badge>
             @elseif (isset($author->role) && $author->role == 'pengurus')
-                <div class="text-sm rounded-full md:py-2 md:px-3 p-2 bg-amber-200 h-fit flex items-center gap-1"
-                    title="Disubmit oleh pengurus">
-                    <i data-lucide='badge-check' class="size-5"></i>
-                    <span class="md:block hidden">Terverifikasi</span>
-                </div>
+                <x-badge color="bg-amber-200" gap="1">
+                    <i data-lucide='user-round-key' class="size-4"></i>
+                    <div class="md:block hidden">Terverifikasi</div>
+                </x-badge>
             @elseif (isset($wordDefinition->verifikasi))
-                <div class="text-sm rounded-full md:py-2 md:px-3 p-2 bg-amber-200 h-fit flex items-center gap-1">
+                <x-badge color="bg-amber-200" gap="1">
                     <i data-lucide='badge-check' class="size-5"></i>
-                    <span class="md:block hidden">Terverifikasi</span>
-                </div>
+                    <div class="md:block hidden">Terverifikasi</div>
+                </x-badge>
             @endif
         </div>
     </div>

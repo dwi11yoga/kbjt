@@ -53,6 +53,17 @@ new class extends Component {
 <div>
     {{-- Header profil --}}
     <x-slot:header>
+        {{-- cek apakah user tersuspend atau didak --}}
+        @if (suspendedAccount($this->user->suspended_time) &&
+                auth()->check() &&
+                (in_array(auth()->user()->role, ['pengurus', 'kepala']) || auth()->user()->id == $this->user->id))
+            <div class="p-5 bg-red-200 text-red-800">
+                <span class="font-bold">Akun tersuspend</span> hingga
+                {{-- {{ $this->user->suspended_time->format('j F Y H:i') }}. --}}
+                {{ dateFormat($this->user->suspended_time) }}.
+            </div>
+        @endif
+
         <section class="md:px-28 px-5 pt-14 mx-auto bg-neutral-100">
             <div class="container mx-auto">
                 <div class="grid grid-cols-4 gap-5">

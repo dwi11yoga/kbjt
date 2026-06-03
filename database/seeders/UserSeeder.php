@@ -26,6 +26,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('muklis1'),
                 'poin' => 1,
                 'email_verified_at' => now(),
+                'profile_pic'=>'avatar/3n52mFW44RTzCJVPbGa9FzzH7jfT3qdy5omFM9LT.jpg',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -37,6 +38,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'poin' => random_int(10, 1000),
                 'email_verified_at' => now(),
+                'profile_pic'=>'avatar/8OjiSUXfJxe5q0Bl93nPqdcuWIvS5lfVOI17lVbn.jpg',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -48,6 +50,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'poin' => random_int(10, 1000),
                 'email_verified_at' => now(),
+                'profile_pic'=>'avatar/550578332_18056995046403780_5849366022156367356_n.jpg',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -59,6 +62,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'poin' => random_int(10, 1000),
                 'email_verified_at' => now(),
+                'profile_pic'=>'avatar/544894025_1299161791652566_8159005770796868881_n.jpg',
                 'created_at' => now(),
                 'updated_at' => now()
             ],

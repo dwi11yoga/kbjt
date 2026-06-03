@@ -16,6 +16,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
 
 
+// convert nomor
+if (!function_exists('numberFormat')) {
+    function numberFormat(int $number)
+    {
+        return number_format($number, 0, ',', '.');
+    }
+}
+
 // Hitung level pengguna
 if (!function_exists('levelCalculator')) {
     function levelCalculator(int $point)
@@ -46,17 +54,19 @@ if (!function_exists('dateFormat')) {
     {
         $date = Carbon::create($datetime);
         // dd(floor($date->diffInDays()) == 5);
-        if ($date->isToday()) {
-            $date = 'Hari ini';
-        } elseif (floor($date->diffInDays()) == 1) {
-            $date = 'Kemarin';
-        } elseif (floor($date->diffInDays()) == 2) {
-            $date = 'Lusa';
-        } elseif (floor($date->diffInDays()) <= 7) {
-            $date = floor($date->diffInDays()) . ' hari lalu';
-        } else {
-            $date = $date->format('j M Y');
-        }
+        $days = floor($date->diffInDays());
+        $date = match (true) {
+            $days <= -365 => $date->format('j M Y'),
+            $days <= -7 => $date->format('j M'),
+            $days <= -3 => abs($days) . ' hari lagi',
+            $days == -2 => 'Lusa',
+            $days == -1 => 'Besok',
+            $date->isToday() => $date->format('H:i'),
+            $days == 1 => 'Kemarin',
+            $days <= 7 => $days . ' hari lalu',
+            $days <= 365 => $date->format('j M'),
+            default => $date->format('j M Y'),
+        };
         return $date;
     }
 }
@@ -218,6 +228,30 @@ if (!function_exists('cekSertifikat')) {
     }
 }
 
+// hitungRequirementSertifikat: menghitung total kontribusi pengguna
+if (!function_exists('userContributionTotal')) {
+    function userContributionTotal(string $rule, int $userId)
+    {
+        if ($rule == 'keanggotaan') { // hitung lama user terdaftar
+            $nilai = User::where('id', $userId)->value('created_at')->diffInDays(now());
+        } elseif ($rule == 'kontribusi') { // hitung kontribusi user
+            $definisi = Definisi::where('user_id', $userId)->count();
+            $laporan = Report::where('user_id', $userId)->whereNotNull('status')->whereNotNull('hukuman')->count();
+            $nilai =  $definisi + $laporan;
+        } elseif ($rule == 'kontribusiPengurus') { // hitung kontribusi user sebagai pengurus
+            $definisi = Definisi::where('verifikasi_oleh', $userId)->count();
+            $laporan = Report::where('pengurus_id', $userId)->whereNotNull('status')->count();
+            // banner - belom
+            $blog = Blog::where('user_id', $userId)->whereNotNull('status')->count();
+            $nilai = $definisi + $laporan + $blog;
+        } else {
+            $nilai = 0;
+        }
+
+        return $nilai;
+    }
+}
+
 // buat notifikasi (nama sebelumnya: kirimNotifikasi)
 if (!function_exists('createNotification')) {
     function createNotification(int $penerimaNotif, string $kategori, string $pesan, string $url)
@@ -235,10 +269,10 @@ if (!function_exists('createNotification')) {
 
 // cekSuspend akun
 if (!function_exists('suspendedAccount')) {
-    function suspendedAccount()
+    function suspendedAccount($suspendedTime = null)
     {
         // cek apakah user tersuspend/tidak
-        $suspendedTime = Auth::user()->suspended_time;
+        $suspendedTime = $suspendedTime ?? Auth::user()?->suspended_time;
 
         if (!empty($suspendedTime) && Carbon::now()->isBefore($suspendedTime)) {
             // jika tersuspend
@@ -307,5 +341,13 @@ if (!function_exists('changeStat')) {
         } else {
             $data->decrement($columnName, 1);
         }
+    }
+}
+
+// buat persentas
+if (!function_exists('percentage')) {
+    function percentage(int $nilai, int $total)
+    {
+        return round(($nilai / $total) * 100) . '%';
     }
 }

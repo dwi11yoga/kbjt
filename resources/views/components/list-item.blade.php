@@ -2,12 +2,12 @@
 
 @if ($type == 'url')
     <a href="{{ $url }}"
-        class="border border-neutral-200 p-3 mt-3 rounded-xl flex md:flex-row flex-col md:justify-between md:gap-1 hover:outline outline-amber-400">
+        class="border border-neutral-200 p-3 rounded-xl flex md:flex-row flex-col md:justify-between gap-1 hover:outline outline-amber-400">
         {{-- default slot --}}
         {{ $slot }}
         {{-- left text slot --}}
         @isset($leftText)
-            <div class="flex flex-wrap items-center gap-1">
+            <div class="flex flex-wrap items-center gap-1 w-full">
                 {{ $leftText }}
             </div>
         @endisset
@@ -21,7 +21,7 @@
 @endif
 @if ($type == 'div')
     <div
-        class="border border-neutral-200 pr-3 mt-3 rounded-xl flex md:flex-row flex-col md:justify-between md:gap-1 hover:outline outline-amber-400">
+        class="border border-neutral-200 pr-3 rounded-xl flex md:flex-row flex-col md:justify-between gap-1 hover:outline outline-amber-400">
         {{-- default slot --}}
         {{ $slot }}
         {{-- left text slot --}}

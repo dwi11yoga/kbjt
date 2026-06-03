@@ -74,7 +74,8 @@ Route::livewire('/u/{username}/{tab}', 'pages::homepages.user-detail');
 
 // tampilan sertifikat
 // pakai 's' saja agar tidak sama dengan route untuk edit sertifikat
-Route::get('/s/{userId}/{sertifikatId}', [SertifikatController::class, 'detailSertifikat']);
+// Route::get('/s/{userId}/{sertifikatId}', [SertifikatController::class, 'detailSertifikat']);
+Route::livewire('/s/{userId}/{sertifikatId}', 'pages::certificate');
 
 // Akses ditolak
 Route::get('/akses-ditolak', function () {
@@ -134,7 +135,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/achievement', [AchievementController::class, 'index']);
 
     // sertifikat - semua
-    Route::get('/sertifikat', [SertifikatController::class, 'index']);
+    // Route::get('/sertifikat', [SertifikatController::class, 'index']);
+    Route::livewire('/sertifikat', 'pages::dashboards.certificates');
     // klaim sertifikat
     Route::post('/sertifikat/klaim/{id}', [SertifikatController::class, 'klaim'])->middleware('kontributorPengurus');
     // tambah sertifikat
@@ -150,7 +152,8 @@ Route::middleware(['auth'])->group(function () {
     route::post('/kosakata/{slug}/laporkan', [ReportController::class, 'kosakata']);
 
     // detail laporan
-    Route::get('/laporan/{id}', [ReportController::class, 'detailLaporan']);
+    // Route::get('/laporan/{id}', [ReportController::class, 'detailLaporan']);
+    Route::livewire('/laporan/{id}', 'pages::dashboards.report-detail');
 
     // hanya untuk role pengurus dan kepala
     Route::middleware(['pengurusKepala'])->group(function () {
@@ -171,27 +174,32 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/artikel/hapus/{id}', [BlogController::class, 'delete']);
 
         // banner
-        Route::get('/banner', [BannerController::class, 'index']);
+        // Route::get('/banner', [BannerController::class, 'index']);
+        Route::livewire('/iklan', 'pages::dashboards.banners');
         // perbarui data banner
-        Route::put('/banner', [BannerController::class, 'store']);
+        // Route::put('/banner', [BannerController::class, 'store']);
 
         // kontributor - pengurus
-        Route::get('/kontributor', [DashboardController::class, 'kontributor']);
+        // Route::get('/kontributor', [DashboardController::class, 'kontributor']);
+        Route::livewire('/kontributor', 'pages::dashboards.contributors');
 
         // pengurus - pengurus
-        Route::get('/pengurus', [DashboardController::class, 'pengurus']);
+        // Route::get('/pengurus', [DashboardController::class, 'pengurus']);
+        Route::livewire('/pengurus', 'pages::dashboards.pengurus');
 
         // view detail user yang menhapus akunnya sendiri
         Route::get('/akun-dihapus/{id}', [HapusAkunController::class, 'detail']);
 
         // laporan - pengurus
-        Route::get('/laporan', [ReportController::class, 'index']);
+        // Route::get('/laporan', [ReportController::class, 'index']);
+        Route::livewire('/laporan', 'pages::dashboards.reports');
 
         // simpan perubahan pada data laporan -> di middleware pengurusKepala (atas)
         Route::put('/laporan/{id}/tindaklanjut', [ReportController::class, 'tindaklanjut']);
 
         // halaman statistik
         Route::get('/statistik', [StatistikController::class, 'index']);
+        // Route::livewire('/statistik', 'pages::dashboards.stats');
     });
 
     // hanya untuk role kepala

@@ -1,0 +1,256 @@
+<?php
+
+use Livewire\Component;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Computed;
+use App\Models\Definisi;
+use App\Models\Report;
+use App\Models\User;
+use App\Models\HapusAkun;
+use Livewire\WithPagination;
+
+new class extends Component {
+    use WithPagination;
+    // overview
+    #[Title('Kontributor')]
+    #[Layout('layouts.dashboard')]
+    #[Computed]
+    public function overview()
+    {
+        $overview['kontributor'] = number_format(User::where('role', '=', 'kontributor')->count('id'), 0, ',', '.');
+        $overview['kontributorBlnIni'] = User::where('role', '=', 'kontributor')->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count('id');
+
+        // bulan ini
+        $definisi = Definisi::whereMonth('created_at', '=', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'kontributor');
+            })
+            ->count();
+        $laporan = Report::whereMonth('created_at', '=', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'kontributor');
+            })
+            ->count();
+        $overview['kontribusi'] = $definisi + $laporan;
+
+        // bulan kemarin
+        if (now()->month == '01') {
+            $tahun = now()->subYear()->year;
+        } else {
+            $tahun = now()->year;
+        }
+        $definisi = Definisi::whereMonth('created_at', '=', now()->subMonth()->month)
+            ->whereYear('created_at', $tahun)
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'kontributor');
+            })
+            ->count();
+        $laporan = Report::whereMonth('created_at', '=', now()->subMonth()->month)
+            ->whereYear('created_at', $tahun)
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'kontributor');
+            })
+            ->count();
+        $overview['kontribusiBlnKemarin'] = $definisi + $laporan;
+        return $overview;
+    }
+
+    // dapatkan data kontributor
+    #[Computed]
+    public function contributors()
+    {
+        $kontributor = User::where('role', 'kontributor')
+            ->orderBy('poin', 'desc')
+            ->paginate(20, '*', 'kontributor')
+            ->appends(request()->query());
+        foreach ($kontributor as $d) {
+            // level
+            $d['level'] = levelCalculator($d->poin);
+            // kontribusi total
+            $definisi = Definisi::where('user_id', $d->id)->count();
+            $laporan = Report::where('user_id', $d->id)->count();
+            $d['kontribusiTotal'] = $definisi + $laporan;
+            // kontribusi bulan ini
+            $definisi = Definisi::where('user_id', $d->id) //
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->count();
+            $laporan = Report::where('user_id', $d->id) //
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->count();
+            $d['kontribusiBlnIni'] = $definisi + $laporan;
+        }
+        return $kontributor;
+    }
+
+    // kontributor yang menhapus akunnya
+    #[Computed]
+    public function deletedAccount()
+    {
+        return HapusAkun::with([
+            'user' => function ($query) {
+                $query->withTrashed();
+            },
+        ])
+            ->whereHas('user', function ($query) {
+                $query->withTrashed()->where('role', 'kontributor');
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, '*', 'kontributor-dihapus')
+            ->appends(request()->query());
+    }
+
+    // dapatkan data definisi terbaru
+    #[Computed]
+    public function latestDefinitions()
+    {
+        return Definisi::whereHas('user', function ($query) {
+            $query->where('role', 'kontributor');
+        })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, '*', 'definisi')
+            ->appends(request()->query());
+    }
+};
+?>
+
+<div class="space-y-5">
+    {{-- Overview --}}
+    <div class="">
+        <div class="mb-3">Overview</div>
+        <div class="grid grid-cols-3 gap-2 ">
+            {{-- Kontributor --}}
+            <x-bento-item title="Kontributor" value="{{ $this->overview['kontributor'] }}"
+                footnote="Bulan ini bertambah {{ $this->overview['kontributorBlnIni'] }} kontributor" />
+
+            {{-- Total Kontribusi --}}
+            <x-bento-item title="Total kontribusi bulan ini" value="{{ $this->overview['kontribusi'] }}"
+                footnote="Total kontribusi bulan kemarin adalah {{ $this->overview['kontribusiBlnKemarin'] }}" />
+        </div>
+    </div>
+
+    <x-alert color="blue" icon="info"
+        message="Total kontribusi dihitung dari jumlah definisi dan laporan yang disubmit kontributor." />
+
+    {{-- Daftar kontributor --}}
+    <div class="bg-white rounded-2xl" id="laporan">
+        <div class="py-2">
+            Daftar kontributor
+        </div>
+
+        <div class="space-y-2">
+            @foreach ($this->contributors as $d)
+                <x-list-item type="url" url="/u/{{ $d->username }}">
+                    <div class="flex flex-wrap items-center gap-1">
+                        {{-- foto profil --}}
+                        <x-avatar avatarUrl="{{ $d->profile_pic }}" />
+                        <div class="">{{ $d->nama }}</div>
+                        <div class="text-neutral-600 text-sm">&#64;{{ $d->username }}</div>
+                        <x-badge color="bg-amber-200">Lvl.{{ $d->level }}</x-badge>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-1">
+                        <x-badge>{{ $d->kontribusiBlnIni }} kontribusi bulan ini</x-badge>
+                        <x-badge>{{ $d->kontribusiTotal }} kontribusi total</x-badge>
+                    </div>
+                </x-list-item>
+            @endforeach
+            @if ($this->contributors->isEmpty())
+                <x-errors.not-found text="Belum ada data" />
+            @endif
+        </div>
+
+        <div class="mt-3">
+            {{ $this->contributors->links() }}
+        </div>
+    </div>
+
+    {{-- Daftar definisi terbaru dari kontributor --}}
+    <div id="definisi" class="bg-white rounded-2xl" id="definisi">
+        <div class="flex items-center justify-between py-2">
+            Definisi terbaru dari kontributor
+        </div>
+
+        <div class="space-y-2">
+            @foreach ($this->latestDefinitions as $d)
+                <x-list-item url="/kosakata/{{ $d->kosakata }}?id={{ $d->id }}">
+                    <x-slot:leftText>
+                        <div class="">Definisi untuk kosakata {{ $d->kosakata }}</div>
+                        {{-- verified? --}}
+                        @if (isset($d->verifikasi))
+                            <div wire:ignore class="" title="Telah diverifikasi">
+                                <i data-lucide='badge-check' class="size-4 fill-amber-400"></i>
+                            </div>
+                        @endif
+                        {{-- pengguna --}}
+                        <x-badge padding="p-1 pr-2" gap="1">
+                            <x-avatar rounded="full" avatarUrl="{{ $d->user->profile_pic }}" size="6" />
+                            <div class="">{{ $d->user->nama ?? '[Akun dihapus]' }}</div>
+                        </x-badge>
+                        {{-- poin diperoleh --}}
+                        <x-badge title="Poin diperoleh">
+                            <i data-lucide='astroid' class="size-3 fill-black"></i>
+                            <div class="">{{ $d->poin_kontributor + $d->poin_verifikasi }} Poin</div>
+                        </x-badge>
+                    </x-slot:leftText>
+                    <x-slot:rightText>
+                        {{ dateFormat($d->updated_at) }}
+                    </x-slot:rightText>
+                </x-list-item>
+            @endforeach
+            @if ($this->latestDefinitions->isEmpty())
+                <x-errors.not-found text="Belum ada data" />
+            @endif
+        </div>
+
+        <div class="mt-3">
+            {{ $this->latestDefinitions->links() }}
+        </div>
+    </div>
+
+    {{-- Daftar kontributor yang menghapus akunnya --}}
+    <div class="bg-white rounded-2xl" id="laporan">
+        <div class="py-2">
+            Kontributor yang menghapus akunnya
+        </div>
+
+        <div class="space-y-3">
+            @if ($this->deletedAccount->isEmpty())
+                <x-errors.not-found text="Belum ada data" />
+            @endif
+            @foreach ($this->deletedAccount as $d)
+                <x-list-item type="url" url="/u/{{ $d->username }}">
+                    <div class="flex flex-wrap items-center gap-1">
+                        {{-- foto profil --}}
+                        <x-avatar avatarUrl="{{ $d->profile_pic }}" />
+                        <div class="">{{ $d->nama }}</div>
+                        <div class="text-neutral-600 text-sm">&#64;{{ $d->username }}</div>
+                        <x-badge color="bg-amber-200">Lvl.{{ $d->level }}</x-badge>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-1">
+                        Dihapus pada {{ dateFormat($d->deleted_at) }}
+                    </div>
+                </x-list-item>
+            @endforeach
+        </div>
+
+        <div class="mt-3">
+            {{ $this->deletedAccount->links() }}
+        </div>
+    </div>
+
+    {{-- Laporan --}}
+    <div class="bg-white rounded-2xl" id="laporan">
+        <div class="py-2">Laporan</div>
+
+        <div class="space-y-2">
+            <div href="/kontribusi/laporan/{{ $d->id }}"
+                class="border border-neutral-200 p-3 mt-3 rounded-xl text-center"> Beralih ke halaman <a href="/laporan"
+                    class="underline underline-offset-2 decoration-amber-400 decoration-4">Laporan</a>.
+            </div>
+        </div>
+    </div>
+</div>

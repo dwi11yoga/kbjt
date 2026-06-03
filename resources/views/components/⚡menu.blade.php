@@ -51,8 +51,8 @@ new class extends Component {
                     'icon' => 'chart-pie',
                 ],
                 [
-                    'name' => 'Banner',
-                    'path' => '/banner',
+                    'name' => 'Iklan',
+                    'path' => '/iklan',
                     'icon' => 'megaphone',
                 ],
                 [
@@ -63,7 +63,7 @@ new class extends Component {
                 [
                     'name' => 'Pengurus',
                     'path' => '/pengurus',
-                    'icon' => 'lock',
+                    'icon' => 'user-round-key',
                 ],
                 [
                     'name' => 'Laporan',

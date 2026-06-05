@@ -8,7 +8,7 @@
     'autofocus' => false,
 ])
 
-<div class="space-y-1 mt-2">
+<div class="space-y-1">
     @if ($label)
         <label for="{{ $id }}">{{ $label }}</label>
     @endif

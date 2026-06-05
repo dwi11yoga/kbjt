@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\KepalaMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,6 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
         // middleware untuk pengurus dan kepala
         $middleware->alias([
             'pengurusKepala' => PengurusKepalaMiddleware::class
+        ]);
+    })
+    ->withMiddleware(function (Middleware $middleware) {
+        // middleware untuk pengurus dan kepala
+        $middleware->alias([
+            'kepala' => KepalaMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

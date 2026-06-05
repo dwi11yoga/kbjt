@@ -15,9 +15,9 @@ new class extends Component {
     #[Title('Masuk')]
     public $remember;
     #[Validate('required|min:6|max:255|regex:/^[A-Za-z0-9_.@-]+$/')]
-    public $credential = 'muklis';
+    public $credential = 'supriyanto';
     #[Validate('required|min:6|max:255')]
-    public $password = 'passaword';
+    public $password = 'password';
 
     // fungsi login
     public function authenticate(Request $request)
@@ -49,27 +49,11 @@ new class extends Component {
         if (Auth::attempt([$fieldType => $credentials['credential'], 'password' => $credentials['password']], $remember)) {
             $request->session()->regenerate(); //untuk mencegah serangan session fixation
 
-            // cek achievement
-            $userId = Auth::user()->id;
-            // rule yang akan dicek achievementnya
-            $rule = ['keanggotaan', 'definisi', 'laporan'];
-            if (Auth::user()->role == 'pengurus') {
-                // tambahan rule khusus untuk pengurus
-                $rulePengurus = ['artikel', 'totalViewBlog', 'viewBlog'];
-                $rule = array_merge($rule, $rulePengurus);
-            }
-            // jika user login = kepala, maka kosongkan rule achievement yang perlu dicek
-            if (Auth::user()->role == 'kepala') {
-                $rule = [];
-            }
-
-            //lakukan perulangan untuk cek achievement user
-            foreach ($rule as $d) {
-                achievement($userId, $d);
-            }
+            // cek achievement keanggotaan pengguna
+            achievement(auth()->user()->id, 'keanggotaan');
 
             // cek sertifikat (untuk notifikasi)
-            cekSertifikat($userId);
+            cekSertifikat(auth()->user()->id);
 
             return redirect()
                 ->intended('/dashboard')

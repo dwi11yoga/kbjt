@@ -117,18 +117,11 @@ new class extends Component {
 };
 ?>
 
-<div class="space-y-5">
+<div class="space-y-2">
     {{-- tambah sertifikat --}}
     @if (auth()->user()->role == 'kepala')
-        <div class="md:flex md:justify-between">
-            {{-- Buat artikel --}}
-            <a href="/sertifikat/tambah">
-                <div class="md:mt-0 mt-2 py-4 px-5 bg-white rounded-xl hover:outline hover:outline-amber-200">
-                    <i data-lucide='plus' class="w-5 inline-block"></i>
-                    <span>Tambah</span>
-                </div>
-            </a>
-        </div>
+        {{-- Buat artikel --}}
+        <x-button url="/sertifikat/tambah" text="Tambah" icon="plus" />
     @endif
     {{-- daftar sertifikat --}}
     <div class="space-y-2">

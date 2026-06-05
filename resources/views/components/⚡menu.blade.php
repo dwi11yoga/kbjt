@@ -90,7 +90,7 @@ new class extends Component {
                 'icon' => 'signature',
             ],
             [
-                'name' => 'Achievement',
+                'name' => 'Pencapaian',
                 'path' => '/achievement',
                 'icon' => 'award',
             ],

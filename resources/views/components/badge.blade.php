@@ -6,7 +6,7 @@
     'padding' => 'py-1 px-2',
 ])
 
-<div class="flex items-center rounded-full {{ $padding }} {{ $color }} {{ $hoverColor }} text-sm gap-{{ $gap }}"
+<div class="flex text-nowrap items-center rounded-full {{ $padding }} {{ $color }} {{ $hoverColor }} text-sm gap-{{ $gap }}"
     title="{{ $title }}">
     {{ $slot }}
 </div>

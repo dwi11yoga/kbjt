@@ -1,5 +1,6 @@
 @props([
     'type' => 'button',
+    'url' => null,
     'disabled' => false,
     'text',
     'icon' => null,
@@ -11,7 +12,11 @@
     'width' => null,
 ])
 
-<button type="{{ $type }}" {{ $disabled ? 'disabled' : '' }} wire:click='{{ $model }}'
+<button type="{{ $type }}"
+    @isset($url)
+        onclick="window.location='{{ $url }}'"
+    @endisset
+    {{ $disabled ? 'disabled' : '' }} wire:click='{{ $model }}'
     class="rounded-{{ $rounded }} py-3 px-4 {{ $color }} hover:bg-opacity-90 flex items-center justify-center gap-1 {{ $width }} active:scale-95 transition-transform duration-200">
     @if ($target)
         {{-- icon --}}
@@ -23,8 +28,9 @@
     @endif
     @if ($icon)
         <i wire:target='{{ $target }}' {{ $target ? 'wire:loading.remove' : '' }}
-            data-lucide='{{ $icon }}' class="size-5"></i>
+            data-lucide='{{ $icon }}' class="md:size-5 size-4"></i>
     @endif
-    <div wire:target='{{ $target }}' {{ $target ? 'wire:loading.remove' : '' }} class="">
+    <div wire:target='{{ $target }}' {{ $target ? 'wire:loading.remove' : '' }}
+        class="text-nowrap md:text-base text-sm">
         {{ $text }}</div>
 </button>

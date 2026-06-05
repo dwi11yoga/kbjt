@@ -126,25 +126,30 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::livewire('/dashboard', 'pages::dashboards.index');
     // Logout
-    Route::post('/logout', [UserController::class, 'logout']);
+    // Route::post('/logout', [UserController::class, 'logout']);
 
     // kontribusi - kontributor
     // Route::get('/kontribusi', [DashboardController::class, 'kontribusi']);
     Route::livewire('/kontribusi', 'pages::dashboards.contribution');
     // achivement - semua achievement
-    Route::get('/achievement', [AchievementController::class, 'index']);
+    // Route::get('/achievement', [AchievementController::class, 'index']);
+    Route::livewire('/achievement', 'pages::dashboards.achievements');
+
 
     // sertifikat - semua
     // Route::get('/sertifikat', [SertifikatController::class, 'index']);
     Route::livewire('/sertifikat', 'pages::dashboards.certificates');
     // klaim sertifikat
-    Route::post('/sertifikat/klaim/{id}', [SertifikatController::class, 'klaim'])->middleware('kontributorPengurus');
+    // Route::post('/sertifikat/klaim/{id}', [SertifikatController::class, 'klaim'])->middleware('kontributorPengurus');
     // tambah sertifikat
-    Route::get('/sertifikat/tambah', [SertifikatController::class, 'tambah'])->middleware('kepala');
-    Route::post('/sertifikat/tambah', [SertifikatController::class, 'simpanTambah'])->middleware('kepala');
+    // Route::get('/sertifikat/tambah', [SertifikatController::class, 'tambah'])->middleware('kepala');
+    // Route::post('/sertifikat/tambah', [SertifikatController::class, 'simpanTambah'])->middleware('kepala');
+    Route::livewire('/sertifikat/tambah', 'pages::dashboards.certificate-new')->middleware('kepala');
     // edit sertifikat
-    Route::get('/sertifikat/edit/{id}', [SertifikatController::class, 'edit'])->middleware('kepala');
-    Route::post('/sertifikat/edit/{id}', [SertifikatController::class, 'simpanEdit'])->middleware('kepala');
+    // Route::get('/sertifikat/edit/{id}', [SertifikatController::class, 'edit'])->middleware('kepala');
+    // Route::post('/sertifikat/edit/{id}', [SertifikatController::class, 'simpanEdit'])->middleware('kepala');
+    Route::livewire('/sertifikat/edit/{id}', 'pages::dashboards.certificate-edit')->middleware('kepala');
+
 
     // laporkan definisi
     Route::post('/laporkan/definisi', [ReportController::class, 'definisi']);
@@ -214,13 +219,15 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/poin-kontribusi/update', [PoinKontribusiController::class, 'update']);
 
         // tambah achievement
-        Route::get('/achievement/baru', [AchievementController::class, 'tambah']);
+        // Route::get('/achievement/baru', [AchievementController::class, 'tambah']);
+        Route::livewire('/achievement/baru', 'pages::dashboards.achievement-new');
         // simpan achievement baru
-        Route::post('/achievement/baru', [AchievementController::class, 'save']);
+        // Route::post('/achievement/baru', [AchievementController::class, 'save']);
         // edit achievement
-        Route::get('achievement/{id}/edit', [AchievementController::class, 'edit']);
+        // Route::get('achievement/{id}/edit', [AchievementController::class, 'edit']);
+        Route::livewire('/achievement/{id}/edit', 'pages::dashboards.achievement-edit');
         // simpan edit achievement
-        Route::put('/achievement/{id}/edit', [AchievementController::class, 'simpanEdit']);
+        // Route::put('/achievement/{id}/edit', [AchievementController::class, 'simpanEdit']);
 
         // ubah status user sebagai pengurus/kontributor
         Route::put('/ubah-role/{id}', [UserController::class, 'ubahStatusPengurus']);
@@ -247,34 +254,40 @@ Route::middleware(['auth'])->group(function () {
         // Route::post('/laporan/{id}/hukuman', [HukumanController::class, 'tindaklanjut']);
 
         // setujui edit kosakata
-        Route::put('/kosakata/{slug}/riwayat/{id}/setujui', [EditKosakataController::class, 'setujui']);
+        // Route::put('/kosakata/{slug}/riwayat/{id}/setujui', [EditKosakataController::class, 'setujui']);
 
         // verifikasi definisi
-        Route::put('/definisi/verifikasi/{kosakata_slug}/{id}', [DefinisiController::class, 'verifikasi']);
+        // Route::put('/definisi/verifikasi/{kosakata_slug}/{id}', [DefinisiController::class, 'verifikasi']);
     });
 
     // Pengaturan
-    Route::get('/pengaturan', [DashboardController::class, 'settings']);
+    // Route::get('/pengaturan', [DashboardController::class, 'settings']);
+    Route::livewire('/pengaturan', 'pages::dashboards.settings');
 
     // Ubah data diri
-    Route::get('/pengaturan/edit-user', [UserController::class, 'editUser']);
+    // Route::get('/pengaturan/edit-user', [UserController::class, 'editUser']);
+    Route::livewire('/pengaturan/edit-user', 'pages::dashboards.setting-user-info');
     // Simpan perubahan data diri
-    Route::put('/pengaturan/edit-user', [UserController::class, 'update']);
+    // Route::put('/pengaturan/edit-user', [UserController::class, 'update']);
 
     // ubah tautan dan media sosial
-    Route::get('/pengaturan/tautan', [UserController::class, 'tautan']);
-    Route::put('/pengaturan/tautan/simpan', [UserController::class, 'simpanTautan']);
+    // Route::get('/pengaturan/tautan', [UserController::class, 'tautan']);
+    // Route::put('/pengaturan/tautan/simpan', [UserController::class, 'simpanTautan']);
+    Route::livewire('/pengaturan/tautan', 'pages::dashboards.setting-media-social');
+
 
     // Simpan edit email
     // Route::put('/pengaturan/ganti-email', [UserController::class, 'updateEmail']);
 
     // sembunyikan data sensitif
-    Route::get('/pengaturan/data-sensitif', [UserController::class, 'dataSensitif']);
-    Route::put('/pengaturan/data-sensitif/simpan', [UserController::class, 'simpanDataSensitif']);
+    // Route::get('/pengaturan/data-sensitif', [UserController::class, 'dataSensitif']);
+    // Route::put('/pengaturan/data-sensitif/simpan', [UserController::class, 'simpanDataSensitif']);
+    Route::livewire('/pengaturan/data-sensitif', 'pages::dashboards.setting-sensitive-info');
 
     // terima donasi
-    Route::get('/pengaturan/donasi', [UserController::class, 'userDonasi']);
-    Route::put('/pengaturan/donasi/simpan', [UserController::class, 'simpanUserDonasi']);
+    // Route::get('/pengaturan/donasi', [UserController::class, 'userDonasi']);
+    // Route::put('/pengaturan/donasi/simpan', [UserController::class, 'simpanUserDonasi']);
+    Route::livewire('/pengaturan/donasi', 'pages::dashboards.setting-donasi');
 
     // ubah username
     Route::get('/pengaturan/ubah-username', [UserController::class, 'ubahUsername']);

@@ -42,9 +42,9 @@ new class extends Component {
         $laporan = Report::select('*');
 
         // filter definisi
-        if ($this->filter == 'belum-ditangani') {
+        if ($this->filter == 'pending') {
             $laporan = $laporan->whereNull('status');
-        } elseif ($this->filter == 'selesai-ditangani') {
+        } elseif ($this->filter == 'selesai') {
             $laporan = $laporan->whereNotNull('status');
         } elseif ($this->filter == 'kamu-tangani') {
             $laporan = $laporan->where('pengurus_id', auth()->user()->id);
@@ -85,7 +85,7 @@ new class extends Component {
     {{-- Overview --}}
     <div class="space-y-2">
         <div class="">Overview</div>
-        <div class="grid grid-cols-3 gap-3 ">
+        <div class="grid md:grid-cols-3 grid-cols-2 gap-2">
             {{-- total laporan --}}
             <x-bento-item title="Total laporan" value="{{ numberFormat($this->overview->laporanTotal) }}"
                 footnote="Bulan ini bertambah {{ numberFormat($this->overview->laporanBlnIni) }} laporan" />
@@ -107,22 +107,29 @@ new class extends Component {
     {{-- laporan definisi --}}
     <div class="bg-white">
         {{-- atas/title --}}
-        <div class="py-2 flex justify-between items-center">
-            <div>Definisi Dilaporkan</div>
+        <div class="py-2 flex gap-2 md:flex-row flex-col justify-between md:items-center">
+            <div class="text-nowrap">Definisi Dilaporkan</div>
 
             {{-- filter --}}
-            <div class="relative">
+            <x-radio-group overflow="overflow-x-auto">
+                <x-input-radio model="filter" id="semua" value="semua" text="Semua" icon="layout-grid" />
+                <x-input-radio model="filter" id="pending" value="pending" text="Pending" icon="clock" />
+                <x-input-radio model="filter" id="selesai" value="selesai" text="Selesai" icon="circle-check" />
+                <x-input-radio model="filter" id="kamu-tangani" value="kamu-tangani" text="Kamu tangani"
+                    icon="user-round" />
+            </x-radio-group>
+            {{-- <div class="relative">
                 <i data-lucide='filter' class="w-5 absolute top-2 left-3"></i>
                 <select wire:model.live='filter' name="filter" id="filter"
                     class="appearance-none border md:text-base text-sm border-neutral-200 rounded-xl py-2 pl-10 pr-3 bg-white cursor-pointer">
                     <option value="semua">Semua</option>
-                    <option value="belum-ditangani">Belum ditangani</option>
-                    <option value="selesai-ditangani">Selesai ditangani</option>
+                    <option value="pending">Belum ditangani</option>
+                    <option value="selesai">Selesai ditangani</option>
                     @if (auth()->user()->role == 'pengurus')
                         <option value="kamu-tangani">Kamu tangani</option>
                     @endif
                 </select>
-            </div>
+            </div> --}}
         </div>
 
         <div class="space-y-2">
@@ -135,15 +142,15 @@ new class extends Component {
                             {{ $d->user->nama }} melaporkan definisi {{ $d->definisi->kosakata }} milik
                             {{ $d->terlapor }}
                         </div>
+                    </x-slot:leftText>
+                    <x-slot:rightText>
                         {{-- status --}}
                         <x-badge gap="1" color="{{ isset($d->status) ? 'bg-green-100' : 'bg-red-100' }}"
-                            hoverColor="">
+                            hoverColor="{{ isset($d->status) ? 'hover:bg-green-300' : 'hover:bg-red-300' }}">
                             <i data-lucide='{{ isset($d->status) ? 'check-circle' : 'circle-alert' }}'
                                 class="w-4"></i>
                             <span>{{ isset($d->status) ? 'Selesai' : 'Pending' }}</span>
                         </x-badge>
-                    </x-slot:leftText>
-                    <x-slot:rightText>
                         <x-badge>
                             {{ dateFormat($d->updated_at) }}
                         </x-badge>

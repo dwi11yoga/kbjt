@@ -16,7 +16,7 @@ new class extends Component {
     #[Url]
     public $status = '';
     #[Url]
-    public $author;
+    public $author = '';
     #[Url]
     public $id;
 
@@ -192,46 +192,30 @@ new class extends Component {
 ?>
 
 <div class="space-y-3">
-    {{-- Filter --}}
-    <div class="md:flex md:justify-between">
-        <div class="inline-flex space-x-2">
-            {{-- Status --}}
-            <div class="relative">
-                <label for="status" class="absolute left-3 top-4"><i data-lucide='filter' class="w-5"></i></label>
-                <select wire:model.live='status' name="status" id="status"
-                    class="py-4 pl-10 pr-5 bg-white rounded-xl appearance-none cursor-pointer hover:outline hover:outline-amber-200">
-                    <option value="">Semua</option>
-                    <option value="dipublikasikan">Dipublikasikan</option>
-                    <option value="draf">Draf</option>
-                </select>
-            </div>
-
+    {{-- menu --}}
+    <div class="flex md:flex-row flex-col justify-between gap-2">
+        {{-- filter --}}
+        <div class="flex md:flex-row flex-col md:items-center gap-2">
+            {{-- author --}}
             @if (auth()->user()->role == 'pengurus')
-                {{-- Dibuat oleh --}}
-                <div class="relative">
-                    <label for="author" class="absolute left-3 top-4">
-                        <i data-lucide='user' class="w-5"></i>
-                    </label>
-                    <select wire:model.live='author' name="author" id="author"
-                        class="py-4 pl-10 pr-5 bg-white rounded-xl appearance-none cursor-pointer hover:outline hover:outline-amber-200">
-                        <option {{ isset($_GET['author']) && $_GET['author'] == '' ? 'selected' : '' }} value="">
-                            Semua</option>
-                        <option
-                            {{ isset($_GET['author']) && $_GET['author'] == auth()->user()->username ? 'selected' : '' }}
-                            value="{{ auth()->user()->username }}">Artikelku</option>
-                    </select>
-                </div>
+                <x-radio-group>
+                    <x-input-radio model="author" id="author-all" value="" text="Semua author" icon="users-round" />
+                    <x-input-radio model="author" id="{{ auth()->user()->username }}"
+                        value="{{ auth()->user()->username }}" text="Artikelku" icon="user-round" />
+                </x-radio-group>
             @endif
+            <div class="w-px h-4 bg-gray-200 md:block hidden"></div>
+            {{-- status --}}
+            <x-radio-group>
+                <x-input-radio model="status" id="semua" value="" text="Semua" icon="layout-grid" />
+                <x-input-radio model="status" id="dipublikasikan" value="dipublikasikan" text="Dipublikasikan" icon="send" />
+                <x-input-radio model="status" id="draf" value="draf" text="Draf" icon="archive" />
+            </x-radio-group>
         </div>
 
         @if (auth()->user()->role == 'pengurus')
             {{-- Buat artikel --}}
-            <a href="/artikel/baru">
-                <div class="md:mt-0 mt-2 py-4 px-5 bg-white rounded-xl hover:outline hover:outline-amber-200">
-                    <i data-lucide='plus' class="w-5 inline-block"></i>
-                    <span>Buat Artikel</span>
-                </div>
-            </a>
+            <x-button url="/artikel/baru" text="Buat artikel" icon="plus" width="w-fit" />
         @endif
     </div>
 

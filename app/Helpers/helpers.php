@@ -97,20 +97,15 @@ if (!function_exists('achievement')) {
         }
 
         // dapatkan achievement dan role user yang didapatkkan
-        $achievements = Achievement::where('rule', $rule)
-            ->whereNotIn('id', array_keys($user?->achievement ?? [])); // ?-> null-safe: agar tidak error ketika variabel==null
-
-        // cek apakah user adalah pengurus atau tidak, agar kontributor tidak bisa mendapatkan achievement pengurus
-        if ($user->role != 'pengurus') {
-            // pengurus
-            $achievements = $achievements->orderBy('requirement', 'asc')
-                ->get();
-        } else {
-            // bukan
-            $achievements = $achievements->whereNot('role', 'pengurus')
-                ->orderBy('requirement', 'asc')
-                ->get();
-        }
+        $achievements = Achievement::whereNotIn('id', array_keys($user?->achievement ?? [])) // ?-> null-safe: agar tidak error ketika variabel==null
+            ->where('rule', $rule)
+            ->where(function ($query) use ($user) {
+                $query
+                    ->where('role', $user->role)
+                    ->orWhereNull('role');
+            })
+            ->orderBy('requirement', 'asc')
+            ->get();
 
         // cek jumlah kontribusi user
         switch ($rule) {
@@ -137,7 +132,6 @@ if (!function_exists('achievement')) {
                 break;
         }
 
-
         // perulangan terhadap achievement yang belum didapatkan. jika memenuhi achievement, maka simpan data baru
         $simpan = $user->achievement;
         $poin = 0;
@@ -156,18 +150,19 @@ if (!function_exists('achievement')) {
             createNotification($userId, 'achievement', $pesan, $url);
         }
 
-        // jika tidak ada data achievement yang berubah (tidak ada achievement baru)
-        if ($user->achievement == $simpan) {
-            return;
+        // jika ada achievement baru
+        if ($user->achievement != $simpan) {
+            // simpan data
+            User::find($userId)->update([
+                'achievement' => $simpan
+            ]);
+
+            // tambah poin exp
+            User::find($userId)->increment('poin', $poin);
         }
 
-        // simpan data
-        User::find($userId)->update([
-            'achievement' => $simpan
-        ]);
-
-        // tambah poin exp
-        User::find($userId)->increment('poin', $poin);
+        // kembalikan jumlah kontribusi pengguna
+        return $value;
     }
 }
 
@@ -346,8 +341,16 @@ if (!function_exists('changeStat')) {
 
 // buat persentas
 if (!function_exists('percentage')) {
-    function percentage(int $nilai, int $total)
+    function percentage(int $nilai, int $total, int $percentageMax = null)
     {
-        return round(($nilai / $total) * 100) . '%';
+        // hitung persentase
+        $percentage = round(($nilai / $total) * 100);
+
+        // jika persentase lebih besar dari jumlah persentase yang diinginkan
+        if (!empty($percentageMax) && $percentage > $percentageMax) {
+            $percentage = $percentageMax;
+        }
+
+        return $percentage . '%';
     }
 }

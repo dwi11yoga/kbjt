@@ -21,14 +21,14 @@
                     <div>{{ $d->progress }}</div>
                     @isset($d->date_achieved)
                         <div class="text-sm md:block hidden"></span>— Diperoleh pada
-                            {{ $d->date_achieved->translatedFormat('d F Y H:i') }}
+                            {{ $d->date_achieved }}
                             WIB.</div>
                     @endisset
                 </div>
                 {{-- mobile --}}
                 @isset($d->date_achieved)
                     <div class="text-sm md:hidden"></span>— Diperoleh pada
-                        {{ $d->date_achieved->translatedFormat('d F Y H:i') }} WIB.
+                        {{ $d->date_achieved }} WIB.
                     </div>
                 @endisset
             </div>

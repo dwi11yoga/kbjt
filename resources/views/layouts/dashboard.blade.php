@@ -47,7 +47,7 @@
             <div class="md:col-span-8 md:col-start-3 col-span-12 md:ml-1 m-7">
 
                 {{-- header --}}
-                <div class="mb-5 md:py-0 py-2 md:static sticky top-0 flex items-center justify-between z-10">
+                <div class="bg-white mb-5 md:py-0 py-2 md:static sticky top-0 flex items-center justify-between z-10">
 
                     <div class="flex md:translate-x-0 -translate-x-3 gap-1">
                         {{-- Menu mobile --}}

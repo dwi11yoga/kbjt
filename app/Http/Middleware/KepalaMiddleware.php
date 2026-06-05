@@ -18,9 +18,10 @@ class KepalaMiddleware
     {
         $user = Auth::user();
         if (!$user || $user->role !== 'kepala') {
-            return response()->view('error.403', [
-                'title' => 'Akses ditolak'
-            ], 403);
+            abort(403, 'Akses ditolak');
+            // return response()->view('error.403', [
+            //     'title' => 'Akses ditolak'
+            // ], 403);
         }
         return $next($request);
     }

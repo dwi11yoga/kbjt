@@ -130,7 +130,7 @@ new class extends Component {
     {{-- Overview --}}
     <div class="">
         <div class="mb-3">Overview</div>
-        <div class="grid grid-cols-3 gap-2 ">
+        <div class="grid  md:grid-cols-3 grid-cols-2 gap-2 ">
             {{-- Jumlah pengurus aktif --}}
             <x-bento-item title="Jumlah pengurus aktif" value="{{ $this->overview['jmlPengurus'] }}"
                 footnote="{{ $this->overview['rasioUser'] }}/10 pengguna adalah pengurus" />
@@ -205,7 +205,7 @@ new class extends Component {
                         </x-badge>
                     </x-slot:leftText>
                     <x-slot:rightText>
-                        {{ dateFormat($d->updated_at) }}
+                        <x-badge>{{ dateFormat($d->updated_at) }}</x-badge>
                     </x-slot:rightText>
                 </x-list-item>
             @endforeach
@@ -239,7 +239,7 @@ new class extends Component {
                         <x-badge color="bg-amber-200">Lvl.{{ $d->level }}</x-badge>
                     </div>
                     <div class="flex flex-wrap items-center gap-1">
-                        Dihapus pada {{ dateFormat($d->deleted_at) }}
+                        <x-badge>{{ dateFormat($d->deleted_at) }}</x-badge>
                     </div>
                 </x-list-item>
             @endforeach

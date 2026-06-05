@@ -1,0 +1,125 @@
+<?php
+
+use Livewire\Component;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Layout;
+
+new class extends Component {
+    #[Title('Pengaturan')]
+    #[Layout('layouts.dashboard')]
+    public $profil;
+    public $akun;
+
+    // set daftar menu
+    public function mount()
+    {
+        $this->profil = [
+            [
+                'text' => 'Ubah data diri',
+                'icon' => 'user-round',
+                'url' => '/pengaturan/edit-user',
+            ],
+            [
+                'text' => 'Tautan dan media sosial',
+                'icon' => 'link',
+                'url' => '/pengaturan/tautan',
+            ],
+            [
+                'text' => 'Sembunyikan data sensitif',
+                'icon' => 'eye-off',
+                'url' => '/pengaturan/data-sensitif',
+            ],
+            [
+                'text' => 'Terima donasi',
+                'icon' => 'heart-handshake',
+                'url' => '/pengaturan/donasi',
+            ],
+        ];
+
+        $menuAkun = [
+            [
+                'text' => 'Ubah username',
+                'icon' => 'at-sign',
+                'url' => 'pengaturan/ubah-username',
+            ],
+            [
+                'text' => 'Ubah alamat email',
+                'icon' => 'mail',
+                'url' => '/pengaturan/ubah-email',
+            ],
+            [
+                'text' => 'Ubah kata sandi',
+                'icon' => 'key',
+                'url' => '/pengaturan/ubah-password',
+            ],
+        ];
+
+        if (auth()->user()->role != 'kepala') {
+            $menuAkun[] = [
+                'text' => 'Hapus akun',
+                'icon' => 'user-x',
+                'url' => '/pengaturan/hapus-akun',
+            ];
+        }
+
+        $this->akun = $menuAkun;
+    }
+
+    // logout
+    public function logout()
+    {
+        sleep(4);
+        Auth::logout(); // meng-logout-kan user
+        request()->session()->invalidate(); //menghapus semua data session yang ada saat ini, mencegah session fixation attack.
+        request()->session()->regenerateToken(); //mengganti CSRF token, Cross-Site Request Forgery
+        return redirect()->to('/')->with('success', 'Anda berhasil keluar dari sistem');
+    }
+};
+?>
+
+<div class="space-y-4">
+
+    {{-- profil --}}
+    <div class="rounded-2xl space-y-3">
+        <div class="">Profil</div>
+        <div class="space-y-2">
+            @foreach ($profil as $menu)
+                <x-list-item type="url" url="{{ $menu['url'] }}">
+                    <x-slot:leftText>
+                        <i data-lucide='{{ $menu['icon'] }}' class="size-5"></i>
+                        <div class="">{{ $menu['text'] }}</div>
+                    </x-slot:leftText>
+                </x-list-item>
+            @endforeach
+        </div>
+    </div>
+
+    {{-- akun --}}
+    <div class="space-y-3">
+        <div class="">Akun</div>
+        <div class="space-y-2">
+            @foreach ($akun as $menu)
+                <x-list-item type="url" url="{{ $menu['url'] }}">
+                    <x-slot:leftText>
+                        <i data-lucide='{{ $menu['icon'] }}' class="size-5"></i>
+                        <div class="">{{ $menu['text'] }}</div>
+                    </x-slot:leftText>
+                </x-list-item>
+            @endforeach
+            {{-- Keluar --}}
+            <div wire:click='logout' class="cursor-pointer">
+                <x-list-item type="div">
+                    <x-slot:leftText>
+                        <div class="animate-spin" wire:target='logout' wire:loading>
+                            <i data-lucide='loader' class="size-5 text-red-600"></i>
+                        </div>
+                        <i wire:target='logout' wire:loading.remove data-lucide='log-out'
+                            class="size-5 text-red-600"></i>
+                        <div class="text-red-600">Keluar</div>
+                    </x-slot:leftText>
+                </x-list-item>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -41,7 +41,11 @@ new class extends Component {
     public function definitions()
     {
         // dapatkan data definisi
-        $definitions = Definisi::with('user')
+        $definitions = Definisi::with([
+            'user' => function ($query) {
+                $query->withTrashed();
+            },
+        ])
             ->where('kosakata', $this->word)
             ->where(function ($query) {
                 //  tampilkan definisi yang hukuman_edit kosong, atau definisi milik pengguna yang sedang login
@@ -90,18 +94,18 @@ new class extends Component {
                     {{ ucwords($word) }}
                 </h1>
                 <div class="flex">
-                    <button wire:ignore class="hover:bg-neutral-100 rounded-full p-2">
+                    <button wire:ignore class="hover:bg-neutral-100 dark:hover:bg-zinc-800 rounded-full p-2">
                         <i data-lucide='volume-2' class="size-5"></i>
                     </button>
-                    <a href="#share" wire:ignore class="hover:bg-neutral-100 rounded-full p-2">
+                    <a href="#share" wire:ignore class="hover:bg-neutral-100 dark:hover:bg-zinc-800 rounded-full p-2">
                         <i data-lucide='share-2' class="size-5"></i>
                     </a>
                 </div>
             </div>
-            <div wire:ignore class="text-neutral-600 flex items-center gap-1">
+            <div wire:ignore class="text-neutral-600 dark:text-zinc-400 flex items-center gap-1">
                 <div class="javanese" id="aksara-text"></div>
                 <button onclick="toggleClass('aksara-disclaimer', 'hidden')" wire:ignore
-                    class="hover:bg-neutral-100  text-neutral-500 rounded-full p-1">
+                    class="hover:bg-neutral-100 dark:hover:bg-zinc-800  text-neutral-500 rounded-full p-1">
                     <i data-lucide='circle-question-mark' class="size-4"></i>
                 </button>
                 <script>
@@ -112,35 +116,36 @@ new class extends Component {
             </div>
         </div>
 
-        <div class="text-neutral-600 text-sm">
+        <div class="text-neutral-600 dark:text-zinc-400 text-sm">
             {{ $definitionCount }} Definisi
             {{ $verifiedCount != 0 ? '· ' . $verifiedCount . ' Terverifikasi' : '' }}
         </div>
 
         {{-- disclaimer penulisan aksara jawa --}}
-        <div id="aksara-disclaimer" class="bg-amber-50  text-amber-700 py-2 px-3 rounded-md w-fit hidden">
-            <i data-lucide='triangle-alert' class="size-5 inline-block"></i>
-            Aksara Jawa di-generate secara otomatis. Kesalahan penulisan mungkin terjadi.
+        <div id="aksara-disclaimer" class="w-fit hidden">
+            <x-alert color="amber" icon="triangle-alert" message="Aksara Jawa di-generate secara otomatis. Kesalahan penulisan mungkin terjadi." />
+            {{-- <i data-lucide='triangle-alert' class="size-5 inline-block"></i>
+            Aksara Jawa di-generate secara otomatis. Kesalahan penulisan mungkin terjadi. --}}
         </div>
     </div>
 
     <div class="space-y-2">
         <div class="flex gap-1 items-center pb-2">
             <button onclick="toggleClass('newdefinition', 'hidden')"
-                class="w-full bg-neutral-100 hover:bg-amber-400 py-3 px-5 rounded-full flex items-center gap-2">
+                class="w-full bg-neutral-100 dark:bg-zinc-800 hover:bg-amber-400 dark:hover:bg-amber-400 dark:hover:text-neutral-800 py-3 px-5 rounded-full flex items-center gap-2">
                 <i data-lucide='plus' class="size-5"></i>
                 Tambah definisi
             </button>
             <div wire:ignore class="relative">
-                <label for="lang" class="absolute top-3 left-4">
+                <label for="lang" class="absolute top-3 left-4 dark:">
                     <i data-lucide='languages' class="size-5 my-0.5"></i>
                 </label>
                 <select wire:model.live='lang' name="lang" id="lang"
                     onchange="this.style.width = this.options[this.selectedIndex].text.length + 7 + 'ch'"
-                    class="bg-neutral-100 hover:bg-amber-400 rounded-full py-3 px-5 pl-10 flex gap-1 items-center group transition-all ease-in-out appearance-none cursor-pointer">
-                    <option class="bg-white" value="">Semua bahasa</option>
-                    <option class="bg-white" value="id">Bahasa Indonesia</option>
-                    <option class="bg-white" value="jw">Basa Jawa</option>
+                    class="bg-neutral-100 dark:bg-zinc-800 hover:bg-amber-400 dark:hover:bg-amber-400 dark:hover:text-neutral-800 rounded-full py-3 px-5 pl-10 flex gap-1 items-center group transition-all ease-in-out appearance-none cursor-pointer">
+                    <option class="bg-white dark:bg-zinc-800 dark:text-zinc-200" value="">Semua bahasa</option>
+                    <option class="bg-white dark:bg-zinc-800 dark:text-zinc-200" value="id">Bahasa Indonesia</option>
+                    <option class="bg-white dark:bg-zinc-800 dark:text-zinc-200" value="jw">Basa Jawa</option>
                     {{-- <div class="group-hover:block group-focus:block hidden">Semua bahasa</div>  --}}
                 </select>
                 <script>
@@ -151,15 +156,15 @@ new class extends Component {
                 </script>
             </div>
             <div wire:ignore class="relative">
-                <label for="sort" class="absolute top-3 left-4">
+                <label for="sort" class="absolute top-3 left-4 dark:peer-hover:text-neutral-800">
                     <i data-lucide='arrow-down-wide-narrow' class="size-5 my-0.5"></i>
                 </label>
                 <select wire:model.live='sort' name="sort" id="sort"
                     onchange="this.style.width = this.options[this.selectedIndex].text.length + 7 + 'ch'"
-                    class="bg-neutral-100 hover:bg-amber-400 rounded-full py-3 px-5 pl-10 flex gap-1 items-center group transition-all ease-in-out appearance-none cursor-pointer">
-                    <option class="bg-white" value="terbaru">Terbaru</option>
-                    <option class="bg-white" value="terlama">Terlama</option>
-                    <option class="bg-white" value="terpopuler">Terpopuler</option>
+                    class="peer bg-neutral-100 dark:bg-zinc-800 hover:bg-amber-400 dark:hover:bg-amber-400 dark:hover:text-neutral-800 rounded-full py-3 px-5 pl-10 flex gap-1 items-center group transition-all ease-in-out appearance-none cursor-pointer">
+                    <option class="bg-white dark:bg-zinc-800 dark:text-zinc-200" value="terbaru">Terbaru</option>
+                    <option class="bg-white dark:bg-zinc-800 dark:text-zinc-200" value="terlama">Terlama</option>
+                    <option class="bg-white dark:bg-zinc-800 dark:text-zinc-200" value="terpopuler">Terpopuler</option>
                     {{-- <div class="group-hover:block group-focus:block hidden">Semua bahasa</div>  --}}
                 </select>
                 <script>

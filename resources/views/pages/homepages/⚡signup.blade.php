@@ -70,7 +70,7 @@ new class extends Component {
             underline underline-offset-2 decoration-red-600 decoration-2
         @enderror">
                     Saya telah membaca dan menyetujui <a href="/syarat-ketentuan"
-                        class="text-blue-500 hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400">syarat
+                        class="text-blue-600 dark:text-blue-400 hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400">syarat
                         dan ketentuan</a>
                     yang berlaku.
                 </label>
@@ -83,7 +83,7 @@ new class extends Component {
         <p id="masuk" class="">
             Sudah punya akun?
             <a href="/masuk"
-                class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-[3px] active:text-blue-800">
+                class="text-blue-600 dark:text-blue-400 hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-[3px] active:text-blue-800">
                 Masuk
             </a>.
         </p>

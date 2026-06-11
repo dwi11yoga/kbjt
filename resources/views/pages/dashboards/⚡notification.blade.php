@@ -84,7 +84,7 @@ new class extends Component {
                     <div class="space-y-2">
                         @foreach ($d as $i)
                             <a href="{{ $i->url ?? '#' }}" title="{{ $i->dilihat == 0 ? 'Belum dibaca' : '' }}"
-                                class="border border-neutral-200 {{ $i->dilihat == 1 ? 'bg-neutral-200 text-neutral-700' : '' }} p-3 mt-3 rounded-xl flex justify-between space-x-2.5 hover:outline hover:outline-amber-400">
+                                class="border border-neutral-200 dark:border-zinc-800 {{ $i->dilihat == 1 ? 'bg-neutral-200 text-neutral-600 dark:bg-zinc-800 dark:text-zinc-400' : '' }} p-3 mt-3 rounded-xl flex justify-between space-x-2.5 hover:outline hover:outline-amber-400">
                                 <div class="flex space-x-2 items-center">
                                     {{-- indikator --}}
                                     <?php

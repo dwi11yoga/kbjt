@@ -14,9 +14,9 @@ class StatistikSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 8; $i <= 12; $i++) {
+        for ($i = 1; $i <= 12; $i++) {
             $tahunLalu[$i] = [
-                'tahun' => 2024,
+                'tahun' => now()->subYear()->year,
                 'bulan' => $i,
                 'pengunjung' => random_int(100, 1000),
                 'user_baru' => random_int(0, 30),
@@ -37,7 +37,7 @@ class StatistikSeeder extends Seeder
 
         for ($i = 1; $i <= Carbon::now()->month; $i++) {
             $tahunIni[$i] = [
-                'tahun' => 2025,
+                'tahun' => now()->year,
                 'bulan' => $i,
                 'pengunjung' => random_int(100, 1000),
                 'user_baru' => random_int(0, 30),

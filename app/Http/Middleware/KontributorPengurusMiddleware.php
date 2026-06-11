@@ -18,10 +18,11 @@ class KontributorPengurusMiddleware
     {
         // hanya bisa diakses oleh kontributor dan pengurus
         $user = Auth::user();
-        if (!$user || ($user->role !== 'kontributor' && $user->role !== 'pengurus')) {
-            return response()->view('error.403', [
-                'title' => 'Akses ditolak'
-            ], 403);
+        if (!$user || !in_array($user->role, ['kontributor', 'pengurus'])) {
+            abort(403, 'Akses ditolak');
+            // return response()->view('error.403', [
+            //     'title' => 'Akses ditolak'
+            // ], 403);
         }
         return $next($request);
     }

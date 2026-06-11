@@ -18,6 +18,8 @@
 
 body {
     font-family: "Noto Sans", sans-serif;
+    @apply dark:bg-zinc-900;
+    @apply dark:text-zinc-200;
     @apply text-neutral-800;
 }
 
@@ -47,10 +49,10 @@ h5 {
 
 /* STYLING UNTUK TRIX */
 div.trix {
-    @apply text-neutral-700;
+    /* @apply text-neutral-700; */
 }
 div.trix h1 {
-    @apply text-neutral-800;
+    /* @apply text-neutral-800; */
     @apply text-3xl;
     @apply font-bold;
     @apply pt-2;
@@ -131,4 +133,20 @@ div.trix a:hover {
 /* cegah agar icon lucide tidak menghalangi klik */
 svg {
     @apply pointer-events-none;
+}
+
+
+/* larapex */
+.apexcharts-canvas svg {
+    pointer-events: auto !important;
+}
+
+/* Pastikan tooltip tidak menghalangi mouse saat muncul */
+.apexcharts-tooltip {
+    pointer-events: none !important;
+}
+
+/* Hilangkan overlay transparan yang sering menghalangi */
+.apexcharts-inner {
+    pointer-events: auto !important;
 }

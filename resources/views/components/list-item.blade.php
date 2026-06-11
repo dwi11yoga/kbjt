@@ -1,8 +1,8 @@
-@props(['type' => 'url', 'url' => '#'])
+@props(['type' => 'url', 'url' => '#', 'onclick' => null])
 
 @if ($type == 'url')
     <a href="{{ $url }}"
-        class="border border-neutral-200 p-3 rounded-xl flex md:flex-row flex-col md:justify-between gap-1 hover:outline outline-amber-400">
+        class="border dark:border-zinc-800 border-neutral-200 p-3 rounded-xl flex md:flex-row flex-col md:justify-between gap-1 hover:outline outline-amber-400">
         {{-- default slot --}}
         {{ $slot }}
         {{-- left text slot --}}
@@ -20,13 +20,13 @@
     </a>
 @endif
 @if ($type == 'div')
-    <div
-        class="border border-neutral-200 pr-3 rounded-xl flex md:flex-row flex-col md:justify-between gap-1 hover:outline outline-amber-400">
+    <div wire:click='{{ $onclick }}'
+        class="border dark:border-zinc-800 border-neutral-200 md:pr-3 md:py-0 md:pl-0 p-3 rounded-xl flex md:flex-row flex-col md:justify-between gap-1 hover:outline outline-amber-400">
         {{-- default slot --}}
         {{ $slot }}
         {{-- left text slot --}}
         @isset($leftText)
-            <div class="flex flex-wrap items-center gap-1 w-full py-3 pl-3">
+            <div class="flex flex-wrap items-center gap-1 w-full md:py-3 md:pl-3">
                 {{ $leftText }}
             </div>
         @endisset

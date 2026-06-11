@@ -19,6 +19,14 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    {{-- load darkmode sebelum halaman dimuat --}}
+    <script>
+        if (localStorage.theme === 'dark' ||
+            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
     @livewireStyles
 </head>
 
@@ -27,7 +35,7 @@
     <div class="container md:p-0 p-10 mx-auto flex flex-col justify-center h-screen items-center">
         <div class="space-y-2">
             <a href="{{ url()->previous() == url()->current() || request()->path() == 'masuk' ? '/' : url()->previous() }}"
-                class="small-text items-center border border-white p-2 -ml-2 hover:border-gray-500 hover:rounded-full active:bg-black active:text-white">
+                class="small-text items-center p-2 -ml-2 hover:ring-1 dark:ring-zinc-700 ring-gray-500 rounded-full active:bg-black active:text-white">
                 <i data-lucide='arrow-left' class="w-4 inline-block"></i> kembali
             </a>
             {{ $slot ?? '' }}

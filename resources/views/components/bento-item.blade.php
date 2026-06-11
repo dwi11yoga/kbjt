@@ -7,10 +7,11 @@
     'marginBottom' => 'mb-0',
     'padding' => 'px-4 py-5',
     'color' => null,
+    'rightTitle' => null,
 ])
 
 <div
-    class="border {{ $color }} border-neutral-200 rounded-xl space-y-2 {{ $padding }} hover:outline outline-amber-400 decoration-1 h-full">
+    class="border {{ $color }} dark:border-zinc-800 border-neutral-200 rounded-xl space-y-2 {{ $padding }} hover:outline outline-amber-400 decoration-1 h-full">
     {{-- title/header --}}
     <div class="flex items-center justify-between {{ $marginBottom }}">
         <div class="">{{ $title }}</div>

@@ -52,7 +52,7 @@ new class extends Component {
 
                 {{-- popularitas --}}
                 <div class="flex justify-center">
-                    <div class="cursor-pointer bg-neutral-200 rounded-full px-2 py-1 text-sm"
+                    <div class="cursor-pointer dark:bg-zinc-800 bg-neutral-200 rounded-full px-2 py-1 text-sm"
                         title="Jumlah kunjungan ke akun kamu">🔥 {{ number_format(auth()->user()->view, 0, ',', '.') }}
                     </div>
                 </div>
@@ -105,7 +105,7 @@ new class extends Component {
                                 {{ cekNotifikasi() ? 'Kamu punya notifikasi baru!' : 'Belum ada notifikasi baru.' }}
                             </div>
                         </div>
-                        <div class="bg-amber-400 rounded-2xl py-3 px-3 relative">
+                        <div class="bg-amber-400 text-neutral-800 rounded-2xl py-3 px-3 relative">
                             <i data-lucide='bell'></i>
                             @if (cekNotifikasi())
                                 <div class="absolute right-3 top-3 w-2.5 h-2.5 rounded-full bg-red-600"></div>

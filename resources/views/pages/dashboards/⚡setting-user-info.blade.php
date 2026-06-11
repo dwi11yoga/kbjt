@@ -33,7 +33,7 @@ new class extends Component {
     public function mount()
     {
         $this->nama = auth()->user()->nama;
-        $this->tgl_lahir = auth()->user()->tgl_lahir->format('Y-m-d');
+        $this->tgl_lahir = !empty(auth()->user()->tgl_lahir) ? auth()->user()->tgl_lahir->format('Y-m-d') : null;
         $this->kota = auth()->user()->kota;
         $this->jenis_kelamin = auth()->user()->jenis_kelamin;
         $this->bio = auth()->user()->bio;
@@ -44,13 +44,13 @@ new class extends Component {
     #[Computed]
     public function avatarPreview()
     {
-        if ($this->removeAvatar) {
-            // jika avatar dihapus
-            $preview = asset('storage/avatar/profile_pic-m.jpg');
-        } elseif (isset($this->profile_pic) && !$this->getErrorBag()->has('profile_pic')) {
+        if (isset($this->profile_pic) && !$this->getErrorBag()->has('profile_pic')) {
             // jika profil pic diupload
             $preview = $this->profile_pic->temporaryUrl();
-        } elseif ($this->oldProfile_pic) {
+        } elseif ($this->removeAvatar || !$this->oldProfile_pic || !Storage::disk('public')->exists($this->oldProfile_pic)) {
+            // jika avatar dihapus
+            $preview = asset('storage/avatar/profile_pic-m.jpg');
+        } elseif ($this->oldProfile_pic && Storage::disk('public')->exists($this->oldProfile_pic)) {
             // selain itu, tampilkan avatar lama pengguna
             $preview = asset('storage/' . $this->oldProfile_pic);
         } else {

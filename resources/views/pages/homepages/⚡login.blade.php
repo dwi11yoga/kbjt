@@ -15,9 +15,9 @@ new class extends Component {
     #[Title('Masuk')]
     public $remember;
     #[Validate('required|min:6|max:255|regex:/^[A-Za-z0-9_.@-]+$/')]
-    public $credential = 'supriyanto';
+    public $credential;
     #[Validate('required|min:6|max:255')]
-    public $password = 'password';
+    public $password;
 
     // fungsi login
     public function authenticate(Request $request)
@@ -118,7 +118,7 @@ new class extends Component {
             <label for="remember">Ingat saya</label>
             <div class="text-right">
                 <a href="/reset-kata-sandi"
-                    class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-[3px] active:text-blue-800">Lupa
+                    class="text-blue-600 dark:text-blue-400 hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-[3px] active:text-blue-800">Lupa
                     kata sandi</a>
             </div>
         </div>
@@ -129,7 +129,7 @@ new class extends Component {
 
     <p class="mt-3">Belum punya akun?
         <a href="/daftar"
-            class="text-blue-600 hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-[3px] active:text-blue-800">
+            class="text-blue-600 dark:text-blue-400 hover:underline hover:underline-offset-4 hover:decoration-amber-400 hover:decoration-[3px] active:text-blue-800">
             Daftar sekarang
         </a>
     </p>

@@ -145,7 +145,7 @@ new class extends Component {
         message="Total kontribusi dihitung dari jumlah definisi, artikel, dan laporan yang disubmit." />
 
     {{-- Daftar pengurus --}}
-    <div class="bg-white rounded-2xl" id="laporan">
+    <div class="" id="laporan">
         <div class="py-2">
             Daftar pengurus
         </div>
@@ -157,8 +157,8 @@ new class extends Component {
                         {{-- foto profil --}}
                         <x-avatar avatarUrl="{{ $d->profile_pic }}" />
                         <div class="">{{ $d->nama }}</div>
-                        <div class="text-neutral-600 text-sm">&#64;{{ $d->username }}</div>
-                        <x-badge color="bg-amber-200">Lvl.{{ $d->level }}</x-badge>
+                        <div class="text-neutral-600 dark:text-zinc-400 text-sm">&#64;{{ $d->username }}</div>
+                        <x-badge color="bg-amber-200 dark:text-neutral-800">Lvl.{{ $d->level }}</x-badge>
                     </div>
                     <div class="flex flex-wrap items-center gap-1">
                         <x-badge>{{ $d->kontribusiBlnIni }} kontribusi bulan ini</x-badge>
@@ -177,7 +177,7 @@ new class extends Component {
     </div>
 
     {{-- Daftar definisi terbaru dari pengurus --}}
-    <div id="definisi" class="bg-white rounded-2xl" id="definisi">
+    <div id="definisi" class="" id="definisi">
         <div class="flex items-center justify-between py-2">
             Definisi terbaru dari pengurus
         </div>
@@ -190,7 +190,7 @@ new class extends Component {
                         {{-- verified? --}}
                         @if (isset($d->verifikasi))
                             <div wire:ignore class="" title="Telah diverifikasi">
-                                <i data-lucide='badge-check' class="size-4 fill-amber-400"></i>
+                                <i data-lucide='badge-check' class="size-4 fill-amber-400 dark:stroke-zinc-900"></i>
                             </div>
                         @endif
                         {{-- pengguna --}}
@@ -200,7 +200,7 @@ new class extends Component {
                         </x-badge>
                         {{-- poin diperoleh --}}
                         <x-badge title="Poin diperoleh">
-                            <i data-lucide='astroid' class="size-3 fill-black"></i>
+                            <i data-lucide='astroid' class="size-3 fill-black dark:fill-white"></i>
                             <div class="">{{ $d->poin_kontributor + $d->poin_verifikasi }} Poin</div>
                         </x-badge>
                     </x-slot:leftText>
@@ -220,7 +220,7 @@ new class extends Component {
     </div>
 
     {{-- Daftar pengurus yang menghapus akunnya --}}
-    <div class="bg-white rounded-2xl" id="laporan">
+    <div class="" id="laporan">
         <div class="py-2">
             Pengurus yang menghapus akunnya
         </div>
@@ -230,13 +230,13 @@ new class extends Component {
                 <x-errors.not-found text="Belum ada data" />
             @endif
             @foreach ($this->deletedAccount as $d)
-                <x-list-item type="url" url="/u/{{ $d->username }}">
+                <x-list-item type="url" url="/u/{{ $d->user->username }}">
                     <div class="flex flex-wrap items-center gap-1">
                         {{-- foto profil --}}
-                        <x-avatar avatarUrl="{{ $d->profile_pic }}" />
-                        <div class="">{{ $d->nama }}</div>
-                        <div class="text-neutral-600 text-sm">&#64;{{ $d->username }}</div>
-                        <x-badge color="bg-amber-200">Lvl.{{ $d->level }}</x-badge>
+                        <x-avatar avatarUrl="{{ $d->user->profile_pic }}" />
+                        <div class="">{{ $d->user->nama }}</div>
+                        <div class="text-neutral-600 dark:text-zinc-400 text-sm">&#64;{{ $d->user->username }}</div>
+                        <x-badge color="bg-amber-200">Lvl.{{ $d->user->level }}</x-badge>
                     </div>
                     <div class="flex flex-wrap items-center gap-1">
                         <x-badge>{{ dateFormat($d->deleted_at) }}</x-badge>
@@ -251,24 +251,24 @@ new class extends Component {
     </div>
 
     {{-- Artikel --}}
-    <div class="bg-white rounded-2xl" id="laporan">
+    <div class="" id="laporan">
         <div class="py-2">Artikel terbaru</div>
 
         <div class="space-y-2">
             <div href="/kontribusi/laporan/{{ $d->id }}"
-                class="border border-neutral-200 p-3 mt-3 rounded-xl text-center"> Beralih ke halaman <a href="/artikel"
+                class="border border-neutral-200 dark:border-zinc-800 p-3 mt-3 rounded-xl text-center"> Beralih ke halaman <a href="/artikel"
                     class="underline underline-offset-2 decoration-amber-400 decoration-4">Artikel</a>.
             </div>
         </div>
     </div>
 
     {{-- Laporan --}}
-    <div class="bg-white rounded-2xl" id="laporan">
+    <div class="" id="laporan">
         <div class="py-2">Laporan</div>
 
         <div class="space-y-2">
             <div href="/kontribusi/laporan/{{ $d->id }}"
-                class="border border-neutral-200 p-3 mt-3 rounded-xl text-center"> Beralih ke halaman <a href="/laporan"
+                class="border border-neutral-200 dark:border-zinc-800 p-3 mt-3 rounded-xl text-center"> Beralih ke halaman <a href="/laporan"
                     class="underline underline-offset-2 decoration-amber-400 decoration-4">Laporan</a>.
             </div>
         </div>

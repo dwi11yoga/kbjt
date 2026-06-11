@@ -79,7 +79,7 @@ Route::livewire('/s/{userId}/{sertifikatId}', 'pages::certificate');
 
 // Akses ditolak
 Route::get('/akses-ditolak', function () {
-    abort(403, 'Lorem ipsum dolor sit amet');
+    abort(403, 'Akses ditolak');
 });
 
 // view untuk user terbanned atau akunnya dihapus
@@ -105,8 +105,9 @@ Route::middleware(['guest'])->group(function () {
 
     // Verifikasi user/email
     // dijalankan setelah daftar
-    Route::get('/daftar/verifikasi', [UserController::class, 'verifikasiUser']);
-    Route::put('/daftar/verifikasi', [UserController::class, 'fungsiverifikasiUser']);
+    // Route::get('/daftar/verifikasi', [UserController::class, 'verifikasiUser']);
+    // Route::put('/daftar/verifikasi', [UserController::class, 'fungsiverifikasiUser']);
+    Route::livewire('/daftar/verifikasi', 'pages::homepages.verify-user');
 
 
     // LUPA KATA SANDI
@@ -152,9 +153,9 @@ Route::middleware(['auth'])->group(function () {
 
 
     // laporkan definisi
-    Route::post('/laporkan/definisi', [ReportController::class, 'definisi']);
+    // Route::post('/laporkan/definisi', [ReportController::class, 'definisi']);
     // laporkan (hapus) kosakata 
-    route::post('/kosakata/{slug}/laporkan', [ReportController::class, 'kosakata']);
+    // route::post('/kosakata/{slug}/laporkan', [ReportController::class, 'kosakata']);
 
     // detail laporan
     // Route::get('/laporan/{id}', [ReportController::class, 'detailLaporan']);
@@ -168,15 +169,15 @@ Route::middleware(['auth'])->group(function () {
         Route::livewire('/artikel', 'pages::dashboards.articles');
 
         // preview artikel
-        Route::get('/blog/preview/{slug}', [HomepageController::class, 'blogPost']);
+        // Route::get('/blog/preview/{slug}', [HomepageController::class, 'blogPost']);
         // Edit artikel/post -> kepala tidak bisa edit artikel, jadi ini tidak usah 
         // Route::get('/artikel/edit/{id}', [BlogController::class, 'editPost']);
         // draf/terbitkan post
-        Route::put('/artikel/draf/{id}', [BlogController::class, 'draft']);
+        // Route::put('/artikel/draf/{id}', [BlogController::class, 'draft']);
         // sematkan/tidak post
-        Route::put('/artikel/sematkan/{id}', [BlogController::class, 'sematkan']);
+        // Route::put('/artikel/sematkan/{id}', [BlogController::class, 'sematkan']);
         // hapus artikel
-        Route::delete('/artikel/hapus/{id}', [BlogController::class, 'delete']);
+        // Route::delete('/artikel/hapus/{id}', [BlogController::class, 'delete']);
 
         // banner
         // Route::get('/banner', [BannerController::class, 'index']);
@@ -193,30 +194,32 @@ Route::middleware(['auth'])->group(function () {
         Route::livewire('/pengurus', 'pages::dashboards.pengurus');
 
         // view detail user yang menhapus akunnya sendiri
-        Route::get('/akun-dihapus/{id}', [HapusAkunController::class, 'detail']);
+        // Route::get('/akun-dihapus/{id}', [HapusAkunController::class, 'detail']);
 
         // laporan - pengurus
         // Route::get('/laporan', [ReportController::class, 'index']);
         Route::livewire('/laporan', 'pages::dashboards.reports');
 
         // simpan perubahan pada data laporan -> di middleware pengurusKepala (atas)
-        Route::put('/laporan/{id}/tindaklanjut', [ReportController::class, 'tindaklanjut']);
+        // Route::put('/laporan/{id}/tindaklanjut', [ReportController::class, 'tindaklanjut']);
 
         // halaman statistik
-        Route::get('/statistik', [StatistikController::class, 'index']);
+        // Route::get('/statistik', [StatistikController::class, 'index']);
+        Route::livewire('/statistik', 'pages::dashboards.stats');
         // Route::livewire('/statistik', 'pages::dashboards.stats');
     });
 
     // hanya untuk role kepala
     Route::middleware(['kepala'])->group(function () {
         // level - kepala
-        Route::get('/level', [LevelController::class, 'index']);
+        // Route::get('/level', [LevelController::class, 'index']);
+        Route::livewire('level', 'pages::dashboards.level-point');
         // tambah level - kepala
-        Route::post('/level/tambah', [LevelController::class, 'create']);
+        // Route::post('/level/tambah', [LevelController::class, 'create']);
         // update level - kepala
-        Route::put('/level/update', [LevelController::class, 'update']);
+        // Route::put('/level/update', [LevelController::class, 'update']);
         // update poin kontribusi - kepala
-        Route::put('/poin-kontribusi/update', [PoinKontribusiController::class, 'update']);
+        // Route::put('/poin-kontribusi/update', [PoinKontribusiController::class, 'update']);
 
         // tambah achievement
         // Route::get('/achievement/baru', [AchievementController::class, 'tambah']);
@@ -230,23 +233,25 @@ Route::middleware(['auth'])->group(function () {
         // Route::put('/achievement/{id}/edit', [AchievementController::class, 'simpanEdit']);
 
         // ubah status user sebagai pengurus/kontributor
-        Route::put('/ubah-role/{id}', [UserController::class, 'ubahStatusPengurus']);
+        // Route::put('/ubah-role/{id}', [UserController::class, 'ubahStatusPengurus']);
     });
 
     // hanya untuk role pengurus
     Route::middleware(['pengurus'])->group(function () {
         // buat artikel
-        Route::get('/artikel/baru', [BlogController::class, 'tambah']);
+        // Route::get('/artikel/baru', [BlogController::class, 'tambah']);
+        Route::livewire('/artikel/baru', 'pages::dashboards.article-new');
         // edit artikel
-        Route::get('/artikel/edit/{id}', [BlogController::class, 'editPost']);
+        // Route::get('/artikel/edit/{id}', [BlogController::class, 'editPost']);
+        Route::livewire('/artikel/edit/{id}', 'pages::dashboards.article-edit');
         // simpan artikel
-        Route::post('/artikel/baru/simpan', [BlogController::class, 'simpanArtikel']);
+        // Route::post('/artikel/baru/simpan', [BlogController::class, 'simpanArtikel']);
         // publikasikan artikel
-        Route::post('/artikel/baru/publikasikan', [BlogController::class, 'simpanArtikel']);
+        // Route::post('/artikel/baru/publikasikan', [BlogController::class, 'simpanArtikel']);
         // simpan artikel (draft)
-        Route::put('/artikel/edit/{id}/simpan', [BlogController::class, 'simpanEdit']);
+        // Route::put('/artikel/edit/{id}/simpan', [BlogController::class, 'simpanEdit']);
         // publikasikan artikel yang disimpan sebagai draft
-        Route::put('/artikel/edit/{id}/publikasikan', [BlogController::class, 'simpanEdit']);
+        // Route::put('/artikel/edit/{id}/publikasikan', [BlogController::class, 'simpanEdit']);
 
         // simpan perubahan pada data laporan -> di middleware pengurusKepala (atas)
 
@@ -290,38 +295,42 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('/pengaturan/donasi', 'pages::dashboards.setting-donasi');
 
     // ubah username
-    Route::get('/pengaturan/ubah-username', [UserController::class, 'ubahUsername']);
-    Route::put('/pengaturan/ubah-username/simpan', [UserController::class, 'simpanUbahUsername']);
+    // Route::get('/pengaturan/ubah-username', [UserController::class, 'ubahUsername']);
+    // Route::put('/pengaturan/ubah-username/simpan', [UserController::class, 'simpanUbahUsername']);
+    Route::livewire('/pengaturan/ubah-username', 'pages::dashboards.setting-username');
 
     // ubah alamat email
-    Route::get('/pengaturan/ubah-email', [UserController::class, 'ubahEmail']);
-    Route::put('/pengaturan/ubah-email/simpan', [UserController::class, 'simpanUbahEmail']);
+    // Route::get('/pengaturan/ubah-email', [UserController::class, 'ubahEmail']);
+    // Route::put('/pengaturan/ubah-email/simpan', [UserController::class, 'simpanUbahEmail']);
+    Route::livewire('/pengaturan/ubah-email', 'pages::dashboards.setting-email');
 
     // ubah password
-    Route::get('/pengaturan/ubah-password', [UserController::class, 'ubahPassword']);
-    Route::put('/pengaturan/ubah-password/simpan', [UserController::class, 'updatePassword']);
+    // Route::get('/pengaturan/ubah-password', [UserController::class, 'ubahPassword']);
+    // Route::put('/pengaturan/ubah-password/simpan', [UserController::class, 'updatePassword']);
+    Route::livewire('/pengaturan/ubah-password', 'pages::dashboards.setting-password');
 
     // hapus akun
-    Route::get('/pengaturan/hapus-akun', [HapusAkunController::class, 'index'])->middleware('kontributorPengurus');
-    Route::put('/pengaturan/hapus-akun/konfirmasi', [HapusAkunController::class, 'hapusAkun'])->middleware('kontributorPengurus');
+    // Route::get('/pengaturan/hapus-akun', [HapusAkunController::class, 'index'])->middleware('kontributorPengurus');
+    // Route::put('/pengaturan/hapus-akun/konfirmasi', [HapusAkunController::class, 'hapusAkun'])->middleware('kontributorPengurus');
+    Route::livewire('/pengaturan/hapus-akun', 'pages::dashboards.setting-delete-account')->middleware('kontributorPengurus');
 
     // Tambah definisi - hanya kontributor dan pengurus
-    Route::post('/kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create'])->middleware('kontributorPengurus');
+    // Route::post('/kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create'])->middleware('kontributorPengurus');
     // Edit definisi - hanya kontributor dan pengurus
-    Route::put('/kosakata/{slug}/{definisiId}/update', [DefinisiController::class, 'update'])->middleware('kontributorPengurus');
-    // Hapus definisi - hanya kontributor dan pengurus
-    Route::delete('/kosakata/{slug}/{definisiId}/delete', [DefinisiController::class, 'delete'])->middleware('kontributorPengurus');
-    // edit definisi -livewire
+    // Route::put('/kosakata/{slug}/{definisiId}/update', [DefinisiController::class, 'update'])->middleware('kontributorPengurus');
     Route::livewire('definisi/{id}/edit', 'pages::homepages.definition-edit');
+    // Hapus definisi - hanya kontributor dan pengurus
+    // Route::delete('/kosakata/{slug}/{definisiId}/delete', [DefinisiController::class, 'delete'])->middleware('kontributorPengurus');
+    // edit definisi -livewire
 
     // tambah kosakata - hanya bisa diakses pengurus dan kontributor
-    Route::get('/tambah/kosakata', [KosakataController::class, 'tambahKosakata'])->middleware('kontributorPengurus');
+    // Route::get('/tambah/kosakata', [KosakataController::class, 'tambahKosakata'])->middleware('kontributorPengurus');
     // simpan kosakata baru - hanya bisa diakses pengurus dan kontributor
-    Route::post('/tambah/kosakata', [KosakataController::class, 'store'])->middleware('kontributorPengurus');
+    // Route::post('/tambah/kosakata', [KosakataController::class, 'store'])->middleware('kontributorPengurus');
 
     // Edit kosakata - hanya bisa diakses pengurus dan kontributor
-    Route::get('/kosakata/{slug}/edit', [EditKosakataController::class, 'edit'])->middleware('kontributorPengurus');
-    Route::post('/kosakata/{slug}/edit', [EditKosakataController::class, 'simpanEdit'])->middleware('kontributorPengurus');
+    // Route::get('/kosakata/{slug}/edit', [EditKosakataController::class, 'edit'])->middleware('kontributorPengurus');
+    // Route::post('/kosakata/{slug}/edit', [EditKosakataController::class, 'simpanEdit'])->middleware('kontributorPengurus');
 
     // notifikasi
     // Route::get('/notifikasi', [NotifikasiController::class, 'index']);

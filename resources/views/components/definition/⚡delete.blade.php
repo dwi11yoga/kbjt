@@ -50,11 +50,8 @@ new class extends Component {
     <p class="py-3">
         Apakah kamu yakin ingin menghapus definisi {{ $definition->kosakata }} yang kamu tulis?
     </p>
-    <div class="space-y-1">
-        <x-button type="button" width="w-full" model="delete" target="delete" color="bg-red-600 text-red-100"
-            text="Hapus definisi" textLoading="Menghapus..." />
-        <div wire:click='close'>
-            <x-button type="button" width="w-full" color="hover:outline outline-2" text="Batal" />
-        </div>
-    </div>
+    <form wire:submit='delete'>
+        <x-popup-action text="Hapus definisi" textLoading="Menghapus..." target="delete" bgColor="bg-red-600 text-red-100"
+            closeAction="close" />
+    </form>
 </x-popup>

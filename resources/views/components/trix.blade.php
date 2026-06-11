@@ -56,17 +56,17 @@ note: 1=enabled, 0=disabled
 
 
     {{-- Trix Toolbar --}}
-    <div wire:ignore class="sticky top-0 bg-white">
+    <div wire:ignore class="sticky top-0 dark:text-zinc-200">
         <trix-toolbar id="my_toolbar-{{ $id }}"></trix-toolbar>
         <div class="more-stuff-inbetween"></div>
     </div>
 
     {{-- Trix Editor --}}
     <div wire:ignore class="">
-        <input id="{{ $id }}" name="{{ $id }}" hidden value="{!! $value ?? '' !!}">
+        <input id="{{ $id }}" name="{{ $id }}" hidden value="{{ $value ?? '' }}">
         <trix-editor toolbar="my_toolbar-{{ $id }}" input="{{ $id }}"
             placeholder="{{ $placeholder ?? 'Ketik disini...' }}"
-            class="px-4 py-3 w-full min-h-52 rounded-md block bg-neutral-100 focus:border-b-2 border-0 focus:rounded-b-none outline-none transition-all ease-in-out duration-75 
+            class="px-4 py-3 w-full min-h-52 rounded-md block bg-neutral-100 dark:bg-zinc-800 focus:border-b-2 border-0 focus:rounded-b-none outline-none transition-all ease-in-out duration-75 
         {{ $errors->has($id) ? 'border-red-500' : 'border-amber-400' }}">
         </trix-editor>
     </div>

@@ -208,7 +208,8 @@ new class extends Component {
             {{-- status --}}
             <x-radio-group>
                 <x-input-radio model="status" id="semua" value="" text="Semua" icon="layout-grid" />
-                <x-input-radio model="status" id="dipublikasikan" value="dipublikasikan" text="Dipublikasikan" icon="send" />
+                <x-input-radio model="status" id="dipublikasikan" value="dipublikasikan" text="Dipublikasikan"
+                    icon="send" />
                 <x-input-radio model="status" id="draf" value="draf" text="Draf" icon="archive" />
             </x-radio-group>
         </div>
@@ -226,14 +227,14 @@ new class extends Component {
     <div class="space-y-2">
         @foreach ($this->articles as $d)
             <div
-                class="relative flex justify-between items-center pr-5 rounded-xl group border border-neutral-200 hover:outline outline-amber-200 {{ request()->id == $d->id ? 'outline outline-amber-400' : '' }}">
+                class="relative flex justify-between items-center pr-5 rounded-xl group border border-neutral-200 dark:border-zinc-800 hover:outline outline-amber-200 {{ request()->id == $d->id ? 'outline outline-amber-400' : '' }}">
                 <a href="{{ $d->user_id != auth()->user()->id || auth()->user()->role == 'kepala' ? '/blog/' . $d->slug : '/artikel/edit/' . $d->id }}"
                     class="w-full space-y-1 py-4 pl-5">
                     {{-- Judul --}}
                     <div class="line-clamp-2 flex flex-wrap gap-1 items-center font-semibold" title="Judul artikel">
                         @if ($d->pinned == 1)
-                            <x-badge color="bg-amber-200">
-                                <i data-lucide='pin' class="size-4 fill-white"></i>
+                            <x-badge color="bg-amber-200 text-neutral-800">
+                                <i data-lucide='pin' class="size-4 fill-white dark:fill-neutral-800"></i>
                                 <div class="">Disematkan</div>
                             </x-badge>
                         @endif
@@ -249,7 +250,7 @@ new class extends Component {
 
                         {{-- Status --}}
                         <x-badge gap="1" color="{{ isset($d->status) ? 'bg-green-100' : 'bg-amber-100' }}"
-                            hoverColor="">
+                            hoverColor="{{ isset($d->status) ? 'hover:bg-green-300' : 'hover:bg-amber-300' }}">
                             <i data-lucide='{{ isset($d->status) ? 'check-circle' : 'archive' }}' class="w-4"></i>
                             <span>{{ isset($d->status) ? 'Rilis' : 'Draf' }}</span>
                         </x-badge>
@@ -270,53 +271,35 @@ new class extends Component {
                 </a>
 
                 {{-- tombol opsi --}}
-                <button onclick="toggleClass('dropdown{{ $d->id }}', 'hidden')"
-                    class="p-2 rounded-full hover:bg-neutral-100">
-                    <i data-lucide='ellipsis-vertical' class="size-5"></i>
-                </button>
-                <div id="dropdown{{ $d->id }}"
-                    class="absolute hidden bg-white top-0 right-14 z-40 p-2 rounded-xl border border-neutral-200 min-w-48 text-neutral-800">
-                    {{-- Lihat --}}
-                    <a href="/blog/{{ $d->slug }}"
-                        class="flex justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
-                        <div>Lihat</div>
-                        <i data-lucide='eye' class="w-5"></i>
-                    </a>
-
+                <x-menu-group menuIcon="more-vertical" menuId="dropdown{{ $d->id }}">
+                    <x-menu-item type="url" action="/blog/{{ $d->slug }}" name="Lihat" icon="eye" />
                     {{-- ubah status --}}
                     @if (auth()->user()->role == 'kepala' || $d->user_id == auth()->user()->id)
-                        <button wire:click='statusToggle({{ $d->id }})'
-                            class="flex justify-between py-2 px-3 rounded-lg hover:bg-amber-100 w-full">
-                            <div>{{ isset($d->status) ? 'Jadikan draf' : 'Publikasikan' }}</div>
-                            <i data-lucide='{{ isset($d->status) ? 'archive' : 'send' }}' class="w-5"></i>
-                        </button>
+                        <x-menu-item type="button" action="statusToggle({{ $d->id }})"
+                            name="{{ isset($d->status) ? 'Jadikan draf' : 'Publikasikan' }}"
+                            icon="{{ isset($d->status) ? 'archive' : 'send' }}" />
                     @endif
 
                     {{-- Pin artikel --}}
                     @if (isset($d->status))
-                        <button wire:click='pinToggle({{ $d->id }})'
-                            class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
-                            <div>{{ $d->pinned == 0 ? 'Sematkan' : 'Lepas semat' }}</div>
-                            <i data-lucide='{{ $d->pinned == 0 ? 'pin' : 'pin-off' }}' class="w-5"></i>
-                        </button>
+                        <x-menu-item type="button" action="pinToggle({{ $d->id }})"
+                            name="{{ $d->pinned == 0 ? 'Sematkan' : 'Lepas semat' }}"
+                            icon="{{ $d->pinned == 0 ? 'pin' : 'pin-off' }}" />
                     @endif
 
                     {{-- Hapus --}}
                     @if (auth()->user()->role == 'kepala' || $d->user_id == auth()->user()->id)
-                        <button wire:click='deleteWindowToggle({{ $d->id }})'
-                            class="flex w-full justify-between py-2 px-3 rounded-lg hover:bg-amber-100">
-                            <div>Hapus</div>
-                            <i data-lucide='trash' class="w-5"></i>
-                        </button>
+                        <x-menu-item type="button" action="deleteWindowToggle({{ $d->id }})" name="Hapus"
+                            icon="trash" textColor="text-red-500" />
                     @endif
-                </div>
+                </x-menu-group>
             </div>
         @endforeach
     </div>
 
     {{-- hapus artikel --}}
     @if ($openDelete)
-        <x-popup title="Hapus artikel? {{ $deletedId }}" color="red">
+        <x-popup title="Hapus artikel?" color="red">
             <div class="space-y-2">
                 <p class="py-3">
                     Artikel yang dihapus akan hilang secara permanen dan tidak dapat dipulihkan.

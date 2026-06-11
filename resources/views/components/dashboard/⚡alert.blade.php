@@ -16,9 +16,9 @@ new class extends Component {
 ?>
 
 <div class="mb-4 space-y-2">
-    {{-- Pemberitahuan untuk melengkapi data diri --}}
     @if ($this->incompleteUserData)
-        <div class="md:flex md:justify-between bg-white border border-neutral-200 rounded-xl p-3 shadow-sm">
+        {{-- Pemberitahuan untuk melengkapi data diri --}}
+        <div class="md:flex md:justify-between border border-neutral-200 dark:border-zinc-800 rounded-xl p-3 shadow-sm">
             <div>Segera lengkapi profil kamu.</div>
             <a href="/pengaturan/edit-user" class="text-amber-600 md:text-base text-sm flex items-center gap-1">
                 <div class="">Pergi ke pengaturan</div>
@@ -29,11 +29,15 @@ new class extends Component {
 
     {{-- jika user tersuspend untuk berkontribusi --}}
     @if (suspendedAccount())
-        <div class="md:flex md:justify-between bg-red-100 border border-neutral-200 rounded-xl p-3 shadow-sm">
-            <div>Saat ini kamu tidak dapat berkontribusi karena akunmu sedang ditangguhkan hingga
-                {{ auth()->user()->suspended_time->format('j F Y H:i') }}.</div>
-            <a href="#" class="text-red-600 md:text-base text-sm">Pelajari lebih lanjut<i
-                    data-feather='arrow-up-right' class="inline-block md:w-5 w-4"></i></a>
+        <div
+            class="md:flex md:justify-between bg-red-100 dark:bg-red-800 border border-neutral-200 rounded-xl p-3 shadow-sm">
+            <div>
+                Saat ini kamu tidak dapat berkontribusi karena akunmu sedang ditangguhkan hingga
+                {{ auth()->user()->suspended_time->format('j F Y H:i') }}.
+            </div>
+            <a href="#" class="dark:text-red-200 text-red-600 md:text-base text-sm">
+                Pelajari lebih lanjut<i data-lucide='arrow-up-right' class="inline-block md:w-5 w-4"></i>
+            </a>
         </div>
     @endif
 </div>

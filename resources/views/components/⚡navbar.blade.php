@@ -48,7 +48,7 @@ new class extends Component {
 ?>
 
 {{-- navbar --}}
-<nav class="w-full bg-white shadow-sm py-4 px-9 sticky top-0 z-50">
+<nav class="w-full bg-white dark:bg-zinc-900 shadow-sm py-4 px-9 sticky top-0 z-50">
     {{-- DESKTOP --}}
     <div class="container mx-auto flex items-center justify-between">
         {{-- Logo & pencarian --}}
@@ -72,42 +72,46 @@ new class extends Component {
         </div>
 
         {{-- Menu --}}
-        <ul class="lg:flex hidden items-center">
+        <div class="lg:flex hidden items-center gap-4">
             @foreach ($menus as $menu)
-                <li>
-                    <a href="{{ $menu['url'] }}"
-                        class="px-3.5 py-5 hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ $menu['name'] == 'Pencarian' ? 'lg:hidden' : '' }} {{ $location == explode('/', $menu['url'])[1] ? 'text-amber-500 font-semibold' : 'text-neutral-700' }}">
-                        {{ $menu['name'] }}
-                    </a>
-                </li>
+                <a href="{{ $menu['url'] }}"
+                    class="hover:rounded-full hover:underline hover:underline-offset-4 hover:decoration-4 hover:decoration-amber-400 {{ $menu['name'] == 'Pencarian' ? 'lg:hidden' : '' }} {{ $location == explode('/', $menu['url'])[1] ? 'text-amber-500 font-semibold' : 'text-neutral-700 dark:text-zinc-300' }}">
+                    {{ $menu['name'] }}
+                </a>
             @endforeach
-            <li>
+            {{-- darkmode toggle --}}
+            <button class="rounded-full p-3 hover:bg-neutral-100 dark:hover:bg-zinc-800 aspect-square"
+                title="Mode gelap" onclick="darkmodeToggle()">
+                <i data-lucide='moon' class="size-5 dark:hidden"></i>
+                <i data-lucide='sun' class="size-5 dark:block hidden"></i>
+            </button>
+            <div>
                 @auth
-                    <a href="/dashboard" title="Ke Dashboard">
-                        <div
-                            class="overflow-hidden ml-2 md:w-10 md:h-10 w-12 h-12 rounded-full flex justify-center hover:outline hover:outline-amber-400 hover:outline-offset-2 hover:outline-2">
-                            @include('partials.profile-pic')
-                        </div>
+                    <a href="/dashboard" class="rounded-full hover:outline outline-offset-2 outline-amber-400 outline-2">
+                        <x-avatar avatarUrl="{{ auth()->user()->profile_pic }}" size="10" rounded="full" />
+                        {{-- @include('partials.profile-pic') --}}
                     </a>
                 @else
-                    <a href="/masuk"
+                    <x-button text="Masuk" url="/masuk" />
+                    {{-- <a href="/masuk"
                         class="px-4 py-2 bg-amber-300 rounded-full hover:bg-neutral-800 hover:text-white active:bg-amber-400 transition-all ease-in-out">
                         Masuk
-                    </a>
+                    </a> --}}
                 @endauth
-            </li>
-        </ul>
+            </div>
+        </div>
 
         {{-- button menu mobile --}}
         <button
-            class="lg:hidden w-10 h-10 rounded-full flex justify-center cursor-pointer items-center hover:bg-gray-200 active:bg-gray-300 translate-x-4"
+            class="lg:hidden w-10 h-10 rounded-full flex justify-center cursor-pointer items-center hover:bg-gray-200 dark:hover:bg-zinc-700 active:bg-gray-300 translate-x-4"
             onclick="document.getElementById('menu').classList.toggle('hidden');">
             <i data-lucide='menu' class="size-5"></i>
         </button>
     </div>
 
     {{-- MOBILE --}}
-    <div id="menu" class="fixed top-0 left-0 w-full h-full bg-white px-5 z-50 hidden space-y-5 mt-5">
+    <div id="menu"
+        class="fixed top-0 left-0 w-full h-full bg-white dark:bg-zinc-900 px-5 z-50 hidden space-y-5 mt-5">
 
         {{-- tutup menu --}}
         <div class="flex justify-between items-center">
@@ -118,7 +122,7 @@ new class extends Component {
             </a>
 
             <button onclick="document.getElementById('menu').classList.toggle('hidden');"
-                class="flex group px-4 py-2 items-center translate-x-2 w-fit rounded-full hover:bg-neutral-100 cursor-pointer space-x-3 active:bg-amber-100">
+                class="flex group px-4 py-2 items-center translate-x-2 w-fit rounded-full hover:bg-neutral-100 dark:hover:bg-zinc-700 cursor-pointer space-x-3 active:bg-amber-100">
                 <div>Tutup</div>
                 <i data-lucide='x' class="size-5"></i>
             </button>
@@ -129,24 +133,35 @@ new class extends Component {
             {{-- Home --}}
             @foreach ($menus as $menu)
                 <a href="{{ $menu['url'] }}"
-                    class="flex group py-4 px-6 w-fit rounded-2xl {{ $location == explode('/', $menu['url'])[1] ? 'bg-amber-100 font-semibold' : '' }}">
+                    class="flex gap-3 group py-4 px-6 w-fit rounded-2xl {{ $location == explode('/', $menu['url'])[1] ? 'bg-amber-100 dark:text-zinc-900 font-semibold' : '' }}">
                     <i data-lucide='{{ $menu['icon'] }}'></i>
-                    <div class="inline-block ml-3">
+                    <div class="inline-block">
                         {{ $menu['name'] }}
                     </div>
                 </a>
             @endforeach
         </div>
 
+        {{-- darkmode toggle --}}
+        <button class="flex group py-4 px-6 w-fit rounded-2xl gap-3 items-center" title="Mode gelap"
+            onclick="darkmodeToggle()">
+
+            <i data-lucide='moon' class="dark:hidden"></i>
+            <div class="dark:hidden">Mode gelap</div>
+            <i data-lucide='sun' class="dark:block hidden"></i>
+            <div class="dark:block hidden">Mode terang</div>
+        </button>
+
         {{-- Masuk --}}
         <div class="flex items-center">
             @auth
-                <a href="/dashboard" class="flex items-center group py-4 px-6 w-fit rounded-2xl hover:bg-neutral-100">
-                    <div class="overflow-hidden w-7 h-7 rounded-full flex justify-center">
-                        @include('partials.profile-pic')
-                    </div>
-                    <div class="inline-block ml-3 text-neutral-700 group-hover:text-black">
+                <a href="/dashboard"
+                    class="flex items-center group p-4 gap-2 w-fit rounded-2xl hover:bg-neutral-100">
+                    {{-- <x-avatar avatarUrl="{{ auth()->user()->profile_pic }}" size="10" rounded="full" /> --}}
+                    <x-avatar avatarUrl="{{ auth()->user()->profile_pic }}" size="10" rounded="full" />
+                    <div class="">
                         Dashboard
+                    </div>
                 </a>
             @else
                 <a href="/masuk"

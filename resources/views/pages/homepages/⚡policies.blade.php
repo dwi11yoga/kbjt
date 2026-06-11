@@ -1,9 +1,12 @@
 <?php
 
 use Livewire\Component;
+use Livewire\Attributes\Title;
 
 new class extends Component {
     //
+    #[TItle('Syarat dan ketentuan')]
+    public $lorem;
 };
 ?>
 

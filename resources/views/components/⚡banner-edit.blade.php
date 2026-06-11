@@ -102,12 +102,6 @@ new class extends Component {
 
         {{-- catatan --}}
         <x-input-textarea id="catatan" model="catatan" label="Catatan" />
-        <div class="space-y-1">
-            <x-button type="submit" width="w-full" target="edit" color="bg-green-600 text-green-100" text="Simpan"
-                textLoading="Menyimpan..." />
-            <div wire:click='closeWindow'>
-                <x-button type="button" width="w-full" color="hover:outline outline-2" text="Batal" />
-            </div>
-        </div>
+        <x-popup-action target="edit" text="Simpan" textLoading="Menyimpan..." closeAction="closeWindow" closeText="Batal" />
     </form>
 </x-popup>

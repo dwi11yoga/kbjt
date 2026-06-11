@@ -17,7 +17,7 @@
         onclick="window.location='{{ $url }}'"
     @endisset
     {{ $disabled ? 'disabled' : '' }} wire:click='{{ $model }}'
-    class="rounded-{{ $rounded }} py-3 px-4 {{ $color }} hover:bg-opacity-90 flex items-center justify-center gap-1 {{ $width }} active:scale-95 transition-transform duration-200">
+    class="rounded-{{ $rounded }} py-3 px-4 {{ $color }} text-neutral-800 hover:bg-opacity-90 flex items-center justify-center gap-1 {{ $width }} active:scale-95 transition-transform duration-200">
     @if ($target)
         {{-- icon --}}
         <div wire:target='{{ $target }}' wire:loading class="animate-spin">

@@ -108,7 +108,14 @@ new class extends Component {
                 <i data-lucide='clock' class="size-5"></i>
                 <div class="">
                     <div class="text-xs text-neutral-600">Bergabung sejak</div>
-                    <div>{{ $user->created_at->format('j F Y') }}</div>
+                    <div>{{ dateFormat($user->created_at, 'long') }}</div>
+                </div>
+            </div>
+            <div class="flex gap-3 items-center">
+                <i data-lucide='shredder' class="size-5"></i>
+                <div class="">
+                    <div class="text-xs text-neutral-600">Dihapus pada</div>
+                    <div>{{ dateFormat($user->deleted_at, 'long') }}</div>
                 </div>
             </div>
             <div class="flex gap-3 items-center">

@@ -2,6 +2,24 @@
 import { createIcons, icons } from "lucide";
 import { toJavanese, toLatin } from "carakanjs";
 
+// dakmode
+if (localStorage.theme === "dark") {
+    document.documentElement.classList.add("dark");
+} else {
+    document.documentElement.classList.remove("dark");
+}
+
+// fungsitoggle darkmode
+window.darkmodeToggle = function () {
+    if (document.documentElement.classList.contains("dark")) {
+        document.documentElement.classList.remove("dark");
+        localStorage.theme = "light";
+    } else {
+        document.documentElement.classList.add("dark");
+        localStorage.theme = "dark";
+    }
+};
+
 // custom icon lucide
 const Facebook = [
     [

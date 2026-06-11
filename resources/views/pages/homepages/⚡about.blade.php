@@ -1,9 +1,12 @@
 <?php
 
 use Livewire\Component;
+use Livewire\Attributes\Title;
 
 new class extends Component {
     //
+    #[TItle('Tentang')]
+    public $lorem;
 };
 ?>
 
@@ -71,22 +74,25 @@ new class extends Component {
             <div class="">Kontak & media sosial</div>
             <div class="my-3 flex space-x-1">
                 {{-- mail --}}
-                <a href="mailto:kontak@kbjt.com" target="_blank" title="Hubungi kami via email">
-                    <div class="bg-neutral-200 rounded-lg py-3 px-3 w-fit group hover:bg-blue-400">
-                        <i data-lucide='mail' class="stroke-black"></i>
+                <a href="#" target="_blank" title="Hubungi kami via email">
+                    <div
+                        class="bg-neutral-200 dark:bg-zinc-800 rounded-lg py-3 px-3 w-fit group dark:hover:bg-blue-400 hover:bg-blue-400">
+                        <i data-lucide='mail' class="stroke-black dark:stroke-zinc-200"></i>
                     </div>
                 </a>
 
                 {{-- facebook --}}
                 <a href="https://www.facebook.com/kbjt" target="_blank" title="Kunjungi akun kbjt di facebook">
-                    <div class="bg-neutral-200 rounded-lg py-3 px-3 w-fit group hover:bg-blue-400">
+                    <div
+                        class="bg-neutral-200 dark:bg-zinc-800 rounded-lg py-3 px-3 w-fit group dark:hover:bg-blue-400 hover:bg-blue-400">
                         <i data-lucide='facebook' class="fill-blue-500 group-hover:fill-white stroke-none"></i>
                     </div>
                 </a>
 
                 {{-- instagram --}}
                 <a href="https://www.instagram.com/kbjt" target="_blank" title="Kunjungi akun kbjt di instagram">
-                    <div class="bg-neutral-200 rounded-lg py-3 px-3 w-fit group hover:bg-sky-400">
+                    <div
+                        class="bg-neutral-200 dark:bg-zinc-800 rounded-lg py-3 px-3 w-fit group dark:hover:bg-sky-400 hover:bg-sky-400">
                         <i data-lucide='instagram'
                             class="fill-neutral-800 group-hover:fill-neutral-200 stroke-neutral-200 group-hover:stroke-neutral-800"></i>
                     </div>
@@ -94,14 +100,16 @@ new class extends Component {
 
                 {{-- twitter/x --}}
                 <a href="https://x.com/kbjt" target="_blank" title="Kunjungi akun kbjt di twitter/x">
-                    <div class="bg-neutral-200 rounded-lg py-3 px-3 w-fit group hover:bg-sky-400">
+                    <div
+                        class="bg-neutral-200 dark:bg-zinc-800 rounded-lg py-3 px-3 w-fit group dark:hover:bg-sky-400 hover:bg-sky-400">
                         <i data-lucide='twitter' class="fill-sky-500 group-hover:fill-white stroke-none"></i>
                     </div>
                 </a>
                 {{-- discord --}}
                 <a href="https://discord.com/invite/kbjt" target="_blank"
                     title="Bergabung dengan komunitas kbjt di discord">
-                    <div class="bg-neutral-200 rounded-lg py-3 px-3 w-fit group hover:bg-blue-700">
+                    <div
+                        class="bg-neutral-200 dark:bg-zinc-800 rounded-lg py-3 px-3 w-fit group dark:hover:bg-blue-700 hover:bg-blue-700">
                         <i data-lucide='discord' class="fill-blue-700 group-hover:fill-white"></i>
                     </div>
                 </a>

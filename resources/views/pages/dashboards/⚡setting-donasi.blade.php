@@ -4,7 +4,6 @@ use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Validate;
 use App\Models\User;
 
 new class extends Component {
@@ -95,7 +94,7 @@ new class extends Component {
 };
 ?>
 
-<form wire:submit='save' class="space-y-2">
+<form wire:submit='save' class="space-y-4">
     @csrf
     {{-- email --}}
     <x-input-toggle id="terimaDonasi" model="terimaDonasi" label="Terima donasi"

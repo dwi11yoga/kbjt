@@ -115,7 +115,7 @@ new class extends Component {
 
 {{-- @props(['wordDefinition', 'showWord' => false, 'author', 'highlight' => false]) --}}
 <div
-    class="rounded-2xl p-5 border border-neutral-200 space-y-3 {{ $highlight ? 'bg-amber-50' : 'bg-white' }}
+    class="rounded-2xl p-5 border border-neutral-200 dark:border-zinc-800 space-y-3 {{ $highlight ? 'bg-amber-50' : 'bg-white dark:bg-zinc-900' }}
         {{ isset($wordDefinition->selected) && $wordDefinition->selected == 1
             ? 'outline outline-2 outline-amber-500 hover:outline-amber-400'
             : 'hover:outline hover:outline-2 hover:outline-amber-400' }}
@@ -126,7 +126,7 @@ new class extends Component {
             <x-avatar avatarUrl="{{ $author->profile_pic }}" size="8" />
             <div class="flex gap-1 items-center">
                 <div class="group-hover:underline underline-offset-4 decoration-amber-400 decoration-4">
-                    {{ $author->nama }}
+                    {{ $author->nama }} {{ $author->trashed() ? '[Akun dihapus]' : '' }}
                     {{ auth()->user() && auth()->user()->username == $author->username ? '(Anda)' : '' }}</div>
                 <div class="text-sm"> · {{ dateFormat($wordDefinition->edited_at) }}</div>
             </div>
@@ -134,55 +134,31 @@ new class extends Component {
 
         {{-- Menu --}}
         @if (auth()->check() && isset($author->username)) {{-- sembunyikan jika tidak ada $wordDefinition->menu (untuk halaman laporan) --}}
-            <div class="relative">
-                <button onclick="toggleClass('dropdown{{ $wordDefinition->id }}', 'hidden')"
-                    class="p-2 rounded-full hover:bg-neutral-100">
-                    <i data-lucide='more-horizontal' class="size-5"></i>
-                </button>
-                <div id="dropdown{{ $wordDefinition->id }}"
-                    class="absolute hidden bg-white right-0 top-10 z-40 p-2 rounded-xl border border-neutral-100 min-w-48 text-neutral-800">
-                    <ul>
-                        {{-- edit --}}
-                        @if ($wordDefinition->user_id == auth()->user()->id)
-                            <a href="/definisi/{{ $wordDefinition->id }}/edit"
-                                class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
-                                <div>Edit</div>
-                                <i data-lucide='pencil' class="size-5"></i>
-                            </a>
-                        @endif
-                        {{-- verifikasi --}}
-                        @if (auth()->check() && auth()->user()->role == 'pengurus' && $wordDefinition->user_id !== auth()->user()->id)
-                            <li wire:click='$toggle("openVerify")'
-                                class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
-                                <div>{{ empty($wordDefinition->verifikasi) ? 'Verifikasi' : 'Unverifikasi' }}</div>
-                                <i data-lucide='check-circle' class="size-5"></i>
-                            </li>
-                        @endif
-                        {{-- bagikan --}}
-                        <li wire:click='$toggle("openShare")'
-                            class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 cursor-pointer">
-                            <div>Bagikan</div>
-                            <i data-lucide='share-2' class="size-5"></i>
-                        </li>
-                        {{-- hapus --}}
-                        @if ($wordDefinition->user_id == auth()->user()->id)
-                            <li wire:click='$toggle("openDelete")'
-                                class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500 cursor-pointer">
-                                <div>Hapus</div>
-                                <i data-lucide='trash' class="size-5"></i>
-                            </li>
-                        @endif
-                        {{-- laporkan --}}
-                        @if ($wordDefinition->user_id != auth()->user()->id)
-                            <li wire:click='$toggle("openReport")'
-                                class="flex justify-between py-2 px-3 rounded-lg hover:bg-neutral-100 text-red-500 cursor-pointer">
-                                <div>Laporkan</div>
-                                <i data-lucide='flag-triangle-right' class="size-5"></i>
-                            </li>
-                        @endif
-                    </ul>
-                </div>
-            </div>
+            <x-menu-group menuIcon="more-horizontal" menuId="dropdown{{ $wordDefinition->id }}">
+                {{-- edit --}}
+                @if ($wordDefinition->user_id == auth()->user()->id)
+                    <x-menu-item type="url" action="/definisi/{{ $wordDefinition->id }}/edit" name="Edit"
+                        icon="pencil" />
+                @endif
+                {{-- verifikasi --}}
+                @if (auth()->check() && auth()->user()->role == 'pengurus' && $wordDefinition->user_id !== auth()->user()->id)
+                    <x-menu-item type="button" action='$toggle("openVerify")'
+                        name="{{ empty($wordDefinition->verifikasi) ? 'Verifikasi' : 'Unverifikasi' }}"
+                        icon="check-circle" />
+                @endif
+                {{-- bagikan --}}
+                <x-menu-item type="button" action='$toggle("openShare")' name="Bagikan" icon="share-2" />
+                {{-- hapus --}}
+                @if ($wordDefinition->user_id == auth()->user()->id)
+                    <x-menu-item type="button" action='$toggle("openDelete")' name="Hapus" icon="trash"
+                        textColor="text-red-500" />
+                @endif
+                {{-- laporkan --}}
+                @if ($wordDefinition->user_id != auth()->user()->id)
+                    <x-menu-item type="button" action='$toggle("openReport")' name="Laporkan"
+                        icon="flag-triangle-right" textColor="text-red-500" />
+                @endif
+            </x-menu-group>
         @endif
 
     </div>
@@ -204,17 +180,19 @@ new class extends Component {
     <div class="flex justify-between items-center">
         {{-- vote --}}
         <div
-            class="rounded-full p-1 flex items-center {{ auth()->check() && in_array(auth()->user()->id, $upvotes ?? []) ? 'bg-green-100' : (auth()->check() && in_array(auth()->user()->id, $downvotes ?? []) ? 'bg-red-100' : 'hover:bg-neutral-100') }} w-fit border border-neutral-100 hover:border-neutral-200">
-            <div class="p-2 ml-1 font-bold text-xs {{ $this->totalVotes < 0 ? 'text-red-600' : '' }}">
+            class="rounded-full p-1 flex items-center {{ auth()->check() && in_array(auth()->user()->id, $upvotes ?? []) ? 'bg-green-100 dark:bg-green-900' : (auth()->check() && in_array(auth()->user()->id, $downvotes ?? []) ? 'bg-red-100 dark:bg-red-900' : 'hover:bg-neutral-100 dark:hover:bg-zinc-800') }} w-fit border border-neutral-100 dark:border-zinc-800 hover:border-neutral-200">
+            <div
+                class="p-2 ml-1 font-bold text-xs {{ $this->totalVotes < 0 ? 'text-red-600 dark:text-red-200' : '' }}">
                 {{ $this->totalVotes }}</div>
             <div class="">
-                <button wire:click='vote(true)' class="rounded-full p-2 hover:bg-neutral-100 group">
+                <button wire:click='vote(true)'
+                    class="rounded-full p-2 hover:bg-green-200 dark:hover:bg-green-100 group">
                     <i wire:ignore data-lucide='arrow-big-up'
-                        class="size-4 {{ auth()->check() && in_array(auth()->user()->id, $upvotes ?? []) ? 'fill-green-700 stroke-green-700' : 'group-hover:fill-green-500 group-hover:stroke-green-500' }}"></i>
+                        class="size-4 {{ auth()->check() && in_array(auth()->user()->id, $upvotes ?? []) ? 'dark:fill-green-300 fill-green-700 dark:stroke-green-300 stroke-green-700' : 'group-hover:fill-green-500 group-hover:stroke-green-500' }}"></i>
                 </button>
-                <button wire:click='vote(false)' class="rounded-full p-2 hover:bg-neutral-100 group">
+                <button wire:click='vote(false)' class="rounded-full p-2 hover:bg-red-200 dark:hover:bg-red-100 group">
                     <i wire:ignore data-lucide='arrow-big-down'
-                        class="size-4 {{ auth()->check() && in_array(auth()->user()->id, $downvotes ?? []) ? 'fill-red-700 stroke-red-700' : 'group-hover:fill-red-500 group-hover:stroke-red-500' }}"></i>
+                        class="size-4 {{ auth()->check() && in_array(auth()->user()->id, $downvotes ?? []) ? 'dark:fill-red-300 fill-red-700 dark:stroke-red-300 stroke-red-700' : 'group-hover:fill-red-500 group-hover:stroke-red-500' }}"></i>
                 </button>
             </div>
         </div>
@@ -222,17 +200,17 @@ new class extends Component {
         <div class="flex w-fit justify-between">
             @if ($wordDefinition->hukuman_edit)
                 {{-- tampilkan jika definisi perlu diedit --}}
-                <x-badge color="bg-red-200" hoverColor="" gap="1">
+                <x-badge color="bg-red-200 dark:text-neutral-800" hoverColor="" gap="1">
                     <i data-lucide='eye-off' class="size-4"></i>
                     <div class="">Disembunyikan: perlu diperbaiki</div>
                 </x-badge>
             @elseif (isset($author->role) && $author->role == 'pengurus')
-                <x-badge color="bg-amber-200" gap="1">
+                <x-badge color="bg-amber-200 dark:text-neutral-800" gap="1">
                     <i data-lucide='user-round-key' class="size-4"></i>
                     <div class="md:block hidden">Terverifikasi</div>
                 </x-badge>
             @elseif (isset($wordDefinition->verifikasi))
-                <x-badge color="bg-amber-200" gap="1">
+                <x-badge color="bg-amber-200 dark:text-neutral-800" gap="1">
                     <i data-lucide='badge-check' class="size-5"></i>
                     <div class="md:block hidden">Terverifikasi</div>
                 </x-badge>

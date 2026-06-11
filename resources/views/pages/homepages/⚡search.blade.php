@@ -24,7 +24,9 @@ new class extends Component {
         if ($this->filter !== 'kosakata' && $this->filter !== 'semua') {
             return [];
         }
-        $words = Definisi::select('kosakata')->distinct()->where('kosakata', 'like', '%' . $this->keyword . '%');
+        $words = Definisi::select('kosakata')
+            ->distinct()
+            ->where('kosakata', 'like', '%' . $this->keyword . '%');
         if ($this->filter === 'semua') {
             $words = $words
                 ->limit(10)
@@ -98,44 +100,13 @@ new class extends Component {
             </div>
 
             {{-- filter --}}
-            <div class="flex gap-1 overflow-x-auto">
-                <div class="">
-                    <input type="radio" wire:model.live='filter' name="filter" id="filter-semua" value="semua"
-                        class="peer hidden">
-                    <label for="filter-semua"
-                        class="px-5 py-2 border border-neutral-200 rounded-full flex gap-1 items-center cursor-pointer peer-checked:bg-amber-400">
-                        <i data-lucide='layers' class="size-5"></i>
-                        Semua
-                    </label>
-                </div>
-                <div class="">
-                    <input type="radio" wire:model.live='filter' name="filter" id="filter-kosakata" value="kosakata"
-                        class="peer hidden">
-                    <label for="filter-kosakata"
-                        class="px-5 py-2 border border-neutral-200 rounded-full flex gap-1 items-center cursor-pointer peer-checked:bg-amber-400">
-                        <i data-lucide='message-circle-more' class="size-5"></i>
-                        Kosakata
-                    </label>
-                </div>
-                <div class="">
-                    <input type="radio" wire:model.live='filter' name="filter" id="filter-pengguna" value="pengguna"
-                        class="peer hidden">
-                    <label for="filter-pengguna"
-                        class="px-5 py-2 border border-neutral-200 rounded-full flex gap-1 items-center cursor-pointer peer-checked:bg-amber-400">
-                        <i data-lucide='users' class="size-5"></i>
-                        Pengguna
-                    </label>
-                </div>
-                <div class="">
-                    <input type="radio" wire:model.live='filter' name="filter" id="filter-artikel" value="artikel"
-                        class="peer hidden">
-                    <label for="filter-artikel"
-                        class="px-5 py-2 border border-neutral-200 rounded-full flex gap-1 items-center cursor-pointer peer-checked:bg-amber-400">
-                        <i data-lucide='file-text' class="size-5"></i>
-                        Artikel
-                    </label>
-                </div>
-            </div>
+            <x-radio-group>
+                <x-input-radio model="filter" id="semua" value="semua" text="Semua" icon="layers" />
+                <x-input-radio model="filter" id="kosakata" value="kosakata" text="Kosakata"
+                    icon="message-circle-more" />
+                <x-input-radio model="filter" id="pengguna" value="pengguna" text="Pengguna" icon="users-round" />
+                <x-input-radio model="filter" id="artikel" value="artikel" text="Artikel" icon="file-text" />
+            </x-radio-group>
         </div>
 
         {{-- jika keyword kosoong --}}
@@ -150,10 +121,7 @@ new class extends Component {
 
         {{-- Jika tidak ada data --}}
         @if (count($this->words) == 0 && count($this->users) == 0 && count($this->articles) == 0)
-            <?php
-            $notFound = 'Pencarian dengan kata kunci "' . $this->keyword . '" tidak ditemukan.';
-            ?>
-            @include('partials.not-found')
+            <x-errors.not-found text="Pencarian dengan kata kunci {{ $this->keyword }} tidak ditemukan." />
         @endif
 
         {{-- hasil pencarian --}}

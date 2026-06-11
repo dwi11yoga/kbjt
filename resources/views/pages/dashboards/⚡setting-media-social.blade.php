@@ -34,16 +34,16 @@ new class extends Component {
     // set nilai dari data penggnuna
     public function mount()
     {
-        $this->tautan = auth()->user()->tautan;
-        $this->telp = auth()->user()->telp;
-        $this->fb = auth()->user()->media_sosial['fb'];
-        $this->x = auth()->user()->media_sosial['x'];
-        $this->ig = auth()->user()->media_sosial['ig'];
-        $this->tiktok = auth()->user()->media_sosial['tiktok'];
-        $this->wa = auth()->user()->media_sosial['wa'];
-        $this->telegram = auth()->user()->media_sosial['telegram'];
-        $this->linkedin = auth()->user()->media_sosial['linkedin'];
-        $this->github = auth()->user()->media_sosial['github'];
+        $this->tautan = auth()->user()->tautan ?? null;
+        $this->telp = auth()->user()->telp ?? null;
+        $this->fb = auth()->user()->media_sosial['fb'] ?? null;
+        $this->x = auth()->user()->media_sosial['x'] ?? null;
+        $this->ig = auth()->user()->media_sosial['ig'] ?? null;
+        $this->tiktok = auth()->user()->media_sosial['tiktok'] ?? null;
+        $this->wa = auth()->user()->media_sosial['wa'] ?? null;
+        $this->telegram = auth()->user()->media_sosial['telegram'] ?? null;
+        $this->linkedin = auth()->user()->media_sosial['linkedin'] ?? null;
+        $this->github = auth()->user()->media_sosial['github'] ?? null;
     }
 
     // simpan tautan pengguna

@@ -37,7 +37,7 @@ new class extends Component {
     <div class="space-x-3 flex overflow-x-auto overflow-y-hidden p-1">
         @foreach ($this->achievements as $d)
             <a href="#"
-                class="md:w-2/5 w-1/2 md:min-w-0 min-w-52 bg-neutral-100 rounded-xl p-4 h-44 flex justify-start items-end hover:outline hover:outline-amber-400">
+                class="md:w-2/5 w-1/2 md:min-w-0 min-w-52 dark:bg-zinc-800 bg-neutral-100 rounded-xl p-4 h-44 flex justify-start items-end hover:outline hover:outline-amber-400">
                 <div class="">
                     <div class="max-w-12 max-h-12 overflow-hidden rounded-md">
                         <img alt="icon" class="object-cover w-full h-full"

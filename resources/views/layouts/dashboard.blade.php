@@ -27,6 +27,17 @@
     <script src="{{ asset('js/trix.umd.min.js') }}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    {{-- larapex --}}
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    {{-- load darkmode sebelum halaman dimuat --}}
+     <script>
+        if (localStorage.theme === 'dark' || 
+            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
     {{-- Import custom --}}
     {{-- @yield('head') --}}
 
@@ -47,13 +58,13 @@
             <div class="md:col-span-8 md:col-start-3 col-span-12 md:ml-1 m-7">
 
                 {{-- header --}}
-                <div class="bg-white mb-5 md:py-0 py-2 md:static sticky top-0 flex items-center justify-between z-10">
+                <div class="dark:bg-zinc-900 bg-white mb-5 md:py-0 py-2 md:static sticky top-0 flex items-center justify-between z-10">
 
                     <div class="flex md:translate-x-0 -translate-x-3 gap-1">
                         {{-- Menu mobile --}}
                         <button class="md:hidden z-40" onclick="toggleClass('menu', 'invisible')">
                             <div
-                                class="w-12 h-12 rounded-full flex justify-center cursor-pointer items-center hover:bg-gray-200 active:bg-gray-300">
+                                class="w-12 h-12 rounded-full flex justify-center cursor-pointer items-center dark:hover:bg-zinc-800 hover:bg-gray-200 active:bg-gray-300">
                                 <i data-lucide='menu'></i>
                             </div>
                         </button>
@@ -73,7 +84,7 @@
                 </div>
 
                 {{-- Konten --}}
-                <div class="text-neutral-900 space-y-5">
+                <div class="space-y-5">
                     {{ $slot ?? '' }}
                     @yield('slot')
                     @yield('body')
@@ -87,6 +98,9 @@
     {{-- Toast --}}
     <x-toast type="session" />
     <x-toast type="dispatch" />
+    
+    @livewireScripts
+    @stack('scripts')
 </body>
 
 </html>

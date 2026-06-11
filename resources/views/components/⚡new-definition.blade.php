@@ -61,14 +61,14 @@ new class extends Component {
 {{-- tambah definisi --}}
 <div class="space-y-1">
     {{-- tidak boleh submit kalau pengguna belum login/kepala --}}
-    <form wire:submit='save' class="bg-white rounded-2xl p-5 border border-neutral-200 space-y-3">
+    <form wire:submit='save' class="rounded-2xl p-5 border border-neutral-200 dark:border-zinc-800 space-y-3">
         @csrf
         {{-- Author --}}
         <div class="flex gap-2 items-center">
             <x-avatar avatarUrl="{{ auth()->user()?->profile_pic }}" size="8" />
             <div class="flex gap-1 items-center">
                 <div class="group-hover:underline underline-offset-4 flex flex-wrap gap-1 decoration-amber-400 decoration-4">
-                    {{ auth()->check() ? auth()->user()->nama . '(Anda)' : 'Anda' }}
+                    {{ auth()->check() ? auth()->user()->nama . ' (Anda)' : 'Anda' }}
                     @if (suspendedAccount())
                         <x-badge color="bg-red-100" hoverColor="hover:bg-red-300">Tersuspend</x-badge>
                     @endif
@@ -87,7 +87,7 @@ new class extends Component {
                     <i data-lucide='languages' class="size-5 my-0.5"></i>
                 </label>
                 <select wire:model.live='lang' name="lang" id="lang" title="Bahasa yang digunakan"
-                    class="hover:bg-neutral-100 bg-white hover:text-neutral-800 rounded-full py-2 px-3 pl-9 flex gap-1 items-center group transition-all ease-in-out appearance-none cursor-pointer">
+                    class="dark:hover:bg-zinc-800 hover:bg-neutral-100 bg-white dark:bg-zinc-900 rounded-full py-2 px-3 pl-9 flex gap-1 items-center group transition-all ease-in-out appearance-none cursor-pointer">
                     <option value="id">Bahasa Indonesia</option>
                     <option value="jw">Basa Jawa</option>
                     {{-- <div class="group-hover:block group-focus:block hidden">Semua bahasa</div>  --}}

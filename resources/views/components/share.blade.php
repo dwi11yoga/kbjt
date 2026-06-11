@@ -8,7 +8,7 @@
     'width' => 'md:w-2/3 w-full',
 ])
 
-<div id="{{ $id }}" class="w-full {{ $separator ? 'py-8 border-t border-b border-gray-200' : '' }} space-y-5">
+<div id="{{ $id }}" class="w-full {{ $separator ? 'py-8 border-t border-b border-gray-200 dark:border-zinc-800' : '' }} space-y-5">
 
     <div class="space-y-1">
         <div class="font-semibold text-xl">{{ $title }}</div>
@@ -19,34 +19,33 @@
     <div class="flex space-x-1">
         {{-- facebook --}}
         <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($url) }}" target="_blank"
-            title="Bagikan lewat facebook" class="bg-neutral-200 rounded-lg py-3 px-3 w-fit group hover:bg-blue-400">
+            title="Bagikan lewat facebook" class="bg-neutral-200 dark:bg-zinc-800 rounded-lg py-3 px-3 w-fit group hover:bg-blue-400">
             <i data-lucide='facebook' class="fill-blue-500 group-hover:fill-white stroke-none"></i>
         </a>
 
         {{-- twitter/x --}}
         <a href="https://twitter.com/intent/tweet?text={{ urlencode($shareText) }}&url={{ urlencode($url) }}"
             target="_blank" title="Bagikan lewat twitter/x"
-            class="bg-neutral-200 rounded-lg py-3 px-3 w-fit group hover:bg-sky-400">
+            class="bg-neutral-200 dark:bg-zinc-800 rounded-lg py-3 px-3 w-fit group hover:bg-sky-400">
             {{-- <i data-lucide='bird' class="fill-sky-500 group-hover:fill-white stroke-none"></i> --}}
             <i data-lucide='twitter' class="fill-sky-500 group-hover:fill-white stroke-none"></i>
         </a>
 
         {{-- whatsapp --}}
         <a href="https://wa.me/?text={{ urlencode($shareText . ' ' . $url) }}" target="_blank"
-            title="Bagikan lewat Whatsapp" class="bg-neutral-200 rounded-lg py-3 px-3 w-fit group hover:bg-green-500">
+            title="Bagikan lewat Whatsapp" class="bg-neutral-200 dark:bg-zinc-800 rounded-lg py-3 px-3 w-fit group hover:bg-green-500">
             <i data-lucide='whatsapp' class="fill-green-500 group-hover:fill-white stroke-none"></i>
         </a>
 
         {{-- telegram --}}
         <a href="https://t.me/share/url?url={{ urlencode($url) }}&text={{ urlencode($shareText) }}" target="_blank"
-            title="Bagikan lewat telegram" class="bg-neutral-200 rounded-lg py-3 px-3 w-fit group hover:bg-blue-500">
+            title="Bagikan lewat telegram" class="bg-neutral-200 dark:bg-zinc-800 rounded-lg py-3 px-3 w-fit group hover:bg-blue-500">
             <i data-lucide='telegram' class="fill-blue-500 group-hover:fill-white stroke-none"></i>
         </a>
-
     </div>
 
     {{-- Bagikan link --}}
-    <div class="bg-neutral-200 rounded-lg {{ $width }} py-3 px-4 flex justify-between gap-2">
+    <div class="bg-neutral-200 dark:bg-zinc-800 rounded-lg {{ $width }} py-3 px-4 flex justify-between gap-2">
         <div id="bagikanLink" class="line-clamp-1">
             {{ $url }}
         </div>

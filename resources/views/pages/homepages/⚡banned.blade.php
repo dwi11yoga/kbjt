@@ -11,7 +11,7 @@ new class extends Component {
 ?>
 
 <div class="container mx-auto p-10 flex justify-center">
-    <div class="p-12 rounded-2xl border border-neutral-200">
+    <div class="p-12 rounded-2xl border border-neutral-200 dark:border-zinc-800">
         <div class="grid grid-cols-3 md:space-x-3 md:space-y-0 space-y-3 items-center">
 
             <div class="md:order-1 order-2 md:col-span-1 col-span-3 flex justify-center">

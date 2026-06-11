@@ -27,6 +27,14 @@
     <script src="{{ asset('js/trix.umd.min.js') }}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    {{-- load darkmode sebelum halaman dimuat --}}
+    <script>
+        if (localStorage.theme === 'dark' ||
+            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
     {{-- Import custom --}}
     {{-- @yield('head') --}}
 
@@ -34,7 +42,7 @@
     {{-- <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script> --}}
 </head>
 
-<body>
+<body class="">
     <livewire:navbar />
 
     {{-- header untuk hal. detail user --}}

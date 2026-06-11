@@ -146,16 +146,16 @@ new class extends Component {
                         <div class="">Mensubmit definisi untuk kosakata {{ $d->kosakata }}</div>
                         @if (isset($d->verifikasi))
                             <div wire:ignore class="" title="Telah diverifikasi">
-                                <i data-lucide='badge-check' class="size-4 fill-amber-400"></i>
+                                <i data-lucide='badge-check' class="size-4 fill-amber-400 dark:stroke-zinc-800"></i>
                             </div>
                         @endif
                         <x-badge title="Poin diperoleh">
-                            <i data-lucide='astroid' class="size-3 fill-black"></i>
+                            <i data-lucide='astroid' class="size-3 fill-black dark:fill-white"></i>
                             <div class="">{{ $d->poin_kontributor + $d->poin_verifikasi }} Poin</div>
                         </x-badge>
                     </x-slot:leftText>
                     <x-slot:rightText>
-                        {{ dateFormat($d->updated_at) }}
+                        <x-badge>{{ dateFormat($d->updated_at) }}</x-badge>
                     </x-slot:rightText>
                 </x-list-item>
             @endforeach
@@ -184,35 +184,19 @@ new class extends Component {
                             </div>
                             @if (isset($d->verifikasi))
                                 <div wire:ignore class="" title="Telah diverifikasi">
-                                    <i data-lucide='badge-check' class="size-4 fill-amber-400"></i>
+                                    <i data-lucide='badge-check' class="size-4 fill-amber-400 dark:stroke-zinc-800"></i>
                                 </div>
                             @endif
                             {{-- poin --}}
                             <x-badge title="Poin diperoleh">
-                                <i data-lucide='astroid' class="size-3 fill-black"></i>
+                                <i data-lucide='astroid' class="size-3 fill-black dark:fill-white"></i>
                                 <div class="">{{ $d->poin_verifikasi }} Poin</div>
                             </x-badge>
                         </x-slot:leftText>
                         <x-slot:rightText>
-                            {{ dateFormat($d->verifikasi) }}
+                            <x-badge>{{ dateFormat($d->verifikasi) }}</x-badge>
                         </x-slot:rightText>
                     </x-list-item>
-
-                    {{-- <a href="/kosakata/{{ $d->kosakata }}?id={{ $d->id }}"
-                        class="border border-neutral-200 p-3 mt-3 rounded-xl grid grid-cols-6 md:space-y-0 space-y-1 hover:outline hover:outline-amber-400">
-                        <div class="line-clamp-1 md:col-span-4 col-span-6 flex items-center">
-                            Memverifikasi definisi {{ $d->kosakata->kosakata ?? '[Kosakata dihapus]' }} milik
-                            {{ $d->user->nama ?? '[Pengguna dihapus]' }}.
-                        </div>
-                        <div
-                            class="md:text-base text-sm col-span-1 flex items-center md:justify-center justify-start space-x-1">
-                            <i data-lucide='heart' class="inline-block w-5 fill-amber-400" title="Poin"></i>
-                            <span>{{ $d->poin_verifikasi }}</span>
-                        </div>
-                        <div class="md:col-span-1 col-span-2 md:text-base text-sm flex items-center">
-                            {{ $d->verifikasi->translatedformat('d M Y') }}
-                        </div>
-                    </a> --}}
                 @endforeach
                 @if ($this->verifiedDefinitions->isEmpty())
                     <x-errors.not-found text="Belum ada data" />
@@ -228,18 +212,7 @@ new class extends Component {
 
     {{-- Laporan --}}
     <div class="space-y-3" id="laporan">
-        <div class="flex items-center justify-between">
-            <span>Laporan kamu</span>
-            <div class="relative">
-                <i data-lucide='filter' class="w-5 absolute top-2 left-3"></i>
-                <select wire:model.live='filter' name="filter_laporan" id="filter_laporan"
-                    class="appearance-none border bg-white border-neutral-200 rounded-xl py-2 pl-10 pr-3 cursor-pointer">
-                    <option value="semua">Semua</option>
-                    <option value="pending">Pending</option>
-                    <option value="selesai">Selesai</option>
-                </select>
-            </div>
-        </div>
+        <div class="">Laporan kamu</div>
 
         <div class="space-y-3">
             @foreach ($this->reports as $d)
@@ -257,7 +230,7 @@ new class extends Component {
                         {{-- poin --}}
                         @isset($d->status)
                             <x-badge title="Poin diperoleh">
-                                <i data-lucide='astroid' class="size-3 fill-black"></i>
+                                <i data-lucide='astroid' class="size-3 fill-black dark:fill-white"></i>
                                 <div class="">{{ $d->poin_pelapor ?? 0 }} Poin</div>
                             </x-badge>
                         @endisset

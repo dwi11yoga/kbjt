@@ -424,7 +424,7 @@ new class extends Component {
 
                     {{-- Tombol simpan --}}
                     <div id="save" class="">
-                        <div class="w-full bg-white rounded-xl p-4 mb-5 flex justify-between items-center">
+                        <div class="w-full rounded-xl p-4 mb-5 flex justify-between items-center">
                             <div>
                                 <div>Simpan tindakan?</div>
                                 <div class="text-sm">Tindakan yang disimpan tidak dapat diubah.</div>

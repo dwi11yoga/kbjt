@@ -34,7 +34,7 @@ class EmailBerubah extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Alamat email akun kamu berubah',
+            subject: 'Alamat email akun anda berubah',
         );
     }
 

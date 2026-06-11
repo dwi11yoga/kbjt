@@ -105,7 +105,7 @@ new class extends Component {
     </div>
 
     {{-- laporan definisi --}}
-    <div class="bg-white">
+    <div class="">
         {{-- atas/title --}}
         <div class="py-2 flex gap-2 md:flex-row flex-col justify-between md:items-center">
             <div class="text-nowrap">Definisi Dilaporkan</div>
@@ -121,7 +121,7 @@ new class extends Component {
             {{-- <div class="relative">
                 <i data-lucide='filter' class="w-5 absolute top-2 left-3"></i>
                 <select wire:model.live='filter' name="filter" id="filter"
-                    class="appearance-none border md:text-base text-sm border-neutral-200 rounded-xl py-2 pl-10 pr-3 bg-white cursor-pointer">
+                    class="appearance-none border md:text-base text-sm border-neutral-200 rounded-xl py-2 pl-10 pr-3  cursor-pointer">
                     <option value="semua">Semua</option>
                     <option value="pending">Belum ditangani</option>
                     <option value="selesai">Selesai ditangani</option>
@@ -145,7 +145,7 @@ new class extends Component {
                     </x-slot:leftText>
                     <x-slot:rightText>
                         {{-- status --}}
-                        <x-badge gap="1" color="{{ isset($d->status) ? 'bg-green-100' : 'bg-red-100' }}"
+                        <x-badge gap="1" color="{{ isset($d->status) ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900' }}"
                             hoverColor="{{ isset($d->status) ? 'hover:bg-green-300' : 'hover:bg-red-300' }}">
                             <i data-lucide='{{ isset($d->status) ? 'check-circle' : 'circle-alert' }}'
                                 class="w-4"></i>

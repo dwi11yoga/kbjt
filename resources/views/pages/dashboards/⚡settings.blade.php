@@ -94,6 +94,29 @@ new class extends Component {
         </div>
     </div>
 
+    {{-- Preferensi --}}
+    <div class="rounded-2xl space-y-3">
+        <div class="">Preferensi</div>
+        <div class="space-y-2">
+            <x-list-item type="div">
+                <x-slot:leftText>
+                    <div class="flex justify-between items-center w-full">
+                        <div class="flex items-center gap-1">
+                            <i data-lucide='moon-star' class="size-5"></i>
+                            <div class="">Mode gelap</div>
+                        </div>
+                        <button class="cursor-pointer w-fit" onclick="darkmodeToggle()">
+                            <x-badge>
+                                <div class="dark:block hidden">Aktif</div>
+                                <div class="dark:hidden block">Nonaktif</div>
+                            </x-badge>
+                        </button>
+                    </div>
+                </x-slot:leftText>
+            </x-list-item>
+        </div>
+    </div>
+
     {{-- akun --}}
     <div class="space-y-3">
         <div class="">Akun</div>

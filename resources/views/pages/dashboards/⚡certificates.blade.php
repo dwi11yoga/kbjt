@@ -132,7 +132,7 @@ new class extends Component {
                     <div class="flex item-center gap-5 w-full">
                         {{-- icon --}}
                         <div
-                            class="p-8 flex items-center justify-center {{ auth()->user()->role != 'kepala' && isset($d->didapat) && $d->didapat == 1 ? 'bg-amber-400' : 'bg-neutral-200' }} aspect-square rounded-xl">
+                            class="p-8 flex items-center justify-center {{ auth()->user()->role != 'kepala' && isset($d->didapat) && $d->didapat == 1 ? 'bg-amber-400' : 'bg-neutral-200 dark:bg-zinc-800' }} aspect-square rounded-xl">
                             <i
                                 data-lucide='{{ auth()->user()->role != 'kepala' && isset($d->didapat) && $d->didapat == 1 ? 'lock-open' : 'lock' }}'></i>
                         </div>
@@ -171,7 +171,7 @@ new class extends Component {
                             {{-- progress --}}
                             @if (auth()->user()->role != 'kepala')
                                 <div class="relative">
-                                    <div class="absolute w-full bg-neutral-200 rounded-full py-1 "></div>
+                                    <div class="absolute w-full bg-neutral-200 dark:bg-zinc-800 rounded-full py-1 "></div>
                                     <div class="absolute bg-amber-400 rounded-full py-1"
                                         style="width: {{ $d->persentase }}">
                                     </div>

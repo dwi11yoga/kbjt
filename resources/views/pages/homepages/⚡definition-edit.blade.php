@@ -16,7 +16,12 @@ new class extends Component {
     #[Computed]
     public function definition()
     {
-        return Definisi::find($this->id);
+        $definition = Definisi::find($this->id);
+        // cek apakah pengguna adalah pemilik definisi
+        if ($definition->user_id != auth()->user()->id) {
+            abort(403, 'Akses ditolak');
+        }
+        return $definition;
     }
 
     // simpan
@@ -26,7 +31,7 @@ new class extends Component {
         $this->validate();
 
         // cek apakah definisi milik user
-        if ($this->definition->user_id != Auth::user()->id) {
+        if ($this->definition->user_id != auth()->user()->id) {
             $this->dispatch('notify', message: 'Tidak dapat mengedit definisi milik pengguna lain.', type: 'failed');
             return;
         }
@@ -55,7 +60,10 @@ new class extends Component {
 
 <div>
     {{-- kembali --}}
-    <a href="{{ url()->previous() != url()->current() ? url()->previous() :'/kosakata/'.$this->definition->kosakata }}" class="-translate-x-4"><x-button type="button" width="w-fit" color="hover:outline outline-2" text="Kembali" icon="arrow-left" /></a>
+    <a href="{{ url()->previous() != url()->current() ? url()->previous() : '/kosakata/' . $this->definition->kosakata }}"
+        class="">
+        <x-button type="button" width="w-fit" color="hover:outline outline-2 dark:text-zinc-200 -translate-x-4" text="Kembali" icon="arrow-left" />
+    </a>
     {{-- judul --}}
     <div class="mb-7">
         <h3 class="font-bold">Edit Definisi {{ ucfirst($this->definition->kosakata) }}</h3>
@@ -72,7 +80,7 @@ new class extends Component {
                     <i data-lucide='languages' class="size-5 my-0.5"></i>
                 </label>
                 <select wire:model.live='lang' name="lang" id="lang" title="Bahasa yang digunakan"
-                    class="hover:bg-neutral-100 bg-white hover:text-neutral-800 rounded-full py-2 px-3 pl-9 flex gap-1 items-center group transition-all ease-in-out appearance-none cursor-pointer">
+                    class="hover:bg-neutral-100 bg-white dark:bg-zinc-900 dark:hover:bg-zinc-800 rounded-full py-2 px-3 pl-9 flex gap-1 items-center group transition-all ease-in-out appearance-none cursor-pointer">
                     <option value="id">Bahasa Indonesia</option>
                     <option value="jw">Basa Jawa</option>
                     {{-- <div class="group-hover:block group-focus:block hidden">Semua bahasa</div>  --}}
@@ -83,7 +91,7 @@ new class extends Component {
         </div>
         <div class="space-y-1">
             <div wire:click='close'>
-                
+
             </div>
         </div>
     </form>

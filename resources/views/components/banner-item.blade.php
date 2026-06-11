@@ -13,7 +13,7 @@
         @endif
         {{-- author tarakhir yang mengedit --}}
         @if (isset($banner['user_id']))
-            <x-badge padding="p-1 pr-2" color="bg-amber-200" gap="1">
+            <x-badge padding="p-1 pr-2" gap="1">
                 <x-avatar avatarUrl="{{ $banner['user']['profile_pic'] }}" size="5" rounded="full" />
                 <div class="text-sm">
                     {{ $banner['user']['nama'] ?? ['Akun dihapus'] }}
@@ -24,19 +24,20 @@
 
     {{-- gambar --}}
     @if (isset($banner['img']))
-        <div class="w-full bg-neutral-200 rounded-t-xl text-neutral-400">
+        <div class="w-full bg-neutral-200 dark:bg-zinc-800 rounded-t-xl text-neutral-400 dark:text-zinc-200">
             <img id="bannerPreview-1" src="{{ asset('storage/' . $banner['img']) }}" alt="Banner belum disetel"
                 class="object-cover w-full rounded-t-xl">
         </div>
     @else
-        <div class="w-full py-4 px-5 bg-neutral-200 rounded-t-xl text-neutral-400">
-            <div class="object-cover min-h-40 rounded-xl flex items-center justify-center"><img id="bannerPreview-1"
-                    src="" alt="Belum ada gambar"></div>
+        <div class="w-full py-4 px-5 bg-neutral-200 dark:bg-zinc-800 rounded-t-xl text-neutral-400 dark:text-zinc-200">
+            <div class="object-cover min-h-40 rounded-xl flex items-center justify-center">
+                <img id="bannerPreview-1" src="" alt="Belum ada gambar">
+            </div>
         </div>
     @endif
 
     <button wire:click='{{ $modelEdit }}'
-        class="bg-neutral-100 w-full rounded-b-xl py-4 px-5 hover:bg-amber-300 cursor-pointer max-h-14 flex justify-between">
+        class="bg-neutral-100 dark:bg-zinc-800 w-full rounded-b-xl py-4 px-5 hover:bg-amber-300 dark:hover:bg-amber-800 cursor-pointer max-h-14 flex justify-between">
         <div>Edit</div>
         <i data-feather='edit-3' class="w-5"></i>
     </button>

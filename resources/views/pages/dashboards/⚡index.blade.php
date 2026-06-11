@@ -39,13 +39,13 @@ new class extends Component {
 
     {{-- Sertifikat, dukung, ajak teman --}}
     <div class="space-y-2">
-        <div class="">Sertifikat & komunitas</div>
+        <div class="">Sertifikat {{ auth()->user()->role != 'kepala' ? ' & komunitas' : '' }}</div>
         <div class="gap-2 grid md:grid-cols-3 grid-cols-2">
             {{-- Sertifikat --}}
             @if (auth()->user()->role != 'kepala')
                 <a href="/sertifikat">
                     <x-bento-item padding="">
-                        <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
+                        <div class="overflow-hidden w-full h-24 rounded-t-xl -mt-2">
                             <img class="object-cover w-full h-full"
                                 src="https://img.freepik.com/free-vector/completed-concept-illustration_114360-31751.jpg"
                                 alt="Completed concept illustration (freepik/storyset)">
@@ -62,7 +62,7 @@ new class extends Component {
             {{-- Ajak teman --}}
             <a href="/dukung#bagikan">
                 <x-bento-item padding="">
-                    <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
+                    <div class="overflow-hidden w-full h-24 rounded-t-xl -mt-2">
                         <img class="object-cover w-full h-full"
                             src="https://img.freepik.com/free-vector/collective-hug-concept-illustration_114360-19747.jpg"
                             alt="Collective hug concept illustration (freepik/storyset)">
@@ -77,7 +77,7 @@ new class extends Component {
             {{-- dukung --}}
             {{-- <a href="/dukung">
                 <x-bento-item padding="">
-                    <div class="overflow-hidden w-full h-24 rounded-t-xl top-0">
+                    <div class="overflow-hidden w-full h-24 rounded-t-xl -mt-2">
                         <img class="object-cover w-full h-full"
                             src="https://img.freepik.com/free-vector/team-work-concept-illustration_114360-28760.jpg"
                             alt="Team work concept illustration by storyset">

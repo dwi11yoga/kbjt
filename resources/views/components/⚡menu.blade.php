@@ -2,6 +2,7 @@
 
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use App\Models\Notifikasi;
 
 new class extends Component {
     //
@@ -10,6 +11,16 @@ new class extends Component {
     {
         $path = request()->path();
         $this->location = explode('/', $path)[0];
+    }
+
+    // cek apakah ada notif baru untuk user
+    #[Computed]
+    public function notification()
+    {
+        $notification = Notifikasi::where('user_id', auth()->user()->id)
+            ->where('dilihat', 0)
+            ->count();
+        return $notification > 0;
     }
 
     #[Computed]
@@ -109,7 +120,7 @@ new class extends Component {
 
 <div class="">
     {{-- Menu --}}
-    <div class="bg-white p-6 top-0 fixed left-0 h-full w-[17rem] hidden md:grid md:grid-row-12">
+    <div class="p-6 top-0 fixed left-0 h-full w-[17rem] hidden md:grid md:grid-row-12">
         {{-- logo --}}
         <div class="ml-4">
             <a href="/">
@@ -117,13 +128,19 @@ new class extends Component {
             </a>
         </div>
 
+        {{-- menu desktop --}}
         <div class="space-y-1 mt-5 overflow-y-auto row-span-10">
             @foreach ($this->menus as $menu)
                 <a href="{{ $menu['path'] }}" class="group">
                     <div
                         class="flex items-center gap-3 p-4 w-fit rounded-xl
-                    {{ $location == explode('/', $menu['path'])[1] ? 'bg-amber-100 text-neutral-800' : 'group-hover:bg-neutral-100 text-neutral-600' }}">
-                        <i data-lucide='{{ $menu['icon'] }}'></i>
+                    {{ $location == explode('/', $menu['path'])[1] ? 'bg-amber-100 dark:bg-amber-400 text-neutral-800' : 'group-hover:bg-neutral-100 text-neutral-600 dark:group-hover:bg-zinc-800 dark:text-zinc-200' }}">
+                        <div class="relative">
+                            <i data-lucide='{{ $menu['icon'] }}'></i>
+                            @if ($menu['name'] == 'Notifikasi' && $this->notification == true)
+                                <div class="absolute top-0 left-3 bg-red rounded-full w-2 h-2 bg-red-500"></div>
+                            @endif
+                        </div>
                         <div class="">{{ $menu['name'] }}</div>
                     </div>
                 </a>
@@ -131,10 +148,11 @@ new class extends Component {
         </div>
 
         {{-- Beranda --}}
-        <a href="/" class="flex items-end">
-            <div class=" flex group py-3 px-4 rounded-xl">
-                <i data-lucide='arrow-left' class="text-neutral-700 group-hover:text-black"></i>
-                <div class="inline-block ml-3 text-neutral-700 group-hover:text-black">
+        <a href="/" class="flex items-end group">
+            <div
+                class=" flex group py-3 px-4 rounded-xl group-hover:bg-neutral-100 text-neutral-600 dark:group-hover:bg-zinc-800 dark:text-zinc-200">
+                <i data-lucide='arrow-left' class=" "></i>
+                <div class="inline-block ml-3">
                     Beranda
                 </div>
             </div>
@@ -142,11 +160,11 @@ new class extends Component {
     </div>
 
     {{-- menu mobile --}}
-    <div id="menu" class="fixed w-full h-full grid grid-row-6 bg-white px-5 z-20 invisible">
+    <div id="menu" class="fixed w-full h-full grid grid-row-6 bg-white dark:bg-zinc-900 px-5 z-20 invisible">
         {{-- tutup menu --}}
         <div>
             <button onclick="toggleClass('menu', 'invisible')"
-                class="mt-10 flex group px-6 py-4 w-fit rounded-2xl hover:bg-neutral-100 cursor-pointer space-x-3 active:bg-amber-100">
+                class="mt-10 flex group px-6 py-4 w-fit rounded-2xl dark:hover:text-neutral-800 hover:bg-neutral-100 cursor-pointer space-x-3 active:bg-amber-100">
                 <i data-lucide='x'></i>
                 <div>Tutup</div>
             </button>
@@ -157,7 +175,8 @@ new class extends Component {
             {{-- Dashboard --}}
             @foreach ($this->menus as $menu)
                 <a href="{{ $menu['path'] }}"
-                    class="flex items-center gap-3 group py-4 px-6 w-fit rounded-2xl {{ $location == explode('/', $menu['path'])[1] ? 'bg-amber-100 text-neutral-800' : 'hover:bg-neutral-100 text-neutral-600' }}">
+                    class="flex items-center gap-3 p-4 w-fit rounded-xl
+                    {{ $location == explode('/', $menu['path'])[1] ? 'bg-amber-100 dark:bg-amber-400 text-neutral-800' : 'hover:bg-neutral-100 text-neutral-600 dark:hover:bg-zinc-800 dark:text-zinc-200' }}">
                     <i data-lucide='{{ $menu['icon'] }}'></i>
                     <div class="">{{ $menu['name'] }}</div>
                 </a>
@@ -166,9 +185,9 @@ new class extends Component {
 
         {{-- Beranda --}}
         <a href="/" class="row-span-1">
-            <div class=" flex group py-4 px-6 w-fit rounded-2xl hover:bg-neutral-100 active:bg-amber-100">
-                <i data-lucide='arrow-left' class="text-neutral-700 group-hover:text-black"></i>
-                <div class="inline-block ml-3 text-neutral-700 group-hover:text-black">
+            <div class="flex group py-4 px-6 w-fit rounded-2xl dark:text-zinc-200 dark:hover:text-neutral-800 hover:bg-neutral-100 active:bg-amber-100">
+                <i data-lucide='arrow-left' class=""></i>
+                <div class="inline-block ml-3 ">
                     Beranda
                 </div>
             </div>

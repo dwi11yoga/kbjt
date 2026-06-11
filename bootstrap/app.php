@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Middleware\CatatKunjunganMiddleware;
 use App\Http\Middleware\KepalaMiddleware;
+use App\Http\Middleware\KontributorPengurusMiddleware;
+use App\Http\Middleware\PengurusMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,15 +16,20 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // middleware untuk pengurus dan kepala
-        $middleware->alias([
-            'pengurusKepala' => PengurusKepalaMiddleware::class
+        // jangan decrypt cookie dikunjungi
+        // agar tidak mengembalikan null saat mendecrypt dikunjungi (dikunjungi tidak di encrypt)
+        $middleware->encryptCookies(except: [
+            'dikunjungi',
         ]);
-    })
-    ->withMiddleware(function (Middleware $middleware) {
-        // middleware untuk pengurus dan kepala
+        // middleware untuk cek apakah pengguna hari ini sudah mengunjungi website/belom
+        $middleware->append(CatatKunjunganMiddleware::class);
+
+        // middleware rule pengguna
         $middleware->alias([
-            'kepala' => KepalaMiddleware::class
+            'kepala' => KepalaMiddleware::class,
+            'pengurus' => PengurusMiddleware::class,
+            'pengurusKepala' => PengurusKepalaMiddleware::class,
+            'kontributorPengurus' => KontributorPengurusMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

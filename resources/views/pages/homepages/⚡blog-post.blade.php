@@ -88,12 +88,12 @@ new class extends Component {
             <h3 class="font-bold leading-tight">{{ $this->article->judul }}</h3>
             {{-- subjudul --}}
             @isset($this->article->subjudul)
-                <div class="text-neutral-600 text-lg">{{ $this->article->subjudul }}</div>
+                <div class="text-neutral-600 dark:text-zinc-400 text-lg">{{ $this->article->subjudul }}</div>
             @endisset
         </div>
 
         {{-- Waktu --}}
-        <div class="text-neutral-600 inline-flex items-center space-x-3 md:text-base text-sm">
+        <div class="text-neutral-600 dark:text-zinc-400 inline-flex items-center space-x-3 md:text-base text-sm">
             <div class="flex space-x-1 items-center">
                 <i data-lucide='calendar' class="size-5"></i>
                 <span>{{ !empty($this->article->status) ? $this->article->status->translatedFormat('d F Y') : $this->article->updated_at->translatedFormat('d F Y') }}</span>
@@ -126,7 +126,7 @@ new class extends Component {
 
     {{-- jika artikel adalah dokumentasi --}}
     @if ($this->article->dokumentasi == true)
-        <div class="w-full rounded-xl py-6 px-7 space-y-3 bg-amber-400">
+        <div class="w-full rounded-xl py-6 px-7 space-y-3 bg-amber-400 text-neutral-800">
             <div class="text-xl font-bold">
                 <i data-lucide='book-text' class="inline-flex fill-white"></i>
                 Lihat Dokumentasi Lain
@@ -163,7 +163,7 @@ new class extends Component {
                 <div class="grid grid-cols-6 gap-2">
                     @foreach ($this->relatedArticles as $d)
                         <a href="/blog/post/{{ $d->slug }}"
-                            class="md:col-span-2 col-span-3 overflow-hidden rounded-lg hover:outline outline-2 outline-amber-400 hover:bg-amber-100 group">
+                            class="md:col-span-2 col-span-3 overflow-hidden rounded-lg hover:outline outline-2 outline-amber-400 hover:bg-amber-100 dark:hover:text-neutral-800 group">
                             {{-- gambar --}}
                             <div class="aspect-video overflow-hidden rounded-md">
                                 <img src="{{ asset(isset($d->thumbnail) ? 'storage/' . $d->thumbnail : 'img/no-image.png') }}"
@@ -173,8 +173,8 @@ new class extends Component {
                                 {{-- judul --}}
                                 <div class="line-clamp-2 font-bold">{{ $d->judul }}</div>
                                 {{-- penulis --}}
-                                <div class="text-sm text-neutral-700">Oleh <span
-                                        class="text-neutral-800 font-semibold">{{ $d->user->nama }}</span></div>
+                                <div class="text-sm opacity-80">Oleh <span
+                                        class="font-semibold">{{ $d->user->nama }}</span></div>
                             </div>
                         </a>
                     @endforeach

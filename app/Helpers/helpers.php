@@ -50,22 +50,24 @@ if (!function_exists('getUrl')) {
 
 // format tanggal
 if (!function_exists('dateFormat')) {
-    function dateFormat($datetime)
+    function dateFormat($datetime, string $type = 'short')
     {
+        $dayMonth=$type=='long' ? 'j F':'j M';
+        $dayMonthYear=$type=='long' ? 'j F Y':'j M Y';
         $date = Carbon::create($datetime);
         // dd(floor($date->diffInDays()) == 5);
         $days = floor($date->diffInDays());
         $date = match (true) {
-            $days <= -365 => $date->format('j M Y'),
-            $days <= -7 => $date->format('j M'),
+            $days <= -365 => $date->format($dayMonthYear),
+            $days <= -7 => $date->format($dayMonth),
             $days <= -3 => abs($days) . ' hari lagi',
             $days == -2 => 'Lusa',
             $days == -1 => 'Besok',
             $date->isToday() => $date->format('H:i'),
             $days == 1 => 'Kemarin',
             $days <= 7 => $days . ' hari lalu',
-            $days <= 365 => $date->format('j M'),
-            default => $date->format('j M Y'),
+            $days <= 365 => $date->format($dayMonth),
+            default => $date->format($dayMonthYear),
         };
         return $date;
     }

@@ -23,9 +23,9 @@ new class extends Component {
 
 <form wire:submit='search' class="relative">
     <label for="keyword"
-        class="lg:w-96 w-full flex items-center justify-between gap-2 px-5 py-2.5 bg-neutral-100 hover:bg-white rounded-full hover:outline focus-within:outline outline-2 outline-amber-400 focus-within:bg-white">
+        class="lg:w-96 w-full flex items-center justify-between gap-2 px-5 py-2.5 bg-neutral-100 dark:bg-zinc-800 rounded-full hover:outline focus-within:outline outline-2 outline-amber-400">
         <input wire:model.live.debounce.500ms='keyword' name="keyword" id="keyword" type="text"
-            class="w-full bg-transparent hover:bg-white focus:outline-none" placeholder="Cari...">
+            class="w-full bg-transparent focus:outline-none" placeholder="Cari...">
         <button type="submit" class="text-neutral-500 hover:text-amber-400" title="Cari">
             <i data-lucide='search' class="size-5"></i>
         </button>

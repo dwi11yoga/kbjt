@@ -1,7 +1,7 @@
 @props(['achievement'])
 
 <div
-    class="p-5 bg-white rounded-xl grid md:grid-cols-12 grid-cols-10 space-x-4 hover:outline hover:outline-amber-400 border border-neutral-200">
+    class="p-5 rounded-xl grid md:grid-cols-12 grid-cols-10 space-x-4 hover:outline hover:outline-amber-400 border dark:border-zinc-800 border-neutral-200">
 
     <div class="md:col-span-1 col-span-3 flex items-center justify-center rounded-md overflow-hidden">
         <img src="{{ asset(isset($achievement->emblem) ? 'storage/' . $achievement->emblem : 'storage/achievement/no-icon.jpg') }}"
@@ -14,7 +14,7 @@
         <div class="w-full space-y-2">
             <div class="">
                 <div class="capitalize font-medium">{{ $achievement->nama }}</div>
-                <div class="text-sm line-clamp-2 text-neutral-600">{{ $achievement->deskripsi }}</div>
+                <div class="text-sm line-clamp-2 text-neutral-600 dark:text-zinc-400">{{ $achievement->deskripsi }}</div>
                 <div class="text-sm flex items-center space-x-1">
                     <div class="flex space-x-0.5 items-center">
                         <i data-lucide='astroid' class="w-4 fill-black"></i>

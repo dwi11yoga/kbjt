@@ -25,13 +25,14 @@ return new class extends Migration {
             $table->dateTime('verifikasi')->nullable();
             $table->foreignId('verifikasi_oleh')->nullable();
             $table->tinyInteger('hukuman_edit')->nullable();
-            $table->dateTime('edited_at')->nullable();
+            $table->timestamp('edited_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->index('kosakata');
             $table->index('user_id');
             $table->index('verifikasi_oleh');
+            $table->index('bahasa');
         });
     }
 

@@ -17,7 +17,7 @@ class Blog extends Model
     protected $guarded = ['id'];
 
     // cast
-    protected $casts = ['status' => 'datetime'];
+    protected $casts = ['status' => 'datetime', 'edited_at' => 'datetime'];
 
     /**
      * Get the user that owns the Blog

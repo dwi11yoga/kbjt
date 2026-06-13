@@ -264,7 +264,7 @@ new class extends Component {
                         {{-- tgl --}}
                         <x-badge gap="1" hoverColor="" title="Terakhir diperbarui">
                             <i data-lucide='calendar' class="w-4"></i>
-                            <span>{{ dateFormat($d->updated_at) }}</span>
+                            <span>{{ dateFormat($d->edited_at) }}</span>
                         </x-badge>
                     </div>
 

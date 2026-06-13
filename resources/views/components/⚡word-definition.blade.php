@@ -115,7 +115,7 @@ new class extends Component {
 
 {{-- @props(['wordDefinition', 'showWord' => false, 'author', 'highlight' => false]) --}}
 <div
-    class="rounded-2xl p-5 border border-neutral-200 dark:border-zinc-800 space-y-3 {{ $highlight ? 'bg-amber-50' : 'bg-white dark:bg-zinc-900' }}
+    class="rounded-2xl p-5 border border-neutral-200 dark:border-zinc-800 space-y-3 {{ $highlight ? 'bg-amber-50 dark:bg-zinc-800' : 'bg-white dark:bg-zinc-900' }}
         {{ isset($wordDefinition->selected) && $wordDefinition->selected == 1
             ? 'outline outline-2 outline-amber-500 hover:outline-amber-400'
             : 'hover:outline hover:outline-2 hover:outline-amber-400' }}
@@ -187,11 +187,11 @@ new class extends Component {
             <div class="">
                 <button wire:click='vote(true)'
                     class="rounded-full p-2 hover:bg-green-200 dark:hover:bg-green-100 group">
-                    <i wire:ignore data-lucide='arrow-big-up'
+                    <i data-lucide='arrow-big-up'
                         class="size-4 {{ auth()->check() && in_array(auth()->user()->id, $upvotes ?? []) ? 'dark:fill-green-300 fill-green-700 dark:stroke-green-300 stroke-green-700' : 'group-hover:fill-green-500 group-hover:stroke-green-500' }}"></i>
                 </button>
                 <button wire:click='vote(false)' class="rounded-full p-2 hover:bg-red-200 dark:hover:bg-red-100 group">
-                    <i wire:ignore data-lucide='arrow-big-down'
+                    <i data-lucide='arrow-big-down'
                         class="size-4 {{ auth()->check() && in_array(auth()->user()->id, $downvotes ?? []) ? 'dark:fill-red-300 fill-red-700 dark:stroke-red-300 stroke-red-700' : 'group-hover:fill-red-500 group-hover:stroke-red-500' }}"></i>
                 </button>
             </div>

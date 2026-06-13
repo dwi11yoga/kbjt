@@ -19,7 +19,7 @@ class BlogSeeder extends Seeder
         'judul' => 'Dokumentasi: Berkontribusi sebagai kontributor di Kamus Bahasa Jawa Terbuka',
         'subjudul' => 'Panduan singkat untuk mulai berkontribusi di kbjt.',
         'slug' => 'berkontribusi-sebagai-kontributor-di-kamus-bahasa-jawa-terbuka',
-        'thumbnail'=>'post-thumbnail/dokumentasi-01.jpg',
+        'thumbnail' => 'post-thumbnail/dokumentasi-01.jpg',
         'user_id' => 1,
         'konten' => '<div>
   Selamat datang di kamus bahasa jawa terbuka! Senang melihat semangatmu untuk
@@ -184,15 +184,16 @@ class BlogSeeder extends Seeder
   ini. Mari terus berbagi ilmu, menjaga akurasi, dan membangun komunitas yang
   saling mendukung demi bahasa Jawa yang lestari!
 </div>',
-        'status' => Carbon::now(),
-        'created_at' => Carbon::now(),
-        'updated_at' => Carbon::now()
+        'status' => now(),
+        'edited_at' => now(),
+        'created_at' => now(),
+        'updated_at' => now()
       ],
       [
         'judul' => 'Dokumentasi: Memahami sistem poin & level',
         'subjudul' => 'Pelajari bagaimana level dan poin bekerja di kbjt.',
         'slug' => 'memahami-sistem-poin-level',
-        'thumbnail'=>'post-thumbnail/dokumentasi-02.jpg',
+        'thumbnail' => 'post-thumbnail/dokumentasi-02.jpg',
         'user_id' => 1,
         'konten' => '<p>
     Di KBJT, kontribusimu tidak hanya dihargai secara moral, tetapi juga tercermin dalam bentuk poin dan level. Sistem ini dirancang untuk memberikan apresiasi kepada kontributor yang aktif dan bertanggung jawab, sekaligus menjaga kualitas isi kamus secara kolektif. Semakin banyak kontribusi yang kamu lakukan, seperti menambah kosakata, memperbarui definisi, atau memberikan laporan yang berguna, semakin tinggi pula poin yang kamu kumpulkan. Ini adalah cara kami menunjukkan bahwa setiap upaya kecilmu membawa dampak besar dalam pelestarian bahasa Jawa.
@@ -218,15 +219,16 @@ class BlogSeeder extends Seeder
   <p>
     Sistem level dan poin di KBJT bukan sekadar angka—ia adalah bentuk apresiasi atas waktu, tenaga, dan perhatian yang kamu curahkan untuk melestarikan bahasa Jawa. Semakin konsisten dan jujur kamu berkontribusi, semakin tinggi pula penghargaan yang akan kamu terima. Mari bersama-sama kita ciptakan komunitas yang aktif, suportif, dan bertanggung jawab, demi bahasa Jawa yang tetap hidup dan berkembang!
   </p>',
-        'status' => Carbon::now(),
-        'created_at' => Carbon::now(),
-        'updated_at' => Carbon::now()
+        'status' => now(),
+        'edited_at' => now(),
+        'created_at' => now(),
+        'updated_at' => now()
       ],
       [
         'judul' => 'Dokumentasi: Manfaat berkontribusi secara aktif di Kamus Bahasa Jawa Terbuka',
         'subjudul' => 'Mulai dari achievement, sertifikat, hingga dana donasi.',
         'slug' => 'manfaat-berkontribusi-secara-aktif-di-kamus-bahasa-jawa-terbuka',
-        'thumbnail'=>'post-thumbnail/dokumentasi-03.jpg',
+        'thumbnail' => 'post-thumbnail/dokumentasi-03.jpg',
         'user_id' => 1,
         'konten' => '<p>
   Menjadi kontributor aktif di KBJT bukan hanya soal menambahkan data ke dalam
@@ -282,15 +284,16 @@ class BlogSeeder extends Seeder
   kerasmu punya tempat yang dihargai di sini. Teruslah berkontribusi dan jadilah
   bagian dari perubahan positif untuk budaya dan bahasa kita.
 </p>',
-        'status' => Carbon::now(),
-        'created_at' => Carbon::now(),
-        'updated_at' => Carbon::now()
+        'status' => now(),
+        'edited_at' => now(),
+        'created_at' => now(),
+        'updated_at' => now()
       ],
       [
         'judul' => 'Dokumentasi: Tindaklanjut terhadap kontribusi bermasalah',
         'subjudul' => 'Hukuman terhadap kontributor yang melanggar syarat dan ketentuan.',
         'slug' => 'tindaklanjut-terhadap-kontribusi-bermasalah',
-        'thumbnail'=>'post-thumbnail/dokumentasi-04.jpg',
+        'thumbnail' => 'post-thumbnail/dokumentasi-04.jpg',
         'user_id' => 1,
         'konten' => '<p>
   Kontribusi di KBJT bersifat terbuka dan kolaboratif, namun tetap membutuhkan
@@ -373,9 +376,10 @@ class BlogSeeder extends Seeder
   kualitas isi kamus. Dengan berkontribusi secara jujur dan bertanggung jawab,
   kamu ikut menjaga nilai dan keberlangsungan proyek ini.
 </p>',
-        'status' => Carbon::now(),
-        'created_at' => Carbon::now(),
-        'updated_at' => Carbon::now()
+        'status' => now(),
+        'edited_at' => now(),
+        'created_at' => now(),
+        'updated_at' => now()
       ],
 
 
@@ -383,7 +387,7 @@ class BlogSeeder extends Seeder
         'judul' => 'Dokumentasi: Mengembalikan Definisi yang Disembunyikan Setelah Dilaporkan',
         'subjudul' => 'Langkah mudah untuk memperbaiki laporan yang disembunyikan.',
         'slug' => 'mengembalikan-definisi-yang-disembunyikan-setelah-dilaporkan',
-        'thumbnail'=>'post-thumbnail/dokumentasi-05.jpg',
+        'thumbnail' => 'post-thumbnail/dokumentasi-05.jpg',
         'user_id' => 1,
         'konten' => '<p>
   Dalam semangat menjaga kualitas konten di KBJT, setiap kontribusi yang dirasa
@@ -434,9 +438,10 @@ class BlogSeeder extends Seeder
   bisa memastikan bahwa apa yang kamu bagikan tetap bermanfaat dan dapat
   dipercaya oleh komunitas.
 </p>',
-        'status' => Carbon::now(),
-        'created_at' => Carbon::now(),
-        'updated_at' => Carbon::now()
+        'status' => now(),
+        'edited_at' => now(),
+        'created_at' => now(),
+        'updated_at' => now()
       ],
 
 
@@ -444,7 +449,7 @@ class BlogSeeder extends Seeder
         'judul' => 'Dokumentasi: Membaca dan Menulis Aksara Jawa',
         'subjudul' => 'Belajar Carakan, Pasangan, dan Sandangan.',
         'slug' => 'membaca-dan-menulis-aksara-jawa',
-        'thumbnail'=>'post-thumbnail/dokumentasi-06.jpg',
+        'thumbnail' => 'post-thumbnail/dokumentasi-06.jpg',
         'user_id' => 1,
         'konten' => '<p>
             Aksara Jawa adalah sistem tulisan tradisional yang digunakan untuk menulis bahasa Jawa. Aksara ini memiliki
@@ -763,16 +768,17 @@ class BlogSeeder extends Seeder
                 <i data-feather="arrow-up-right" class="w-5 inline"></i>
             </a>
         </p>',
-        'status' => Carbon::now(),
-        'created_at' => Carbon::now(),
-        'updated_at' => Carbon::now()
+        'status' => now(),
+        'edited_at' => now(),
+        'created_at' => now(),
+        'updated_at' => now()
       ],
 
       [
         'judul' => 'Dokumentasi: Menulis Aksara Jawa di Kamus Bahasa Jawa Terbuka',
         'subjudul' => 'Panduan singkat dalam menginput aksara jawa di kbjt.',
         'slug' => 'menulis-aksara-jawa-di-kbjt',
-        'thumbnail'=>'post-thumbnail/dokumentasi-07.jpg',
+        'thumbnail' => 'post-thumbnail/dokumentasi-07.jpg',
         'user_id' => 1,
         'konten' => '<p>
   Kini, menambahkan kosakata atau deskripsi di Kamus Bahasa Jawa Terbuka (KBJT)
@@ -846,9 +852,10 @@ class BlogSeeder extends Seeder
   dan mudah diakses oleh semua orang!
 </p>
 ',
-        'status' => Carbon::now(),
-        'created_at' => Carbon::now(),
-        'updated_at' => Carbon::now()
+        'status' => now(),
+        'edited_at' => now(),
+        'created_at' => now(),
+        'updated_at' => now()
       ],
     ]);
 

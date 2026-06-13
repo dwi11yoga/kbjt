@@ -49,5 +49,9 @@ new class extends Component {
                 <x-word-item word="{{ ucfirst($word) }}" url="{{ $word }}" />
             @endforeach
         </div>
+        <div class="">
+            Tidak menemukan kosakata yang dicari? 
+            <a href="/kosakata/baru" class="text-blue-600 hover:underline underline-offset-4 decoration-4 decoration-amber-400">Tambahkan kosakata baru.</a>
+        </div>
     @endif
 </div>

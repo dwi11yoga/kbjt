@@ -19,6 +19,8 @@ return new class extends Migration {
             $table->string("message");
             $table->string("url")->nullable();
             $table->datetimes();
+
+            $table->index('user_id');
         });
     }
 

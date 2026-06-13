@@ -20,6 +20,9 @@ return new class extends Migration {
             $table->integer('reward');
             $table->text('emblem')->nullable();
             $table->dateTimes();
+
+            $table->index('role');
+            $table->index('rule');
         });
     }
 

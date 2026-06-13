@@ -37,6 +37,7 @@ return new class extends Migration {
             $table->json('achievement')->nullable();
             $table->json('sertifikat')->nullable();
             $table->json('sembunyikan_data')->nullable();
+            $table->string('timezone')->nullable();
             $table->dateTime('suspended_time')->nullable();
             $table->rememberToken();
             $table->timestamps();

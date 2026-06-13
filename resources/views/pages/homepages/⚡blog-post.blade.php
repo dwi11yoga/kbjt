@@ -95,16 +95,16 @@ new class extends Component {
         {{-- Waktu --}}
         <div class="text-neutral-600 dark:text-zinc-400 inline-flex items-center space-x-3 md:text-base text-sm">
             <div class="flex space-x-1 items-center">
-                <i data-lucide='calendar' class="size-5"></i>
-                <span>{{ !empty($this->article->status) ? $this->article->status->translatedFormat('d F Y') : $this->article->updated_at->translatedFormat('d F Y') }}</span>
+                <i data-lucide='clock' class="size-5"></i>
+                <span>{{ dateFormat($this->article->edited_at) }}</span>
             </div>
-            <div class="flex space-x-1 items-center">
+            {{-- <div class="flex space-x-1 items-center">
                 <i data-lucide='clock' class="size-5"></i>
                 <span>{{ !empty($this->article->status) ? $this->article->status->format('h:i A') : $this->article->updated_at->format('h:i A') }}</span>
-            </div>
+            </div> --}}
             <div class="flex space-x-1 items-center">
                 <i data-lucide='eye' class="size-5"></i>
-                <span>{{ number_format($this->article->view, 0, ',', '.') ?? 0 }}x dilihat</span>
+                <span>{{ numberFormat($this->article->view ?? 0) }}x dilihat</span>
             </div>
         </div>
     </div>

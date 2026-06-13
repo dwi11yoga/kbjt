@@ -30,6 +30,9 @@ return new class extends Migration {
             $table->string('tindakan')->nullable(); // tindakan untuk definisi dilaporakn
             $table->string('hukuman')->nullable(); // tindakan untuk pengguna
             $table->timestamps();
+
+            $table->index('user_id');
+            $table->index('pengurus_id');
         });
     }
 

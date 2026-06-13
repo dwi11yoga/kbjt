@@ -52,22 +52,30 @@ if (!function_exists('getUrl')) {
 if (!function_exists('dateFormat')) {
     function dateFormat($datetime, string $type = 'short')
     {
-        $dayMonth=$type=='long' ? 'j F':'j M';
-        $dayMonthYear=$type=='long' ? 'j F Y':'j M Y';
-        $date = Carbon::create($datetime);
+        // format tampilan waktu
+        $dayMonth = $type == 'long' ? 'j F' : 'j M';
+        $dayMonthYear = $type == 'long' ? 'j F Y' : 'j M Y';
+
+        // atur timezone pengguna
+        $timezone = Auth::user()->timezone ?? 'Asia/Jakarta';
+
+        // dapatkan jarak hari yang di param dengan waktu user saat ini
+        $date = Carbon::create($datetime)->timezone($timezone)->locale('id');
         // dd(floor($date->diffInDays()) == 5);
-        $days = floor($date->diffInDays());
+        $days = floor($date->floatDiffInRealDays());
+
+        // set bagaimana waktu ditampilkan
         $date = match (true) {
-            $days <= -365 => $date->format($dayMonthYear),
-            $days <= -7 => $date->format($dayMonth),
+            $date->isToday() => $date->translatedFormat('H:i') . (empty(Auth::user()->timezone) ? ' WIB' : ''),
+            $days <= -365 => $date->translatedFormat($dayMonthYear),
+            $days <= -7 => $date->translatedFormat($dayMonth),
             $days <= -3 => abs($days) . ' hari lagi',
             $days == -2 => 'Lusa',
             $days == -1 => 'Besok',
-            $date->isToday() => $date->format('H:i'),
             $days == 1 => 'Kemarin',
             $days <= 7 => $days . ' hari lalu',
-            $days <= 365 => $date->format($dayMonth),
-            default => $date->format($dayMonthYear),
+            $days <= 365 => $date->translatedFormat($dayMonth),
+            default => $date->translatedFormat($dayMonthYear),
         };
         return $date;
     }

@@ -29,6 +29,8 @@ return new class extends Migration
             $table->integer('laporan_ditangani')->default(0);
             $table->integer('laporan_bersalah')->default(0);
             $table->datetimes();
+
+            $table->index('tahun');
         });
     }
 

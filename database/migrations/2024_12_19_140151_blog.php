@@ -23,8 +23,12 @@ return new class extends Migration {
             $table->boolean('pinned')->default(0);
             $table->integer('view')->default(0); // jumlah view
             $table->integer('poin')->default(0);
+            $table->timestamp('edited_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('user_id');
+            $table->index('status');
         });
     }
 

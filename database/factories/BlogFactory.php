@@ -25,6 +25,7 @@ class BlogFactory extends Factory
             'user_id' => 1,
             'konten' => fake()->text(10000),
             'status' => random_int(0, 1) === 1 ? fake()->dateTimeBetween('-1 year', 'now') : null,
+            'edited_at' => $date,
             'created_at' => $date,
             'updated_at' => $date
         ];

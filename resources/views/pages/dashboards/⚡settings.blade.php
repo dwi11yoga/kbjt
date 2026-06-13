@@ -3,6 +3,8 @@
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
+use App\Models\User;
 
 new class extends Component {
     #[Title('Pengaturan')]
@@ -10,9 +12,12 @@ new class extends Component {
     public $profil;
     public $akun;
 
-    // set daftar menu
     public function mount()
     {
+        // set nilai timezone
+        $this->timezone = auth()->user()->timezone ?? 'Asia/Jakarta';
+
+        // set daftar menu
         $this->profil = [
             [
                 'text' => 'Ubah data diri',
@@ -65,6 +70,16 @@ new class extends Component {
         $this->akun = $menuAkun;
     }
 
+    // timezone
+    #[Validate('in:Asia/Jakarta,Asia/Makassar,Asia/Jayapura')]
+    public $timezone;
+    public function updatedTimezone()
+    {
+        $this->validateOnly('timezone');
+        User::find(auth()->user()->id)->update(['timezone' => $this->timezone]);
+        $this->dispatch('notify', type: 'success', message: 'Preferensi zona waktu berhasil disimpan');
+    }
+
     // logout
     public function logout()
     {
@@ -79,25 +94,12 @@ new class extends Component {
 
 <div class="space-y-4">
 
-    {{-- profil --}}
-    <div class="rounded-2xl space-y-3">
-        <div class="">Profil</div>
-        <div class="space-y-2">
-            @foreach ($profil as $menu)
-                <x-list-item type="url" url="{{ $menu['url'] }}">
-                    <x-slot:leftText>
-                        <i data-lucide='{{ $menu['icon'] }}' class="size-5"></i>
-                        <div class="">{{ $menu['text'] }}</div>
-                    </x-slot:leftText>
-                </x-list-item>
-            @endforeach
-        </div>
-    </div>
-
     {{-- Preferensi --}}
     <div class="rounded-2xl space-y-3">
         <div class="">Preferensi</div>
         <div class="space-y-2">
+
+            {{-- mode gelap --}}
             <x-list-item type="div">
                 <x-slot:leftText>
                     <div class="flex justify-between items-center w-full">
@@ -114,6 +116,41 @@ new class extends Component {
                     </div>
                 </x-slot:leftText>
             </x-list-item>
+
+            {{-- timezone --}}
+            <x-list-item type="div">
+                <x-slot:leftText>
+                    <div class="flex justify-between items-center w-full">
+                        <div class="flex items-center gap-1">
+                            <i data-lucide='clock' class="size-5"></i>
+                            <div class="">Zona waktu</div>
+                        </div>
+                        <x-radio-group model="timezone">
+                            <x-input-radio style="3" model="timezone" id="wib" value="Asia/Jakarta"
+                                text="WIB" />
+                            <x-input-radio style="3" model="timezone" id="wita" value="Asia/Makassar"
+                                text="WITA" />
+                            <x-input-radio style="3" model="timezone" id="wit" value="Asia/Jayapura"
+                                text="WIT" />
+                        </x-radio-group>
+                    </div>
+                </x-slot:leftText>
+            </x-list-item>
+        </div>
+    </div>
+
+    {{-- profil --}}
+    <div class="rounded-2xl space-y-3">
+        <div class="">Profil</div>
+        <div class="space-y-2">
+            @foreach ($profil as $menu)
+                <x-list-item type="url" url="{{ $menu['url'] }}">
+                    <x-slot:leftText>
+                        <i data-lucide='{{ $menu['icon'] }}' class="size-5"></i>
+                        <div class="">{{ $menu['text'] }}</div>
+                    </x-slot:leftText>
+                </x-list-item>
+            @endforeach
         </div>
     </div>
 

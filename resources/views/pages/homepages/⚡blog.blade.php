@@ -31,7 +31,7 @@ new class extends Component {
         {{-- Artikel --}}
         @foreach ($this->posts as $article)
             <x-article-item slug="{{ $article->slug }}" title="{{ $article->judul }}" image="{{ $article->thumbnail }}"
-                author="{{ $article->user->nama }}" :desc="$article->konten" :datetime="$article->updated_at" :pinned="$article->pinned" />
+                author="{{ $article->user->nama }}" :desc="$article->konten" :datetime="$article->edited_at" :pinned="$article->pinned" />
         @endforeach
 
         {{-- Pagination --}}

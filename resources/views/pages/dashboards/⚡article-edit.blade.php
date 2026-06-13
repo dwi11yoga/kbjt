@@ -105,6 +105,7 @@ new class extends Component {
             'subjudul' => $this->subjudul,
             'konten' => $this->konten,
             'status' => $this->isPublish ? now() : null,
+            'edited_at' => now(),
         ];
 
         if ($this->removeThumbnail) {

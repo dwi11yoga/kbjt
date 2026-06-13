@@ -18,7 +18,12 @@ return new class extends Migration {
             $table->integer('requirement')->default(0);
             $table->integer('reward')->default(0);
             $table->datetimes();
+
+
+            $table->index('role');
+            $table->index('rule');
         });
+
     }
 
     /**

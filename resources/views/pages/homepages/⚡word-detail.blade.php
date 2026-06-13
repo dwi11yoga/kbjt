@@ -72,6 +72,15 @@ new class extends Component {
         return $definitions;
     }
 
+    public function updatedLang()
+    {
+        $this->resetPage();
+    }
+    public function updatedSort()
+    {
+        $this->resetPage();
+    }
+
     // rekomendasi kosakata random
     #[Computed]
     public function moreWords()
@@ -94,17 +103,17 @@ new class extends Component {
                     {{ ucwords($word) }}
                 </h1>
                 <div class="flex">
-                    <button wire:ignore class="hover:bg-neutral-100 dark:hover:bg-zinc-800 rounded-full p-2">
+                    <button class="hover:bg-neutral-100 dark:hover:bg-zinc-800 rounded-full p-2">
                         <i data-lucide='volume-2' class="size-5"></i>
                     </button>
-                    <a href="#share" wire:ignore class="hover:bg-neutral-100 dark:hover:bg-zinc-800 rounded-full p-2">
+                    <a href="#share" class="hover:bg-neutral-100 dark:hover:bg-zinc-800 rounded-full p-2">
                         <i data-lucide='share-2' class="size-5"></i>
                     </a>
                 </div>
             </div>
-            <div wire:ignore class="text-neutral-600 dark:text-zinc-400 flex items-center gap-1">
+            <div class="text-neutral-600 dark:text-zinc-400 flex items-center gap-1">
                 <div class="javanese" id="aksara-text"></div>
-                <button onclick="toggleClass('aksara-disclaimer', 'hidden')" wire:ignore
+                <button onclick="toggleClass('aksara-disclaimer', 'hidden')"
                     class="hover:bg-neutral-100 dark:hover:bg-zinc-800  text-neutral-500 rounded-full p-1">
                     <i data-lucide='circle-question-mark' class="size-4"></i>
                 </button>
@@ -123,7 +132,8 @@ new class extends Component {
 
         {{-- disclaimer penulisan aksara jawa --}}
         <div id="aksara-disclaimer" class="w-fit hidden">
-            <x-alert color="amber" icon="triangle-alert" message="Aksara Jawa di-generate secara otomatis. Kesalahan penulisan mungkin terjadi." />
+            <x-alert color="amber" icon="triangle-alert"
+                message="Aksara Jawa di-generate secara otomatis. Kesalahan penulisan mungkin terjadi." />
             {{-- <i data-lucide='triangle-alert' class="size-5 inline-block"></i>
             Aksara Jawa di-generate secara otomatis. Kesalahan penulisan mungkin terjadi. --}}
         </div>
@@ -136,7 +146,7 @@ new class extends Component {
                 <i data-lucide='plus' class="size-5"></i>
                 Tambah definisi
             </button>
-            <div wire:ignore class="relative">
+            <div class="relative">
                 <label for="lang" class="absolute top-3 left-4 dark:">
                     <i data-lucide='languages' class="size-5 my-0.5"></i>
                 </label>
@@ -144,7 +154,8 @@ new class extends Component {
                     onchange="this.style.width = this.options[this.selectedIndex].text.length + 7 + 'ch'"
                     class="bg-neutral-100 dark:bg-zinc-800 hover:bg-amber-400 dark:hover:bg-amber-400 dark:hover:text-neutral-800 rounded-full py-3 px-5 pl-10 flex gap-1 items-center group transition-all ease-in-out appearance-none cursor-pointer">
                     <option class="bg-white dark:bg-zinc-800 dark:text-zinc-200" value="">Semua bahasa</option>
-                    <option class="bg-white dark:bg-zinc-800 dark:text-zinc-200" value="id">Bahasa Indonesia</option>
+                    <option class="bg-white dark:bg-zinc-800 dark:text-zinc-200" value="id">Bahasa Indonesia
+                    </option>
                     <option class="bg-white dark:bg-zinc-800 dark:text-zinc-200" value="jw">Basa Jawa</option>
                     {{-- <div class="group-hover:block group-focus:block hidden">Semua bahasa</div>  --}}
                 </select>
@@ -155,7 +166,7 @@ new class extends Component {
                     })
                 </script>
             </div>
-            <div wire:ignore class="relative">
+            <div class="relative">
                 <label for="sort" class="absolute top-3 left-4 dark:peer-hover:text-neutral-800">
                     <i data-lucide='arrow-down-wide-narrow' class="size-5 my-0.5"></i>
                 </label>
@@ -187,7 +198,8 @@ new class extends Component {
         @endif
         {{-- deskripsi kosakata --}}
         @foreach ($this->definitions as $definition)
-            <livewire:word-definition :wordDefinition="$definition" :author="$definition->user" :highlight="$id == $definition->id ? true : false" />
+            <livewire:word-definition wire:key='{{ $this->word . $definition->id }}' :wordDefinition="$definition" :author="$definition->user"
+                :highlight="$id == $definition->id ? true : false" />
         @endforeach
         {{-- iklan --}}
         @if (count($this->definitions) >= 10)

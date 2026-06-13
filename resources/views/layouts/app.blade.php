@@ -77,12 +77,12 @@
     </main>
 
     <footer class="w-full">
-        <div class="container md:px-0 px-5 py-2 mx-auto flex justify-between gap-5">
+        <div class="container md:px-0 px-5 py-2 mx-auto flex justify-center gap-5">
             <a href="/tentang"
                 class="hover:underline underline-offset-4 decoration-yellow-400 decoration-2 md:text-base text-sm">
                 Copyright© 2024 KBJT. All right reserved.
             </a>
-            <div class="gap-2 justify-end md:flex hidden">
+            {{-- <div class="gap-2 justify-end md:flex hidden">
                 <a href="#" target="_blank" class="hover:bg-yellow-400 p-1 rounded-md active:bg-yellow-300">
                     <i data-lucide="facebook" class="fill-black stroke-none"></i>
                 </a>
@@ -93,7 +93,7 @@
                     <i data-lucide="instagram"
                         class="fill-black stroke-white group-hover:stroke-yellow-400 group-active:stroke-yellow-300"></i>
                 </a>
-            </div>
+            </div> --}}
         </div>
     </footer>
 

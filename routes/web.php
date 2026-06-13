@@ -60,6 +60,9 @@ Route::livewire('/tentang', 'pages::homepages.about');
 // Route::get('/syarat-ketentuan', [HomepageController::class, 'syaratKetentuan']);
 Route::livewire('/syarat-ketentuan', 'pages::homepages.policies');
 
+// tambah definisi dengan kosakata baru
+Route::livewire('/kosakata/baru', 'pages::homepages.definition-new');
+
 // tampilkan definisi & kosakata
 // Route::get('/kosakata/{slug}', [HomepageController::class, 'kosakata']);
 Route::livewire('/kosakata/{word}', 'pages::homepages.word-detail');
@@ -318,7 +321,7 @@ Route::middleware(['auth'])->group(function () {
     // Route::post('/kosakata/{slug}/buat-definisi', [DefinisiController::class, 'create'])->middleware('kontributorPengurus');
     // Edit definisi - hanya kontributor dan pengurus
     // Route::put('/kosakata/{slug}/{definisiId}/update', [DefinisiController::class, 'update'])->middleware('kontributorPengurus');
-    Route::livewire('definisi/{id}/edit', 'pages::homepages.definition-edit');
+    Route::livewire('/definisi/{id}/edit', 'pages::homepages.definition-edit');
     // Hapus definisi - hanya kontributor dan pengurus
     // Route::delete('/kosakata/{slug}/{definisiId}/delete', [DefinisiController::class, 'delete'])->middleware('kontributorPengurus');
     // edit definisi -livewire

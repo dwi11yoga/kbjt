@@ -103,9 +103,9 @@ new class extends Component {
                     {{ ucwords($word) }}
                 </h1>
                 <div class="flex">
-                    <button class="hover:bg-neutral-100 dark:hover:bg-zinc-800 rounded-full p-2">
+                    {{-- <button class="hover:bg-neutral-100 dark:hover:bg-zinc-800 rounded-full p-2">
                         <i data-lucide='volume-2' class="size-5"></i>
-                    </button>
+                    </button> --}}
                     <a href="#share" class="hover:bg-neutral-100 dark:hover:bg-zinc-800 rounded-full p-2">
                         <i data-lucide='share-2' class="size-5"></i>
                     </a>
